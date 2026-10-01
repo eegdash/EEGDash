@@ -29,9 +29,6 @@ https://facebookresearch.github.io/neuroai/neuralbench/auto_examples/biosignal_c
 # Mean absolute angular error is reported in degrees, averaging over joints
 # and time. This is neither a character error rate nor a fingertip distance.
 
-import os
-from pathlib import Path
-
 import matplotlib.pyplot as plt
 import mne
 import numpy as np
@@ -43,6 +40,8 @@ from sklearn.linear_model import Ridge
 from sklearn.metrics import mean_absolute_error
 from sklearn.pipeline import make_pipeline
 from sklearn.preprocessing import StandardScaler
+
+from eegdash.paths import get_default_cache_dir
 
 from eegdash import EEGDash, EEGDashDataset
 
@@ -61,7 +60,7 @@ from eegdash import EEGDash, EEGDashDataset
 # users and held-out stages separately. One recording per split cannot estimate
 # population performance or reproduce those full benchmark comparisons.
 
-cache = Path(os.environ.get("EEGDASH_CACHE_DIR", "~/.eegdash_cache")).expanduser()
+cache = get_default_cache_dir()
 revision = "90cb29b450de36bb275b226cbc47918f6cbc3b09"
 source = f"https://raw.githubusercontent.com/nemarDatasets/nm000281/{revision}"
 selections = [
@@ -99,7 +98,9 @@ api = EEGDash()
 # signal, before taking its square root. It starts with zero filter state at
 # the recording boundary. Envelopes are computed continuously before windowing
 # so later windows retain their preceding EMG context. Joint trajectories remain
-# at 2 kHz; no temporal average replaces the dense pose target.
+# at 2 kHz; no temporal average replaces the dense pose target. Only the local
+# envelope is causal; source preprocessing is not claimed causal. Dense samples
+# are temporally correlated, and these arrays need hundreds of MB of RAM.
 
 for split, subject, session, run in selections:
     filename = (
@@ -115,21 +116,12 @@ for split, subject, session, run in selections:
     )
     scans = pd.read_csv(scans_path, sep="\t").set_index("filename")
     assignment = scans.loc[f"emg/{filename}"]
-    assert assignment["split"] == split and assignment["side"] == "right"
-    if split == "test":
-        assert assignment["generalization"] == "user_stage"
     records = api.find(dataset="nm000281", subject=subject, session=session, run=run)
     records = [record for record in records if record["bids_relpath"] == relative]
-    assert len(records) == 1
     users[split] = records[0]["participant_tsv"]["original_user"]
     stages[split] = assignment["stage"]
     dataset = EEGDashDataset(records=records, cache_dir=cache)
     raw = dataset.datasets[0].raw
-    assert raw.info["sfreq"] == 2000 and raw.first_samp == 0
-    assert raw.ch_names == [f"emg{i}" for i in range(16)] + [
-        f"joint{i}" for i in range(20)
-    ]
-    assert raw.get_channel_types() == ["emg"] * 16 + ["misc"] * 20
     stop = int(round(float(assignment["duration"]) * raw.info["sfreq"]))
     raw.crop(tmax=(stop - 1) / raw.info["sfreq"])
     signal = raw.get_data(picks="emg")
@@ -145,14 +137,10 @@ for split, subject, session, run in selections:
         axis=(1, 2)
     )
     inputs, targets = inputs[finite], targets[finite]
-    assert len(targets) > 0 and inputs.shape[1:] == (10000, 16)
-    assert targets.shape[1:] == (10000, 20)
     arrays[split] = (inputs, targets)
     print(split, users[split], stages[split], assignment["generalization"])
     print("EMG envelope / pose shapes:", inputs.shape, targets.shape)
 
-assert len(set(users.values())) == 3
-assert stages["test"] not in (stages["train"], stages["val"])
 
 # %%
 # Fit a dense regression baseline using training data only

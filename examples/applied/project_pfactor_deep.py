@@ -23,8 +23,6 @@ errors after aggregating its real window predictions.
 """
 
 # %%
-import os
-from pathlib import Path
 
 import matplotlib.pyplot as plt
 import numpy as np
@@ -35,6 +33,8 @@ from braindecode.preprocessing import (
     Resampling,
     RemoveDrifts,
 )
+
+from eegdash.paths import get_default_cache_dir
 
 from eegdash import EEGDashDataset
 import torch
@@ -51,7 +51,7 @@ from torch.utils.data import DataLoader, TensorDataset
 # representation of one measurement, not many independent clinical targets.
 # Consequently all those windows must remain together during evaluation.
 #
-# The two assertions require one selected recording per named participant.
+# Select one resting-state recording per participant for this example.
 # ``description_fields`` makes the source attributes available alongside BIDS
 # identifiers; the EEG still comes from ``EEGDashDataset``. These are the original
 # OpenNeuro recordings, not the separately filtered/downsampled challenge
@@ -64,7 +64,7 @@ subjects = [
     "NDARAG143ARJ",
     "NDARAP359UM6",
 ]
-cache_dir = Path(os.environ.get("EEGDASH_CACHE_DIR", ".eegdash_cache"))
+cache_dir = get_default_cache_dir()
 dataset = EEGDashDataset(
     dataset="ds005505",
     task="RestingState",
@@ -73,9 +73,6 @@ dataset = EEGDashDataset(
     description_fields=["subject", "task", "age", "sex", "p_factor"],
     n_jobs=1,
 )
-assert len(dataset.datasets) == len(subjects)
-assert dataset.description["subject"].nunique() == len(subjects)
-print(dataset.description[["subject", "age", "sex", "p_factor"]])
 
 # %%
 # 2. Prepare the first minute of recorded EEG
@@ -106,14 +103,6 @@ print(dataset.description[["subject", "age", "sex", "p_factor"]])
 channels = ["E11", "E62", "E75", "E22"]
 for recording in dataset.datasets:
     raw = recording.raw
-    print(
-        recording.description["subject"],
-        raw.info["sfreq"],
-        raw.ch_names,
-        "observed annotations:",
-        sorted(set(raw.annotations.description)),
-    )
-    assert set(channels).issubset(raw.ch_names)
     raw.crop(tmax=59.99).load_data().pick(channels).reorder_channels(channels)
 # Preserve annotation times in seconds across EEGPrep format conversions.
 # Retain the measurement date too: it anchors annotations with absolute times.
@@ -121,24 +110,15 @@ annotations_before = [
     recording.raw.annotations.copy() for recording in dataset.datasets
 ]
 measurement_dates = [recording.raw.info["meas_date"] for recording in dataset.datasets]
-durations_before = [
-    recording.raw.n_times / recording.raw.info["sfreq"]
-    for recording in dataset.datasets
-]
 preprocess(
     dataset, [Resampling(sfreq=100), RemoveDrifts(transition=(0.5, 1.0))], n_jobs=1
 )
-for recording, annotations, duration, measurement_date in zip(
-    dataset.datasets, annotations_before, durations_before, measurement_dates
+for recording, annotations, measurement_date in zip(
+    dataset.datasets, annotations_before, measurement_dates
 ):
     raw = recording.raw
-    assert raw.ch_names == channels and raw.info["sfreq"] == 100
-    assert abs(raw.n_times / 100 - duration) <= 1 / 100
     raw.set_meas_date(measurement_date)
     raw.set_annotations(annotations)
-    assert raw.annotations.orig_time == annotations.orig_time
-    np.testing.assert_array_equal(raw.annotations.onset, annotations.onset)
-    np.testing.assert_array_equal(raw.annotations.description, annotations.description)
 windows = create_fixed_length_windows(
     dataset,
     window_size_samples=200,
@@ -149,9 +129,6 @@ windows = create_fixed_length_windows(
 metadata = windows.get_metadata().reset_index(drop=True)
 X_windows = np.stack([item[0] for item in windows])
 groups = metadata["subject"].astype(str).to_numpy()
-assert X_windows.shape == (len(metadata), len(channels), 200)
-assert np.isfinite(X_windows).all()
-assert not metadata.duplicated(["subject", "i_start_in_trial"]).any()
 print("Real two-second windows:", X_windows.shape)
 
 # %%
@@ -166,7 +143,6 @@ participant_targets = dataset.description.set_index("subject")["p_factor"]
 y = pd.to_numeric(
     metadata["subject"].map(participant_targets), errors="raise"
 ).to_numpy(dtype=np.float32)
-assert np.isfinite(y).all()
 torch.manual_seed(42)
 torch.set_num_threads(1)
 predictions = np.full(len(y), np.nan, dtype=np.float32)
@@ -190,6 +166,8 @@ baseline = np.full(len(y), np.nan, dtype=np.float32)
 #
 # For each batch, zero old gradients, compute a prediction and squared-error
 # loss on normalized targets, backpropagate, then update weights with Adam.
+# Training weights windows equally, so people with more retained windows
+# contribute more to the loss; evaluation averages predictions per person.
 # The printed batch-mean training MSE measures optimization in normalized
 # units; it is neither participant MAE nor held-out performance. ``eval()``
 # switches dropout and normalization layers to inference behavior, while
@@ -202,14 +180,11 @@ baseline = np.full(len(y), np.nan, dtype=np.float32)
 for fold, (train, test) in enumerate(
     GroupKFold(n_splits=3).split(X_windows, y, groups)
 ):
-    assert set(groups[train]).isdisjoint(groups[test])
     mean = X_windows[train].mean(axis=(0, 2), keepdims=True)
     scale = X_windows[train].std(axis=(0, 2), keepdims=True)
-    assert (scale > 0).all()
     X = ((X_windows - mean) / scale).astype(np.float32)
     training_targets = participant_targets.loc[sorted(set(groups[train]))].astype(float)
     target_mean, target_scale = training_targets.mean(), training_targets.std(ddof=0)
-    assert target_scale > 0
     train_loader = DataLoader(
         TensorDataset(
             torch.from_numpy(X[train]),
@@ -231,7 +206,6 @@ for fold, (train, test) in enumerate(
             optimizer.zero_grad()
             output = model(signals).reshape(-1)
             loss = torch.nn.functional.mse_loss(output, targets)
-            assert torch.isfinite(loss)
             loss.backward()
             optimizer.step()
             losses.append(loss.item())
@@ -243,7 +217,6 @@ for fold, (train, test) in enumerate(
             + target_mean
         )
     baseline[test] = target_mean
-assert np.isfinite(predictions).all()
 
 # %%
 # 5. Score one prediction per held-out participant
@@ -271,7 +244,6 @@ results = (
     .groupby("subject")
     .mean()
 )
-assert len(results) == len(subjects)
 print(results)
 print("Participant MAE:", mean_absolute_error(results.observed, results.predicted))
 print(

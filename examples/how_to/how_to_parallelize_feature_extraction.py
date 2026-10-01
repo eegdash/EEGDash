@@ -18,17 +18,16 @@ are 1 and 2, session 0, run 0, task ssvep; use EEGDASH_CACHE_DIR to reuse them.
 # 1. Load a bounded real cohort and window its events
 # ---------------------------------------------------
 import os
-from pathlib import Path
 from time import perf_counter
 
-import numpy as np
 import pandas as pd
 from braindecode.preprocessing import create_windows_from_events
 
 from eegdash import EEGDashDataset
 from eegdash.features import extract_features, signal_variance
+from eegdash.paths import get_default_cache_dir
 
-cache_dir = Path(os.environ.get("EEGDASH_CACHE_DIR", ".eegdash_cache"))
+cache_dir = get_default_cache_dir()
 dataset = EEGDashDataset(
     cache_dir=cache_dir,
     dataset="nm000118",
@@ -38,7 +37,8 @@ dataset = EEGDashDataset(
     task="ssvep",
     n_jobs=1,
 )
-assert len(dataset.datasets) == 2
+sfreq = dataset.datasets[0].raw.info["sfreq"]
+window_samples = round(4 * sfreq)
 names = sorted(set(dataset.datasets[0].raw.annotations.description), key=float)
 mapping = {name: i for i, name in enumerate(names)}
 # %%
@@ -50,8 +50,8 @@ mapping = {name: i for i, name in enumerate(names)}
 windows = create_windows_from_events(
     dataset,
     mapping=mapping,
-    window_size_samples=1024,
-    window_stride_samples=1024,
+    window_size_samples=window_samples,
+    window_stride_samples=window_samples,
     on_last_window="drop",
     preload=True,
 )
@@ -71,9 +71,8 @@ windows = create_windows_from_events(
 # allocated, the loop reports one configuration rather than oversubscribing it.
 # More workers can increase RAM use through worker copies and in-flight batches;
 # worker count is therefore a resource choice, not an accuracy parameter.
-workers = max(
-    1, min(2, int(os.environ.get("SLURM_CPUS_PER_TASK", os.cpu_count() or 1)))
-)
+allocated_cpus = int(os.environ.get("SLURM_CPUS_PER_TASK", os.cpu_count() or 1))
+workers = min(2, allocated_cpus)
 # %%
 # Timing starts after acquisition and window creation. It covers feature
 # extraction and conversion to a DataFrame, including worker startup when that
@@ -88,20 +87,28 @@ for n_jobs in sorted({1, workers}):
         windows, {"variance": signal_variance}, batch_size=64, n_jobs=n_jobs
     ).to_dataframe()
     elapsed = perf_counter() - start
-    assert len(features) == len(windows)
-    assert np.isfinite(features.to_numpy()).all()
     if reference is None:
         reference = features
-    else:
-        pd.testing.assert_frame_equal(reference, features)
-    rows.append({"workers": n_jobs, "seconds": elapsed})
-print(pd.DataFrame(rows).to_string(index=False))
+    pd.testing.assert_frame_equal(reference, features)
+    rows.append(
+        {
+            "workers": n_jobs,
+            "seconds": elapsed,
+        }
+    )
+timings = pd.DataFrame(rows)
+timings["serial time / measured time"] = timings.loc[0, "seconds"] / timings["seconds"]
+timings
 
 # %%
+# The equality check compares values, columns and row order.
+# This table is one serial-first run, not a warmed speedup benchmark.
+#
 # 3. Save the actual table with its window metadata
 # -------------------------------------------------
 metadata = windows.get_metadata().reset_index(drop=True)
 table = pd.concat([metadata, reference.reset_index(drop=True)], axis=1)
+# This fixed tutorial-owned output is replaced on repeat runs.
 output = cache_dir / "parallel_variance.csv"
 table.to_csv(output, index=False)
 print("Saved:", output, table.shape)

@@ -1,7 +1,7 @@
 """Preprocess and window recorded EEG
 ==================================
 
-Select EEG channels, apply an explicit reference, and save reusable windows.
+Select EEG channels, apply an explicit reference, and create labelled windows.
 
 These real Nakanishi2015 SSVEP recordings are distributed as the processed
 `nm000118 release <https://nemar.org/dataset/nm000118>`_
@@ -15,20 +15,18 @@ The explicit subset uses 1 participant(s), about 7.0 MB of signal files.
 Before you start
 ----------------
 Install EEGDash with its EEGPrep tutorial dependencies; tutorials 01 and 02 introduce Raw and
-window indexing. This file independently loads the recording and writes an
-average-referenced prepared dataset. Allow additional disk space for that
-output as well as the original download.
+window indexing. This file independently loads the recording and creates
+average-referenced windows. Tutorial 13 covers persistent storage.
 """
 
 # %%
-import os
-from pathlib import Path
 
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 from braindecode.preprocessing import create_windows_from_events
 
+from eegdash.paths import get_default_cache_dir
 from eegdash import EEGDashDataset
 from braindecode.preprocessing import (
     Preprocessor,
@@ -45,7 +43,7 @@ from braindecode.preprocessing import (
 # generic filtering recipe intended for unprocessed acquisition would not be an
 # appropriate default. The following DC-offset and reference operations are explicit changes
 # to the source representation, separate from its existing filtering.
-cache_dir = Path(os.environ.get("EEGDASH_CACHE_DIR", ".eegdash_cache"))
+cache_dir = get_default_cache_dir()
 subjects = ["1"]
 dataset = EEGDashDataset(
     cache_dir=cache_dir,
@@ -56,20 +54,15 @@ dataset = EEGDashDataset(
     task="ssvep",
     n_jobs=1,
 )
-assert len(dataset.datasets) == len(subjects)
-print(dataset.description[["subject", "session", "run"]])
-raw = dataset.datasets[0].raw
+dataset.description[["subject", "session", "run"]]
+
+# %%
+(recording,) = dataset.datasets  # This lesson opens exactly one recording.
+raw = recording.raw
 sfreq = raw.info["sfreq"]
 channel_names = raw.ch_names
 class_names = sorted(set(raw.annotations.description), key=float)
 mapping = {name: index for index, name in enumerate(class_names)}
-assert len(mapping) == 12
-for recording in dataset.datasets:
-    assert recording.raw.ch_names == channel_names
-    assert recording.raw.info["sfreq"] == sfreq
-    assert set(recording.raw.annotations.description) == set(mapping)
-print(f"Channels: {channel_names}; sampling rate: {sfreq} Hz")
-print("Observed stimulus frequencies (Hz):", class_names)
 
 # %%
 # Apply EEGPrep offset and reference components
@@ -95,7 +88,8 @@ print("Observed stimulus frequencies (Hz):", class_names)
 # Average reference needs voltage channels, not electrode coordinates.
 annotations_before = raw.annotations.copy()
 measurement_date = raw.info["meas_date"]
-n_samples_before = raw.n_times
+source_grid = (raw.info["sfreq"], raw.n_times, raw.first_samp)
+excerpt = raw.get_data(start=0, stop=int(4 * sfreq))
 preprocess(
     dataset,
     [
@@ -104,20 +98,29 @@ preprocess(
         RemoveCommonAverageReference(),
     ],
 )
-channel_names = dataset.datasets[0].raw.ch_names
+raw = dataset.datasets[0].raw  # Adapters may replace the Raw object.
+channel_names = raw.ch_names
 # These two components do not resample or cut data. The format conversion
 # can quantize annotation latencies, so preserve original event timing once
 # the sample-grid invariants have been verified. Restore the measurement date
 # first because annotations may use it as their absolute time origin.
-assert raw.n_times == n_samples_before and raw.info["sfreq"] == sfreq
+if (raw.info["sfreq"], raw.n_times, raw.first_samp) != source_grid:
+    raise RuntimeError(
+        "Offset/reference changed the sample grid; do not restore events"
+    )
 raw.set_meas_date(measurement_date)
+# With no absolute origin, set_annotations adds first_time itself.
+if annotations_before.orig_time is None:
+    annotations_before.onset -= raw.first_time
 raw.set_annotations(annotations_before)
-assert raw.annotations.orig_time == annotations_before.orig_time
-np.testing.assert_array_equal(
-    raw.annotations.description, annotations_before.description
-)
-np.testing.assert_array_equal(raw.annotations.onset, annotations_before.onset)
-np.testing.assert_array_equal(raw.annotations.duration, annotations_before.duration)
+after = raw.get_data(start=0, stop=excerpt.shape[1])
+fig, ax = plt.subplots(figsize=(8, 3), layout="constrained")
+times = np.arange(excerpt.shape[1]) / sfreq
+ax.plot(times, excerpt[0] * 1e6, label="Source")
+ax.plot(times, after[0] * 1e6, label="Median removed + average referenced")
+ax.set(xlabel="Recording time (s)", ylabel=f"{channel_names[0]} (µV)")
+ax.legend()
+plt.show()
 
 # %%
 # 2. Window the observed trials
@@ -127,9 +130,7 @@ np.testing.assert_array_equal(raw.annotations.duration, annotations_before.durat
 # creating overlapping examples. Each row in ``metadata`` must correspond to
 # one item in ``windows``; labels remain the observed frequency classes.
 #
-# After stacking, ``X`` has axes ``(trials, channels, samples)`` and still uses
-# volts. The channel-mean check verifies the reference operation at each time
-# sample. It says nothing about classifier performance or artifact removal.
+# Each window has axes ``(channels, samples)`` and remains in volts.
 # The source event lasts 4.15 seconds; its final 0.15 seconds are unused.
 window_size = int(4 * sfreq)
 windows = create_windows_from_events(
@@ -142,37 +143,6 @@ windows = create_windows_from_events(
 )
 metadata = windows.get_metadata().reset_index(drop=True)
 y = metadata["target"].to_numpy(dtype=int)
-assert len(windows) == len(metadata)
-assert set(y) == set(mapping.values())
-assert not metadata.duplicated(["subject", "session", "run", "i_start_in_trial"]).any()
-print(pd.crosstab(metadata["subject"], y))
+pd.crosstab(metadata["subject"], y)
 
-X = np.stack([window[0] for window in windows])
-assert X.shape == (len(metadata), len(channel_names), window_size)
-assert np.isfinite(X).all()
-print("Windows:", X.shape)
-
-assert np.allclose(X.mean(axis=1), 0, atol=1e-10)
-
-# %%
-# 3. Save the prepared data in the persistent cache
-# -------------------------------------------------
-# Braindecode saves signal data together with the information needed to index
-# windows and recover their descriptions. Keep the whole output directory,
-# not just a FIF file. The directory name distinguishes this average-referenced
-# version from the source-reference windows in tutorial 13.
-#
-# The plotted channels should be read in the context of that reference: their
-# instantaneous average is zero, but each waveform need not have zero temporal
-# mean. Tutorial 13 demonstrates reloading and checking prepared datasets;
-# pass this page's printed directory to ``load_concat_dataset`` to inspect this
-# specific reference choice in a later session.
-# This tutorial owns this named output. Re-running refreshes that output.
-prepared_path = cache_dir / "tutorial_10_nm000118_average_reference"
-prepared_path.mkdir(parents=True, exist_ok=True)
-windows.save(str(prepared_path), overwrite=True)
-print("Saved reusable windows:", prepared_path.resolve())
-fig, ax = plt.subplots(figsize=(8, 3), layout="constrained")
-ax.plot(np.arange(window_size) / sfreq, X[0].T * 1e6)
-ax.set(xlabel="Time (s)", ylabel="Voltage (µV)", title="Average-referenced trial")
-plt.show()
+# For saving and reloading prepared windows, continue with tutorial 13.

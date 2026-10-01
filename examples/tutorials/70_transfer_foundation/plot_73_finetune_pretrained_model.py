@@ -5,11 +5,12 @@ Adapt the published CBraMod checkpoint to real HBN eyes-open/closed cues.
 The checkpoint is https://huggingface.co/braindecode/cbramod-pretrained
 (documented by Braindecode's CBraMod model). It was pretrained on TUH EEG;
 this example uses the distinct HBN R5 mini cohort. It downloads about 20 MB
-of weights and eighteen challenge recordings (roughly 320 MB total).
+of weights and six challenge recordings in small mode (roughly 100 MB).
+Opt in to full mode for eighteen recordings (roughly 320 MB).
 
-Six subject-grouped folds each hold three participants out for testing
-while three others select the epoch and twelve train, so every participant
-is scored exactly once. Compare scratch, a frozen encoder with a learned linear
+Small mode uses three folds with two test, two validation and two training
+participants. Full mode uses six folds with three test, three validation and
+twelve training participants. Each person is scored once per regime. Compare scratch, a frozen encoder with a learned linear
 head, and fine-tuning. The small fixed budget demonstrates adaptation, not a
 foundation-model benchmark.
 """
@@ -18,10 +19,10 @@ foundation-model benchmark.
 # Before you start
 # ----------------
 #
-# Use EEGDash, Braindecode, PyTorch, NumPy, SciPy, scikit-learn and Matplotlib.
+# Use EEGDash, Braindecode, PyTorch, NumPy, scikit-learn and Matplotlib.
 # The public checkpoint requires network access on first use;
 # ``from_pretrained`` caches its weights separately from ``EEGDASH_CACHE_DIR``,
-# which caches the eighteen EEG recordings. The revision below pins the actual
+# which caches the selected EEG recordings. The revision below pins the actual
 # checkpoint rather than relying on a changing default branch.
 #
 # The executable comparison answers a narrow question: what happens when the
@@ -31,25 +32,30 @@ foundation-model benchmark.
 # contract, consult `Braindecode's pretrained-model example <https://braindecode.org/dev/auto_examples/model_building/plot_load_pretrained_models.html>`_.
 
 import copy
-import os
-from pathlib import Path
 
 import matplotlib.pyplot as plt
+import mne
 import numpy as np
+import pandas as pd
 import torch
 from braindecode.models import CBraMod
 from braindecode.preprocessing import (
     Preprocessor,
-    create_windows_from_events,
     preprocess,
 )
-from scipy.stats import wilcoxon
 from sklearn.metrics import balanced_accuracy_score
+
+from eegdash.paths import get_default_cache_dir
 
 from eegdash import EEGChallengeDataset
 from eegdash.const import SUBJECT_MINI_RELEASE_MAP
 
-CACHE_DIR = Path(os.environ.get("EEGDASH_CACHE_DIR", "~/.eegdash_cache")).expanduser()
+CACHE_DIR = get_default_cache_dir()
+RESOURCE_MODE = "small"  # explicit opt-in: "full" uses all 18 retained participants
+N_EPOCHS = 2 if RESOURCE_MODE == "small" else 6
+N_FOLDS = 3 if RESOURCE_MODE == "small" else 6
+N_VALID = 2 if RESOURCE_MODE == "small" else 3
+torch.set_num_threads(2)
 CHANNELS = ["E70", "E75", "E83"]  # three posterior (occipital) channels
 SFREQ = 200  # CBraMod expects 200 Hz: one-second patches of 200 samples
 # Steady-state window (start, stop) in seconds after each cue, as in the eyes-open/closed tutorial
@@ -78,8 +84,7 @@ CUE_WINDOW = {"instructed_toOpenEyes": (5, 19), "instructed_toCloseEyes": (15, 2
 # two-second windows from 5 to 19 s after an open-eyes cue (the open block
 # lasts 20 s) and from 15 to 29 s after a close-eyes cue (the closed block
 # lasts 40 s). The final open-eyes cue falls a few seconds before the recording
-# ends and cannot supply a full window; Braindecode refuses such a cue, so it
-# is removed first. Labels
+# ends and cannot supply the complete interval; MNE drops incomplete epochs. Labels
 # represent the observed open/close instructions, not eye tracking.
 
 # Load the resting-state recordings of the HBN R5 mini release, except two with
@@ -88,18 +93,19 @@ BAD_RECORDINGS = ["NDARAP785CTE", "NDARCA740UC8"]
 subjects = [
     s for s in sorted(SUBJECT_MINI_RELEASE_MAP["R5"]) if s not in BAD_RECORDINGS
 ]
+if RESOURCE_MODE == "small":
+    subjects = subjects[:6]  # about 100 MB; no outcome-based choice within this list
+# Historical exclusions above are inherited, not reproduced by a QC threshold.
+# They limit the estimand to this selected cohort; do not call it representative.
 dataset = EEGChallengeDataset(
     release="R5", mini=True, task="RestingState", subject=subjects, cache_dir=CACHE_DIR
 )
 
 
-def drop_late_cues(raw):
-    """The last eyes-open cue comes ~5 s before the end and cannot supply a full window."""
-    fits = (
-        raw.annotations.onset + max(stop for _, stop in CUE_WINDOW.values())
-        < raw.times[-1]
-    )
-    return raw.set_annotations(raw.annotations[fits])
+def standardize_recording(x):
+    """Offline whole-recording normalization, including the held-out recording."""
+    scale = x.std(axis=1, keepdims=True)
+    return (x - x.mean(axis=1, keepdims=True)) / scale
 
 
 preprocess(
@@ -108,26 +114,48 @@ preprocess(
         Preprocessor("pick", picks=CHANNELS),
         Preprocessor("resample", sfreq=SFREQ),
         # standardize each channel of each recording with its own mean and std (uses no labels)
-        Preprocessor(
-            lambda x: (x - x.mean(axis=1, keepdims=True)) / x.std(axis=1, keepdims=True)
-        ),
-        Preprocessor(drop_late_cues, apply_on_array=False),
+        Preprocessor(standardize_recording),
     ],
 )
 
-# Cut 2 s windows: label 0 = eyes open, 1 = eyes closed
-windows = create_windows_from_events(
-    dataset,
-    mapping={"instructed_toOpenEyes": 0, "instructed_toCloseEyes": 1},
-    trial_start_offset_samples={
-        cue: start * SFREQ for cue, (start, _) in CUE_WINDOW.items()
-    },
-    trial_stop_offset_samples={
-        cue: stop * SFREQ for cue, (_, stop) in CUE_WINDOW.items()
-    },
-    window_size_samples=2 * SFREQ,
-    window_stride_samples=2 * SFREQ,
-)
+# Cut seven 2 s epochs per eligible cue with explicit MNE sample origins.
+# Native epochs reject BAD spans and incomplete trailing windows.
+# Cue-specific offsets below avoid discarding valid open-eye windows based
+# on the longer closed-eye interval.
+epoch_arrays, metadata_tables = [], []
+for recording in dataset.datasets:
+    raw = recording.raw
+    events = []
+    for annotation in raw.annotations:
+        cue = annotation["description"]
+        if cue not in CUE_WINDOW:
+            continue
+        start, stop = CUE_WINDOW[cue]
+        onset = annotation["onset"] - raw.first_time
+        code = 1 if cue == "instructed_toOpenEyes" else 2
+        for offset in range(start, stop, 2):
+            sample = round((onset + offset) * SFREQ) + raw.first_samp
+            events.append([sample, 0, code])
+    events = np.asarray(events)
+    epochs = mne.Epochs(
+        raw,
+        events[np.argsort(events[:, 0])],
+        event_id={"eyes_open": 1, "eyes_closed": 2},
+        tmin=0,
+        tmax=2 - 1 / SFREQ,
+        baseline=None,
+        preload=True,
+        reject_by_annotation=True,
+    )
+    epoch_arrays.append(epochs.get_data())
+    metadata_tables.append(
+        pd.DataFrame(
+            {
+                "target": epochs.events[:, 2] - 1,
+                "subject": str(recording.description["subject"]),
+            }
+        )
+    )
 
 # %%
 # Reserve participants, not windows
@@ -135,9 +163,8 @@ windows = create_windows_from_events(
 #
 # ``X`` has shape ``(windows, 3, 400)`` and ``y`` contains the two integer
 # instruction classes. Participants, rather than windows, determine the folds:
-# six subject-grouped folds each hold out three participants for testing, three
-# others select the epoch, and the remaining twelve train. Every participant is
-# tested exactly once.
+# group-disjoint folds use the counts in the parameter cell. Each participant
+# is tested exactly once per regime, regardless of resource mode.
 #
 # All checkpoint selection uses validation balanced accuracy. Test labels are
 # read only for the final score of each prespecified regime. Reporting several
@@ -145,14 +172,16 @@ windows = create_windows_from_events(
 # and call that a new independent result.
 
 # Arrays for PyTorch: X = (windows, channels, samples), y = label, subject = participant of each window
-X = np.stack([x for x, _, _ in windows]).astype("float32")
-metadata = windows.get_metadata()
+X = np.concatenate(epoch_arrays).astype("float32")
+metadata = pd.concat(metadata_tables, ignore_index=True)
 y = metadata["target"].to_numpy()
 subject = metadata["subject"].to_numpy()
 print(f"X {X.shape} | classes {np.bincount(y)} | participants {len(subjects)}")
 
-# Six folds of three participants each; every participant is tested exactly once
-folds = np.array_split(np.array(subjects), 6)
+# Every participant is tested exactly once, in either resource mode
+folds = np.array_split(np.array(subjects), N_FOLDS)
+# Full-recording normalization uses each test recording's unlabeled distribution:
+# this is offline/transductive preprocessing, not causal online deployment.
 
 # %%
 # Load the checkpoint and understand the head dimensions
@@ -195,8 +224,8 @@ pretrained = CBraMod.from_pretrained(
 # dropout. ``predict`` returns the predicted class of each window.
 #
 # The learning rate is ``1e-4`` for the scratch and fine-tune regimes and
-# ``1e-3`` for the linear head alone. Six epochs per fold keep CPU execution to
-# a few minutes; they are not a recommended training budget. Each regime is
+# ``1e-3`` for the linear head alone. The explicit small/full epoch budgets
+# demonstrate execution, not recommended convergence settings. Each regime is
 # scored once per held-out participant, as the balanced accuracy over that
 # participant's windows.
 
@@ -215,17 +244,24 @@ def make_model(regime):
     else:
         encoder = copy.deepcopy(pretrained)
     if regime == "linear probe":
-        encoder.requires_grad_(False)  # freeze the encoder: only the head learns
-    return torch.nn.Sequential(encoder, torch.nn.Flatten(), torch.nn.Linear(1200, 2))
+        encoder.requires_grad_(False)
+    # Derive width from the actual encoder output, not a magic architecture constant.
+    encoder.eval()
+    with torch.inference_mode():
+        width = encoder(torch.from_numpy(X[:1])).flatten(1).shape[1]
+    torch.manual_seed(17)  # matched head initialization across regimes
+    return torch.nn.Sequential(encoder, torch.nn.Flatten(), torch.nn.Linear(width, 2))
 
 
 def predict(model, X):
     model.eval()
     with torch.no_grad():
-        return model(torch.from_numpy(X)).argmax(1).numpy()
+        return np.concatenate(
+            [model(batch).argmax(1).numpy() for batch in torch.from_numpy(X).split(16)]
+        )
 
 
-def fit(model, train, valid, lr, frozen, n_epochs=6, batch_size=16):
+def fit(model, train, valid, lr, frozen, n_epochs=N_EPOCHS, batch_size=16):
     """Train with AdamW; return the model with the weights of the best validation epoch."""
     optimizer = torch.optim.AdamW(
         [p for p in model.parameters() if p.requires_grad], lr=lr
@@ -240,7 +276,8 @@ def fit(model, train, valid, lr, frozen, n_epochs=6, batch_size=16):
         ):  # shuffled mini-batches
             idx = np.flatnonzero(train)[batch.numpy()]
             loss = torch.nn.functional.cross_entropy(
-                model(torch.from_numpy(X[idx])), torch.from_numpy(y[idx])
+                model(torch.from_numpy(X[idx])),
+                torch.from_numpy(y[idx]),
             )
             optimizer.zero_grad()
             loss.backward()
@@ -258,10 +295,11 @@ scores = {
 }  # one balanced accuracy per held-out participant
 for test_subjects in folds:
     others = [s for s in subjects if s not in test_subjects]
-    train = np.isin(subject, others[:-3])  # 12 participants train
-    valid = np.isin(subject, others[-3:])  # 3 participants select the epoch
-    test = np.isin(subject, test_subjects)  # 3 participants are scored once
+    train = np.isin(subject, others[:-N_VALID])  # training people
+    valid = np.isin(subject, others[-N_VALID:])  # validation people
+    test = np.isin(subject, test_subjects)  # held-out people
     for regime in REGIMES:
+        torch.manual_seed(0)
         frozen = regime == "linear probe"
         model = fit(
             make_model(regime), train, valid, lr=1e-3 if frozen else 1e-4, frozen=frozen
@@ -275,17 +313,6 @@ for test_subjects in folds:
         f"held out {test_subjects.tolist()}: "
         + " | ".join(f"{r} {np.mean(scores[r][-n:]):.2f}" for r in REGIMES)
     )
-
-# %%
-# Statistics over participants (one score each) and a figure with one dot per participant
-for regime in REGIMES:
-    s = np.array(scores[regime])
-    p = wilcoxon(s - 0.5, alternative="greater").pvalue
-    print(
-        f"{regime:13s} mean {s.mean():.3f} | above chance in {(s > 0.5).sum()}/{len(s)} | Wilcoxon p = {p:.1e}"
-    )
-p = wilcoxon(scores["fine-tune"], scores["scratch"], alternative="greater").pvalue
-print(f"fine-tune > scratch (paired over participants): p = {p:.1e}")
 
 fig, ax = plt.subplots(figsize=(6, 4))
 jitter = np.linspace(
@@ -308,15 +335,13 @@ plt.show()
 # --------------------------------------------------
 #
 # Each dot is one held-out participant, scored on that participant's windows
-# alone; the bar is the mean across the eighteen participants and the dashed
-# line is the two-class chance level. Random weights stay close to chance. The
-# frozen published representation already separates the two eye states for most
-# participants, and fine-tuning does best. The paired test between fine-tuning
-# and scratch is the evidence that the pretrained weights matter, because the
-# two regimes share folds, windows, budget and seed. A few participants sit near
-# 0.5 under every regime; those recordings show little alpha reactivity in the
-# selected channels, which is a data property to inspect, not a modeling
-# failure to tune away.
+# alone; the bar is the mean across the selected participants and the dashed
+# line is the two-class chance level. Any regime may do better on this cohort.
+# Shared folds and a matched head do not isolate pretraining as a causal effect:
+# learning rates and trainable parameters differ, and this is one random seed.
+# No p-values are computed because overlapping training folds, multiple regime
+# comparisons and the selected cohort need a prespecified inferential design.
+# Accuracy alone does not diagnose alpha reactivity or signal quality.
 #
 # For a stronger comparison, add repeated seeds and prespecify longer budgets.
 # Compare equal head initializations when estimating the effect of pretrained

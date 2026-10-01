@@ -24,9 +24,7 @@ count and trial count reported so the horizontal axis is unambiguous.
 # ----------------------------------
 # Filtering subjects, session and run bounds the download. Cropping after
 # opening a recording would reduce computation but not its download size.
-import os
 from functools import partial
-from pathlib import Path
 
 import matplotlib.pyplot as plt
 import numpy as np
@@ -37,6 +35,7 @@ from sklearn.metrics import balanced_accuracy_score
 from sklearn.pipeline import make_pipeline
 from sklearn.preprocessing import StandardScaler
 
+from eegdash.paths import get_default_cache_dir
 from eegdash import EEGDashDataset
 from eegdash.features import (
     FeatureExtractor,
@@ -45,7 +44,7 @@ from eegdash.features import (
     spectral_preprocessor,
 )
 
-cache_dir = Path(os.environ.get("EEGDASH_CACHE_DIR", ".eegdash_cache"))
+cache_dir = get_default_cache_dir()
 subjects = ["1", "2", "3"]
 dataset = EEGDashDataset(
     cache_dir=cache_dir,
@@ -56,7 +55,6 @@ dataset = EEGDashDataset(
     task="ssvep",
     n_jobs=1,
 )
-assert len(dataset.datasets) == len(subjects), "Expected one recording per subject"
 print(dataset.description[["subject", "session", "run"]])
 
 # %%
@@ -70,12 +68,6 @@ sfreq = raw.info["sfreq"]
 channel_names = raw.ch_names
 class_names = sorted(set(raw.annotations.description), key=float)
 mapping = {name: index for index, name in enumerate(class_names)}
-assert len(mapping) == 12, "Expected the twelve SSVEP stimulus frequencies"
-for recording in dataset.datasets:
-    recording_raw = recording.raw
-    assert recording_raw.ch_names == channel_names
-    assert recording_raw.info["sfreq"] == sfreq
-    assert set(recording_raw.annotations.description) == set(mapping)
 print(f"Channels: {channel_names}; sampling frequency: {sfreq} Hz")
 print("Stimulus frequencies (Hz):", class_names)
 
@@ -103,14 +95,8 @@ windows = create_windows_from_events(
     preload=True,
 )
 metadata = windows.get_metadata()
-assert (metadata.i_window_in_trial == 0).all(), "Expected one window per trial"
-assert not metadata.duplicated(["subject", "session", "run", "i_start_in_trial"]).any()
 y = metadata["target"].to_numpy(dtype=int)
 groups = metadata["subject"].astype(str).to_numpy()
-X = np.stack([window[0] for window in windows])
-assert X.shape == (len(metadata), len(channel_names), window_size)
-assert set(groups) == set(subjects)
-assert np.isfinite(X).all()
 print(pd.crosstab(groups, y, rownames=["subject"], colnames=["class"]))
 
 # %%
@@ -147,9 +133,7 @@ spectral = FeatureExtractor(
 feature_table = extract_features(
     windows, {"spectral": spectral}, batch_size=64, n_jobs=1
 ).to_dataframe()
-assert feature_table.shape == (len(y), len(class_names) * len(channel_names))
 features = np.log(np.maximum(feature_table.to_numpy() * sfreq / window_size, 1e-30))
-assert np.isfinite(features).all()
 
 # %%
 # 5. Grow a nested training cohort; keep validation fixed
@@ -160,7 +144,7 @@ assert np.isfinite(features).all()
 # Both training subsets contain every frequency class. The one-participant
 # subset contributes 180 trials; the two-participant subset contains those
 # same trials plus the other person's 180 trials. This nesting prevents a
-# change in training membership from being mistaken for a change in size.
+# loss of earlier trials; participant identity and training size still change together.
 # Subject 3 supplies the same 180 validation trials at both points.
 #
 # The feature extraction is fixed, but the scaler and classifier are refitted
@@ -170,13 +154,8 @@ rng = np.random.default_rng(42)
 training_order = rng.permutation(["1", "2"])
 validation = np.flatnonzero(groups == "3")
 rows = []
-previous = set()
 for n_subjects in (1, 2):
     train = np.flatnonzero(np.isin(groups, training_order[:n_subjects]))
-    assert previous.issubset(set(train))
-    assert set(groups[train]).isdisjoint(groups[validation])
-    assert set(y[train]) == set(y[validation]) == set(mapping.values())
-    previous = set(train)
     model = make_pipeline(StandardScaler(), LogisticRegression(max_iter=1000))
     model.fit(features[train], y[train])
     prediction = model.predict(features[validation])

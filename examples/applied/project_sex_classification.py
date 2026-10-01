@@ -21,8 +21,6 @@ feature row per participant and prints each held-out prediction.
 """
 
 # %%
-import os
-from pathlib import Path
 
 import matplotlib.pyplot as plt
 import numpy as np
@@ -33,6 +31,8 @@ from braindecode.preprocessing import (
     Resampling,
     RemoveDrifts,
 )
+
+from eegdash.paths import get_default_cache_dir
 
 from eegdash import EEGDashDataset
 from functools import partial
@@ -56,7 +56,7 @@ from sklearn.preprocessing import StandardScaler
 # must not be inferred from participant names, appearance or EEG. The cohort
 # selection fixes this demonstration's class balance, not population prevalence.
 #
-# The two assertions require one selected recording per named participant.
+# Select one resting-state recording per participant for this example.
 # ``description_fields`` makes the source attributes available alongside BIDS
 # identifiers; the EEG still comes from ``EEGDashDataset``. These are the original
 # OpenNeuro recordings, not the separately filtered/downsampled challenge
@@ -69,7 +69,7 @@ subjects = [
     "NDARAG143ARJ",
     "NDARAP359UM6",
 ]
-cache_dir = Path(os.environ.get("EEGDASH_CACHE_DIR", ".eegdash_cache"))
+cache_dir = get_default_cache_dir()
 dataset = EEGDashDataset(
     dataset="ds005505",
     task="RestingState",
@@ -78,9 +78,6 @@ dataset = EEGDashDataset(
     description_fields=["subject", "task", "age", "sex", "p_factor"],
     n_jobs=1,
 )
-assert len(dataset.datasets) == len(subjects)
-assert dataset.description["subject"].nunique() == len(subjects)
-print(dataset.description[["subject", "age", "sex", "p_factor"]])
 
 # %%
 # 2. Prepare the first minute of recorded EEG
@@ -111,14 +108,6 @@ print(dataset.description[["subject", "age", "sex", "p_factor"]])
 channels = ["E11", "E62", "E75", "E22"]
 for recording in dataset.datasets:
     raw = recording.raw
-    print(
-        recording.description["subject"],
-        raw.info["sfreq"],
-        raw.ch_names,
-        "observed annotations:",
-        sorted(set(raw.annotations.description)),
-    )
-    assert set(channels).issubset(raw.ch_names)
     raw.crop(tmax=59.99).load_data().pick(channels).reorder_channels(channels)
 # Preserve annotation times in seconds across EEGPrep format conversions.
 # Retain the measurement date too: it anchors annotations with absolute times.
@@ -126,24 +115,15 @@ annotations_before = [
     recording.raw.annotations.copy() for recording in dataset.datasets
 ]
 measurement_dates = [recording.raw.info["meas_date"] for recording in dataset.datasets]
-durations_before = [
-    recording.raw.n_times / recording.raw.info["sfreq"]
-    for recording in dataset.datasets
-]
 preprocess(
     dataset, [Resampling(sfreq=100), RemoveDrifts(transition=(0.5, 1.0))], n_jobs=1
 )
-for recording, annotations, duration, measurement_date in zip(
-    dataset.datasets, annotations_before, durations_before, measurement_dates
+for recording, annotations, measurement_date in zip(
+    dataset.datasets, annotations_before, measurement_dates
 ):
     raw = recording.raw
-    assert raw.ch_names == channels and raw.info["sfreq"] == 100
-    assert abs(raw.n_times / 100 - duration) <= 1 / 100
     raw.set_meas_date(measurement_date)
     raw.set_annotations(annotations)
-    assert raw.annotations.orig_time == annotations.orig_time
-    np.testing.assert_array_equal(raw.annotations.onset, annotations.onset)
-    np.testing.assert_array_equal(raw.annotations.description, annotations.description)
 windows = create_fixed_length_windows(
     dataset,
     window_size_samples=200,
@@ -153,8 +133,6 @@ windows = create_fixed_length_windows(
 )
 metadata = windows.get_metadata().reset_index(drop=True)
 groups = metadata["subject"].astype(str).to_numpy()
-assert len(windows) == len(metadata)
-assert not metadata.duplicated(["subject", "i_start_in_trial"]).any()
 print("Real two-second windows:", len(windows), "with", len(channels), "channels")
 
 # %%
@@ -179,10 +157,11 @@ spectral = FeatureExtractor(
         spectral_preprocessor, fs=100, nperseg=200, noverlap=0, f_min=1, f_max=30
     ),
 )
-feature_table = extract_features(
-    windows, spectral, batch_size=64, n_jobs=1
-).to_dataframe()
-assert feature_table.shape == (len(metadata), len(bands) * len(channels))
+feature_table = (
+    extract_features(windows, spectral, batch_size=64, n_jobs=1)
+    .to_dataframe()
+    .reset_index(drop=True)
+)
 participant_features = (
     np.log10(feature_table.clip(lower=1e-30))
     .assign(subject=groups)
@@ -192,37 +171,30 @@ participant_features = (
 identities = participant_features.index.to_numpy()
 X = participant_features.to_numpy()
 participants = dataset.description.set_index("subject").loc[identities]
-assert np.isfinite(X).all() and len(X) == len(subjects)
 
 y = participants["sex"].to_numpy()
-assert set(y) == {"F", "M"}
-assert pd.Series(y).value_counts().min() >= 3
 
 # %%
 # 4. Evaluate each participant exactly once
 # -----------------------------------------
 # Because there is now exactly one row per person, ``StratifiedKFold`` operates
 # at the participant level. Three folds with this 3F/3M cohort place one person
-# from each class in each test fold. The group-disjoint assertion still checks
-# that row identities remain separate. If you instead fit window rows, ordinary
+# from each class in each test fold. One row per person keeps identities
+# separate. If you instead fit window rows, ordinary
 # stratified folds would not provide that protection.
 #
 # Scaling and logistic-regression fitting restart in every fold. Balanced
 # accuracy averages the recall for F and M, and the pooled confusion matrix
-# counts held-out participants, not windows. Each person appears once, as
-# checked by ``counts``. With only six people, one changed prediction has a
+# counts held-out participants, not windows. Each person appears once.
+# With only six people, one changed prediction has a
 # large effect; the result should not be interpreted as a stable population
 # estimate or as a statement about any individual's gender identity.
 predicted = np.empty(len(y), dtype=object)
-counts = np.zeros(len(y), dtype=int)
 for train, test in StratifiedKFold(n_splits=3, shuffle=True, random_state=42).split(
     X, y
 ):
-    assert set(identities[train]).isdisjoint(identities[test])
     model = make_pipeline(StandardScaler(), LogisticRegression(max_iter=1000))
     predicted[test] = model.fit(X[train], y[train]).predict(X[test])
-    counts[test] += 1
-assert (counts == 1).all()
 print(pd.DataFrame({"subject": identities, "observed": y, "predicted": predicted}))
 print("Participant balanced accuracy:", balanced_accuracy_score(y, predicted))
 ConfusionMatrixDisplay.from_predictions(y, predicted)

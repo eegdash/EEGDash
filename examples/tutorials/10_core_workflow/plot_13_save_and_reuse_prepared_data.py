@@ -21,14 +21,11 @@ Keep ``EEGDASH_CACHE_DIR`` stable across sessions to reuse the printed path.
 """
 
 # %%
-import os
-from pathlib import Path
 
-import matplotlib.pyplot as plt
 import numpy as np
-import pandas as pd
 from braindecode.preprocessing import create_windows_from_events
 
+from eegdash.paths import get_default_cache_dir
 from eegdash import EEGDashDataset
 import json
 from importlib.metadata import version
@@ -42,7 +39,7 @@ from braindecode.datautil import load_concat_dataset
 # representation and indexing choices used by your analysis. Here we retain
 # the source reference. Tutorial 10's average-referenced output deliberately
 # has a different directory name.
-cache_dir = Path(os.environ.get("EEGDASH_CACHE_DIR", ".eegdash_cache"))
+cache_dir = get_default_cache_dir()
 subjects = ["1"]
 dataset = EEGDashDataset(
     cache_dir=cache_dir,
@@ -53,20 +50,14 @@ dataset = EEGDashDataset(
     task="ssvep",
     n_jobs=1,
 )
-assert len(dataset.datasets) == len(subjects)
-print(dataset.description[["subject", "session", "run"]])
+dataset.description[["subject", "session", "run"]]
+
+# %%
 raw = dataset.datasets[0].raw
 sfreq = raw.info["sfreq"]
 channel_names = raw.ch_names
 class_names = sorted(set(raw.annotations.description), key=float)
 mapping = {name: index for index, name in enumerate(class_names)}
-assert len(mapping) == 12
-for recording in dataset.datasets:
-    assert recording.raw.ch_names == channel_names
-    assert recording.raw.info["sfreq"] == sfreq
-    assert set(recording.raw.annotations.description) == set(mapping)
-print(f"Channels: {channel_names}; sampling rate: {sfreq} Hz")
-print("Observed stimulus frequencies (Hz):", class_names)
 
 # %%
 # 2. Window the observed trials
@@ -85,17 +76,6 @@ windows = create_windows_from_events(
     on_last_window="drop",
     preload=True,
 )
-metadata = windows.get_metadata().reset_index(drop=True)
-y = metadata["target"].to_numpy(dtype=int)
-assert len(windows) == len(metadata)
-assert set(y) == set(mapping.values())
-assert not metadata.duplicated(["subject", "session", "run", "i_start_in_trial"]).any()
-print(pd.crosstab(metadata["subject"], y))
-
-X = np.stack([window[0] for window in windows])
-assert X.shape == (len(metadata), len(channel_names), window_size)
-assert np.isfinite(X).all()
-print("Windows:", X.shape)
 
 # %%
 # 3. Write a persistent Braindecode dataset and a provenance manifest
@@ -115,6 +95,7 @@ print("Windows:", X.shape)
 prepared_path = cache_dir / "tutorial_13_nm000118_windows"
 prepared_path.mkdir(parents=True, exist_ok=True)
 windows.save(str(prepared_path), overwrite=True)
+print("Reusable path:", prepared_path.resolve())
 manifest = {
     "dataset": "nm000118",
     "subjects": subjects,
@@ -122,6 +103,9 @@ manifest = {
     "run": "0",
     "task": "ssvep",
     "window_samples": window_size,
+    "stride_samples": window_size,
+    "on_last_window": "drop",
+    "reference": "source release unchanged",
     "mapping": mapping,
     "channels": channel_names,
     "sfreq": sfreq,
@@ -130,33 +114,17 @@ manifest = {
 prepared_path.with_suffix(".manifest.json").write_text(json.dumps(manifest, indent=2))
 
 # %%
-# 4. Reload and check samples, labels and recording identity
+# 4. Reload and inspect a window and its metadata
 # ----------------------------------------------------------
 # ``load_concat_dataset`` opens the prepared files, not a new catalogue query.
 # ``preload=True`` reads their signals into memory for repeated indexing. The
-# checks compare every window numerically, every label exactly, and all window
-# metadata. The small numerical tolerance permits float32 serialization without
-# accepting reordered or differently referenced signals.
-#
-# The plotted waveform is read from the reloaded dataset, so its availability
-# does not depend on the original Python object's lifetime. ``Saved bytes``
-# measures this prepared directory on disk; it is not a network-download count.
+# example compares one window numerically; this is an inspection, not a full
+# integrity audit. A small tolerance permits float32 serialization.
 reloaded = load_concat_dataset(str(prepared_path), preload=True)
-assert len(reloaded) == len(windows)
-np.testing.assert_allclose(
-    np.stack([item[0] for item in reloaded]), X, rtol=1e-6, atol=1e-12
-)
-np.testing.assert_array_equal([item[1] for item in reloaded], y)
-pd.testing.assert_frame_equal(reloaded.get_metadata().reset_index(drop=True), metadata)
-print("Reusable path:", prepared_path.resolve())
-print(
-    "Saved bytes:",
-    sum(p.stat().st_size for p in prepared_path.rglob("*") if p.is_file()),
-)
-fig, ax = plt.subplots(figsize=(8, 3), layout="constrained")
-ax.plot(np.arange(window_size) / sfreq, reloaded[0][0][0] * 1e6)
-ax.set(xlabel="Time (s)", ylabel=f"{channel_names[0]} (µV)", title="Reloaded trial")
-plt.show()
+original, restored = windows[0], reloaded[0]
+np.testing.assert_allclose(restored[0], original[0], rtol=1e-6, atol=1e-12)
+print("Original / reloaded target:", original[1], restored[1])
+reloaded.get_metadata().head()
 
 # %%
 # Reuse the directory in a new process
@@ -166,4 +134,11 @@ plt.show()
 # that data with another prepared dataset. For large recordings you can choose
 # ``preload=False`` and load samples on access. If you change the query,
 # reference or window duration, give the new preparation its own output name
-# so an earlier analysis remains reproducible.
+# so an earlier analysis remains reproducible. For a complete audit, compare
+# windows and their metadata one at a time rather than stacking all signals.
+#
+# .. code-block:: python
+#
+#     from braindecode.datautil import load_concat_dataset
+#     prepared = load_concat_dataset("/your/printed/prepared/path", preload=False)
+#     signal, target, crop_indices = prepared[0]

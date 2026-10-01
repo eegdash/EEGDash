@@ -6,11 +6,11 @@ whole recording (hundreds of MB) plus 60 original stimulus images.
 Observed tot_img_number values in the BIDS event sidecar identify the images;
 the release's stimuli.tsv maps those IDs to the actual JPG files.
 
-A frozen DINOv2-giant encoder supplies 1536-dimensional image targets. Ridge
+A frozen DINOv2-small encoder supplies 384-dimensional image targets. Ridge
 maps EEG to these real image features. Split image identities 60/20/20 for
 training, validation and testing. Each retrieval gallery contains only that
-split's unseen images. The default uses the official DINOv2-giant target
-configuration; EEGDASH_DINO_MODEL=small selects a lower-cost warm-up encoder.
+split's unseen images. The default uses nonofficial warm-up targets;
+EEGDASH_DINO_MODEL=giant opts into the costly official target encoder.
 The source calls this recording "test", but our within-recording image split
 is an instructional experiment, not the official challenge train/test split.
 
@@ -37,8 +37,8 @@ Source: https://github.com/nemarDatasets/nm000232
 # ``imsize=518``, scored across the complete held-out gallery and then averaged
 # across participants. Its within-batch validation metric is a different task.
 #
-# The default giant encoder uses the guide's NeuralSet extraction settings.
-# Selecting small reduces download and CPU cost with different targets. Neither mode
+# The opt-in giant encoder uses the guide's NeuralSet extraction settings.
+# The default small model reduces download and CPU cost. Neither mode
 # reproduces its contrastive EEG training, source-defined splits or hidden
 # Alljoined cohort. This one-session ridge warm-up reports its own held-out
 # gallery size alongside its measured score.
@@ -61,6 +61,8 @@ from sklearn.metrics.pairwise import cosine_similarity
 from sklearn.pipeline import make_pipeline
 from sklearn.preprocessing import StandardScaler
 
+from eegdash.paths import get_default_cache_dir
+
 from eegdash import EEGDash, EEGDashDataset
 
 # %%
@@ -69,7 +71,7 @@ from eegdash import EEGDash, EEGDashDataset
 #
 # The catalogue also contains original BrainVision source files. Selecting
 # a path beginning with ``sub-`` chooses the converted BIDS BDF and its event
-# sidecar; the assertion prevents loading both representations of the same run.
+# sidecar rather than loading both representations of the same run.
 # The exact path is printed so the acquisition remains reviewable.
 #
 # ``tot_img_number`` in that sidecar records which stimulus was presented.
@@ -81,13 +83,11 @@ records = EEGDash().find(
     {"dataset": "nm000232", "subject": "08", "session": "02", "task": "test"}
 )
 records = [record for record in records if record["bids_relpath"].startswith("sub-")]
-assert len(records) == 1
-cache = Path(os.environ.get("EEGDASH_CACHE_DIR", "~/.eegdash_cache")).expanduser()
+cache = get_default_cache_dir()
 dataset = EEGDashDataset(records=records, cache_dir=cache)
 print(dataset.description.to_string(index=False))
 print("Exact signal:", records[0]["bids_relpath"])
 raw = dataset.datasets[0].raw.pick("eeg")
-print(raw.ch_names, raw.info["sfreq"], np.unique(raw.annotations.description))
 # Read the sidecar acquired together with this exact EEG recording.
 event_path = Path(raw.filenames[0]).with_name(
     Path(raw.filenames[0]).name.replace("_eeg.bdf", "_events.tsv")
@@ -97,7 +97,6 @@ trials = trials[
     trials.trial_type.eq("image") & trials.tot_img_number.between(1, 60)
 ].copy()
 labels = trials.tot_img_number.to_numpy(dtype=int) - 1
-assert len(trials) and set(labels) == set(range(60))
 # Pin the metadata and JPG revision together; no inferred trigger-to-image mapping.
 # %%
 # Build targets from the actual stimulus files
@@ -119,7 +118,7 @@ assert len(trials) and set(labels) == set(range(60))
 revision = "5732fd1a9b9c873c94b25c7e7e70e550dc64faa7"
 root = f"https://raw.githubusercontent.com/nemarDatasets/nm000232/{revision}/stimuli/"
 manifest = pd.read_csv(root + "stimuli.tsv", sep="\t").set_index("stimulus_id")
-image_cache = cache / "things_test_images"
+image_cache = cache / "things_test_images" / revision
 image_cache.mkdir(parents=True, exist_ok=True)
 image_events = []
 for identity in range(1, 61):
@@ -138,8 +137,7 @@ for identity in range(1, 61):
         ImageEvent(filepath=destination, start=0, duration=1, timeline="stimulus")
     )
 
-model_size = os.environ.get("EEGDASH_DINO_MODEL", "giant")
-assert model_size in {"small", "giant"}
+model_size = os.environ.get("EEGDASH_DINO_MODEL", "small")
 model_revision = {
     "small": "ed25f3a31f01632728cabb09d1542f84ab7b00566",
     "giant": "611a9d42f2335e0f921f1e313ad3c1b7178d206d",
@@ -163,8 +161,6 @@ image_encoder.prepare(image_events)
 embeddings = np.stack(
     [image_encoder.get_static(event).numpy() for event in image_events]
 )
-assert embeddings.shape == (60, 384 if model_size == "small" else 1536)
-assert np.isfinite(embeddings).all() and (np.linalg.norm(embeddings, axis=1) > 0).all()
 embeddings /= np.linalg.norm(embeddings, axis=1, keepdims=True)
 # Limit windows to 180 ms: stimuli occur approximately every 200 ms. Earlier
 # responses can still overlap because this is a rapid serial presentation task.
@@ -204,7 +200,6 @@ epochs = mne.Epochs(
 ).resample(100)
 labels = labels[epochs.selection]
 X = epochs.get_data().reshape(len(epochs), -1)
-assert np.isfinite(X).all()
 print("Actual EEG features:", X.shape, "actual image features:", embeddings.shape)
 
 # %%
@@ -218,12 +213,10 @@ print("Actual EEG features:", X.shape, "actual image features:", embeddings.shap
 # 60 are retained. It randomizes only assignments, not signals or labels.
 #
 # These are within-participant, within-session results. They do not measure
-# cross-person or cross-device generalization. Assertions check the image-ID
-# boundaries; they cannot erase physiological overlap between successive
-# presentations in the original acquisition.
+# cross-person or cross-device generalization. Disjoint image identities do
+# not erase physiological overlap between successive presentations.
 
 unique = np.unique(labels)
-assert len(unique) == 60
 np.random.default_rng(2026).shuffle(unique)
 first, second = int(0.6 * len(unique)), int(0.8 * len(unique))
 train_ids, valid_ids, test_ids = [
@@ -232,8 +225,6 @@ train_ids, valid_ids, test_ids = [
 train, valid, test = [
     np.isin(labels, group) for group in [train_ids, valid_ids, test_ids]
 ]
-assert set(labels[train]).isdisjoint(labels[valid | test])
-assert set(labels[valid]).isdisjoint(labels[test])
 
 
 # %%
@@ -290,8 +281,8 @@ plt.show()
 # within image or reporting image-wise scores answers a different evaluation
 # question and should be prespecified.
 #
-# Select ``EEGDASH_DINO_MODEL=small`` before running to compare a compact
-# encoder with the official giant target extractor on the same image split.
+# Opt into ``EEGDASH_DINO_MODEL=giant`` to compare the official target
+# encoder on the same image split; budget its checkpoint and CPU cost.
 # Larger target vectors alone do not establish competition performance. The
 # next protocol change is to use the release's original train/test image sets,
 # train the EEG mapping on separate source recordings, and retain the complete

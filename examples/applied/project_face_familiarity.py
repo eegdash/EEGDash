@@ -12,37 +12,41 @@ The pipeline is deliberately short: keep the EEG channels, clean the
 continuous signal with Braindecode's EEGPrep (resampling, high-pass filter,
 artifact subspace reconstruction), cut one-second windows around each face
 onset, and train ShallowFBCSPNet on 80 % of that participant's trials. The
-remaining 20 % are scored once. Both classes have the same number of trials,
-so chance is 0.5.
+remaining 20 % are scored once. Binary balanced accuracy has a constant-class
+reference of 0.5 regardless of retained class counts.
 
-Familiarity is a weak single-trial effect. Participant 018 was chosen after
-running this pipeline on all eighteen ds002718 participants: it is the one
-whose held-out accuracy stayed above chance across repeated random splits,
-while most participants sit at chance for this contrast. The same code
-separates faces from scrambled faces far more easily. The result describes
-one participant and one split, not a population claim.
+This is an outcome-selected exploratory illustration: participant 018 was
+chosen after inspecting results across eighteen participants and repeated splits.
+Consequently the held-out trials below are not unbiased evidence of decoding
+performance, even with a fresh split. Repeated face identities can occur on
+both sides: the estimand is within-participant, potentially within-stimulus
+prediction, not recognition of unseen identities or population generalization.
+A confirmatory study must prespecify participants and group original image
+identities using the source event metadata before any outcome inspection.
 
 Before you start
 ----------------
 This project assumes the core tutorials on windows and splits and the
 eyes-open/closed tutorial for EEGPrep. It runs independently and prints the
-per-epoch training table, the held-out accuracy and a learning curve.
+per-epoch training table, exploratory balanced accuracy and learning curves.
 """
 
 # %%
 # Install dependencies (uncomment when running in Colab or a fresh notebook)
 
-# !pip install eegdash braindecode eegprep scikit-learn torch numpy
+# !pip install eegdash braindecode "eegprep[eeglabio]>=0.2.23,<0.3" scikit-learn torch numpy
 
 # %%
 # Imports
-import os
-from pathlib import Path
 
 import matplotlib.pyplot as plt
 import numpy as np
 import torch
 from sklearn.model_selection import train_test_split
+from sklearn.metrics import balanced_accuracy_score
+from skorch.dataset import ValidSplit
+from eegdash.paths import get_default_cache_dir
+
 from eegdash import EEGDashDataset
 from braindecode import EEGClassifier
 from braindecode.models import ShallowFBCSPNet
@@ -62,9 +66,7 @@ SFREQ = 128
 # -----------------------------------
 # One subject of ds002718 (Wakeman & Henson face recognition), fetched by EEGDash into a local cache.
 ds = EEGDashDataset(
-    cache_dir=Path(
-        os.environ.get("EEGDASH_CACHE_DIR", "~/.eegdash_cache")
-    ).expanduser(),
+    cache_dir=get_default_cache_dir(),
     dataset="ds002718",
     subject="018",
     task="FaceRecognition",
@@ -73,14 +75,13 @@ ds = EEGDashDataset(
 # %%
 # 2. Clean the continuous signal with EEGPrep
 # -------------------------------------------
-# Continuous preprocessing on the raw data: EEG channels only, V -> uV, then EEGPrep (resample, high-pass, ASR).
+# EEGPrep calibrates on this entire unlabelled recording before splitting.
+# This is offline/transductive cleaning, not a train-only or causal protocol.
+# Keep volts through EEGPrep; convert the resulting windows for the network.
 preprocess(
     ds,
     [
         Preprocessor("pick", picks="eeg"),
-        Preprocessor(
-            lambda x: x * 1e6
-        ),  # V -> uV: the network does not train on V-scale inputs
         EEGPrep(
             resample_to=SFREQ,
             highpass_frequencies=(
@@ -111,8 +112,8 @@ windows = create_windows_from_events(
     trial_stop_offset_samples=int(0.8 * SFREQ),
     mapping=mapping,
 )
-X = np.stack([x for x, _, _ in windows])
-y = windows.get_metadata()["target"].to_numpy()
+X = (np.stack([x for x, _, _ in windows]) * 1e6).astype(np.float32)
+y = windows.get_metadata()["target"].to_numpy(dtype=np.int64)
 X_train, X_test, y_train, y_test = train_test_split(
     X, y, test_size=0.2, stratify=y, random_state=0
 )
@@ -129,6 +130,9 @@ model = ShallowFBCSPNet(n_chans=X.shape[1], n_outputs=2, n_times=X.shape[2])
 clf = EEGClassifier(
     model,
     optimizer=torch.optim.AdamW,
+    train_split=ValidSplit(0.2, stratified=True, random_state=0),
+    batch_size=64,
+    lr=0.001,
 )
 print(model)
 clf.fit(X_train, y_train, epochs=30)
@@ -136,20 +140,15 @@ clf.fit(X_train, y_train, epochs=30)
 # %%
 # 5. Score the held-out trials and look at the learning curve
 # -----------------------------------------------------------
-# Accuracy on the held-out trials. Classes are balanced, so chance is 0.5.
-print(f"test accuracy: {clf.score(X_test, y_test):.3f} (chance 0.5)")
-
-# Learning curve from the skorch history: training loss and validation accuracy per epoch
+# Score once after the fixed training budget; selection bias remains.
+predicted = clf.predict(X_test)
+print("Exploratory balanced accuracy:", balanced_accuracy_score(y_test, predicted))
+print("Constant-class balanced-accuracy reference: 0.5")
 history = clf.history
-fig, ax = plt.subplots(figsize=(6, 3.5))
-ax.plot(history[:, "epoch"], history[:, "train_loss"], marker="o", label="train loss")
-ax.plot(
-    history[:, "epoch"],
-    history[:, "valid_acc"],
-    marker="s",
-    label="validation accuracy",
-)
-ax.axhline(0.5, ls="--", color="gray")  # chance level for the accuracy curve
-ax.set(xlabel="epoch", ylim=(0, 1))
-ax.legend()
+fig, axes = plt.subplots(1, 2, figsize=(9, 3.5), layout="constrained")
+axes[0].plot(history[:, "epoch"], history[:, "train_loss"], marker="o")
+axes[0].set(xlabel="Epoch", ylabel="Training loss")
+axes[1].plot(history[:, "epoch"], history[:, "valid_acc"], marker="s")
+axes[1].axhline(0.5, ls="--", color="gray")
+axes[1].set(xlabel="Epoch", ylabel="Development validation accuracy", ylim=(0, 1))
 plt.show()

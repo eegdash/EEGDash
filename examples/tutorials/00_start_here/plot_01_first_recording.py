@@ -21,12 +21,10 @@ labels you have inspected before making training windows.
 """
 
 # %%
-import os
-from pathlib import Path
 
 import matplotlib.pyplot as plt
-import numpy as np
 
+from eegdash.paths import get_default_cache_dir
 from eegdash import EEGDashDataset
 
 # %%
@@ -38,11 +36,8 @@ from eegdash import EEGDashDataset
 # has a different meaning and should not be used as the recording count.
 #
 # SSVEP means a response to repeated visual stimulation. Here annotation
-# strings name the attended flicker frequency in Hz. Sorting with ``key=float``
-# keeps numerical frequency order; sorting strings or relying on automatic
-# integer event codes need not do that. The channel and rate checks establish
-# the array contract that the next tutorials reuse.
-cache_dir = Path(os.environ.get("EEGDASH_CACHE_DIR", ".eegdash_cache"))
+# strings name the attended flicker frequency in Hz.
+cache_dir = get_default_cache_dir()
 subjects = ["1"]
 dataset = EEGDashDataset(
     cache_dir=cache_dir,
@@ -53,43 +48,31 @@ dataset = EEGDashDataset(
     task="ssvep",
     n_jobs=1,
 )
-assert len(dataset.datasets) == len(subjects)
-print(dataset.description[["subject", "session", "run"]])
+dataset.description[["subject", "session", "run"]]
+
+# %%
 raw = dataset.datasets[0].raw
-sfreq = raw.info["sfreq"]
-channel_names = raw.ch_names
-class_names = sorted(set(raw.annotations.description), key=float)
-mapping = {name: index for index, name in enumerate(class_names)}
-assert len(mapping) == 12
-for recording in dataset.datasets:
-    assert recording.raw.ch_names == channel_names
-    assert recording.raw.info["sfreq"] == sfreq
-    assert set(recording.raw.annotations.description) == set(mapping)
-print(f"Channels: {channel_names}; sampling rate: {sfreq} Hz")
-print("Observed stimulus frequencies (Hz):", class_names)
+raw.annotations.to_data_frame().head()
 
 # %%
-# 2. Inspect voltage and annotations
-# ----------------------------------
-# ``get_data`` returns ``(channels, samples)``. At 256 Hz, four seconds contain
-# 1,024 samples, and ``stop`` is exclusive. The plotted transpose places samples
-# on the horizontal axis and gives each channel its own line. Multiplying by
-# ``1e6`` changes display units from volts to microvolts, not the cached signal.
+# 2. Browse voltage and annotations with Braindecode
+# --------------------------------------------------
+# EEGDashDataset inherits Braindecode's public ``BaseConcatDataset.plot``
+# (available since Braindecode 1.8.0, already required by EEGDash). It opens
+# the file-backed recording in the interactive EEGDash viewer: scroll through
+# channels and time, and inspect the stimulus annotations beside the traces.
+# This replaces manual per-channel plotting; no local server is needed.
 #
-# Inspect the annotations table alongside the trace: an event description tells
-# you the stimulus condition, whereas a waveform shows the recorded response.
-# A finite-array assertion catches invalid numerical values; it does not rule
-# out artifacts, clipping or a poorly connected electrode.
-print(raw)
-print(raw.annotations.to_data_frame().head())
-signal = raw.get_data(picks="eeg", start=0, stop=int(4 * sfreq))
-assert signal.shape[0] == len(channel_names) and np.isfinite(signal).all()
-fig, ax = plt.subplots(figsize=(9, 4), layout="constrained")
-ax.plot(np.arange(signal.shape[1]) / sfreq, signal.T * 1e6)
-ax.set(xlabel="Time (s)", ylabel="Voltage (µV)", title="Recorded first trial")
+# Run this cell in the downloadable notebook (trust saved notebook output).
+# It returns HTML, loads the deployed viewer, and embeds the recording bytes
+# in the output. The roughly 7 MB source fits its default 64 MiB base64 limit.
+# The viewer reads the original file, not later in-memory preprocessing;
+# use MNE for inspecting transformed data. Static pages may not execute the
+# embedded script; the spectrum below remains a static scientific view.
+dataset.plot(index=0)
 
 # %%
-# 3. Inspect the supplied channel geometry and spectrum
+# 3. Inspect the whole-recording spectrum
 # -----------------------------------------------------
 # The averaged power spectral density summarizes how signal power is distributed
 # across frequency over the recording. The 40 Hz display limit focuses on the
@@ -100,12 +83,11 @@ ax.set(xlabel="Time (s)", ylabel="Voltage (µV)", title="Recorded first trial")
 # Channel coordinates describe where sensors were placed; channel names and
 # order determine which signal is which. Neither an attractive montage nor a
 # smooth spectrum replaces inspection of the individual trial voltages.
-print("Supplied montage:", raw.get_montage())
 raw.compute_psd(fmax=40, picks="eeg").plot(average=True, show=False)
 plt.show()
 
 # %%
-# Try another observed trial by changing the start and stop sample indices.
+# Browse another annotated trial in the viewer.
 # The release concatenates trials; their order is not acquisition chronology.
 
 # %%

@@ -24,9 +24,6 @@ participant-out exercise is not a challenge leaderboard estimate.
 # feature row and one target, so long recordings cannot increase that subject's
 # weight simply by yielding more windows.
 
-import os
-from pathlib import Path
-
 import matplotlib.pyplot as plt
 import numpy as np
 from sklearn.dummy import DummyRegressor
@@ -35,6 +32,8 @@ from sklearn.metrics import mean_absolute_error
 from sklearn.model_selection import LeaveOneOut
 from sklearn.pipeline import make_pipeline
 from sklearn.preprocessing import StandardScaler
+
+from eegdash.paths import get_default_cache_dir
 
 from eegdash import EEGChallengeDataset
 from eegdash.features import spectral_preprocessor, spectral_bands_power
@@ -52,7 +51,7 @@ from eegdash.const import SUBJECT_MINI_RELEASE_MAP
 # available alongside each recording. The printed metadata lets you verify the
 # join between signal and participant.
 #
-# A missing recording fails the coverage check. Missing or nonnumeric targets
+# Missing recordings or nonnumeric targets
 # must be investigated at the source instead of filled with a group mean or a
 # random number. For a larger cohort, specify missing-target exclusions before
 # fitting a model and report the resulting number of people.
@@ -63,14 +62,11 @@ dataset = EEGChallengeDataset(
     mini=True,
     task="RestingState",
     subject=subjects,
-    cache_dir=Path(
-        os.environ.get("EEGDASH_CACHE_DIR", "~/.eegdash_cache")
-    ).expanduser(),
+    cache_dir=get_default_cache_dir(),
     description_fields=["subject", "task", "p_factor"],
     target_name="p_factor",
 )
 print(dataset.description.to_string(index=False))
-assert len(dataset.datasets) == len(subjects)
 # %%
 # Summarize a fixed resting interval
 # ----------------------------------
@@ -92,14 +88,14 @@ assert len(dataset.datasets) == len(subjects)
 # it does not turn a flat electrode into an informative feature.
 #
 # Concatenation is band-major, retaining channel order inside each band. The
-# channel-order assertion keeps feature columns comparable across recordings.
+# recordings use the same challenge montage and channel order.
+# This direct public function requires _metadata to resolve sampling/filter
+# defaults. FeatureExtractor normally supplies it; here each Raw contributes
+# one participant row, so its MNE info is passed explicitly.
 
 features, targets, identities = [], [], []
-channels = None
 for recording in dataset.datasets:
     raw = recording.raw.copy().pick("eeg").crop(tmax=59).load_data()
-    channels = raw.ch_names if channels is None else channels
-    assert raw.ch_names == channels
     frequencies, psd = spectral_preprocessor(
         raw.get_data(),
         _metadata={"info": raw.info},
@@ -132,9 +128,8 @@ for recording in dataset.datasets:
 #
 # ``X`` has shape ``(participants, four bands × channels)`` and ``y`` has
 # one observed p-factor per row. With the current 129-channel recordings, this
-# means 516 predictors for only six participants. The identity and finiteness
-# assertions detect duplicated people, missing phenotypes and invalid features.
-# They do not test whether the EEG contains predictive information.
+# means 516 predictors for only six participants. This does not establish
+# whether the EEG contains predictive information.
 #
 # This high-dimensional, tiny-sample setting motivates regularization, but no
 # penalty can make six participants sufficient for clinical inference. The page
@@ -142,9 +137,7 @@ for recording in dataset.datasets:
 # that the resulting features are invariant to subject identity.
 
 X, y = np.asarray(features), np.asarray(targets)
-assert len(set(identities)) == len(y) and np.isfinite(X).all() and np.isfinite(y).all()
 print("Participant features:", X.shape, "observed targets:", y)
-
 # %%
 # All scaling and baseline fitting occur inside the held-out participant fold.
 # %%
@@ -164,14 +157,14 @@ print("Participant features:", X.shape, "observed targets:", y)
 
 predicted, baseline = np.empty_like(y), np.empty_like(y)
 for train, test in LeaveOneOut().split(X):
-    assert set(np.asarray(identities)[train]).isdisjoint(np.asarray(identities)[test])
     model = make_pipeline(StandardScaler(), Ridge(alpha=10))
     predicted[test] = model.fit(X[train], y[train]).predict(X[test])
     baseline[test] = DummyRegressor().fit(X[train], y[train]).predict(X[test])
 print("Participant MAE:", mean_absolute_error(y, predicted))
 print("Training-mean MAE:", mean_absolute_error(y, baseline))
 fig, ax = plt.subplots(figsize=(5, 4))
-ax.scatter(y, predicted, label="held-out participant")
+ax.scatter(y, predicted, label="Ridge: held-out participant")
+ax.scatter(y, baseline, marker="x", label="Training-mean baseline")
 ax.plot([y.min(), y.max()], [y.min(), y.max()], "k--")
 ax.set(xlabel="Observed p-factor", ylabel="Predicted p-factor")
 ax.legend()

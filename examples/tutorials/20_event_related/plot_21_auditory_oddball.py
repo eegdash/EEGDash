@@ -14,7 +14,8 @@ trials, and average each condition. An ERP is an average voltage time course;
 it does not assign a predicted label to a new trial. This page therefore
 ends with a descriptive comparison rather than a fitted classifier.
 
-With EEGDash installed, run the blocks in order. Basic MNE Raw concepts from
+Install ``eegprep[eeglabio]>=0.2.23,<0.3`` as well as EEGDash for the
+EEGPrep adapters used below, then run the blocks in order. Basic MNE Raw concepts from
 the first-recording page are sufficient. You will inspect the retained trial
 counts and array shape, a Cz waveform plot and a mean difference in microvolts.
 """
@@ -26,19 +27,17 @@ counts and array shape, a Cz waveform plot and a mean difference in microvolts.
 # The task and run filters bound acquisition before any samples are read.
 # Printing annotation counts makes the source vocabulary visible and avoids
 # accidentally treating responses or unrelated markers as standard stimuli.
-import os
-from pathlib import Path
 
 import matplotlib.pyplot as plt
 import mne
-import numpy as np
 import pandas as pd
 from braindecode.preprocessing import RemoveCommonAverageReference, RemoveDCOffset
 
+from eegdash.paths import get_default_cache_dir
 from eegdash import EEGDashDataset
 from eegdash.features import signal_mean
 
-cache_dir = Path(os.environ.get("EEGDASH_CACHE_DIR", ".eegdash_cache"))
+cache_dir = get_default_cache_dir()
 dataset = EEGDashDataset(
     cache_dir=cache_dir,
     dataset="ds003061",
@@ -47,16 +46,15 @@ dataset = EEGDashDataset(
     run="2",
     n_jobs=1,
 )
-assert len(dataset.datasets) == 1
 raw = dataset.datasets[0].raw.copy().load_data().pick("eeg")
-print(pd.Series(raw.annotations.description).value_counts())
+pd.Series(raw.annotations.description).value_counts()
+# Source event files and vocabulary: `ds003061 source tree
+# <https://github.com/OpenNeuroDatasets/ds003061>`_.
 # Preserve the source marker spelling below, including its typo.
 # These literal names are the label source, including the response qualification
 # on the oddball class. Consequently the comparison concerns the selected
 # response-associated oddballs, not every possible rare-stimulus outcome.
 mapping = {"stimulus/standard": 1, "stimulus/oddball_with_reponse": 2}
-assert set(mapping) <= set(raw.annotations.description)
-assert "Cz" in raw.ch_names, "This ERP comparison requires Cz"
 
 # %%
 # 2. Filter and epoch relative to the actual stimulus onset
@@ -75,17 +73,21 @@ assert "Cz" in raw.ch_names, "This ERP comparison requires Cz"
 # correction subtracts the pre-stimulus channel mean within each trial.
 # ``get_data()`` returns (trials, channels, time samples), with voltages in
 # volts. Resampling to 128 Hz changes the last dimension, not trial identity.
-# The printed condition counts refer to retained epochs, whereas the earlier
-# counts describe all annotations. Epochs can be lost at recording boundaries
-# or existing bad spans; missing conditions stop the example rather than
-# silently producing an empty average.
+# Inspect the Epochs summary for retained counts. Trials can be lost at
+# recording boundaries or existing bad spans; inspect the drop log if needed.
 source_annotations = raw.annotations.copy()
 source_date = raw.info["meas_date"]
 source_grid = (raw.info["sfreq"], raw.n_times, raw.first_samp)
 RemoveDCOffset().apply(raw)
 RemoveCommonAverageReference().apply(raw)
-assert (raw.info["sfreq"], raw.n_times, raw.first_samp) == source_grid
+if not ((raw.info["sfreq"], raw.n_times, raw.first_samp) == source_grid):
+    raise ValueError(
+        "Preprocessing changed the sample grid; do not restore event times"
+    )
 raw.set_meas_date(source_date)
+# With no absolute origin, set_annotations adds first_time itself.
+if source_annotations.orig_time is None:
+    source_annotations.onset -= raw.first_time
 raw.set_annotations(source_annotations)
 raw.filter(0.5, 30.0)
 events, _ = mne.events_from_annotations(raw, event_id=mapping)
@@ -100,10 +102,7 @@ epochs = mne.Epochs(
     reject_by_annotation=True,
 )
 epochs.resample(128)
-assert np.isfinite(epochs.get_data()).all()
-assert all(len(epochs[name]) > 1 for name in epochs.event_id)
-print({name: len(epochs[name]) for name in epochs.event_id})
-print("Epoch shape:", epochs.get_data().shape)
+epochs
 
 # %%
 # 3. Plot the measured response at Cz

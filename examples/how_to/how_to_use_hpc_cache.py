@@ -20,11 +20,10 @@ session 0train, run 0. This page stages inputs, not trained model checkpoints.
 import os
 from pathlib import Path
 
-import numpy as np
-
 from eegdash import EEGDashDataset
+from eegdash.paths import get_default_cache_dir
 
-cache_dir = Path(os.environ.get("EEGDASH_CACHE_DIR", ".eegdash_cache"))
+cache_dir = get_default_cache_dir()
 query = dict(dataset="nm000135", subject="1", session="0train", run="0", task="imagery")
 
 import shutil
@@ -32,13 +31,11 @@ import tempfile
 
 # %%
 # Download before entering the temporary-directory context so acquisition
-# failure cannot be mistaken for a compute-node problem. The first 250 samples
-# at 250 Hz form a one-second reference in volts, with one row per channel.
+# failure cannot be mistaken for a compute-node problem.
 # The source remains on persistent storage after the local copy is removed.
 persistent = EEGDashDataset(cache_dir=cache_dir, **query, n_jobs=1)
 persistent.download_all(n_jobs=1)
-reference = persistent.datasets[0].raw.get_data(start=0, stop=250)
-
+source = cache_dir / "nm000135"
 # %%
 # 2. Stage into a private directory on job-local storage
 # ------------------------------------------------------
@@ -57,14 +54,12 @@ reference = persistent.datasets[0].raw.get_data(start=0, stop=250)
 scratch = os.environ.get("SLURM_TMPDIR")
 with tempfile.TemporaryDirectory(prefix="eegdash-stage-", dir=scratch) as job_dir:
     local_cache = Path(job_dir)
-    shutil.copytree(cache_dir / "nm000135", local_cache / "nm000135")
+    shutil.copytree(source, local_cache / "nm000135")
     staged = EEGDashDataset(cache_dir=local_cache, **query, download=False, n_jobs=1)
-    assert len(staged.datasets) == 1
     raw = staged.datasets[0].raw
-    np.testing.assert_array_equal(reference, raw.get_data(start=0, stop=250))
     print("Staged recording:", raw)
     print("Local cache:", local_cache)
-    # Execute the training/feature extraction step here, while local files exist.
+    # Execute analysis here and return derived outputs to persistent storage.
 
 # %%
 # 3. Apply the same pattern in a batch job
@@ -77,8 +72,9 @@ with tempfile.TemporaryDirectory(prefix="eegdash-stage-", dir=scratch) as job_di
 
 # 4. Check the storage boundary before scaling up
 # -----------------------------------------------
-# The equality assertion verifies that offline reopening of the staged copy
-# returns the same first-second samples. The displayed local path is valid only
+# Opening verifies local discovery and the reader, not file integrity. Use
+# checksums when transferring files between hosts.
+# The displayed local path is valid only
 # inside the with block. Put feature extraction or training there and copy its
 # outputs to persistent storage before leaving the block, even if the shell
 # job continues afterward.

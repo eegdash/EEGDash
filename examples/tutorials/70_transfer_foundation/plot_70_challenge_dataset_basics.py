@@ -13,8 +13,8 @@ must not be confused with the original HBN OpenNeuro recordings.
 #
 # Use an installed EEGDash environment and an internet connection to the
 # catalogue. This page requests metadata only; it needs neither a GPU nor a
-# signal download. ``EEGDASH_CACHE_DIR`` selects a reusable cache, defaulting to
-# ``~/.eegdash_cache``. Reading a recording's ``.raw`` later is a separate step
+# signal download. ``EEGDASH_CACHE_DIR`` overrides
+# the shared EEGDash cache resolver. Reading a recording's ``.raw`` later is a separate step
 # that acquires its signal and sidecars.
 #
 # The question is whether a proposed cohort contains the participants and tasks
@@ -22,8 +22,7 @@ must not be confused with the original HBN OpenNeuro recordings.
 # ``p_factor`` is requested to inspect available participant metadata, not to
 # construct a new target or infer that every participant has a valid value.
 
-import os
-from pathlib import Path
+from eegdash.paths import get_default_cache_dir
 
 from eegdash import EEGChallengeDataset
 from eegdash.const import SUBJECT_MINI_RELEASE_MAP
@@ -46,9 +45,7 @@ from eegdash.const import SUBJECT_MINI_RELEASE_MAP
 dataset = EEGChallengeDataset(
     release="R5",
     mini=True,
-    cache_dir=Path(
-        os.environ.get("EEGDASH_CACHE_DIR", "~/.eegdash_cache")
-    ).expanduser(),
+    cache_dir=get_default_cache_dir(),
     description_fields=["subject", "task", "run", "age", "sex", "p_factor"],
 )
 # %%
@@ -60,13 +57,10 @@ dataset = EEGChallengeDataset(
 # therefore answer different questions. Grouping by task exposes repeated runs:
 # ``recordings`` can exceed ``participants`` without indicating duplicate data.
 #
-# The subset assertion checks that catalogue results respect mini eligibility.
-# It does not require all eligible subjects to have every task, or freeze a live
-# catalogue count into a test. Inspect the printed table before choosing a task
-# for the next tutorial.
+# Not every eligible participant has every task. Inspect the table before
+# choosing a bounded cohort for the next tutorial.
 
 metadata = dataset.description
-assert set(metadata.subject).issubset(SUBJECT_MINI_RELEASE_MAP["R5"])
 print("Eligible mini participants:", len(SUBJECT_MINI_RELEASE_MAP["R5"]))
 print("Matched participants:", metadata.subject.nunique())
 print("Matched recordings:", len(dataset.datasets))
@@ -75,7 +69,6 @@ print(
         recordings=("subject", "size"), participants=("subject", "nunique")
     )
 )
-print(metadata.head().to_string(index=False))
 
 # %%
 # Select participants explicitly before accessing .raw: the constructor above

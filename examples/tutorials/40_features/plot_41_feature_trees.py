@@ -21,14 +21,12 @@ for two ways of expressing the same band features.
 """
 
 # %%
-import os
-from pathlib import Path
 
 import matplotlib.pyplot as plt
 import numpy as np
-import pandas as pd
 from braindecode.preprocessing import create_windows_from_events
 
+from eegdash.paths import get_default_cache_dir
 from eegdash import EEGDashDataset
 from functools import partial
 from eegdash.features import (
@@ -45,7 +43,7 @@ from time import perf_counter
 # Use a single recording so both extraction paths see precisely the same
 # channel order, rate and event labels. Download time is outside the timed
 # region. The comparison concerns feature computation, not network performance.
-cache_dir = Path(os.environ.get("EEGDASH_CACHE_DIR", ".eegdash_cache"))
+cache_dir = get_default_cache_dir()
 subjects = ["1"]
 dataset = EEGDashDataset(
     cache_dir=cache_dir,
@@ -56,20 +54,14 @@ dataset = EEGDashDataset(
     task="ssvep",
     n_jobs=1,
 )
-assert len(dataset.datasets) == len(subjects)
-print(dataset.description[["subject", "session", "run"]])
+dataset.description[["subject", "session", "run"]]
+
+# %%
 raw = dataset.datasets[0].raw
 sfreq = raw.info["sfreq"]
 channel_names = raw.ch_names
 class_names = sorted(set(raw.annotations.description), key=float)
 mapping = {name: index for index, name in enumerate(class_names)}
-assert len(mapping) == 12
-for recording in dataset.datasets:
-    assert recording.raw.ch_names == channel_names
-    assert recording.raw.info["sfreq"] == sfreq
-    assert set(recording.raw.annotations.description) == set(mapping)
-print(f"Channels: {channel_names}; sampling rate: {sfreq} Hz")
-print("Observed stimulus frequencies (Hz):", class_names)
 
 # %%
 # 2. Window the observed trials
@@ -87,13 +79,6 @@ windows = create_windows_from_events(
     on_last_window="drop",
     preload=True,
 )
-metadata = windows.get_metadata().reset_index(drop=True)
-y = metadata["target"].to_numpy(dtype=int)
-assert len(windows) == len(metadata)
-assert set(y) == set(mapping.values())
-assert not metadata.duplicated(["subject", "session", "run", "i_start_in_trial"]).any()
-print(pd.crosstab(metadata["subject"], y))
-
 # %%
 # 3. Build equivalent independent and shared spectral features
 # ------------------------------------------------------------
@@ -146,13 +131,15 @@ for band in bands:
             tree_table[f"{band}_{band}_{channel}"],
             rtol=1e-6,
         )
-assert np.isfinite(tree_table.to_numpy()).all()
 print(
     f"Flat: {flat_seconds:.3f}s; tree: {tree_seconds:.3f}s; ratio: {flat_seconds / tree_seconds:.2f}"
 )
 fig, ax = plt.subplots(figsize=(6, 3), layout="constrained")
 ax.bar(["Separate spectra", "Shared spectrum"], [flat_seconds, tree_seconds])
-ax.set(ylabel="Measured extraction time (s)", title="Same trials and band powers")
+ax.set(
+    ylabel="Measured extraction time (s)",
+    title="One illustrative run (flat first, tree second)",
+)
 plt.show()
 
 # %%

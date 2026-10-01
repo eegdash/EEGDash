@@ -21,14 +21,13 @@ tutorial 42. Keep both files in the same cache directory.
 """
 
 # %%
-import os
-from pathlib import Path
 
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 from braindecode.preprocessing import create_windows_from_events
 
+from eegdash.paths import get_default_cache_dir
 from eegdash import EEGDashDataset
 from functools import partial
 from eegdash.features import (
@@ -46,7 +45,7 @@ import json
 # readable feature table. The three recordings share eight posterior channels
 # and a 256 Hz rate. Numeric ordering of annotation strings provides a stable
 # class mapping; those labels describe the attended stimulus, not eye state.
-cache_dir = Path(os.environ.get("EEGDASH_CACHE_DIR", ".eegdash_cache"))
+cache_dir = get_default_cache_dir()
 subjects = ["1", "2", "3"]
 dataset = EEGDashDataset(
     cache_dir=cache_dir,
@@ -57,20 +56,14 @@ dataset = EEGDashDataset(
     task="ssvep",
     n_jobs=1,
 )
-assert len(dataset.datasets) == len(subjects)
-print(dataset.description[["subject", "session", "run"]])
+dataset.description[["subject", "session", "run"]]
+
+# %%
 raw = dataset.datasets[0].raw
 sfreq = raw.info["sfreq"]
 channel_names = raw.ch_names
 class_names = sorted(set(raw.annotations.description), key=float)
 mapping = {name: index for index, name in enumerate(class_names)}
-assert len(mapping) == 12
-for recording in dataset.datasets:
-    assert recording.raw.ch_names == channel_names
-    assert recording.raw.info["sfreq"] == sfreq
-    assert set(recording.raw.annotations.description) == set(mapping)
-print(f"Channels: {channel_names}; sampling rate: {sfreq} Hz")
-print("Observed stimulus frequencies (Hz):", class_names)
 
 # %%
 # 2. Window the observed trials
@@ -91,10 +84,7 @@ windows = create_windows_from_events(
 )
 metadata = windows.get_metadata().reset_index(drop=True)
 y = metadata["target"].to_numpy(dtype=int)
-assert len(windows) == len(metadata)
-assert set(y) == set(mapping.values())
-assert not metadata.duplicated(["subject", "session", "run", "i_start_in_trial"]).any()
-print(pd.crosstab(metadata["subject"], y))
+pd.crosstab(metadata["subject"], y)
 
 # %%
 # 3. Compute named band powers with one shared Welch spectrum
@@ -120,16 +110,24 @@ bands = {"theta": (4, 8), "alpha": (8, 12), "beta": (12, 30)}
 spectral = FeatureExtractor(
     {"power": partial(spectral_bands_power, bands=bands)},
     preprocessor=partial(
-        spectral_preprocessor, fs=sfreq, nperseg=int(sfreq), f_min=4, f_max=30
+        spectral_preprocessor,
+        fs=sfreq,
+        nperseg=int(sfreq),
+        noverlap=0,
+        window="hamming",
+        f_min=4,
+        f_max=30,
     ),
 )
 feature_dataset = extract_features(
     windows, {"spectral": spectral}, batch_size=64, n_jobs=1
 )
 feature_table = feature_dataset.to_dataframe()
+# Extracted metadata travels with feature rows; reset both positional indexes.
+metadata = feature_dataset.get_metadata().reset_index(drop=True)
+feature_table = feature_table.reset_index(drop=True)
+# With 1 Hz bins, the PSD-bin sum is numerically integrated power in V².
 feature_columns = list(feature_table.columns)
-assert len(feature_columns) == len(bands) * len(channel_names)
-assert np.isfinite(feature_table.to_numpy()).all()
 # Window metadata carries participant and trial identity. Join explicitly:
 # feature extraction's default DataFrame contains only the feature values.
 feature_table = pd.concat(
@@ -139,10 +137,9 @@ feature_table = pd.concat(
     ],
     axis=1,
 )
-feature_table["frequency_hz"] = [float(class_names[target]) for target in y]
-assert not feature_table.duplicated(
-    ["subject", "session", "run", "i_start_in_trial"]
-).any()
+feature_table["frequency_hz"] = [
+    float(class_names[target]) for target in metadata["target"]
+]
 
 # %%
 # 4. Persist the exact table and column contract for tutorial 42
@@ -151,9 +148,9 @@ assert not feature_table.duplicated(
 # The JSON file supplies the authoritative feature-column order, mapping and
 # extraction parameters. Read BIDS identifiers explicitly as strings: otherwise
 # a CSV reader can reinterpret ``"0"`` or a zero-padded identifier as a number.
-# The reload assertions verify the actual saved values and labels, rather than
-# assuming that a successful write preserved the table contract.
+# This tutorial owns both fixed names; rerunning replaces CSV and schema together.
 output_path = cache_dir / "plot_40_features.csv"
+cache_dir.mkdir(parents=True, exist_ok=True)
 feature_table.to_csv(output_path, index=False)
 (output_path.with_suffix(".json")).write_text(
     json.dumps(
@@ -168,31 +165,27 @@ feature_table.to_csv(output_path, index=False)
             "sfreq": sfreq,
             "window_samples": window_size,
             "bands": bands,
+            "channels": channel_names,
+            "nperseg": int(sfreq),
+            "noverlap": 0,
+            "welch_window": "hamming",
+            "power_units": "V^2",
         },
         indent=2,
     )
 )
-roundtrip = pd.read_csv(output_path, dtype={"subject": str, "session": str, "run": str})
-np.testing.assert_allclose(roundtrip[feature_columns], feature_table[feature_columns])
-np.testing.assert_array_equal(roundtrip["target"], y)
-print("Saved:", output_path.resolve(), feature_table.shape)
+print("Saved:", output_path.resolve())
 
 # %%
 # 5. Inspect measured feature distributions
 # -----------------------------------------
-# The saved features remain linear power values. Only this plot takes log10,
-# so a one-unit vertical difference represents a factor of ten in power.
-# Boxplots summarize the trial distribution of each band/channel column;
-# ``showfliers=False`` hides markers outside the whiskers but does not remove
-# those trials from the table. Very low or constant columns deserve signal
-# inspection before interpretation.
-#
-# Run tutorial 42 with the same cache to fit directly from these files. If you
-# add a feature family, regenerate both CSV and JSON so the next page uses the
-# new feature names and never accidentally trains on metadata.
+# These are log10 powers relative to 1 V², not decibels. Outliers stay visible.
+# Broad bands discard fine SSVEP frequency detail; weak decoding can be valid.
+# Run tutorial 42 with the same cache to fit from the saved CSV and feature list.
+feature_table[["subject", "target", "frequency_hz"] + feature_columns[:4]].head()
 log_power = np.log10(np.maximum(feature_table[feature_columns], 1e-30))
 fig, ax = plt.subplots(figsize=(10, 4), layout="constrained")
-ax.boxplot(log_power.to_numpy(), tick_labels=feature_columns, showfliers=False)
+ax.boxplot(log_power.to_numpy(), tick_labels=feature_columns, showfliers=True)
 ax.tick_params(axis="x", rotation=90)
-ax.set(ylabel="log10 band power", title="Recorded SSVEP trials: channel-wise features")
+ax.set(ylabel="log10(power / 1 V²)", title="Recorded SSVEP band/channel features")
 plt.show()

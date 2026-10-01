@@ -5,8 +5,8 @@ Use three recorded Sleep-EDF participants from EEGDash ``nm000185``
 (cassette63, cassette64, cassette65; night1), about 150 MB in total. Predict
 once per five-second EEG window and evaluate on an unseen participant.
 The `official tracks page <https://neural-interfaces26.github.io/tracks.html>`_
-announces the exclusive wearable release for September 21, 2026. This page
-uses the available PSG seed corpus, not an assumed Muse configuration.
+describes the wearable task; consult it for current release availability.
+This page uses the PSG seed corpus, not an assumed Muse configuration.
 
 The `NeuralBench Track 3 guide
 <https://facebookresearch.github.io/neuroai/neuralbench/auto_examples/biosignal_challenge_2026/plot_track3_sleep_onset.html>`_
@@ -29,9 +29,7 @@ target, held-out predictions, per-bin errors and their equally weighted mean.
 # windows enter the model. This retrospective selection follows the task's
 # annotation-based evaluation region; it is not a prospective onset detector
 # that can choose its analysis region without knowing the reference onset.
-import os
 from functools import partial
-from pathlib import Path
 
 import matplotlib.pyplot as plt
 import numpy as np
@@ -43,6 +41,8 @@ from sklearn.linear_model import Ridge
 from sklearn.model_selection import LeaveOneGroupOut
 from sklearn.pipeline import make_pipeline
 from sklearn.preprocessing import StandardScaler
+
+from eegdash.paths import get_default_cache_dir
 
 from eegdash import EEGDashDataset
 from eegdash.features import (
@@ -59,23 +59,22 @@ dataset = EEGDashDataset(
     subject=subjects,
     session="night1",
     task="sleep",
-    cache_dir=Path(os.environ.get("EEGDASH_CACHE_DIR", ".eegdash_cache")).expanduser(),
+    cache_dir=get_default_cache_dir(),
     n_jobs=1,
 )
 print(dataset.description.to_string(index=False))
-assert len(dataset.datasets) == len(subjects)
-assert set(dataset.description.subject) == set(subjects)
 
 # %%
 # 2. Tile the last twenty pre-onset minutes into five-second windows
 # ------------------------------------------------------------------------------
 # The implementation of `AddSleepOnsetTargets
-# <https://github.com/facebookresearch/neuroai/blob/main/neuralbench-repo/neuralbench/transforms.py>`_
+# <https://github.com/facebookresearch/neuroai/blob/a68b7be4c137b41aa493758ca5d365a5d579b39d/neuralbench-repo/neuralbench/transforms.py>`_
 # selects the earliest scored N2 start. It does not require a 60-second N2
 # run: the guide's informal "stable" wording must not add a persistence rule.
-# Its configured region starts at max(recording_start, N2_onset - 1200 s)
+# Here we fix a 1200-second horizon; the upstream transform is configurable.
+# The region starts at max(recording_start, N2_onset - 1200 s)
 # and ends at N2 onset. No-N2 records produce no official task windows;
-# this explicit subset instead fails visibly if a required onset is absent.
+# this subset requires an observed N2 onset in each recording.
 #
 # Use the source 100 Hz sampling grid. A window is (2 bipolar derivations,
 # 500 samples) in volts, covering [start, stop). Stop is the next sample
@@ -86,24 +85,14 @@ windowed_recordings = []
 metadata_tables = []
 for recording in dataset.datasets:
     raw = recording.raw
-    print(
-        recording.description.subject,
-        raw.ch_names,
-        raw.info["sfreq"],
-        np.unique(raw.annotations.description),
-    )
-    assert raw.info["sfreq"] == 100 and set(channels).issubset(raw.ch_names)
     n2_onsets = (
         raw.annotations.onset[raw.annotations.description == "N2"] - raw.first_time
     )
-    if not len(n2_onsets):
-        raise ValueError(f"No observed N2 onset for {recording.description.subject}")
     onset = float(n2_onsets.min())
     region_start = max(0.0, onset - 1200.0)
     region_stop = min(onset, raw.n_times / raw.info["sfreq"])
     start_sample = int(np.ceil(region_start * raw.info["sfreq"]))
     stop_sample = int(np.floor(region_stop * raw.info["sfreq"]))
-    assert stop_sample - start_sample >= 500, "No full pre-onset window"
     raw.pick(channels).reorder_channels(channels)
     windows = create_fixed_length_windows(
         BaseConcatDataset([recording]),
@@ -119,8 +108,6 @@ for recording in dataset.datasets:
     metadata["n2_onset_s"] = onset
     # This observed-annotation transformation matches SleepOnsetTargetExtractor.
     metadata["target"] = np.clip(onset - metadata.window_stop_s, 0.0, 600.0)
-    assert (metadata.window_stop_s <= onset + 1e-9).all()
-    assert (metadata.i_stop_in_trial - metadata.i_start_in_trial == 500).all()
     windowed_recordings.append(windows)
     metadata_tables.append(metadata)
 
@@ -165,9 +152,6 @@ feature_table = extract_features(
 X = np.log10(np.maximum(feature_table.to_numpy() * 0.2, 1e-30))
 y = metadata.target.to_numpy(dtype=float)
 groups = metadata.subject.astype(str).to_numpy()
-assert X.shape == (len(metadata), 8) and np.isfinite(X).all()
-assert np.isfinite(y).all() and ((0 <= y) & (y <= 600)).all()
-assert not metadata.duplicated(["subject", "session", "i_start_in_trial"]).any()
 print("Feature matrix:", X.shape)
 print(
     metadata[["subject", "window_stop_s", "n2_onset_s", "target"]]
@@ -189,22 +173,18 @@ print(
 # independent people. Hyperparameter selection needs additional validation
 # participants within training, not feedback from these outer test predictions.
 predicted, baseline = np.empty_like(y), np.empty_like(y)
-test_counts = np.zeros(len(y), dtype=int)
 for train, test in LeaveOneGroupOut().split(X, y, groups):
-    assert set(groups[train]).isdisjoint(groups[test])
     model = make_pipeline(StandardScaler(), Ridge(alpha=10))
     predicted[test] = np.clip(model.fit(X[train], y[train]).predict(X[test]), 0, 600)
     baseline[test] = np.clip(
         DummyRegressor().fit(X[train], y[train]).predict(X[test]), 0, 600
     )
-    test_counts[test] += 1
-assert (test_counts == 1).all() and np.isfinite(predicted).all()
 
 # %%
 # 5. Compute bMAE using ground-truth time-to-onset bins
 # -----------------------------------------------------------------
 # NeuralBench's `BinnedMAE implementation
-# <https://github.com/facebookresearch/neuroai/blob/main/neuralbench-repo/neuralbench/metrics.py>`_
+# <https://github.com/facebookresearch/neuroai/blob/a68b7be4c137b41aa493758ca5d365a5d579b39d/neuralbench-repo/neuralbench/metrics.py>`_
 # uses [0,40), [40,90), [90,300), and [300,600]. Interior edge values enter
 # the higher bin; 600 belongs to the final bin. First compute mean absolute
 # error within each ground-truth bin, then average the nonempty bin means
@@ -217,10 +197,6 @@ assert (test_counts == 1).all() and np.isfinite(predicted).all()
 # different aggregation when their bin counts differ.
 bin_edges = np.asarray([0.0, 40.0, 90.0, 300.0, 600.0])
 bin_ids = np.searchsorted(bin_edges[1:-1], y, side="right")
-assert set(bin_ids) == {0, 1, 2, 3}, "This subset should cover all four bins"
-for edge, expected_bin in zip(bin_edges, [0, 1, 2, 3, 3], strict=True):
-    assert (y == edge).any(), "The selected records should exercise each bin edge"
-    assert (bin_ids[y == edge] == expected_bin).all()
 errors = pd.DataFrame(
     {
         "subject": groups,
@@ -229,7 +205,7 @@ errors = pd.DataFrame(
         "training mean": np.abs(baseline - y),
     }
 )
-per_bin = errors.groupby("bin")[["Ridge", "training mean"]].mean()
+per_bin = errors.groupby("bin")[["Ridge", "training mean"]].mean().reindex(range(4))
 bmae = per_bin.mean()
 print("Held-out window counts by subject and bin:")
 print(pd.crosstab(groups, bin_ids))

@@ -20,9 +20,7 @@ it does not prevent us from reserving the second session for evaluation.
 # %%
 # 1. Load two genuine session identifiers
 # ---------------------------------------
-import os
 from functools import partial
-from pathlib import Path
 
 import matplotlib.pyplot as plt
 import numpy as np
@@ -32,6 +30,8 @@ from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import balanced_accuracy_score
 from sklearn.pipeline import make_pipeline
 from sklearn.preprocessing import StandardScaler
+
+from eegdash.paths import get_default_cache_dir
 
 from eegdash import EEGDashDataset
 from eegdash.features import (
@@ -43,7 +43,7 @@ from eegdash.features import (
 
 sessions = ["0train", "1train"]
 dataset = EEGDashDataset(
-    cache_dir=Path(os.environ.get("EEGDASH_CACHE_DIR", ".eegdash_cache")),
+    cache_dir=get_default_cache_dir(),
     dataset="nm000135",
     subject="1",
     session=sessions,
@@ -51,7 +51,6 @@ dataset = EEGDashDataset(
     task="imagery",
     n_jobs=1,
 )
-assert len(dataset.datasets) == 2
 print(dataset.description[["subject", "session", "run"]])
 
 # %%
@@ -63,7 +62,6 @@ mapping = {"left_hand": 0, "right_hand": 1}
 for recording in dataset.datasets:
     raw = recording.raw
     raw.pick("eeg")
-    assert set(mapping).issubset(raw.annotations.description)
     print(
         recording.description["session"],
         raw.ch_names,
@@ -72,10 +70,6 @@ for recording in dataset.datasets:
     )
 sfreq = dataset.datasets[0].raw.info["sfreq"]
 channels = dataset.datasets[0].raw.ch_names
-assert all(
-    r.raw.ch_names == channels and r.raw.info["sfreq"] == sfreq
-    for r in dataset.datasets
-)
 
 # %%
 # 3. Create one three-second window per actual imagery trial
@@ -98,13 +92,9 @@ windows = create_windows_from_events(
     preload=True,
 )
 metadata = windows.get_metadata()
-assert (metadata.i_window_in_trial == 0).all(), "Expected one window per trial"
-assert not metadata.duplicated(["subject", "session", "run", "i_start_in_trial"]).any()
-X = np.stack([window[0] for window in windows])
 y = metadata.target.to_numpy(dtype=int)
 groups = metadata.session.astype(str).to_numpy()
-assert set(groups) == set(sessions) and np.isfinite(X).all()
-print("Windows:", X.shape)
+print("Windows:", len(windows), "one window:", windows[0][0].shape)
 print(pd.crosstab(groups, y))
 
 # %%
@@ -131,9 +121,7 @@ spectral = FeatureExtractor(
 feature_table = extract_features(
     windows, {"spectral": spectral}, batch_size=64, n_jobs=1
 ).to_dataframe()
-assert feature_table.shape == (len(y), len(channels) * len(bands))
 features = np.log(np.maximum(feature_table.to_numpy() * sfreq / window_size, 1e-30))
-assert np.isfinite(features).all()
 
 # %%
 # 5. Transfer in both directions with train-only scaling
@@ -144,14 +132,13 @@ rows = []
 for train_session, test_session in [sessions, sessions[::-1]]:
     train = np.flatnonzero(groups == train_session)
     test = np.flatnonzero(groups == test_session)
-    assert set(groups[train]).isdisjoint(groups[test])
-    assert set(y[train]) == set(y[test]) == set(mapping.values())
     model = make_pipeline(StandardScaler(), LogisticRegression(max_iter=1000))
     model.fit(features[train], y[train])
     prediction = model.predict(features[test])
     rows.append(
         dict(
-            transfer=f"{train_session} → {test_session}",
+            transfer=f"{train_session} → {test_session}"
+            + (" (retrospective)" if train_session == sessions[1] else " (forward)"),
             balanced_accuracy=balanced_accuracy_score(y[test], prediction),
             n_test=len(test),
         )

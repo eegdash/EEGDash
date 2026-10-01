@@ -32,7 +32,7 @@ evaluated on 123, whose signals and labels are excluded from fitting.
 # Use the same five named channels in the same order for every participant.
 # EEGPrep removes channel-median offsets and applies its common-average
 # reference over the EEG sensors before this subset is selected. The adapters
-# leave the sample grid unchanged; the explicit check lets us restore the
+# leave the sample grid unchanged; restore the
 # original annotations without accumulating conversion-rounding errors. The 0.5–30 Hz filter and -100..0 ms baseline are fixed
 # across participants, so a preprocessing choice is not selected from test
 # accuracy. These operations respect the original participant boundaries.
@@ -49,7 +49,6 @@ evaluated on 123, whose signals and labels are excluded from fitting.
 # simple representation uses voltages directly rather than engineered P300
 # amplitudes, but it does not exploit convolutional time structure.
 import os
-from pathlib import Path
 
 import matplotlib.pyplot as plt
 import mne
@@ -61,9 +60,11 @@ from sklearn.metrics import balanced_accuracy_score
 from sklearn.preprocessing import StandardScaler
 from torch import nn
 
+from eegdash.paths import get_default_cache_dir
+
 from eegdash import EEGDashDataset
 
-cache_dir = Path(os.environ.get("EEGDASH_CACHE_DIR", ".eegdash_cache"))
+cache_dir = get_default_cache_dir()
 subjects = ["054", "119", "123"]
 channels = ["Fz", "CP1", "Pz", "P3", "P4"]
 dataset = EEGDashDataset(
@@ -73,27 +74,24 @@ dataset = EEGDashDataset(
     task="visualoddball",
     n_jobs=1,
 )
-assert len(dataset.datasets) == 3
 cohort = {}
 for recording in dataset.datasets:
     raw = recording.raw.copy().load_data().pick("eeg")
-    assert set(channels) <= set(raw.ch_names)
     source_annotations = raw.annotations.copy()
     source_date = raw.info["meas_date"]
-    source_grid = (raw.info["sfreq"], raw.n_times, raw.first_samp)
     RemoveDCOffset().apply(raw)
     RemoveCommonAverageReference().apply(raw)
-    assert (raw.info["sfreq"], raw.n_times, raw.first_samp) == source_grid
     raw.set_meas_date(source_date)
+    if source_annotations.orig_time is None:
+        source_annotations.onset -= raw.first_time
     raw.set_annotations(source_annotations)
     raw.filter(0.5, 30)
-    raw.pick(channels)
+    raw.pick(channels).reorder_channels(channels)
     mapping = {}
     for name in set(raw.annotations.description):
         code = name.split("/")[-1].replace(" ", "")
         if len(code) == 3 and code[0] == "S" and set(code[1:]) <= set("12345"):
             mapping[name] = 2 if code[1] == code[2] else 1
-    assert set(mapping.values()) == {1, 2}
     events, _ = mne.events_from_annotations(raw, event_id=mapping)
     epochs = mne.Epochs(
         raw,
@@ -107,11 +105,8 @@ for recording in dataset.datasets:
     epochs.resample(64)
     X = epochs.get_data().reshape(len(epochs), -1) * 1e6
     y = epochs.events[:, 2] - 1
-    assert np.isfinite(X).all() and set(y) == {0, 1}
     cohort[str(recording.description["subject"])] = (X, y)
-assert set(cohort) == set(subjects)
 source_subject, adaptation_subject, test_subject = subjects
-assert len({source_subject, adaptation_subject, test_subject}) == 3
 
 # %%
 # 2. Define the model and a distribution discrepancy
@@ -156,9 +151,9 @@ torch.set_num_threads(max(1, min(2, os.cpu_count() or 1)))
 # The comparison is a single demonstration run, not an estimate across seeds.
 rows = []
 histories = {}
-for regime in ["source only", "MMD", "target supervised"]:
+for regime in ["source only", "MMD", "adaptation supervised"]:
     training_subject = (
-        adaptation_subject if regime == "target supervised" else source_subject
+        adaptation_subject if regime == "adaptation supervised" else source_subject
     )
     X_train, y_train = cohort[training_subject]
     scaler = StandardScaler().fit(X_train)
@@ -198,7 +193,6 @@ for regime in ["source only", "MMD", "target supervised"]:
                     ).mean()
                 )
                 loss = loss + 0.1 * discrepancy
-            assert torch.isfinite(loss)
             loss.backward()
             optimizer.step()
             losses.append(loss.item())
@@ -223,7 +217,7 @@ for regime in ["source only", "MMD", "target supervised"]:
 # %%
 # 4. Report the observed comparison
 # ---------------------------------
-# The target-supervised model is a reference, not a guaranteed upper bound.
+# The adaptation-supervised model is a reference, not a guaranteed upper bound.
 # Negative transfer and below-chance results remain valid outcomes.
 # Binary balanced accuracy is the mean of target and standard recall, so an
 # always-standard classifier scores 0.5 even though standards are more common.

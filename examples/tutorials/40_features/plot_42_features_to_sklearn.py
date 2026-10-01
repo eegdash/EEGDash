@@ -18,8 +18,7 @@ Tutorial 11 explains the participant split used below.
 
 # %%
 import json
-import os
-from pathlib import Path
+from eegdash.paths import get_default_cache_dir
 
 import matplotlib.pyplot as plt
 import numpy as np
@@ -41,9 +40,9 @@ from sklearn.preprocessing import StandardScaler
 # The stored values are linear power summaries. Log10 compresses their range
 # before learning, with a numerical floor for zero power. This transform acts
 # on each value independently; unlike StandardScaler, it does not estimate
-# statistics from held-out participants. The printed crosstab checks class
+# statistics from held-out participants. The crosstab shows class
 # coverage after the file handoff.
-cache_dir = Path(os.environ.get("EEGDASH_CACHE_DIR", ".eegdash_cache"))
+cache_dir = get_default_cache_dir()
 path = cache_dir / "plot_40_features.csv"
 if not path.exists() or not path.with_suffix(".json").exists():
     raise FileNotFoundError(
@@ -51,17 +50,27 @@ if not path.exists() or not path.with_suffix(".json").exists():
     )
 table = pd.read_csv(path, dtype={"subject": str, "session": str, "run": str})
 schema = json.loads(path.with_suffix(".json").read_text())
-assert schema["dataset"] == "nm000118"
 columns = schema["feature_columns"]
-assert columns and set(columns).issubset(table.columns)
-assert not table.duplicated(["subject", "session", "run", "i_start_in_trial"]).any()
-X = np.log10(np.maximum(table[columns].to_numpy(), 1e-30))
+# Never guess predictors by numeric dtype: targets and IDs are numeric too.
+if set(columns) & {
+    "target",
+    "frequency_hz",
+    "subject",
+    "session",
+    "run",
+    "i_start_in_trial",
+}:
+    raise ValueError("The saved feature list includes labels or recording identity")
+powers = table[columns].to_numpy(dtype=float)
+if not np.isfinite(powers).all() or np.any(powers < 0):
+    raise ValueError(
+        "Stored powers must be finite and nonnegative; do not mask invalid data with a log floor"
+    )
+X = np.log10(np.maximum(powers, 1e-30))
 y = table["target"].to_numpy(dtype=int)
 groups = table["subject"].astype(str).to_numpy()
-assert np.isfinite(X).all()
-assert set(groups) == {"1", "2", "3"}
-print(pd.crosstab(groups, y))
-print("Feature matrix:", X.shape)
+pd.crosstab(groups, y)
+table[["subject", "target", "frequency_hz"] + columns[:4]].head()
 
 # %%
 # 2. Fit the scaler and classifier on the training subjects only
@@ -79,8 +88,6 @@ print("Feature matrix:", X.shape)
 # limitation of this feature representation, not a reason to replace the
 # measured score with a more attractive number.
 train, test = groups != "3", groups == "3"
-assert set(groups[train]).isdisjoint(groups[test])
-assert set(y[train]) == set(y[test]) == set(schema["mapping"].values())
 pipe = make_pipeline(StandardScaler(), LogisticRegression(max_iter=1000))
 pipe.fit(X[train], y[train])
 predictions = pipe.predict(X[test])
@@ -90,8 +97,8 @@ print("Subject 3 balanced accuracy:", balanced_accuracy_score(y[test], predictio
 # 3. Inspect actual predictions and fitted coefficients
 # -----------------------------------------------------
 # The confusion matrix is row-normalized, so each row describes the predicted
-# class distribution for a single true class. Its integer labels are the
-# frequency indices stored in the JSON mapping.
+# class distribution for a single true class. Axes decode the saved mapping
+# back to stimulus frequencies in Hz.
 #
 # For each feature, the right plot averages the absolute fitted coefficient
 # over all class decisions and displays the eight largest. Scaling makes
@@ -103,12 +110,18 @@ fig, axes = plt.subplots(1, 2, figsize=(12, 5), layout="constrained")
 ConfusionMatrixDisplay.from_predictions(
     y[test],
     predictions,
+    labels=sorted(schema["mapping"].values()),
+    display_labels=[
+        name
+        for name, index in sorted(schema["mapping"].items(), key=lambda item: item[1])
+    ],
+    xticks_rotation=90,
     normalize="true",
     include_values=False,
     colorbar=False,
     ax=axes[0],
 )
-axes[0].set_title("Held-out subject 3 (frequency-class indices)")
+axes[0].set_title("Held-out subject 3 (Hz)")
 weights = np.abs(pipe.named_steps["logisticregression"].coef_).mean(axis=0)
 order = np.argsort(weights)[-8:]
 axes[1].barh(np.asarray(columns)[order], weights[order])

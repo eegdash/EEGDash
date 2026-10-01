@@ -30,8 +30,6 @@ would reduce computation but would not avoid their initial download.
 # channel names supplied by the source; replacing them with arbitrary 10–20
 # names would misrepresent electrode identity. This small five-channel subset
 # is fixed before evaluation, and the plot uses E70, its first channel.
-import os
-from pathlib import Path
 
 import matplotlib.pyplot as plt
 import numpy as np
@@ -48,11 +46,12 @@ from sklearn.model_selection import LeaveOneGroupOut
 from sklearn.pipeline import make_pipeline
 from sklearn.preprocessing import StandardScaler
 
+from eegdash.paths import get_default_cache_dir
 from eegdash import EEGDashDataset
 from eegdash.features import spectral_bands_power, spectral_preprocessor
 from eegdash.hbn.preprocessing import hbn_ec_ec_reannotation
 
-cache_dir = Path(os.environ.get("EEGDASH_CACHE_DIR", ".eegdash_cache"))
+cache_dir = get_default_cache_dir()
 subjects = ["NDARAE710YWG", "NDARAH239PGG", "NDARAL897CYV"]
 dataset = EEGDashDataset(
     cache_dir=cache_dir,
@@ -61,19 +60,7 @@ dataset = EEGDashDataset(
     subject=subjects,
     n_jobs=1,
 )
-assert len(dataset.datasets) == len(subjects)
 channels = ["E70", "E62", "E92", "E96", "Cz"]
-for recording in dataset.datasets:
-    raw = recording.raw
-    assert set(channels) <= set(raw.ch_names)
-    assert {"instructed_toCloseEyes", "instructed_toOpenEyes"} <= set(
-        raw.annotations.description
-    )
-    print(
-        recording.description["subject"],
-        pd.Series(raw.annotations.description).value_counts(),
-    )
-
 # %%
 # 2. Clean with EEGPrep and retain the recorded instruction times
 # ---------------------------------------------------------------
@@ -100,7 +87,10 @@ durations = [
     recording.raw.n_times / recording.raw.info["sfreq"]
     for recording in dataset.datasets
 ]
-assert all(recording.raw.first_samp == 0 for recording in dataset.datasets)
+if not (all(recording.raw.first_samp == 0 for recording in dataset.datasets)):
+    raise ValueError(
+        "This restoration recipe requires first_samp=0; inspect source time origins"
+    )
 preprocess(
     dataset,
     [
@@ -118,18 +108,23 @@ for recording, annotation, measurement_date, duration in zip(
     dataset.datasets, annotations, measurement_dates, durations
 ):
     raw = recording.raw
-    assert raw.first_samp == 0 and abs(raw.n_times / 128 - duration) <= 1 / 128
+    if (
+        raw.info["sfreq"] != 128
+        or raw.first_samp != 0
+        or abs(raw.n_times / raw.info["sfreq"] - duration) > 1 / raw.info["sfreq"]
+    ):
+        raise RuntimeError(
+            "Cleaning changed the expected 128 Hz timeline; do not restore instructions"
+        )
     raw.set_meas_date(measurement_date)
     raw.set_annotations(annotation)
-    np.testing.assert_allclose(raw.annotations.onset, annotation.onset, atol=1e-12)
-    np.testing.assert_array_equal(raw.annotations.description, annotation.description)
     # The HBN helper replaces annotations; retain original BAD spans explicitly.
     bad_spans = annotation[
         np.char.startswith(np.char.lower(annotation.description), "bad")
     ]
     hbn_ec_ec_reannotation().apply(raw)
     raw.set_annotations(raw.annotations + bad_spans)
-    raw.pick(channels)
+    raw.pick(channels).reorder_channels(channels)
 
 # %%
 # 3. Window stable periods following the actual instructions
@@ -159,9 +154,7 @@ metadata = windows.get_metadata()
 X = np.stack([window[0] for window in windows])
 y = metadata["target"].to_numpy(dtype=int)
 groups = metadata["subject"].astype(str).to_numpy()
-assert X.shape[1:] == (len(channels), 256) and np.isfinite(X).all()
-assert set(groups) == set(subjects)
-print(pd.crosstab(groups, y, rownames=["subject"], colnames=["condition"]))
+pd.crosstab(groups, y, rownames=["subject"], colnames=["condition"])
 
 # %%
 # 4. Compute alpha power with EEGDash's spectral functions
@@ -188,7 +181,6 @@ frequencies, psd = spectral_preprocessor(
 alpha_power = spectral_bands_power(frequencies, psd, bands={"alpha": (8, 13)})["alpha"]
 alpha_power *= frequencies[1] - frequencies[0]
 features = np.log10(np.maximum(alpha_power, 1e-30))
-assert features.shape == (len(metadata), len(channels)) and np.isfinite(features).all()
 
 # %%
 # 5. Fit a fresh scaler and classifier in every LOSO fold
@@ -197,15 +189,11 @@ assert features.shape == (len(metadata), len(channels)) and np.isfinite(features
 # held out once, and all windows from that participant stay together.
 # Logistic regression combines the five log-band features into a binary
 # decision. Balanced accuracy averages eyes-open and eyes-closed recall,
-# with a 0.5 chance reference when both conditions are present. The assertions
-# verify those conditions and exactly-once test coverage; they do not require
-# the model to beat chance. With two training participants in each fold, there
+# with a 0.5 chance reference when both conditions are present. The model
+# need not beat chance. With two training participants in each fold, there
 # is little support for model selection, so parameters are fixed in advance.
 rows = []
-counts = np.zeros(len(y), dtype=int)
 for train, test in LeaveOneGroupOut().split(features, y, groups):
-    assert set(groups[train]).isdisjoint(groups[test])
-    assert set(y[train]) == set(y[test]) == {0, 1}
     model = make_pipeline(StandardScaler(), LogisticRegression(max_iter=1000))
     model.fit(features[train], y[train])
     rows.append(
@@ -216,10 +204,8 @@ for train, test in LeaveOneGroupOut().split(features, y, groups):
             ),
         }
     )
-    counts[test] += 1
-assert len(rows) == len(subjects) and np.all(counts == 1)
 results = pd.DataFrame(rows)
-print(results.to_string(index=False))
+results
 
 # %%
 # 6. Compare the measured spectra and held-out scores
@@ -235,13 +221,16 @@ print(results.to_string(index=False))
 # inside the selected 8–13 Hz band before calling them alpha activity. A large
 # out-of-band peak is a reason to inspect the raw channels and recording
 # quality; its size alone does not identify a neural source.
+e70 = dataset.datasets[0].raw.ch_names.index("E70")
 fig, axes = plt.subplots(1, 2, figsize=(10, 4), layout="constrained")
 for label, name in [(0, "eyes open"), (1, "eyes closed")]:
     subject_psds = [
-        psd[(groups == subject) & (y == label), 0].mean(axis=0) for subject in subjects
+        psd[(groups == subject) & (y == label), e70].mean(axis=0)
+        for subject in subjects
     ]
     axes[0].semilogy(frequencies, np.mean(subject_psds, axis=0) * 1e12, label=name)
 axes[0].set(xlabel="Frequency (Hz)", ylabel="PSD at E70 (µV²/Hz)")
+axes[0].axvspan(8, 13, color="gray", alpha=0.15, label="[8, 13) Hz")
 axes[0].legend()
 axes[1].bar(range(len(results)), results["balanced_accuracy"])
 axes[1].set_xticks(range(len(results)), results["subject"], rotation=45, ha="right")

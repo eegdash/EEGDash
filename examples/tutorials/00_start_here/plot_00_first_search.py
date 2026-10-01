@@ -9,12 +9,11 @@ Before you start
 ----------------
 Install EEGDash with its dependencies and run this file in Python or a
 notebook with network access. Familiarity with a pandas DataFrame is useful;
-no MNE, PyTorch or model-training knowledge is needed. The result is a checked
+no MNE, PyTorch or model-training knowledge is needed. The result is a bounded
 cohort query that you can pass to ``EEGDashDataset`` in tutorial 01.
 """
 
 # %%
-import matplotlib.pyplot as plt
 import pandas as pd
 from eegdash import EEGDash
 
@@ -27,10 +26,8 @@ from eegdash import EEGDash
 # fields must all match. This bounds the later signal acquisition before we
 # open a recording.
 #
-# ``limit=10`` is a result cap, not a request for ten participants. The assertion
-# checks that this particular query currently resolves to the three expected
-# recordings. If it fails, inspect the returned identifiers before changing the
-# query; silently taking the first three rows could select a different cohort.
+# ``limit=10`` caps recording rows, not participants. Inspect the returned
+# identifiers before downloading; do not silently take the first three rows.
 client = EEGDash()
 query = {
     "dataset": "nm000118",
@@ -40,8 +37,7 @@ query = {
     "task": "ssvep",
 }
 records = pd.DataFrame(client.find(query, limit=10))
-assert len(records) == 3
-print(records[["dataset", "subject", "session", "run", "task"]])
+records[["dataset", "subject", "session", "run", "task"]]
 
 # %%
 # 2. Inspect the signal metadata before committing to downloads
@@ -51,19 +47,11 @@ print(records[["dataset", "subject", "session", "run", "task"]])
 # by ``sampling_frequency`` estimates a file's signal duration. These fields
 # help plan memory and window lengths, but they do not establish signal quality.
 #
-# The two counts deliberately answer different questions: a participant may
-# contribute multiple runs. In the bar chart, each bar counts matched files
-# for one participant; it does not count trials or measure EEG amplitude.
+# A participant may contribute multiple recordings; duration estimates the
+# download workload, not signal quality.
 fields = ["subject", "sampling_frequency", "nchans", "ntimes"]
-print(records[fields])
-print("Recording count:", len(records))
-print("Participant count:", records["subject"].nunique())
-# This particular subset has approximately 21.1 MB of signal files. The
-# next tutorial opens only subject 1 (about 7 MB) with EEGDashDataset.
-fig, ax = plt.subplots(figsize=(6, 3), layout="constrained")
-records["subject"].value_counts().sort_index().plot.bar(ax=ax, rot=0)
-ax.set(xlabel="Subject", ylabel="Matched recordings", title="Explicit SSVEP subset")
-plt.show()
+records["duration_minutes"] = records["ntimes"] / records["sampling_frequency"] / 60
+records[fields + ["duration_minutes"]]
 
 # %%
 # 3. Broaden discovery without treating a limited sample as a census
@@ -74,7 +62,6 @@ plt.show()
 # specific dataset from discovery, then query its relevant recordings before
 # summarizing a cohort.
 sample = pd.DataFrame(client.find({}, limit=20))
-print("First 20 catalogue records (not representative cohort counts):")
-print(sample[["dataset", "subject", "task"]])
+sample[["dataset", "subject", "task"]]
 # Change the dataset/task query to explore another paradigm, then inspect
 # its real participant and event metadata before choosing a decoding target.

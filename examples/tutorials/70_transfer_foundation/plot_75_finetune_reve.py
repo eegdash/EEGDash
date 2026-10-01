@@ -1,7 +1,8 @@
 """How do I fine-tune a published EEG foundation model (REVE)?
 =============================================================
 
-**Difficulty 3** | **Runtime: ~2m (CPU)** | **Compute: CPU (GPU Optional)**
+**Difficulty 3** | **Compute: CPU; optional accelerator**
+Runtime depends on hardware; full fine-tuning is an explicit opt-in.
 
 Adapt the published REVE-Base checkpoint to a motor-imagery-vs-rest task from
 OpenNeuro dataset ``ds003810``, served through EEGDash and trained with
@@ -14,8 +15,8 @@ and 7 MB of EEG (one participant, four runs).
 Two ways to adapt a pretrained encoder are shown with the same code path:
 a **linear probe** (encoder frozen, only the classification head trains -- runs
 on a laptop CPU) and **full fine-tuning** (everything trains at a lower learning
-rate -- enabled automatically on a GPU). Runs 1 and 2 train, run 3 chooses when
-to stop, and run 4 is scored exactly once. The small budget demonstrates
+rate -- explicitly opt in before running). Runs 1 and 2 train, run 3 chooses when
+to stop, and run 4 is scored once per prespecified regime. The small budget demonstrates
 adaptation, not a foundation-model benchmark.
 
 Keywords: foundation-model, fine-tuning, linear-probe, REVE, motor-imagery, transfer-learning
@@ -38,20 +39,9 @@ Keywords: foundation-model, fine-tuning, linear-probe, REVE, motor-imagery, tran
 # 1. Open https://huggingface.co/brain-bzh/reve-base and accept the terms.
 # 2. Log in once from a terminal: ``hf auth login`` (or set ``HF_TOKEN``).
 #
-# The check below turns a missing login into a readable message instead of an
-# HTTP traceback further down. Without network it simply continues and relies
-# on the local cache.
-
-import logging
-import os
-from pathlib import Path
-
 import matplotlib.pyplot as plt
-import mne
 import numpy as np
 import torch
-from huggingface_hub import auth_check
-from huggingface_hub.errors import HfHubHTTPError
 from skorch.callbacks import EarlyStopping
 from skorch.helper import predefined_split
 from sklearn.metrics import balanced_accuracy_score
@@ -64,52 +54,27 @@ from braindecode.preprocessing import (
     create_windows_from_events,
     preprocess,
 )
+from eegdash.paths import get_default_cache_dir
+
 from eegdash import EEGDashDataset
 
 MODEL_ID = "brain-bzh/reve-base"
-MODEL_REVISION = "fa9a2163a4b7c0a42c8e28b56077ef9c368944dc"  # checkpoint commit the numbers below were measured with
+MODEL_REVISION = (
+    "fa9a2163a4b7c0a42c8e28b56077ef9c368944dc"  # pinned published checkpoint
+)
 DATASET, SUBJECT, RUNS = "ds003810", "02", ["1", "2", "3", "4"]
 SFREQ = 200  # REVE was pretrained at 200 Hz; it does not check, so we must
 WINDOW_S = 4  # cue -> end of trial in this paradigm
-CACHE_DIR = Path(os.environ.get("EEGDASH_CACHE_DIR", "~/.eegdash_cache")).expanduser()
-DEVICE = os.environ.get("REVE_TUTORIAL_DEVICE") or (
-    "cuda"
-    if torch.cuda.is_available()
-    else "mps"
-    if torch.backends.mps.is_available()
-    else "cpu"
-)
-# Full fine-tuning updates all 69M parameters; on CPU that is minutes per epoch,
-# so it runs only on an accelerator. Force it with REVE_TUTORIAL_FINETUNE=1.
-RUN_FINETUNE = DEVICE != "cpu" or os.environ.get("REVE_TUTORIAL_FINETUNE") == "1"
-FT_EPOCHS = int(os.environ.get("REVE_TUTORIAL_FT_EPOCHS", 5))
+CACHE_DIR = get_default_cache_dir()
+# Changing hardware never changes which experiment runs.
+DEVICE = "cpu"  # explicitly choose "cuda" or "mps" when available
+RUN_FINETUNE = False  # opt in before inspecting any test results
+PROBE_EPOCHS, FT_EPOCHS = 5, 2  # small workflow budget, not converged performance
+PROBE_LR, FINETUNE_LR = 1e-4, 1e-5
 torch.manual_seed(0)
-print(
-    f"device: {DEVICE} | full fine-tuning: {'on' if RUN_FINETUNE else 'off (linear probe only)'}"
-)
-
-# Keep the output readable: the libraries are chatty at INFO level.
-mne.set_log_level("WARNING")  # filter-design reports, "legacy function" notes
-for name in ("httpx", "huggingface_hub", "eegdash", "braindecode"):
-    logging.getLogger(name).setLevel(logging.WARNING)
-try:
-    auth_check(MODEL_ID)
-    print("Hugging Face access to", MODEL_ID, "OK")
-except HfHubHTTPError as err:  # gated repo without an accepted license / token
-    print(
-        f"\nCannot access {MODEL_ID} ({err.__class__.__name__}). The REVE weights are gated:\n"
-        f"  1) open https://huggingface.co/{MODEL_ID} and accept the terms\n"
-        f"  2) run `hf auth login` (or export HF_TOKEN=...) and re-run this example.\n"
-    )
-    # A plain Exception, never SystemExit: sphinx-gallery reports it on this page
-    # and carries on with the rest of the docs build.
-    raise RuntimeError(
-        f"no access to the gated {MODEL_ID}; see the steps above"
-    ) from None
-except Exception as err:  # no network: fine if the weights are already cached
-    print(
-        f"Could not reach the Hub ({err.__class__.__name__}); continuing with the local cache."
-    )
+print(f"device={DEVICE}; probe epochs={PROBE_EPOCHS}; fine-tune={RUN_FINETUNE}")
+# from_pretrained reports gated access/download errors directly. Complete the
+# one-time login above before running; no exception is silently treated as offline.
 
 # %%
 # Match the real signal to the encoder input
@@ -168,34 +133,24 @@ windows = create_windows_from_events(
     window_stride_samples=WINDOW_S * SFREQ,
     preload=True,
 )
-print(
-    len(windows),
-    "windows of",
-    WINDOW_S * SFREQ,
-    "samples;",
-    "labels per run:",
-    windows.get_metadata().groupby("run")["target"].value_counts().unstack().to_dict(),
-)
-
 # %%
 # Reserve runs, not windows
 # -------------------------
 # Windows from the same run share slow drifts, electrode impedance and the
 # participant's state, so a random window-level split leaks. Split by run:
-# runs 1-2 train, run 3 decides when to stop training, run 4 is scored once at
-# the end and never looked at before that.
+# runs 1-2 train, run 3 selects the epoch, run 4 is scored once per prespecified
+# regime and never used to select settings.
 #
-# This is a *within-subject* design, chosen so the page runs on a CPU in a
-# minute. To claim the model works on *new people* you need to hold out whole
-# participants -- and one held-out participant is a single draw from a wide
-# spread, so the reference number at the end is a leave-one-subject-out mean
-# over all ten participants, computed with the same recipe on a GPU.
+# This is within-person, across-run evaluation, not generalization to new people.
+# Complete-recording filtering and normalization also use each held-out run's
+# unlabeled signal: an offline protocol, not causal online prediction.
+# Verify that this dataset/participant was absent from the checkpoint pretraining
+# corpus before claiming a contamination-free transfer estimate; it is not checked here.
 
 by_run = windows.split("run")
 train_set = BaseConcatDataset([by_run["1"], by_run["2"]])
 valid_set, test_set = by_run["3"], by_run["4"]
 print(f"train {len(train_set)} windows | valid {len(valid_set)} | test {len(test_set)}")
-
 # %%
 # Load the checkpoint and understand the head
 # -------------------------------------------
@@ -216,17 +171,18 @@ model = REVE.from_pretrained(
     sfreq=SFREQ,
     chs_info=chs_info,
 )
-missing = [
-    c["ch_name"] for c in chs_info if c["ch_name"] not in model._position_bank.mapping
-]
-assert not missing, f"channels missing from REVE's position bank: {missing}"
+# Public resolved positions must contain one finite xyz coordinate per input channel.
+positions = model.get_positions([channel["ch_name"] for channel in chs_info])
+if positions.shape[-2:] != (len(chs_info), 3) or not torch.isfinite(positions).all():
+    raise ValueError(
+        "REVE did not resolve all input channels to finite xyz positions; inspect chs_info."
+    )
 n_total = sum(p.numel() for p in model.parameters())
 print(
     f"REVE-Base: {n_total / 1e6:.1f}M parameters | positions resolved: {tuple(model.default_pos.shape)}"
 )
 # The head flattens every token: 15 channels x 4 patches (200-sample patches with
 # 20 overlap across 800 samples) x 512 dims = 30,720 features -> 2 classes.
-print("head:", model.final_layer)
 
 # %%
 # Two ways to adapt the encoder
@@ -239,10 +195,9 @@ print("head:", model.final_layer)
 # a lower learning rate. More capacity, more data needed, and it overfits fast
 # on a few hundred windows -- which is why both use early stopping on run 3.
 #
-# Both share one ``EEGClassifier`` recipe. A note on the learning rate: REVE's
-# paper probes at 1e-3, but with this 30,720-wide head Adam saturates at 1e-3
-# and predicts one class for the first epochs -- it looks like a broken model.
-# 1e-4 behaves from epoch 1.
+# Both use fixed, explicit rates: 1e-4 for the probe and 1e-5 for continuation.
+# Fine-tuning starts from the validation-selected probe, so this is sequential
+# adaptation, not two independently initialized regimes or equal-compute training.
 
 
 def set_trainable(model, head_only):
@@ -250,10 +205,6 @@ def set_trainable(model, head_only):
     # batch-norm, so the frozen encoder returns the same features in train and eval mode.
     for name, p in model.named_parameters():
         p.requires_grad = (not head_only) or name.startswith("final_layer")
-    n_train = sum(p.numel() for p in model.parameters() if p.requires_grad)
-    print(
-        f"trainable parameters: {n_train:,} of {n_total:,} ({'head only' if head_only else 'all'})"
-    )
 
 
 def make_classifier(model, lr, patience=5):
@@ -296,8 +247,8 @@ def valid_curve(clf):
 
 results, curves = {}, {}
 set_trainable(model, head_only=True)
-probe = make_classifier(model, lr=1e-4)
-probe.fit(train_set, y=None, epochs=30)
+probe = make_classifier(model, lr=PROBE_LR)
+probe.fit(train_set, y=None, epochs=PROBE_EPOCHS)
 results["linear probe"] = score_on_test(probe)
 curves["linear probe"] = valid_curve(probe)
 print(
@@ -305,16 +256,15 @@ print(
 )
 
 # %%
-# Full fine-tuning (GPU)
-# ----------------------
-# Continue from the probed model with every parameter trainable, for a few
-# epochs at the same learning rate. On CPU this cell only reports what it would
-# do; on a GPU it runs (about 1.5 s per epoch on a V100 for this participant).
+# Optional full fine-tuning
+# -------------------------
+# Continue from the selected probe at a tenfold smaller learning rate. Enable
+# RUN_FINETUNE in the parameter cell before scoring either regime.
 
 if RUN_FINETUNE:
     model = probe.module_
     set_trainable(model, head_only=False)
-    finetune = make_classifier(model, lr=1e-4, patience=2)
+    finetune = make_classifier(model, lr=FINETUNE_LR, patience=2)
     finetune.fit(train_set, y=None, epochs=FT_EPOCHS)
     results["fine-tune"] = score_on_test(finetune)
     curves["fine-tune"] = valid_curve(finetune)
@@ -323,15 +273,14 @@ if RUN_FINETUNE:
     )
 else:
     print(
-        "Skipped on CPU. Same recipe with set_trainable(model, head_only=False), lr 1e-4,",
-        f"{FT_EPOCHS} epochs, early stopping; set REVE_TUTORIAL_FINETUNE=1 to run it here.",
+        "Probe-only protocol; set RUN_FINETUNE=True before running for sequential adaptation."
     )
 
 # %%
 # Result
 # ------
 # Left: validation balanced accuracy per epoch, with the epoch whose weights were
-# kept. Right: the number that matters, balanced accuracy on run 4, scored once.
+# kept. Right: balanced accuracy on run 4, scored once per prespecified regime.
 
 fig, (ax_curve, ax_bar) = plt.subplots(1, 2, figsize=(10, 3.6))
 for name, curve in curves.items():
@@ -357,9 +306,9 @@ ax_bar.bar(
 )
 ax_bar.axhline(0.5, color="grey", ls=":", lw=1)
 ax_bar.set(
-    ylim=(0.4, 1.0),
+    ylim=(0.0, 1.0),
     ylabel="test balanced accuracy (run 4)",
-    title=f"participant {SUBJECT}, 40 test trials",
+    title=f"participant {SUBJECT}, {len(test_set)} retained test trials",
 )
 fig.tight_layout()
 
@@ -371,21 +320,12 @@ plt.show()
 # %%
 # Read the result and design the next experiment
 # ----------------------------------------------
-# * **This is one participant and 40 test trials.** One trial is 2.5 points of
-#   balanced accuracy, so the standard error is about 8 points. Differences of
-#   that size are noise; report participants, not windows.
-# * **Cross-subject is the real question.** The same recipe, looped over the ten
-#   participants of ``ds003810`` on a GPU node (train on eight, stop on a ninth,
-#   test on the tenth, 40 max epochs, patience 5), gives REVE-Base a
-#   leave-one-subject-out mean of **0.74 +- 0.08** balanced accuracy (range
-#   0.56-0.84; about 50 s per fold on a V100). A single favourable split had
-#   scored 0.825 -- one more reason to average over participants.
-# * **More encoder is not more accuracy.** REVE-Large (390M parameters) probed on
-#   the same 1,270 training windows scored *lower* (0.688 on the same split):
-#   it memorised them. Early stopping is not optional at this data size.
-# * **Full fine-tuning needs thousands of labelled trials** to beat the probe
-#   reliably; the paper's benchmark for that is BCI-IV-2a via MOABB (0.64
-#   fine-tuned vs 0.52 probed with REVE-Base).
+# Either regime may be better on this participant. The test runs do not select
+# the regime, epoch budget, rate or checkpoint. No external benchmark result is
+# reproduced here, and test-trial variation is not population uncertainty.
+# To study new-person transfer, prespecify participant-disjoint train/validation/
+# test cohorts and repeated seeds, audit pretraining overlap, and retain a
+# simple baseline. This five-epoch workflow is not evidence of convergence.
 #
 # References
 # ----------

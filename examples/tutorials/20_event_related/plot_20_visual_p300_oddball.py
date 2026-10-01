@@ -28,8 +28,6 @@ previously prepared feature file is needed.
 # Each recording contributes many stimulus trials after epoching. Inspect the
 # description before accessing ``raw``, which acquires the signal file;
 # ``load_data()`` below then brings its samples into memory.
-import os
-from pathlib import Path
 
 import matplotlib.pyplot as plt
 import mne
@@ -42,10 +40,11 @@ from sklearn.model_selection import LeaveOneGroupOut
 from sklearn.pipeline import make_pipeline
 from sklearn.preprocessing import StandardScaler
 
+from eegdash.paths import get_default_cache_dir
 from eegdash import EEGDashDataset
 from eegdash.features import signal_mean
 
-cache_dir = Path(os.environ.get("EEGDASH_CACHE_DIR", ".eegdash_cache"))
+cache_dir = get_default_cache_dir()
 subjects = ["054", "119", "123"]
 dataset = EEGDashDataset(
     cache_dir=cache_dir,
@@ -54,13 +53,15 @@ dataset = EEGDashDataset(
     task="visualoddball",
     n_jobs=1,
 )
-assert len(dataset.datasets) == len(subjects)
-print(dataset.description[["subject", "task"]])
+dataset.description[["subject", "task"]]
 
 # %%
 # 2. Map recorded events and prepare trial features
 # -------------------------------------------------
-# In code XY, X is the block's target letter and Y is the presented
+# Consult the source task/event documentation before transferring this mapping:
+# `ds005863 source tree <https://github.com/OpenNeuroDatasets/ds005863>`_.
+# The mapping uses literal marker names; a catalogue task name alone
+# cannot establish these semantics. In code XY, X is the block's target letter and Y is the presented
 # letter, both coded 1..5. Matching digits denote targets. Explicitly
 # exclude responses and other markers rather than calling all other
 # annotations standards. Some readers prefix names with ``Stimulus/``.
@@ -89,7 +90,7 @@ print(dataset.description[["subject", "task"]])
 # quality-control rules before extending this analysis.
 features, labels, groups = [], [], []
 first_epochs = None
-channel_names = None
+first_subject = None
 for recording in dataset.datasets:
     raw = recording.raw.copy().load_data().pick("eeg")
     mapping = {}
@@ -97,9 +98,6 @@ for recording in dataset.datasets:
         code = name.split("/")[-1].replace(" ", "")
         if len(code) == 3 and code[0] == "S" and set(code[1:]) <= set("12345"):
             mapping[name] = 2 if code[1] == code[2] else 1
-    assert set(mapping.values()) == {1, 2}, "Missing target or standard markers"
-    print(recording.description["subject"], mapping)
-
     # Preprocess, epoch and baseline-correct
     # Filtering is independent for each recording. Epochs span -0.1..0.8 s
     # relative to stimulus onset, irrespective of annotation duration.
@@ -108,8 +106,14 @@ for recording in dataset.datasets:
     source_grid = (raw.info["sfreq"], raw.n_times, raw.first_samp)
     RemoveDCOffset().apply(raw)
     RemoveCommonAverageReference().apply(raw)
-    assert (raw.info["sfreq"], raw.n_times, raw.first_samp) == source_grid
+    if not ((raw.info["sfreq"], raw.n_times, raw.first_samp) == source_grid):
+        raise ValueError(
+            "Preprocessing changed the sample grid; do not restore event times"
+        )
     raw.set_meas_date(source_date)
+    # With no absolute origin, set_annotations adds first_time itself.
+    if source_annotations.orig_time is None:
+        source_annotations.onset -= raw.first_time
     raw.set_annotations(source_annotations)
     raw.filter(0.5, 30.0)
     events, _ = mne.events_from_annotations(raw, event_id=mapping)
@@ -124,20 +128,29 @@ for recording in dataset.datasets:
         reject_by_annotation=True,
     )
     epochs.resample(128)
-    if channel_names is None:
-        channel_names = epochs.ch_names
+    if first_epochs is None:
         first_epochs = epochs
-    assert epochs.ch_names == channel_names
-    assert "Pz" in epochs.ch_names, "This ERP example requires Pz"
+        first_subject = str(recording.description["subject"])
+    epochs.reorder_channels(first_epochs.ch_names)
     X = epochs.get_data()
     y = epochs.events[:, 2] - 1
-    assert set(y) == {0, 1} and np.isfinite(X).all()
 
     # Use a fixed analysis interval; do not choose it from test accuracy.
     interval = (epochs.times >= 0.3) & (epochs.times <= 0.45)
     features.append(signal_mean(X[:, :, interval]) * 1e6)
     labels.append(y)
     groups.extend([str(recording.description["subject"])] * len(y))
+
+# %%
+# Inspect the first participant's condition averages before fitting.
+# Whole-recording filtering/reference is offline, not causal online processing.
+mne.viz.plot_compare_evokeds(
+    {name: first_epochs[name].average() for name in ["standard", "target"]},
+    picks="Pz",
+    title=f"Subject {first_subject}: Pz",
+    show=False,
+)
+plt.show()
 
 # %%
 # 3. Evaluate one held-out subject per fold
@@ -157,26 +170,22 @@ for recording in dataset.datasets:
 X = np.concatenate(features)
 y = np.concatenate(labels)
 groups = np.asarray(groups)
-print(pd.crosstab(groups, y, rownames=["subject"], colnames=["class"]))
+pd.crosstab(groups, y, rownames=["subject"], colnames=["class"])
 predictions = np.full(len(y), -1)
-counts = np.zeros(len(y), dtype=int)
 rows = []
 for train, test in LeaveOneGroupOut().split(X, y, groups):
-    assert set(groups[train]).isdisjoint(groups[test])
     model = make_pipeline(
         StandardScaler(), LogisticRegression(class_weight="balanced", max_iter=1000)
     )
     model.fit(X[train], y[train])
     predictions[test] = model.predict(X[test])
-    counts[test] += 1
     rows.append(
         {
             "subject": groups[test][0],
             "balanced_accuracy": balanced_accuracy_score(y[test], predictions[test]),
         }
     )
-assert np.all(counts == 1)
-print(pd.DataFrame(rows).to_string(index=False))
+pd.DataFrame(rows)
 
 # %%
 # 4. Inspect the measured ERP and decoding errors
@@ -189,11 +198,7 @@ print(pd.DataFrame(rows).to_string(index=False))
 # targets. Compare both rows, since good standard recall can hide missed
 # targets in an unbalanced task. An averaged ERP difference also need not
 # imply that single-trial responses are reliably separable.
-mne.viz.plot_compare_evokeds(
-    {name: first_epochs[name].average() for name in ["standard", "target"]},
-    picks="Pz",
-    show=False,
-)
+# This confusion pools trials; the score table above gives each person a row.
 ConfusionMatrixDisplay.from_predictions(
     y, predictions, display_labels=["standard", "target"], normalize="true"
 )

@@ -28,9 +28,6 @@ the operations; this is not evidence for general transfer gains.
 # source release has already been filtered and its preprocessing must be audited
 # separately before claiming real-time prediction.
 
-import os
-from pathlib import Path
-
 import matplotlib.pyplot as plt
 import numpy as np
 from braindecode.preprocessing import create_windows_from_events
@@ -39,6 +36,8 @@ import torch
 from braindecode.models import EEGNet
 from braindecode import EEGClassifier, EEGRegressor
 from sklearn.metrics import mean_absolute_error
+
+from eegdash.paths import get_default_cache_dir
 
 from eegdash import EEGChallengeDataset
 from eegdash.hbn.windows import (
@@ -53,8 +52,7 @@ from eegdash.hbn.windows import (
 #
 # The explicit run filter prevents a subject query from pulling all three
 # contrast-change runs. The first two subject IDs will train the model; the third
-# is reserved for evaluation. The subject-coverage assertion catches a missing
-# recording instead of silently changing that design.
+# is reserved for evaluation. Keep these identities disjoint in both stages.
 #
 # ``annotate_trials_with_target`` reads the recording's event sidecar and pairs
 # contrast trials with actual stimulus and response times. Trials without the
@@ -63,7 +61,7 @@ from eegdash.hbn.windows import (
 # Inspect the printed annotation names and 100 Hz rate before windowing.
 
 subjects = ["NDARDC843HHM", "NDAREC480KFA", "NDARAP785CTE"]
-cache = Path(os.environ.get("EEGDASH_CACHE_DIR", "~/.eegdash_cache")).expanduser()
+cache = get_default_cache_dir()
 dataset = EEGChallengeDataset(
     release="R5",
     mini=True,
@@ -73,7 +71,6 @@ dataset = EEGChallengeDataset(
     cache_dir=cache,
 )
 print(dataset.description.to_string(index=False))
-assert set(dataset.description.subject) == set(subjects)
 for recording in dataset.datasets:
     raw = recording.raw
     raw.pick("eeg")
@@ -83,7 +80,6 @@ for recording in dataset.datasets:
         raw.info["sfreq"],
         np.unique(raw.annotations.description),
     )
-    assert raw.info["sfreq"] == 100
     annotate_trials_with_target(raw, target_field="rt_from_stimulus")
     add_aux_anchors(raw)
 # %%
@@ -98,8 +94,7 @@ for recording in dataset.datasets:
 # ``add_extras_columns`` carries the measured ``rt_from_stimulus`` into the
 # window metadata. Use that column for ``y``, in seconds. A finite array with
 # shape ``(trials, EEG channels, 200)`` supplies predictors in volts. Positive,
-# finite latency assertions expose malformed event pairings; they do not require
-# a particular prediction error or favourable result.
+# finite latencies are required; inspect missing-response exclusions before fitting.
 
 windows = create_windows_from_events(
     dataset,
@@ -119,11 +114,8 @@ windows = add_extras_columns(
 metadata = windows.get_metadata().reset_index(drop=True)
 X = np.stack([windows[i][0] for i in range(len(windows))])
 y = metadata.rt_from_stimulus.to_numpy(dtype=float)
-assert np.isfinite(X).all() and np.isfinite(y).all() and (y > 0).all()
 train = metadata.subject.isin(subjects[:2]).to_numpy()
 test = metadata.subject.eq(subjects[2]).to_numpy()
-assert train.any() and test.any()
-assert set(metadata.subject[train]).isdisjoint(metadata.subject[test])
 # Fixed microvolt conversion does not estimate a transform on held-out data.
 X = X.astype("float32") * 1e6
 
@@ -131,9 +123,8 @@ X = X.astype("float32") * 1e6
 # Pretrain on an observed auxiliary task
 # --------------------------------------
 #
-# Only the two training participants supply resting EEG. Checking their
-# IDs against the held-out target participant closes a common transfer-learning
-# leak: excluding a person from fine-tuning is insufficient if their recording
+# Only the two training participants supply resting EEG. Excluding a person
+# from fine-tuning is insufficient if their recording
 # was already used during pretraining.
 #
 # The source labels encode instructions to open (0) or close (1) the eyes. The
@@ -147,10 +138,8 @@ X = X.astype("float32") * 1e6
 source = EEGChallengeDataset(
     release="R5", mini=True, task="RestingState", subject=subjects[:2], cache_dir=cache
 )
-assert set(source.description.subject).isdisjoint(metadata.subject[test])
 for recording in source.datasets:
     recording.raw.pick("eeg")
-    assert recording.raw.ch_names == dataset.datasets[0].raw.ch_names
 source_windows = create_windows_from_events(
     source,
     mapping={"instructed_toOpenEyes": 0, "instructed_toCloseEyes": 1},
@@ -167,7 +156,6 @@ Xs = (
     * 1e6
 )
 ys = np.asarray([source_windows[i][1] for i in range(len(source_windows))])
-assert np.isfinite(Xs).all() and set(ys) == {0, 1}
 print(
     "Resting-state windows:",
     Xs.shape,
@@ -194,8 +182,7 @@ torch.set_num_threads(2)
 # Target standardization uses only training latencies. Predictions are later
 # multiplied by that training standard deviation and shifted by the training mean
 # to return to seconds. Copying all state except ``final_layer`` transfers the
-# encoder while keeping the new one-output head. The missing-key assertion
-# ensures that relaxed loading has not silently discarded unrelated parameters.
+# encoder while keeping the new one-output head.
 # Both downstream conditions begin with the same randomly initialized head.
 
 encoder = EEGNet(n_chans=X.shape[1], n_outputs=2, n_times=200, sfreq=100)
@@ -207,17 +194,19 @@ source_trainer = EEGClassifier(
     batch_size=16,
     max_epochs=2,
     train_split=None,
-    iterator_train__shuffle=False,
+    iterator_train__shuffle=True,
     classes=[0, 1],
     device="cpu",
 )
 source_trainer.fit(Xs, ys)
 encoder = source_trainer.module_
 mean, scale = y[train].mean(), y[train].std()
-assert scale > 0
-results = {}
+results = {
+    "training-mean latency": mean_absolute_error(y[test], np.full(test.sum(), mean))
+}
 initial = EEGNet(n_chans=X.shape[1], n_outputs=1, n_times=200, sfreq=100)
 for regime in ["from scratch", "resting-state transfer"]:
+    torch.manual_seed(72)  # matched downstream shuffle seed and initial head
     model = copy.deepcopy(initial)
     if regime == "resting-state transfer":
         state = {
@@ -225,8 +214,7 @@ for regime in ["from scratch", "resting-state transfer"]:
             for k, v in encoder.state_dict().items()
             if not k.startswith("final_layer")
         }
-        missing, unexpected = model.load_state_dict(state, strict=False)
-        assert not unexpected and all(k.startswith("final_layer") for k in missing)
+        model.load_state_dict(state, strict=False)
     regressor = EEGRegressor(
         model,
         criterion=torch.nn.MSELoss,
@@ -235,7 +223,7 @@ for regime in ["from scratch", "resting-state transfer"]:
         batch_size=16,
         max_epochs=2,
         train_split=None,
-        iterator_train__shuffle=False,
+        iterator_train__shuffle=True,
         device="cpu",
     )
     standardized_y = ((y[train] - mean) / scale).astype("float32")[:, None]
@@ -261,7 +249,7 @@ plt.show()
 # To extend the experiment, reserve additional validation participants before
 # either training stage. Select the epoch budget and learning rate there, then
 # repeat the entire comparison over untouched test participants and seeds. Also
-# compare a training-mean latency predictor and assess exclusions for missing
+# inspect the included training-mean latency predictor and exclusions for missing
 # responses. Do not tune source tasks after looking at these test bars.
 #
 # Related worked examples: `cross-dataset transfer

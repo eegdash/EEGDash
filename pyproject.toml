@@ -107,6 +107,7 @@ features = [
   "safetensors",
 ]
 tests = [
+    'ipython',
     'pytest',
     'pytest-cov',
     'pytest-benchmark',

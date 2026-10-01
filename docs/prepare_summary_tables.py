@@ -78,6 +78,7 @@ DATASET_CANONICAL_MAP = {
         "visual": "Visual",
         "somatosensory": "Somatosensory",
         "multisensory": "Multisensory",
+        "no stimulus": "No stimulus",
     },
     "record_modality": {
         "eeg": "EEG",

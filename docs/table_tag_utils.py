@@ -265,9 +265,7 @@ def prefer_api_record_modality(df, csv_col: str = "record_modality_csv"):
     if csv_col not in df.columns:
         return df
     df = df.copy()
-    df["record_modality"] = _non_empty(df, "record_modality").combine_first(
-        df[csv_col]
-    )
+    df["record_modality"] = _non_empty(df, "record_modality").combine_first(df[csv_col])
     df["recording_modality"] = _non_empty(df, "recording_modality").combine_first(
         df["record_modality"]
     )

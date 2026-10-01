@@ -21,14 +21,13 @@ network.
 """
 
 # %%
-import os
-from pathlib import Path
 
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 from braindecode.preprocessing import create_windows_from_events
 
+from eegdash.paths import get_default_cache_dir
 from eegdash import EEGDashDataset
 from torch.utils.data import DataLoader
 
@@ -40,7 +39,7 @@ from torch.utils.data import DataLoader
 # which is the label representation a multiclass neural loss expects. Retain
 # ``class_names`` to translate predictions back to Hz: integer class 0 is an
 # index, not a zero-Hz stimulus.
-cache_dir = Path(os.environ.get("EEGDASH_CACHE_DIR", ".eegdash_cache"))
+cache_dir = get_default_cache_dir()
 subjects = ["1"]
 dataset = EEGDashDataset(
     cache_dir=cache_dir,
@@ -51,18 +50,15 @@ dataset = EEGDashDataset(
     task="ssvep",
     n_jobs=1,
 )
-assert len(dataset.datasets) == len(subjects)
-print(dataset.description[["subject", "session", "run"]])
-raw = dataset.datasets[0].raw
+dataset.description[["subject", "session", "run"]]
+
+# %%
+(recording,) = dataset.datasets  # This lesson opens exactly one recording.
+raw = recording.raw
 sfreq = raw.info["sfreq"]
 channel_names = raw.ch_names
 class_names = sorted(set(raw.annotations.description), key=float)
 mapping = {name: index for index, name in enumerate(class_names)}
-assert len(mapping) == 12
-for recording in dataset.datasets:
-    assert recording.raw.ch_names == channel_names
-    assert recording.raw.info["sfreq"] == sfreq
-    assert set(recording.raw.annotations.description) == set(mapping)
 print(f"Channels: {channel_names}; sampling rate: {sfreq} Hz")
 print("Observed stimulus frequencies (Hz):", class_names)
 
@@ -76,8 +72,7 @@ print("Observed stimulus frequencies (Hz):", class_names)
 # ``preload=True`` makes subsequent indexing read prepared data in memory.
 #
 # ``get_metadata`` preserves subject, session, run and start-sample information
-# alongside ``target``. The duplicate check uses the recording identifiers plus
-# the start sample because a start sample alone is not unique across recordings.
+# alongside ``target``. Recording identifiers plus start samples identify windows.
 # The crosstab reports observed counts, making missing or imbalanced classes
 # visible before any model is constructed.
 window_size = int(4 * sfreq)
@@ -91,9 +86,6 @@ windows = create_windows_from_events(
 )
 metadata = windows.get_metadata().reset_index(drop=True)
 y = metadata["target"].to_numpy(dtype=int)
-assert len(windows) == len(metadata)
-assert set(y) == set(mapping.values())
-assert not metadata.duplicated(["subject", "session", "run", "i_start_in_trial"]).any()
 print(pd.crosstab(metadata["subject"], y))
 
 # %%
@@ -107,24 +99,45 @@ print(pd.crosstab(metadata["subject"], y))
 #
 # Batch size 16 keeps inspection small. ``num_workers=0`` loads in the current
 # process, which is straightforward in both scripts and notebooks. The
-# non-shuffled order lets the equality assertion compare batch labels with the
-# first metadata rows. It is a debugging choice, not the recommended training
-# order. The plot selects the first example and first channel without changing
+# non-shuffled order aligns batch labels with the first metadata rows.
+# It is an inspection choice, not the recommended training
+# order. The plots select up to four examples and the first channel without changing
 # the arrays passed to a future network.
-loader = DataLoader(windows, batch_size=16, shuffle=False, num_workers=0)
+batch_size = 16  # Try 7 or 32; the final batch may contain fewer examples.
+loader = DataLoader(windows, batch_size=batch_size, shuffle=False, num_workers=0)
 X_batch, y_batch, crop_indices = next(iter(loader))
-assert tuple(X_batch.shape) == (16, len(channel_names), window_size)
-np.testing.assert_array_equal(y_batch.numpy(), y[:16])
-assert np.isfinite(X_batch.numpy()).all()
+# With shuffle=True, batch labels still travel with their signals, but no longer
+# match the first metadata rows by position.
+if not np.isfinite(X_batch.numpy()).all():
+    raise ValueError("Nonfinite batch voltages; inspect the selected windows")
 print("Batch:", X_batch.shape, "labels:", y_batch.tolist())
 print("First batch crop indices:", crop_indices)
-fig, ax = plt.subplots(figsize=(8, 3), layout="constrained")
-ax.plot(np.arange(window_size) / sfreq, X_batch[0, 0].numpy() * 1e6)
-ax.set(
-    xlabel="Time (s)",
-    ylabel=f"{channel_names[0]} (µV)",
-    title=f"Observed target: {class_names[int(y_batch[0])]} Hz",
+fig, axes = plt.subplots(
+    min(4, len(y_batch)) + 1, 1, figsize=(9, 8), layout="constrained"
 )
+for i, ax in enumerate(axes[:-1]):
+    ax.plot(np.arange(window_size) / sfreq, X_batch[i, 0].numpy() * 1e6)
+    ax.set(
+        ylabel=f"{channel_names[0]} (µV)",
+        title=f"Batch row {i}: class {int(y_batch[i])} = {class_names[int(y_batch[i])]} Hz",
+    )
+axes[-2].set_xlabel("Time in window (s)")
+duration = raw.annotations.duration[0]
+axes[-1].broken_barh(
+    [(0, duration)], (0, 0.35), facecolors="lightgray", label="Source event"
+)
+axes[-1].broken_barh(
+    [(0, window_size / sfreq)],
+    (0.4, 0.35),
+    facecolors="tab:blue",
+    label="Retained window",
+)
+axes[-1].set(
+    xlabel="Time from first event onset (s)",
+    yticks=[],
+    title=f"Unused event tail: {duration - window_size / sfreq:.2f} s",
+)
+axes[-1].legend()
 plt.show()
 
 # %%

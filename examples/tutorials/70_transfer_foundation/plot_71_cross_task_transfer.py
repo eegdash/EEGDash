@@ -28,9 +28,6 @@ the operations; this is not evidence for general transfer gains.
 # source release has already been filtered and its preprocessing must be audited
 # separately before claiming real-time prediction.
 
-import os
-from pathlib import Path
-
 import matplotlib.pyplot as plt
 import numpy as np
 from braindecode.preprocessing import create_windows_from_events
@@ -39,6 +36,8 @@ import torch
 from braindecode.models import EEGNet
 from braindecode import EEGClassifier, EEGRegressor
 from sklearn.metrics import mean_absolute_error
+
+from eegdash.paths import get_default_cache_dir
 
 from eegdash import EEGChallengeDataset
 from eegdash.hbn.windows import (
@@ -63,7 +62,7 @@ from eegdash.hbn.windows import (
 # Inspect the printed annotation names and 100 Hz rate before windowing.
 
 subjects = ["NDARDC843HHM", "NDAREC480KFA", "NDARAP785CTE"]
-cache = Path(os.environ.get("EEGDASH_CACHE_DIR", "~/.eegdash_cache")).expanduser()
+cache = get_default_cache_dir()
 dataset = EEGChallengeDataset(
     release="R5",
     mini=True,
@@ -73,7 +72,10 @@ dataset = EEGChallengeDataset(
     cache_dir=cache,
 )
 print(dataset.description.to_string(index=False))
-assert set(dataset.description.subject) == set(subjects)
+if not (set(dataset.description.subject) == set(subjects)):
+    raise ValueError(
+        "Data contract failed: set(dataset.description.subject) == set(subjects); inspect the selected recordings and metadata."
+    )
 for recording in dataset.datasets:
     raw = recording.raw
     raw.pick("eeg")
@@ -83,7 +85,10 @@ for recording in dataset.datasets:
         raw.info["sfreq"],
         np.unique(raw.annotations.description),
     )
-    assert raw.info["sfreq"] == 100
+    if raw.info["sfreq"] != 100 or raw.ch_names != dataset.datasets[0].raw.ch_names:
+        raise ValueError(
+            "All target recordings need 100 Hz EEG in identical channel order."
+        )
     annotate_trials_with_target(raw, target_field="rt_from_stimulus")
     add_aux_anchors(raw)
 # %%
@@ -119,13 +124,39 @@ windows = add_extras_columns(
 metadata = windows.get_metadata().reset_index(drop=True)
 X = np.stack([windows[i][0] for i in range(len(windows))])
 y = metadata.rt_from_stimulus.to_numpy(dtype=float)
-assert np.isfinite(X).all() and np.isfinite(y).all() and (y > 0).all()
+if not (np.isfinite(X).all() and np.isfinite(y).all() and (y > 0).all()):
+    raise ValueError(
+        "Reaction times must be positive and finite, and EEG finite; inspect event pairing."
+    )
 train = metadata.subject.isin(subjects[:2]).to_numpy()
 test = metadata.subject.eq(subjects[2]).to_numpy()
-assert train.any() and test.any()
-assert set(metadata.subject[train]).isdisjoint(metadata.subject[test])
+if not (train.any() and test.any()):
+    raise ValueError(
+        "Data contract failed: train.any() and test.any(); inspect the selected recordings and metadata."
+    )
+if not (set(metadata.subject[train]).isdisjoint(metadata.subject[test])):
+    raise ValueError(
+        "Data contract failed: set(metadata.subject[train]).isdisjoint(metadata.subject[test]); inspect the selected recordings and metadata."
+    )
 # Fixed microvolt conversion does not estimate a transform on held-out data.
 X = X.astype("float32") * 1e6
+
+# %%
+# Inspect actual latency support and participant assignments before fitting.
+print(
+    metadata.groupby("subject").rt_from_stimulus.agg(["count", "median", "min", "max"])
+)
+fig, ax = plt.subplots(figsize=(7, 3))
+for identity in subjects:
+    ax.hist(
+        y[metadata.subject.eq(identity)],
+        bins=20,
+        alpha=0.4,
+        label=f"{identity} ({'test' if identity == subjects[2] else 'train + pretrain'})",
+    )
+ax.set(xlabel="Observed reaction time (s)", ylabel="Trials")
+ax.legend(fontsize=8)
+plt.show()
 
 # %%
 # Pretrain on an observed auxiliary task
@@ -147,10 +178,20 @@ X = X.astype("float32") * 1e6
 source = EEGChallengeDataset(
     release="R5", mini=True, task="RestingState", subject=subjects[:2], cache_dir=cache
 )
-assert set(source.description.subject).isdisjoint(metadata.subject[test])
+if set(source.description.subject) != set(subjects[:2]):
+    raise ValueError(
+        "Auxiliary pretraining must contain exactly the two training participants."
+    )
+if not (set(source.description.subject).isdisjoint(metadata.subject[test])):
+    raise ValueError(
+        "Data contract failed: set(source.description.subject).isdisjoint(metadata.subject[test]); inspect the selected recordings and metadata."
+    )
 for recording in source.datasets:
     recording.raw.pick("eeg")
-    assert recording.raw.ch_names == dataset.datasets[0].raw.ch_names
+    if not (recording.raw.ch_names == dataset.datasets[0].raw.ch_names):
+        raise ValueError(
+            "Data contract failed: recording.raw.ch_names == dataset.datasets[0].raw.ch_names; inspect the selected recordings and metadata."
+        )
 source_windows = create_windows_from_events(
     source,
     mapping={"instructed_toOpenEyes": 0, "instructed_toCloseEyes": 1},
@@ -167,7 +208,10 @@ Xs = (
     * 1e6
 )
 ys = np.asarray([source_windows[i][1] for i in range(len(source_windows))])
-assert np.isfinite(Xs).all() and set(ys) == {0, 1}
+if not (np.isfinite(Xs).all() and set(ys) == {0, 1}):
+    raise ValueError(
+        "Data contract failed: np.isfinite(Xs).all() and set(ys) == {0, 1}; inspect the selected recordings and metadata."
+    )
 print(
     "Resting-state windows:",
     Xs.shape,
@@ -207,17 +251,23 @@ source_trainer = EEGClassifier(
     batch_size=16,
     max_epochs=2,
     train_split=None,
-    iterator_train__shuffle=False,
+    iterator_train__shuffle=True,
     classes=[0, 1],
     device="cpu",
 )
 source_trainer.fit(Xs, ys)
 encoder = source_trainer.module_
 mean, scale = y[train].mean(), y[train].std()
-assert scale > 0
-results = {}
+if not (scale > 0):
+    raise ValueError(
+        "Training reaction times have zero spread; standardized regression is undefined."
+    )
+results = {
+    "training-mean latency": mean_absolute_error(y[test], np.full(test.sum(), mean))
+}
 initial = EEGNet(n_chans=X.shape[1], n_outputs=1, n_times=200, sfreq=100)
 for regime in ["from scratch", "resting-state transfer"]:
+    torch.manual_seed(72)  # matched downstream shuffle seed and initial head
     model = copy.deepcopy(initial)
     if regime == "resting-state transfer":
         state = {
@@ -226,7 +276,10 @@ for regime in ["from scratch", "resting-state transfer"]:
             if not k.startswith("final_layer")
         }
         missing, unexpected = model.load_state_dict(state, strict=False)
-        assert not unexpected and all(k.startswith("final_layer") for k in missing)
+        if unexpected or any(not k.startswith("final_layer") for k in missing):
+            raise RuntimeError(
+                f"EEGNet encoder/head mismatch: missing={missing}, unexpected={unexpected}"
+            )
     regressor = EEGRegressor(
         model,
         criterion=torch.nn.MSELoss,
@@ -235,7 +288,7 @@ for regime in ["from scratch", "resting-state transfer"]:
         batch_size=16,
         max_epochs=2,
         train_split=None,
-        iterator_train__shuffle=False,
+        iterator_train__shuffle=True,
         device="cpu",
     )
     standardized_y = ((y[train] - mean) / scale).astype("float32")[:, None]
@@ -261,7 +314,7 @@ plt.show()
 # To extend the experiment, reserve additional validation participants before
 # either training stage. Select the epoch budget and learning rate there, then
 # repeat the entire comparison over untouched test participants and seeds. Also
-# compare a training-mean latency predictor and assess exclusions for missing
+# inspect the included training-mean latency predictor and exclusions for missing
 # responses. Do not tune source tasks after looking at these test bars.
 #
 # Related worked examples: `cross-dataset transfer

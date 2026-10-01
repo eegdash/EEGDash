@@ -25,8 +25,6 @@ identity, followed by predictions for the reserved session.
 # %%
 # 1. Load and inspect the EEGDash signal source
 # ---------------------------------------------
-import os
-from pathlib import Path
 
 import matplotlib.pyplot as plt
 import numpy as np
@@ -38,11 +36,13 @@ from sklearn.metrics import ConfusionMatrixDisplay, balanced_accuracy_score
 from sklearn.pipeline import make_pipeline
 from sklearn.preprocessing import StandardScaler
 
+from eegdash.paths import get_default_cache_dir
+
 from eegdash import EEGDashDataset
 from eegdash.features import signal_variance
 
 source = EEGDashDataset(
-    cache_dir=Path(os.environ.get("EEGDASH_CACHE_DIR", ".eegdash_cache")),
+    cache_dir=get_default_cache_dir(),
     dataset="nm000135",
     subject="1",
     session=["0train", "1train"],
@@ -50,12 +50,18 @@ source = EEGDashDataset(
     task="imagery",
     n_jobs=1,
 )
-assert len(source.datasets) == 2
+if not (len(source.datasets) == 2):
+    raise ValueError(
+        "Data contract failed: len(source.datasets) == 2; inspect the selected recordings and metadata."
+    )
 print(source.description[["subject", "session", "run"]])
 for recording in source.datasets:
     raw = recording.raw
     print(raw.ch_names, raw.info["sfreq"], np.unique(raw.annotations.description))
-    assert {"left_hand", "right_hand"}.issubset(raw.annotations.description)
+    if not ({"left_hand", "right_hand"}.issubset(raw.annotations.description)):
+        raise ValueError(
+            'Data contract failed: {"left_hand", "right_hand"}.issubset(raw.annotations.description); inspect the selected recordings and metadata.'
+        )
 
 
 # %%
@@ -69,8 +75,9 @@ for recording in source.datasets:
 # the two abstract methods required by BaseDataset.
 # ``_get_single_subject_data`` is MOABB's dataset-provider hook despite its
 # leading underscore. ``data_path`` intentionally has no second downloader:
-# MOABB receives the EEGDash objects we already acquired. The equality check
-# below verifies that copying preserves their actual samples before filtering.
+# MOABB receives the EEGDash objects we already acquired. The structural check
+# below verifies channel order, sampling rate and event identity/time; it is not
+# a sample-by-sample equality test.
 #
 # ``interval=[0, 3]`` declares our analysis interval relative to each existing
 # cue. ``sessions_per_subject=2`` describes the actual two-session selection,
@@ -88,13 +95,19 @@ class EEGDashImagery(BaseDataset):
         )
 
     def _get_single_subject_data(self, subject):
-        assert subject == 1
-        return {
-            str(recording.description["session"]): {
-                str(recording.description["run"]): recording.raw.copy().load_data()
-            }
-            for recording in self.recordings.datasets
-        }
+        if subject != 1:
+            raise ValueError("This bounded adapter contains only subject 1.")
+        nested = {}
+        for recording in self.recordings.datasets:
+            session = str(recording.description["session"])
+            run = str(recording.description["run"])
+            runs = nested.setdefault(session, {})
+            if run in runs:
+                raise ValueError(
+                    f"Duplicate recording key: subject 1 / {session} / {run}"
+                )
+            runs[run] = recording.raw.copy().load_data()
+        return nested
 
     def data_path(
         self, subject, path=None, force_update=False, update_path=None, verbose=None
@@ -109,7 +122,17 @@ for recording in source.datasets:
     raw = handed_off[str(recording.description["session"])][
         str(recording.description["run"])
     ]
-    np.testing.assert_array_equal(raw.get_data(), recording.raw.get_data())
+    if (
+        raw.ch_names != recording.raw.ch_names
+        or raw.info["sfreq"] != recording.raw.info["sfreq"]
+        or not np.array_equal(
+            raw.annotations.description, recording.raw.annotations.description
+        )
+        or not np.array_equal(raw.annotations.onset, recording.raw.annotations.onset)
+    ):
+        raise ValueError(
+            "Handoff changed channel order, sampling rate or event identity/time."
+        )
 
 # %%
 # 3. Let MOABB create labelled epochs from those EEGDash recordings
@@ -127,11 +150,46 @@ paradigm = LeftRightImagery(
 # MOABB supplies class-name strings in y and session identities in metadata.
 epochs, y, metadata = paradigm.get_data(adapter, subjects=[1], return_epochs=True)
 X = epochs.get_data()
-assert len(X) == len(y) == len(metadata)
-assert np.isfinite(X).all() and set(y) == {"left_hand", "right_hand"}
-assert set(metadata.session) == {"0train", "1train"}
+if not (len(X) == len(y) == len(metadata)):
+    raise ValueError(
+        "Data contract failed: len(X) == len(y) == len(metadata); inspect the selected recordings and metadata."
+    )
+if not (np.isfinite(X).all() and set(y) == {"left_hand", "right_hand"}):
+    raise ValueError(
+        'Data contract failed: np.isfinite(X).all() and set(y) == {"left_hand", "right_hand"}; inspect the selected recordings and metadata.'
+    )
+if not (set(metadata.session) == {"0train", "1train"}):
+    raise ValueError(
+        'Data contract failed: set(metadata.session) == {"0train", "1train"}; inspect the selected recordings and metadata.'
+    )
 print("MOABB epochs:", X.shape, epochs.ch_names, "units: volts")
 print(pd.crosstab(metadata.session, y))
+
+# %%
+# Inspect the first retained epoch against the same source interval. MOABB's
+# analysis filter changes values, so this is not an equality claim.
+first_session = str(metadata.iloc[0].session)
+reference_raw = next(
+    r.raw for r in source.datasets if str(r.description["session"]) == first_session
+)
+start = int(epochs.events[0, 0] - reference_raw.first_samp)
+reference = reference_raw.get_data(
+    picks=epochs.ch_names, start=start, stop=start + X.shape[-1]
+)
+fig, ax = plt.subplots(figsize=(8, 3))
+ax.plot(epochs.times, reference[0] * 1e6, label="EEGDash source")
+ax.plot(epochs.times, X[0, 0] * 1e6, label="MOABB 8–30 Hz")
+ax.axvline(
+    3 - 1 / epochs.info["sfreq"], color="gray", ls=":", label="750-sample last point"
+)
+ax.axvline(3, color="black", ls="--", label="inclusive 751st point")
+ax.set(
+    xlabel="Seconds from cue",
+    ylabel=f"{epochs.ch_names[0]} (µV)",
+    title=f"Session {first_session}: {y[0]}",
+)
+ax.legend()
+plt.show()
 
 # %%
 # 4. Fit only on the first session and predict the second
@@ -143,8 +201,14 @@ print(pd.crosstab(metadata.session, y))
 features = np.log(np.maximum(signal_variance(X), 1e-30))
 train = np.flatnonzero(metadata.session.to_numpy() == "0train")
 test = np.flatnonzero(metadata.session.to_numpy() == "1train")
-assert set(train).isdisjoint(test)
-assert set(y[train]) == set(y[test]) == {"left_hand", "right_hand"}
+if not (set(train).isdisjoint(test)):
+    raise ValueError(
+        "Data contract failed: set(train).isdisjoint(test); inspect the selected recordings and metadata."
+    )
+if not (set(y[train]) == set(y[test]) == {"left_hand", "right_hand"}):
+    raise ValueError(
+        'Data contract failed: set(y[train]) == set(y[test]) == {"left_hand", "right_hand"}; inspect the selected recordings and metadata.'
+    )
 model = make_pipeline(StandardScaler(), LogisticRegression(max_iter=1000))
 model.fit(features[train], y[train])
 prediction = model.predict(features[test])

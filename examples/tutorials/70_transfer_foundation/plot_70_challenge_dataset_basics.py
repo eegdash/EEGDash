@@ -13,8 +13,8 @@ must not be confused with the original HBN OpenNeuro recordings.
 #
 # Use an installed EEGDash environment and an internet connection to the
 # catalogue. This page requests metadata only; it needs neither a GPU nor a
-# signal download. ``EEGDASH_CACHE_DIR`` selects a reusable cache, defaulting to
-# ``~/.eegdash_cache``. Reading a recording's ``.raw`` later is a separate step
+# signal download. ``EEGDASH_CACHE_DIR`` overrides
+# the shared EEGDash cache resolver. Reading a recording's ``.raw`` later is a separate step
 # that acquires its signal and sidecars.
 #
 # The question is whether a proposed cohort contains the participants and tasks
@@ -22,8 +22,9 @@ must not be confused with the original HBN OpenNeuro recordings.
 # ``p_factor`` is requested to inspect available participant metadata, not to
 # construct a new target or infer that every participant has a valid value.
 
-import os
-from pathlib import Path
+import matplotlib.pyplot as plt
+
+from eegdash.paths import get_default_cache_dir
 
 from eegdash import EEGChallengeDataset
 from eegdash.const import SUBJECT_MINI_RELEASE_MAP
@@ -46,9 +47,7 @@ from eegdash.const import SUBJECT_MINI_RELEASE_MAP
 dataset = EEGChallengeDataset(
     release="R5",
     mini=True,
-    cache_dir=Path(
-        os.environ.get("EEGDASH_CACHE_DIR", "~/.eegdash_cache")
-    ).expanduser(),
+    cache_dir=get_default_cache_dir(),
     description_fields=["subject", "task", "run", "age", "sex", "p_factor"],
 )
 # %%
@@ -66,7 +65,15 @@ dataset = EEGChallengeDataset(
 # for the next tutorial.
 
 metadata = dataset.description
-assert set(metadata.subject).issubset(SUBJECT_MINI_RELEASE_MAP["R5"])
+if metadata.empty:
+    raise RuntimeError(
+        "No R5 mini recordings returned; check catalogue connectivity and release filters."
+    )
+unexpected = set(metadata.subject) - set(SUBJECT_MINI_RELEASE_MAP["R5"])
+if unexpected:
+    raise ValueError(
+        f"Catalogue returned participants outside R5 mini eligibility: {unexpected}"
+    )
 print("Eligible mini participants:", len(SUBJECT_MINI_RELEASE_MAP["R5"]))
 print("Matched participants:", metadata.subject.nunique())
 print("Matched recordings:", len(dataset.datasets))
@@ -76,6 +83,12 @@ print(
     )
 )
 print(metadata.head().to_string(index=False))
+metadata.groupby("task").agg(
+    recordings=("subject", "size"), participants=("subject", "nunique")
+).plot.bar(figsize=(9, 4), rot=30)
+plt.ylabel("Count (recordings are not independent participants)")
+plt.tight_layout()
+plt.show()
 
 # %%
 # Select participants explicitly before accessing .raw: the constructor above

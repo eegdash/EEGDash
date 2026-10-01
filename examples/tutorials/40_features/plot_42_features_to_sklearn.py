@@ -18,8 +18,7 @@ Tutorial 11 explains the participant split used below.
 
 # %%
 import json
-import os
-from pathlib import Path
+from eegdash.paths import get_default_cache_dir
 
 import matplotlib.pyplot as plt
 import numpy as np
@@ -43,7 +42,7 @@ from sklearn.preprocessing import StandardScaler
 # on each value independently; unlike StandardScaler, it does not estimate
 # statistics from held-out participants. The printed crosstab checks class
 # coverage after the file handoff.
-cache_dir = Path(os.environ.get("EEGDASH_CACHE_DIR", ".eegdash_cache"))
+cache_dir = get_default_cache_dir()
 path = cache_dir / "plot_40_features.csv"
 if not path.exists() or not path.with_suffix(".json").exists():
     raise FileNotFoundError(
@@ -51,17 +50,88 @@ if not path.exists() or not path.with_suffix(".json").exists():
     )
 table = pd.read_csv(path, dtype={"subject": str, "session": str, "run": str})
 schema = json.loads(path.with_suffix(".json").read_text())
-assert schema["dataset"] == "nm000118"
+required_schema = {
+    "dataset",
+    "schema_version",
+    "power_units",
+    "feature_columns",
+    "bands",
+    "channels",
+    "mapping",
+}
+if not required_schema.issubset(schema):
+    raise ValueError("Incomplete schema: regenerate both files with tutorial 40")
+required_metadata = {
+    "subject",
+    "session",
+    "run",
+    "i_start_in_trial",
+    "target",
+    "frequency_hz",
+}
+if not required_metadata.issubset(table.columns):
+    raise ValueError(
+        "Missing identity/target columns: regenerate the tutorial 40 table"
+    )
+if (
+    schema.get("dataset") != "nm000118"
+    or schema.get("schema_version") != 1
+    or schema.get("power_units") != "V^2"
+):
+    raise ValueError("Incompatible schema: regenerate both files with tutorial 40")
 columns = schema["feature_columns"]
-assert columns and set(columns).issubset(table.columns)
-assert not table.duplicated(["subject", "session", "run", "i_start_in_trial"]).any()
-X = np.log10(np.maximum(table[columns].to_numpy(), 1e-30))
-y = table["target"].to_numpy(dtype=int)
+metadata_columns = {
+    "subject",
+    "session",
+    "run",
+    "i_start_in_trial",
+    "target",
+    "frequency_hz",
+    "dataset",
+    "task",
+}
+expected_columns = {
+    f"spectral_power_{band}_{channel}"
+    for band in schema["bands"]
+    for channel in schema["channels"]
+}
+if (
+    not columns
+    or len(columns) != len(set(columns))
+    or not set(columns).issubset(table.columns)
+    or set(columns) & metadata_columns
+    or set(columns) != expected_columns
+):
+    raise ValueError(
+        "Predictor names must uniquely match the band/channel schema and exclude metadata"
+    )
+powers = table[columns].to_numpy(dtype=float)
+if not np.isfinite(powers).all() or np.any(powers < 0):
+    raise ValueError(
+        "Stored powers must be finite and nonnegative; do not mask invalid data with a log floor"
+    )
+if table.duplicated(["subject", "session", "run", "i_start_in_trial"]).any():
+    raise ValueError(
+        "Duplicate recording/start identities; inspect row alignment before modelling"
+    )
+X = np.log10(np.maximum(powers, 1e-30))
+target_values = table["target"].to_numpy(dtype=float)
+if (
+    not np.isfinite(target_values).all()
+    or not np.equal(target_values, np.floor(target_values)).all()
+):
+    raise ValueError(
+        "Targets must be finite integer class indices from the saved mapping"
+    )
+y = target_values.astype(int)
 groups = table["subject"].astype(str).to_numpy()
-assert np.isfinite(X).all()
-assert set(groups) == {"1", "2", "3"}
+if not (set(groups) == {"1", "2", "3"}):
+    raise ValueError(
+        "Expected cohort identities are missing; inspect query and retained windows"
+    )
 print(pd.crosstab(groups, y))
 print("Feature matrix:", X.shape)
+table[["subject", "target", "frequency_hz"] + columns[:4]].head()
 
 # %%
 # 2. Fit the scaler and classifier on the training subjects only
@@ -79,8 +149,12 @@ print("Feature matrix:", X.shape)
 # limitation of this feature representation, not a reason to replace the
 # measured score with a more attractive number.
 train, test = groups != "3", groups == "3"
-assert set(groups[train]).isdisjoint(groups[test])
-assert set(y[train]) == set(y[test]) == set(schema["mapping"].values())
+if not (set(groups[train]).isdisjoint(groups[test])):
+    raise ValueError("Training and test participants overlap; fix the evaluation split")
+if not (set(y[train]) == set(y[test]) == set(schema["mapping"].values())):
+    raise ValueError(
+        "Required event classes are missing; inspect annotation/retained-condition counts"
+    )
 pipe = make_pipeline(StandardScaler(), LogisticRegression(max_iter=1000))
 pipe.fit(X[train], y[train])
 predictions = pipe.predict(X[test])
@@ -90,8 +164,8 @@ print("Subject 3 balanced accuracy:", balanced_accuracy_score(y[test], predictio
 # 3. Inspect actual predictions and fitted coefficients
 # -----------------------------------------------------
 # The confusion matrix is row-normalized, so each row describes the predicted
-# class distribution for a single true class. Its integer labels are the
-# frequency indices stored in the JSON mapping.
+# class distribution for a single true class. Axes decode the saved mapping
+# back to stimulus frequencies in Hz.
 #
 # For each feature, the right plot averages the absolute fitted coefficient
 # over all class decisions and displays the eight largest. Scaling makes
@@ -103,12 +177,18 @@ fig, axes = plt.subplots(1, 2, figsize=(12, 5), layout="constrained")
 ConfusionMatrixDisplay.from_predictions(
     y[test],
     predictions,
+    labels=sorted(schema["mapping"].values()),
+    display_labels=[
+        name
+        for name, index in sorted(schema["mapping"].items(), key=lambda item: item[1])
+    ],
+    xticks_rotation=90,
     normalize="true",
     include_values=False,
     colorbar=False,
     ax=axes[0],
 )
-axes[0].set_title("Held-out subject 3 (frequency-class indices)")
+axes[0].set_title("Held-out subject 3 (Hz)")
 weights = np.abs(pipe.named_steps["logisticregression"].coef_).mean(axis=0)
 order = np.argsort(weights)[-8:]
 axes[1].barh(np.asarray(columns)[order], weights[order])

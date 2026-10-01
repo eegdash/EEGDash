@@ -28,8 +28,6 @@ previously prepared feature file is needed.
 # Each recording contributes many stimulus trials after epoching. Inspect the
 # description before accessing ``raw``, which acquires the signal file;
 # ``load_data()`` below then brings its samples into memory.
-import os
-from pathlib import Path
 
 import matplotlib.pyplot as plt
 import mne
@@ -42,10 +40,11 @@ from sklearn.model_selection import LeaveOneGroupOut
 from sklearn.pipeline import make_pipeline
 from sklearn.preprocessing import StandardScaler
 
+from eegdash.paths import get_default_cache_dir
 from eegdash import EEGDashDataset
 from eegdash.features import signal_mean
 
-cache_dir = Path(os.environ.get("EEGDASH_CACHE_DIR", ".eegdash_cache"))
+cache_dir = get_default_cache_dir()
 subjects = ["054", "119", "123"]
 dataset = EEGDashDataset(
     cache_dir=cache_dir,
@@ -54,13 +53,19 @@ dataset = EEGDashDataset(
     task="visualoddball",
     n_jobs=1,
 )
-assert len(dataset.datasets) == len(subjects)
+if len(dataset.datasets) != len(subjects):
+    raise ValueError(
+        "Query did not return one recording per requested subject; inspect dataset.description"
+    )
 print(dataset.description[["subject", "task"]])
 
 # %%
 # 2. Map recorded events and prepare trial features
 # -------------------------------------------------
-# In code XY, X is the block's target letter and Y is the presented
+# Consult the source task/event documentation before transferring this mapping:
+# `ds005863 source tree <https://github.com/OpenNeuroDatasets/ds005863>`_.
+# The literal marker vocabulary is printed below; a catalogue task name alone
+# cannot establish these semantics. In code XY, X is the block's target letter and Y is the presented
 # letter, both coded 1..5. Matching digits denote targets. Explicitly
 # exclude responses and other markers rather than calling all other
 # annotations standards. Some readers prefix names with ``Stimulus/``.
@@ -89,6 +94,7 @@ print(dataset.description[["subject", "task"]])
 # quality-control rules before extending this analysis.
 features, labels, groups = [], [], []
 first_epochs = None
+first_subject = None
 channel_names = None
 for recording in dataset.datasets:
     raw = recording.raw.copy().load_data().pick("eeg")
@@ -97,8 +103,39 @@ for recording in dataset.datasets:
         code = name.split("/")[-1].replace(" ", "")
         if len(code) == 3 and code[0] == "S" and set(code[1:]) <= set("12345"):
             mapping[name] = 2 if code[1] == code[2] else 1
-    assert set(mapping.values()) == {1, 2}, "Missing target or standard markers"
+    if not (set(mapping.values()) == {1, 2}):
+        raise ValueError(
+            "Required event classes are missing; inspect annotation/retained-condition counts"
+        )
     print(recording.description["subject"], mapping)
+    if first_epochs is None:
+        # Static annotated voltage excerpt before preprocessing or model fitting.
+        event_sample = np.flatnonzero(
+            np.isin(raw.annotations.description, list(mapping))
+        )[0]
+        onset = raw.annotations.onset[event_sample] - raw.first_time
+        start = max(0, raw.time_as_index(onset - 0.1, use_rounding=True)[0])
+        stop = min(raw.n_times, start + int(3 * raw.info["sfreq"]))
+        fig, ax = plt.subplots(figsize=(10, 3), layout="constrained")
+        ax.plot(
+            raw.times[start:stop],
+            raw.get_data(picks=["Pz"], start=start, stop=stop)[0] * 1e6,
+        )
+        for ann in raw.annotations:
+            time = ann["onset"] - raw.first_time
+            if (
+                raw.times[start] <= time <= raw.times[stop - 1]
+                and ann["description"] in mapping
+            ):
+                ax.axvline(time, color="tab:orange", alpha=0.5)
+                ax.text(
+                    time, ax.get_ylim()[1], ann["description"], rotation=90, va="top"
+                )
+        ax.set(
+            xlabel="Recording time (s)",
+            ylabel="Pz (µV)",
+            title=f"Unfiltered source excerpt: {recording.description['subject']}",
+        )
 
     # Preprocess, epoch and baseline-correct
     # Filtering is independent for each recording. Epochs span -0.1..0.8 s
@@ -108,8 +145,14 @@ for recording in dataset.datasets:
     source_grid = (raw.info["sfreq"], raw.n_times, raw.first_samp)
     RemoveDCOffset().apply(raw)
     RemoveCommonAverageReference().apply(raw)
-    assert (raw.info["sfreq"], raw.n_times, raw.first_samp) == source_grid
+    if not ((raw.info["sfreq"], raw.n_times, raw.first_samp) == source_grid):
+        raise ValueError(
+            "Preprocessing changed the sample grid; do not restore event times"
+        )
     raw.set_meas_date(source_date)
+    # With no absolute origin, set_annotations adds first_time itself.
+    if source_annotations.orig_time is None:
+        source_annotations.onset -= raw.first_time
     raw.set_annotations(source_annotations)
     raw.filter(0.5, 30.0)
     events, _ = mne.events_from_annotations(raw, event_id=mapping)
@@ -123,21 +166,88 @@ for recording in dataset.datasets:
         preload=True,
         reject_by_annotation=True,
     )
+    retained_counts = {name: len(epochs[name]) for name in epochs.event_id}
+    print(
+        pd.DataFrame(
+            {
+                "before": {
+                    name: int(np.sum(events[:, 2] == code))
+                    for name, code in epochs.event_id.items()
+                },
+                "retained": retained_counts,
+            }
+        )
+    )
+    print(
+        "Drop reasons:",
+        pd.Series(
+            [reason for reasons in epochs.drop_log for reason in reasons]
+        ).value_counts(),
+    )
     epochs.resample(128)
     if channel_names is None:
         channel_names = epochs.ch_names
         first_epochs = epochs
-    assert epochs.ch_names == channel_names
-    assert "Pz" in epochs.ch_names, "This ERP example requires Pz"
+        first_subject = str(recording.description["subject"])
+    if not (epochs.ch_names == channel_names):
+        raise ValueError(
+            "Required EEG channels or their order differ; inspect channel metadata"
+        )
+    if "Pz" not in epochs.ch_names:
+        raise ValueError(
+            "Required EEG channels or their order differ; inspect channel metadata"
+        )
     X = epochs.get_data()
     y = epochs.events[:, 2] - 1
-    assert set(y) == {0, 1} and np.isfinite(X).all()
+    if not (set(y) == {0, 1} and np.isfinite(X).all()):
+        raise ValueError(
+            "Required event classes are missing; inspect annotation/retained-condition counts"
+        )
 
     # Use a fixed analysis interval; do not choose it from test accuracy.
     interval = (epochs.times >= 0.3) & (epochs.times <= 0.45)
     features.append(signal_mean(X[:, :, interval]) * 1e6)
     labels.append(y)
     groups.extend([str(recording.description["subject"])] * len(y))
+
+# %%
+# Inspect trial variability before fitting
+# ----------------------------------------
+# Whole-recording filtering/reference is offline preprocessing, not a causal
+# online deployment recipe. The image includes all retained first-subject trials.
+fig, axes = plt.subplots(1, 2, figsize=(12, 4), layout="constrained")
+pz_trials = first_epochs.get_data(picks=["Pz"])[:, 0] * 1e6
+image = axes[0].imshow(
+    pz_trials,
+    aspect="auto",
+    origin="lower",
+    extent=[first_epochs.times[0], first_epochs.times[-1], 0, len(first_epochs)],
+    cmap="RdBu_r",
+)
+axes[0].axvline(0, color="black", linestyle=":")
+axes[0].set(
+    xlabel="Time from stimulus (s)",
+    ylabel="Retained trial",
+    title=f"Subject {first_subject}: Pz trials",
+)
+fig.colorbar(image, ax=axes[0], label="µV")
+for name in ["standard", "target"]:
+    evoked = first_epochs[name].average()
+    axes[1].plot(
+        evoked.times,
+        evoked.data[evoked.ch_names.index("Pz")] * 1e6,
+        label=f"{name}, n={len(first_epochs[name])}",
+    )
+axes[1].axvline(0, color="black", linestyle=":")
+axes[1].axhline(0, color="gray", linewidth=0.5)
+axes[1].axvspan(0.3, 0.45, alpha=0.15, color="gray", label="Fixed feature interval")
+axes[1].set(
+    xlabel="Time from stimulus (s)",
+    ylabel="Pz (µV)",
+    title=f"Subject {first_subject}: condition means",
+)
+axes[1].legend()
+plt.show()
 
 # %%
 # 3. Evaluate one held-out subject per fold
@@ -162,7 +272,10 @@ predictions = np.full(len(y), -1)
 counts = np.zeros(len(y), dtype=int)
 rows = []
 for train, test in LeaveOneGroupOut().split(X, y, groups):
-    assert set(groups[train]).isdisjoint(groups[test])
+    if not (set(groups[train]).isdisjoint(groups[test])):
+        raise ValueError(
+            "Training and test participants overlap; fix the evaluation split"
+        )
     model = make_pipeline(
         StandardScaler(), LogisticRegression(class_weight="balanced", max_iter=1000)
     )
@@ -175,7 +288,8 @@ for train, test in LeaveOneGroupOut().split(X, y, groups):
             "balanced_accuracy": balanced_accuracy_score(y[test], predictions[test]),
         }
     )
-assert np.all(counts == 1)
+if not (np.all(counts == 1)):
+    raise ValueError("Every trial must have exactly one held-out prediction")
 print(pd.DataFrame(rows).to_string(index=False))
 
 # %%
@@ -189,11 +303,18 @@ print(pd.DataFrame(rows).to_string(index=False))
 # targets. Compare both rows, since good standard recall can hide missed
 # targets in an unbalanced task. An averaged ERP difference also need not
 # imply that single-trial responses are reliably separable.
-mne.viz.plot_compare_evokeds(
-    {name: first_epochs[name].average() for name in ["standard", "target"]},
-    picks="Pz",
-    show=False,
+scores = pd.DataFrame(rows)
+fig, ax = plt.subplots(figsize=(6, 3), layout="constrained")
+ax.scatter(scores["subject"], scores["balanced_accuracy"])
+ax.axhline(0.5, color="black", linestyle="--")
+ax.set(
+    xlabel="Held-out participant",
+    ylabel="Balanced accuracy",
+    ylim=(0, 1),
+    title="Participant-level scores (three people)",
 )
+# Pooled confusion below weights trials, not participants.
+
 ConfusionMatrixDisplay.from_predictions(
     y, predictions, display_labels=["standard", "target"], normalize="true"
 )

@@ -8,12 +8,13 @@ strategy: freeze the pretrained encoder and train only a linear head on top.
 The checkpoint is https://huggingface.co/braindecode/cbramod-pretrained
 (documented by Braindecode's CBraMod model). It was pretrained on TUH EEG;
 this example uses the distinct HBN R5 mini cohort. It downloads about 20 MB
-of weights and eighteen challenge recordings (roughly 320 MB total).
+of weights and six challenge recordings in small mode (roughly 100 MB).
+Opt in to full mode for eighteen recordings (roughly 320 MB).
 
-Six subject-grouped folds each hold three participants out for testing
-while three others select the epoch and twelve train, so every participant
-is scored exactly once. The training loop is written out in one block, with
-no helper functions, so each step can be read top to bottom. The small fixed
+Small mode uses three folds with two test, two reserved validation and two training
+participants. Full mode uses six folds with three test, three validation and
+twelve training participants. Each person is scored once per regime. Frozen embeddings are computed once; a train-only scaled logistic classifier
+provides the linear probe without a neural training loop. The small fixed
 budget demonstrates adaptation, not a foundation-model benchmark.
 """
 
@@ -24,7 +25,7 @@ budget demonstrates adaptation, not a foundation-model benchmark.
 # Use EEGDash, Braindecode, PyTorch, NumPy, scikit-learn and Matplotlib.
 # The public checkpoint requires network access on first use;
 # ``from_pretrained`` caches its weights separately from ``EEGDASH_CACHE_DIR``,
-# which caches the eighteen EEG recordings. The revision below pins the actual
+# which caches the selected EEG recordings. The revision below pins the actual
 # checkpoint rather than relying on a changing default branch.
 #
 # The question here is narrow: does a frozen published representation, read
@@ -33,25 +34,33 @@ budget demonstrates adaptation, not a foundation-model benchmark.
 # full fine-tuning, see the full example. For the architecture and checkpoint
 # contract, consult `Braindecode's pretrained-model example <https://braindecode.org/dev/auto_examples/model_building/plot_load_pretrained_models.html>`_.
 
-import copy
-import os
-from pathlib import Path
-
 import matplotlib.pyplot as plt
+import mne
 import numpy as np
+import pandas as pd
 import torch
 from braindecode.models import CBraMod
 from braindecode.preprocessing import (
     Preprocessor,
-    create_windows_from_events,
     preprocess,
 )
 from sklearn.metrics import balanced_accuracy_score
+from sklearn.linear_model import LogisticRegression
+from sklearn.pipeline import make_pipeline
+from sklearn.preprocessing import StandardScaler
+
+from eegdash.paths import get_default_cache_dir
 
 from eegdash import EEGChallengeDataset
 from eegdash.const import SUBJECT_MINI_RELEASE_MAP
 
-CACHE_DIR = Path(os.environ.get("EEGDASH_CACHE_DIR", "~/.eegdash_cache")).expanduser()
+CACHE_DIR = get_default_cache_dir()
+RESOURCE_MODE = "small"  # explicit opt-in: "full" uses all 18 retained participants
+if RESOURCE_MODE not in {"small", "full"}:
+    raise ValueError("RESOURCE_MODE must be 'small' or 'full'.")
+N_FOLDS = 3 if RESOURCE_MODE == "small" else 6
+N_VALID = 2 if RESOURCE_MODE == "small" else 3
+torch.set_num_threads(2)
 CHANNELS = ["E70", "E75", "E83"]  # three posterior (occipital) channels
 SFREQ = 200  # CBraMod expects 200 Hz: one-second patches of 200 samples
 # Steady-state window (start, stop) in seconds after each cue, as in the eyes-open/closed tutorial
@@ -80,8 +89,7 @@ CUE_WINDOW = {"instructed_toOpenEyes": (5, 19), "instructed_toCloseEyes": (15, 2
 # two-second windows from 5 to 19 s after an open-eyes cue (the open block
 # lasts 20 s) and from 15 to 29 s after a close-eyes cue (the closed block
 # lasts 40 s). The final open-eyes cue falls a few seconds before the recording
-# ends and cannot supply a full window; Braindecode refuses such a cue, so it
-# is removed first. Labels
+# ends and cannot supply the complete interval, so it is removed first. Labels
 # represent the observed open/close instructions, not eye tracking.
 
 # Load the resting-state recordings of the HBN R5 mini release, except two with
@@ -90,18 +98,63 @@ BAD_RECORDINGS = ["NDARAP785CTE", "NDARCA740UC8"]
 subjects = [
     s for s in sorted(SUBJECT_MINI_RELEASE_MAP["R5"]) if s not in BAD_RECORDINGS
 ]
+if RESOURCE_MODE == "small":
+    subjects = subjects[:6]  # about 100 MB; no outcome-based choice within this list
+# Historical exclusions above are inherited, not reproduced by a QC threshold.
+# They limit the estimand to this selected cohort; do not call it representative.
 dataset = EEGChallengeDataset(
     release="R5", mini=True, task="RestingState", subject=subjects, cache_dir=CACHE_DIR
 )
 
 
 def drop_late_cues(raw):
-    """The last eyes-open cue comes ~5 s before the end and cannot supply a full window."""
-    fits = (
-        raw.annotations.onset + max(stop for _, stop in CUE_WINDOW.values())
-        < raw.times[-1]
+    """Remove only task cues whose own requested interval exceeds the signal."""
+    fits = np.array(
+        [
+            name not in CUE_WINDOW
+            or onset - raw.first_time + CUE_WINDOW[name][1]
+            <= raw.n_times / raw.info["sfreq"]
+            for onset, name in zip(raw.annotations.onset, raw.annotations.description)
+        ]
     )
-    return raw.set_annotations(raw.annotations[fits])
+    # Preserve unrelated annotations, including BAD spans, in their original time frame.
+    raw.annotations.delete(np.flatnonzero(~fits))
+    return raw
+
+
+def standardize_recording(x):
+    """Offline whole-recording normalization, including the held-out recording."""
+    if not np.isfinite(x).all():
+        raise ValueError("Nonfinite or flat EEG channel; inspect before normalization.")
+    scale = x.std(axis=1, keepdims=True)
+    if np.any(scale <= 0):
+        raise ValueError(
+            "Nonfinite or flat EEG channel; inspect the recording before normalization."
+        )
+    return (x - x.mean(axis=1, keepdims=True)) / scale
+
+
+# Inspect pre-normalization channel scales; do not infer alpha reactivity from accuracy.
+quality = np.array(
+    [r.raw.get_data(picks=CHANNELS).std(axis=1) * 1e6 for r in dataset.datasets]
+)
+fig, ax = plt.subplots(figsize=(7, 3))
+for index, channel in enumerate(CHANNELS):
+    ax.plot(
+        dataset.description["subject"].astype(str),
+        quality[:, index],
+        "o-",
+        label=channel,
+    )
+ax.set(
+    ylabel="Whole-recording SD (µV)",
+    yscale="log",
+    title="Selected-cohort QC before normalization",
+)
+ax.tick_params(axis="x", rotation=90)
+ax.legend()
+plt.tight_layout()
+plt.show()
 
 
 preprocess(
@@ -110,26 +163,53 @@ preprocess(
         Preprocessor("pick", picks=CHANNELS),
         Preprocessor("resample", sfreq=SFREQ),
         # standardize each channel of each recording with its own mean and std (uses no labels)
-        Preprocessor(
-            lambda x: (x - x.mean(axis=1, keepdims=True)) / x.std(axis=1, keepdims=True)
-        ),
+        Preprocessor(standardize_recording),
         Preprocessor(drop_late_cues, apply_on_array=False),
     ],
 )
 
-# Cut 2 s windows: label 0 = eyes open, 1 = eyes closed
-windows = create_windows_from_events(
-    dataset,
-    mapping={"instructed_toOpenEyes": 0, "instructed_toCloseEyes": 1},
-    trial_start_offset_samples={
-        cue: start * SFREQ for cue, (start, _) in CUE_WINDOW.items()
-    },
-    trial_stop_offset_samples={
-        cue: stop * SFREQ for cue, (_, stop) in CUE_WINDOW.items()
-    },
-    window_size_samples=2 * SFREQ,
-    window_stride_samples=2 * SFREQ,
-)
+# Cut seven 2 s epochs per eligible cue with explicit MNE sample origins.
+# Native epochs reject BAD spans; Braindecode's default raw windows do not.
+# This also avoids its dictionary-offset boundary check using the longest
+# interval for the last cue even when that cue requires only 19 seconds.
+epoch_arrays, metadata_tables = [], []
+for recording in dataset.datasets:
+    raw = recording.raw
+    events = []
+    for annotation in raw.annotations:
+        cue = annotation["description"]
+        if cue not in CUE_WINDOW:
+            continue
+        start, stop = CUE_WINDOW[cue]
+        onset = annotation["onset"] - raw.first_time
+        code = 1 if cue == "instructed_toOpenEyes" else 2
+        for offset in range(start, stop, 2):
+            sample = round((onset + offset) * SFREQ) + raw.first_samp
+            events.append([sample, 0, code])
+    if not events:
+        raise ValueError(
+            f"No eligible eye-state cues for {recording.description['subject']}"
+        )
+    events = np.asarray(events)
+    epochs = mne.Epochs(
+        raw,
+        events[np.argsort(events[:, 0])],
+        event_id={"eyes_open": 1, "eyes_closed": 2},
+        tmin=0,
+        tmax=2 - 1 / SFREQ,
+        baseline=None,
+        preload=True,
+        reject_by_annotation=True,
+    )
+    epoch_arrays.append(epochs.get_data())
+    metadata_tables.append(
+        pd.DataFrame(
+            {
+                "target": epochs.events[:, 2] - 1,
+                "subject": str(recording.description["subject"]),
+            }
+        )
+    )
 
 # %%
 # Reserve participants, not windows
@@ -137,22 +217,33 @@ windows = create_windows_from_events(
 #
 # ``X`` has shape ``(windows, 3, 400)`` and ``y`` contains the two integer
 # instruction classes. Participants, rather than windows, determine the folds:
-# six subject-grouped folds each hold out three participants for testing, three
-# others select the epoch, and the remaining twelve train. Every participant is
-# tested exactly once.
+# group-disjoint folds use the counts in the parameter cell. Each participant
+# is tested exactly once per regime, regardless of resource mode.
 #
-# Epoch selection uses validation balanced accuracy only. Test labels are read
-# once per fold, for the final score.
+# The classifier setting is fixed before fitting. Validation people are
+# reserved for later development; test labels only score the final predictions.
 
 # Arrays for PyTorch: X = (windows, channels, samples), y = label, subject = participant of each window
-X = np.stack([x for x, _, _ in windows]).astype("float32")
-metadata = windows.get_metadata()
+X = np.concatenate(epoch_arrays).astype("float32")
+metadata = pd.concat(metadata_tables, ignore_index=True)
 y = metadata["target"].to_numpy()
 subject = metadata["subject"].to_numpy()
 print(f"X {X.shape} | classes {np.bincount(y)} | participants {len(subjects)}")
 
-# Six folds of three participants each; every participant is tested exactly once
-folds = np.array_split(np.array(subjects), 6)
+# Every participant is tested exactly once, in either resource mode
+if set(subject) != set(subjects) or not np.isfinite(X).all():
+    raise ValueError(
+        "Missing participant windows or nonfinite EEG after preprocessing."
+    )
+for identity in subjects:
+    if set(y[subject == identity]) != {0, 1}:
+        raise ValueError(
+            f"Both eye-state classes are required for participant {identity}."
+        )
+folds = np.array_split(np.array(subjects), N_FOLDS)
+print("Test cohorts:", [fold.tolist() for fold in folds])
+# Full-recording normalization uses each test recording's unlabeled distribution:
+# this is offline/transductive preprocessing, not causal online deployment.
 
 # %%
 # Load the checkpoint and understand the head dimensions
@@ -161,8 +252,8 @@ folds = np.array_split(np.array(subjects), 6)
 # ``return_encoder_output=True`` exposes CBraMod's patch representations.
 # For three channels and two one-second patches, each with 200 representation
 # coordinates, flattening gives ``3 × 2 × 200 = 1200`` inputs to the two-class
-# linear head. The head returns logits; cross-entropy consumes logits directly,
-# so no softmax is inserted in the training loop.
+# linear head. These fixed coordinates feed a logistic classifier below.
+# Its learned coefficients are the linear readout.
 #
 # If you change channels or duration, derive the new head width from a real
 # encoder forward pass. Merely changing ``n_outputs`` cannot fix a mismatched
@@ -180,91 +271,39 @@ pretrained = CBraMod.from_pretrained(
 )
 
 # %%
-# Train a linear head on the frozen encoder
-# -----------------------------------------
-#
-# For each fold, copy the pretrained encoder, freeze it with
-# ``requires_grad_(False)``, and append ``Flatten`` and a ``Linear(1200, 2)``
-# head. Only the head's parameters are passed to AdamW (learning rate
-# ``1e-3``). During training the encoder is also put in evaluation mode:
-# freezing gradients alone would not switch off its dropout.
-#
-# Each epoch reshuffles the mini-batches of 16 windows (the windows are
-# otherwise ordered by participant and cue, which would make consecutive batches
-# nearly single-class), then scores the validation participants. The weights of
-# the best validation epoch are restored before the test participants are
-# scored. Six epochs per fold keep CPU execution to a few minutes; they are not
-# a recommended training budget. Each held-out participant receives one score,
-# the balanced accuracy over that participant's windows.
-
-torch.manual_seed(0)
+# Cache frozen representations in memory once
+# -------------------------------------------
+# Evaluation mode disables dropout. This fixed transform sees no labels and
+# learns no cohort statistics. The scaler is fitted only on training people.
+# C=1 is prespecified; validation people remain available for later development
+# but are not used to choose a setting in this compact example.
+pretrained.eval().requires_grad_(False)
+with torch.inference_mode():
+    embeddings = np.concatenate(
+        [
+            pretrained(batch).flatten(1).numpy()
+            for batch in torch.from_numpy(X).split(16)
+        ]
+    )
+print("Frozen feature matrix:", embeddings.shape)
 scores = []
-
 for test_subjects in folds:
     others = [s for s in subjects if s not in test_subjects]
-
-    train = np.isin(subject, others[:-3])
-    valid = np.isin(subject, others[-3:])
+    train = np.isin(subject, others[:-N_VALID])
     test = np.isin(subject, test_subjects)
-
-    # Frozen CBraMod + linear classifier
-    encoder = copy.deepcopy(pretrained)
-    encoder.requires_grad_(False)
-
-    model = torch.nn.Sequential(
-        encoder,
-        torch.nn.Flatten(),
-        torch.nn.Linear(1200, 2),
-    )
-
-    optimizer = torch.optim.AdamW(model[-1].parameters(), lr=1e-3)
-
-    best_score = -1
-
-    for epoch in range(6):
-        model.train()
-        model[0].eval()
-
-        idx_train = np.flatnonzero(train)
-
-        for batch in torch.randperm(len(idx_train)).split(16):
-            idx = idx_train[batch.numpy()]
-
-            loss = torch.nn.functional.cross_entropy(
-                model(torch.from_numpy(X[idx])),
-                torch.from_numpy(y[idx]),
-            )
-
-            optimizer.zero_grad()
-            loss.backward()
-            optimizer.step()
-
-        model.eval()
-        with torch.no_grad():
-            pred = model(torch.from_numpy(X[valid])).argmax(1).numpy()
-
-        score = balanced_accuracy_score(y[valid], pred)
-
-        if score > best_score:
-            best_score = score
-            best_state = copy.deepcopy(model.state_dict())
-
-    model.load_state_dict(best_state)
-
-    with torch.no_grad():
-        pred = model(torch.from_numpy(X[test])).argmax(1).numpy()
-
-    for s in test_subjects:
-        m = subject[test] == s
-        scores.append(balanced_accuracy_score(y[test][m], pred[m]))
-
-    print(test_subjects, np.mean(scores[-len(test_subjects) :]))
+    model = make_pipeline(StandardScaler(), LogisticRegression(C=1, max_iter=1000))
+    model.fit(embeddings[train], y[train])
+    pred = model.predict(embeddings[test])
+    for identity in test_subjects:
+        mask = subject[test] == identity
+        scores.append(balanced_accuracy_score(y[test][mask], pred[mask]))
+    print("Held out:", test_subjects, "scores:", scores[-len(test_subjects) :])
 
 # %%
 # Plot one score per participant
 # ------------------------------
 #
-# Each dot is one held-out participant; the bar is the mean over the eighteen
+# Each dot is one held-out participant; the bar is the mean over the selected
 # participants and the dashed line is the two-class chance level.
 
 plt.bar(0, np.mean(scores), color="lightgray")
@@ -279,15 +318,11 @@ plt.show()
 # Read the result and design the next experiment
 # ----------------------------------------------
 #
-# The frozen published representation, read out by a linear head trained on
-# three posterior channels, separates the two eye states above chance for most
-# held-out participants. A few participants sit near 0.5; those recordings show
-# little alpha reactivity in the selected channels, which is a data property to
-# inspect, not a modeling failure to tune away. This page does not show that
-# the pretrained weights are responsible for the result: that requires the
-# same pipeline trained from random weights, which the full example
-# (``plot_73_finetune_pretrained_model.py``) runs alongside full fine-tuning,
-# with paired tests over participants.
+# The measured dots may lie above or below chance. This page does not measure
+# alpha reactivity or establish that pretraining caused a gain. The full page
+# compares regimes descriptively on paired participants; overlapping training
+# folds and one seed do not justify an independent-pairs significance test.
+# This fixed logistic probe is not identical to the full page's AdamW probe.
 #
 # To extend this page, unfreeze the encoder with a smaller learning rate
 # (fine-tuning), add repeated seeds, and prespecify longer budgets. Save the

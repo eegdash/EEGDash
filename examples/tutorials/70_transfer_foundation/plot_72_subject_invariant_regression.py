@@ -24,9 +24,6 @@ participant-out exercise is not a challenge leaderboard estimate.
 # feature row and one target, so long recordings cannot increase that subject's
 # weight simply by yielding more windows.
 
-import os
-from pathlib import Path
-
 import matplotlib.pyplot as plt
 import numpy as np
 from sklearn.dummy import DummyRegressor
@@ -35,6 +32,8 @@ from sklearn.metrics import mean_absolute_error
 from sklearn.model_selection import LeaveOneOut
 from sklearn.pipeline import make_pipeline
 from sklearn.preprocessing import StandardScaler
+
+from eegdash.paths import get_default_cache_dir
 
 from eegdash import EEGChallengeDataset
 from eegdash.features import spectral_preprocessor, spectral_bands_power
@@ -63,14 +62,21 @@ dataset = EEGChallengeDataset(
     mini=True,
     task="RestingState",
     subject=subjects,
-    cache_dir=Path(
-        os.environ.get("EEGDASH_CACHE_DIR", "~/.eegdash_cache")
-    ).expanduser(),
+    cache_dir=get_default_cache_dir(),
     description_fields=["subject", "task", "p_factor"],
     target_name="p_factor",
 )
 print(dataset.description.to_string(index=False))
-assert len(dataset.datasets) == len(subjects)
+if len(dataset.datasets) != len(subjects) or set(dataset.description.subject) != set(
+    subjects
+):
+    raise ValueError("Expected one resting recording per requested participant.")
+# Validate the observed phenotype before downloading any signals.
+for value in dataset.description["p_factor"]:
+    if not np.isfinite(float(value)):
+        raise ValueError(
+            "Missing/nonfinite p-factor; define exclusions before acquisition."
+        )
 # %%
 # Summarize a fixed resting interval
 # ----------------------------------
@@ -92,14 +98,31 @@ assert len(dataset.datasets) == len(subjects)
 # it does not turn a flat electrode into an informative feature.
 #
 # Concatenation is band-major, retaining channel order inside each band. The
-# channel-order assertion keeps feature columns comparable across recordings.
+# channel-order check keeps feature columns comparable across recordings.
+# This direct public function requires _metadata to resolve sampling/filter
+# defaults. FeatureExtractor normally supplies it; here each Raw contributes
+# one participant row, so its MNE info is passed explicitly.
 
 features, targets, identities = [], [], []
 channels = None
 for recording in dataset.datasets:
     raw = recording.raw.copy().pick("eeg").crop(tmax=59).load_data()
+    if channels is None:
+        raw.compute_psd(fmax=30).plot(average=True, show=False)
+        plt.show()
+    print(
+        "Flat channels:",
+        [
+            name
+            for name, scale in zip(raw.ch_names, raw.get_data().std(axis=1))
+            if scale == 0
+        ],
+    )
     channels = raw.ch_names if channels is None else channels
-    assert raw.ch_names == channels
+    if not (raw.ch_names == channels):
+        raise ValueError(
+            "Recordings have different channel orders; align channels before extracting features."
+        )
     frequencies, psd = spectral_preprocessor(
         raw.get_data(),
         _metadata={"info": raw.info},
@@ -142,8 +165,24 @@ for recording in dataset.datasets:
 # that the resulting features are invariant to subject identity.
 
 X, y = np.asarray(features), np.asarray(targets)
-assert len(set(identities)) == len(y) and np.isfinite(X).all() and np.isfinite(y).all()
+if not (
+    len(set(identities)) == len(y) and np.isfinite(X).all() and np.isfinite(y).all()
+):
+    raise ValueError(
+        "Data contract failed: len(set(identities)) == len(y) and np.isfinite(X).all() and np.isfinite(y).all(); inspect the selected recordings and metadata."
+    )
 print("Participant features:", X.shape, "observed targets:", y)
+fig, axes = plt.subplots(1, 2, figsize=(10, 3), layout="constrained")
+image = axes[0].imshow(X, aspect="auto")
+axes[0].set(
+    xlabel="Band-major channel feature",
+    ylabel="Participant row",
+    title="log10 band power (V² reference)",
+)
+fig.colorbar(image, ax=axes[0])
+axes[1].scatter(y, np.arange(len(y)))
+axes[1].set(xlabel="Observed p-factor", yticks=range(len(y)), yticklabels=identities)
+plt.show()
 
 # %%
 # All scaling and baseline fitting occur inside the held-out participant fold.
@@ -164,14 +203,20 @@ print("Participant features:", X.shape, "observed targets:", y)
 
 predicted, baseline = np.empty_like(y), np.empty_like(y)
 for train, test in LeaveOneOut().split(X):
-    assert set(np.asarray(identities)[train]).isdisjoint(np.asarray(identities)[test])
+    if not (
+        set(np.asarray(identities)[train]).isdisjoint(np.asarray(identities)[test])
+    ):
+        raise ValueError(
+            "Data contract failed: set(np.asarray(identities)[train]).isdisjoint(np.asarray(identities)[test]); inspect the selected recordings and metadata."
+        )
     model = make_pipeline(StandardScaler(), Ridge(alpha=10))
     predicted[test] = model.fit(X[train], y[train]).predict(X[test])
     baseline[test] = DummyRegressor().fit(X[train], y[train]).predict(X[test])
 print("Participant MAE:", mean_absolute_error(y, predicted))
 print("Training-mean MAE:", mean_absolute_error(y, baseline))
 fig, ax = plt.subplots(figsize=(5, 4))
-ax.scatter(y, predicted, label="held-out participant")
+ax.scatter(y, predicted, label="Ridge: held-out participant")
+ax.scatter(y, baseline, marker="x", label="Training-mean baseline")
 ax.plot([y.min(), y.max()], [y.min(), y.max()], "k--")
 ax.set(xlabel="Observed p-factor", ylabel="Predicted p-factor")
 ax.legend()

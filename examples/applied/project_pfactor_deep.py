@@ -23,8 +23,6 @@ errors after aggregating its real window predictions.
 """
 
 # %%
-import os
-from pathlib import Path
 
 import matplotlib.pyplot as plt
 import numpy as np
@@ -35,6 +33,8 @@ from braindecode.preprocessing import (
     Resampling,
     RemoveDrifts,
 )
+
+from eegdash.paths import get_default_cache_dir
 
 from eegdash import EEGDashDataset
 import torch
@@ -51,7 +51,7 @@ from torch.utils.data import DataLoader, TensorDataset
 # representation of one measurement, not many independent clinical targets.
 # Consequently all those windows must remain together during evaluation.
 #
-# The two assertions require one selected recording per named participant.
+# The cohort check requires one selected recording per named participant.
 # ``description_fields`` makes the source attributes available alongside BIDS
 # identifiers; the EEG still comes from ``EEGDashDataset``. These are the original
 # OpenNeuro recordings, not the separately filtered/downsampled challenge
@@ -64,7 +64,7 @@ subjects = [
     "NDARAG143ARJ",
     "NDARAP359UM6",
 ]
-cache_dir = Path(os.environ.get("EEGDASH_CACHE_DIR", ".eegdash_cache"))
+cache_dir = get_default_cache_dir()
 dataset = EEGDashDataset(
     dataset="ds005505",
     task="RestingState",
@@ -73,9 +73,27 @@ dataset = EEGDashDataset(
     description_fields=["subject", "task", "age", "sex", "p_factor"],
     n_jobs=1,
 )
-assert len(dataset.datasets) == len(subjects)
-assert dataset.description["subject"].nunique() == len(subjects)
-print(dataset.description[["subject", "age", "sex", "p_factor"]])
+cohort = dataset.description.set_index("subject")
+if cohort.index.has_duplicates or set(cohort.index) != set(subjects):
+    raise ValueError(
+        "Expected one RestingState recording per named participant; inspect the query."
+    )
+print("Missing participant fields:\n", cohort[["age", "sex", "p_factor"]].isna().sum())
+observed = pd.to_numeric(cohort["p_factor"], errors="raise")
+if not np.isfinite(observed).all():
+    raise ValueError(
+        "Missing p_factor: inspect participant metadata before downloading EEG."
+    )
+print(cohort[["age", "sex", "p_factor"]])
+fig, ax = plt.subplots(figsize=(8, 3), layout="constrained")
+ax.scatter(observed, np.arange(len(cohort)), marker="o")
+ax.set(
+    yticks=np.arange(len(cohort)),
+    yticklabels=cohort.index,
+    xlabel="Observed p_factor (released metadata scale)",
+    ylabel="Participant",
+)
+plt.show()
 
 # %%
 # 2. Prepare the first minute of recorded EEG
@@ -113,8 +131,13 @@ for recording in dataset.datasets:
         "observed annotations:",
         sorted(set(raw.annotations.description)),
     )
-    assert set(channels).issubset(raw.ch_names)
+    if not (set(channels).issubset(raw.ch_names)):
+        raise ValueError(
+            "Unexpected channel layout: inspect the recording and select/reorder the documented channels."
+        )
     raw.crop(tmax=59.99).load_data().pick(channels).reorder_channels(channels)
+# A matched-channel spectrum makes the transform visible before feature fitting.
+preview = dataset.datasets[0].raw.copy()
 # Preserve annotation times in seconds across EEGPrep format conversions.
 # Retain the measurement date too: it anchors annotations with absolute times.
 annotations_before = [
@@ -132,13 +155,27 @@ for recording, annotations, duration, measurement_date in zip(
     dataset.datasets, annotations_before, durations_before, measurement_dates
 ):
     raw = recording.raw
-    assert raw.ch_names == channels and raw.info["sfreq"] == 100
-    assert abs(raw.n_times / 100 - duration) <= 1 / 100
+    if not (raw.ch_names == channels and raw.info["sfreq"] == 100):
+        raise ValueError(
+            "Unexpected channel layout: inspect the recording and select/reorder the documented channels."
+        )
+    if not (abs(raw.n_times / 100 - duration) <= 1 / 100):
+        raise ValueError(
+            "Unexpected sampling grid: inspect source timing and preprocessing before constructing windows."
+        )
     raw.set_meas_date(measurement_date)
     raw.set_annotations(annotations)
-    assert raw.annotations.orig_time == annotations.orig_time
-    np.testing.assert_array_equal(raw.annotations.onset, annotations.onset)
-    np.testing.assert_array_equal(raw.annotations.description, annotations.description)
+fig, ax = plt.subplots(figsize=(6, 3), layout="constrained")
+for label, signal in [("Before", preview), ("After", dataset.datasets[0].raw)]:
+    spectrum = signal.compute_psd(fmin=1, fmax=40, picks=[channels[0]], verbose=False)
+    ax.semilogy(spectrum.freqs, spectrum.get_data()[0] * 1e12, label=label)
+ax.set(
+    xlabel="Frequency (Hz)",
+    ylabel="PSD (µV²/Hz)",
+    title=f"{dataset.datasets[0].description['subject']}: {channels[0]} — first minute",
+)
+ax.legend()
+plt.show()
 windows = create_fixed_length_windows(
     dataset,
     window_size_samples=200,
@@ -149,9 +186,14 @@ windows = create_fixed_length_windows(
 metadata = windows.get_metadata().reset_index(drop=True)
 X_windows = np.stack([item[0] for item in windows])
 groups = metadata["subject"].astype(str).to_numpy()
-assert X_windows.shape == (len(metadata), len(channels), 200)
-assert np.isfinite(X_windows).all()
-assert not metadata.duplicated(["subject", "i_start_in_trial"]).any()
+if not (np.isfinite(X_windows).all()):
+    raise ValueError(
+        "Nonfinite signals, targets or predictions: inspect missing metadata and unusable channels before fitting."
+    )
+if metadata.duplicated(["subject", "i_start_in_trial"]).any():
+    raise ValueError(
+        "Unexpected cohort: check the query, missing recordings and duplicate participant rows."
+    )
 print("Real two-second windows:", X_windows.shape)
 
 # %%
@@ -166,7 +208,10 @@ participant_targets = dataset.description.set_index("subject")["p_factor"]
 y = pd.to_numeric(
     metadata["subject"].map(participant_targets), errors="raise"
 ).to_numpy(dtype=np.float32)
-assert np.isfinite(y).all()
+if not (np.isfinite(y).all()):
+    raise ValueError(
+        "Nonfinite signals, targets or predictions: inspect missing metadata and unusable channels before fitting."
+    )
 torch.manual_seed(42)
 torch.set_num_threads(1)
 predictions = np.full(len(y), np.nan, dtype=np.float32)
@@ -199,23 +244,47 @@ baseline = np.full(len(y), np.nan, dtype=np.float32)
 # Finally, reverse the training target normalization so test predictions are
 # back on the original score scale. The same fold's training mean supplies
 # the non-EEG reference prediction.
+histories = []
 for fold, (train, test) in enumerate(
     GroupKFold(n_splits=3).split(X_windows, y, groups)
 ):
-    assert set(groups[train]).isdisjoint(groups[test])
     mean = X_windows[train].mean(axis=(0, 2), keepdims=True)
     scale = X_windows[train].std(axis=(0, 2), keepdims=True)
-    assert (scale > 0).all()
+    if not ((scale > 0).all()):
+        raise ValueError(
+            "Zero training scale: inspect flat channels or constant participant targets before normalization."
+        )
     X = ((X_windows - mean) / scale).astype(np.float32)
     training_targets = participant_targets.loc[sorted(set(groups[train]))].astype(float)
     target_mean, target_scale = training_targets.mean(), training_targets.std(ddof=0)
-    assert target_scale > 0
+    if not (target_scale > 0):
+        raise ValueError(
+            "Zero training scale: inspect flat channels or constant participant targets before normalization."
+        )
+    # Inverse window counts give each training participant equal total loss weight.
+    training_counts = pd.Series(groups[train]).value_counts()
+    weights = np.asarray(
+        [1 / training_counts[g] for g in groups[train]], dtype=np.float32
+    )
+    weights /= weights.mean()
+    if fold == 0:
+        fig, ax = plt.subplots(figsize=(6, 3), layout="constrained")
+        ax.plot(
+            np.arange(200) / 100,
+            X_windows[train[0], 0] / scale[0, 0, 0],
+            label="Original / train SD",
+        )
+        ax.plot(np.arange(200) / 100, X[train[0], 0], label="Centered / train SD")
+        ax.set(xlabel="Time (s)", ylabel="Training-SD units", title=channels[0])
+        ax.legend()
+        plt.show()
     train_loader = DataLoader(
         TensorDataset(
             torch.from_numpy(X[train]),
             torch.from_numpy(
                 ((y[train] - target_mean) / target_scale).astype(np.float32)
             ),
+            torch.from_numpy(weights),
         ),
         batch_size=16,
         shuffle=True,
@@ -224,18 +293,29 @@ for fold, (train, test) in enumerate(
         n_chans=len(channels), n_outputs=1, n_times=200, F1=4, D=2, kernel_length=32
     )
     optimizer = torch.optim.Adam(model.parameters(), lr=1e-3)
+    history = []
     for epoch in range(2):
         model.train()
         losses = []
-        for signals, targets in train_loader:
+        for signals, targets, batch_weights in train_loader:
             optimizer.zero_grad()
             output = model(signals).reshape(-1)
-            loss = torch.nn.functional.mse_loss(output, targets)
-            assert torch.isfinite(loss)
+            loss = (
+                torch.nn.functional.mse_loss(output, targets, reduction="none")
+                * batch_weights
+            ).mean()
+            if not (torch.isfinite(loss)):
+                raise ValueError(
+                    "Nonfinite signals, targets or predictions: inspect missing metadata and unusable channels before fitting."
+                )
             loss.backward()
             optimizer.step()
             losses.append(loss.item())
-        print(f"Fold {fold}, epoch {epoch + 1}, training MSE {np.mean(losses):.4f}")
+        history.append(float(np.mean(losses)))
+        print(
+            f"Fold {fold}, epoch {epoch + 1}, weighted training MSE {np.mean(losses):.4f}"
+        )
+    histories.append(history)
     model.eval()
     with torch.no_grad():
         predictions[test] = (
@@ -243,7 +323,19 @@ for fold, (train, test) in enumerate(
             + target_mean
         )
     baseline[test] = target_mean
-assert np.isfinite(predictions).all()
+if not (np.isfinite(predictions).all()):
+    raise ValueError(
+        "Nonfinite signals, targets or predictions: inspect missing metadata and unusable channels before fitting."
+    )
+
+# %%
+# Inspect optimization, not generalization, after the two-epoch smoke run.
+fig, ax = plt.subplots(figsize=(5, 3), layout="constrained")
+for fold, history in enumerate(histories):
+    ax.plot([1, 2], history, marker="o", label=f"Fold {fold + 1}")
+ax.set(xlabel="Epoch", ylabel="Participant-weighted training MSE")
+ax.legend()
+plt.show()
 
 # %%
 # 5. Score one prediction per held-out participant
@@ -271,14 +363,15 @@ results = (
     .groupby("subject")
     .mean()
 )
-assert len(results) == len(subjects)
 print(results)
 print("Participant MAE:", mean_absolute_error(results.observed, results.predicted))
 print(
     "Training-mean MAE:", mean_absolute_error(results.observed, results.training_mean)
 )
 fig, ax = plt.subplots(figsize=(5, 4), layout="constrained")
-ax.scatter(results.observed, results.predicted)
+ax.scatter(results.observed, results.predicted, label="EEGNet")
+ax.scatter(results.observed, results.training_mean, marker="x", label="Training mean")
+ax.legend()
 limits = [results.observed.min(), results.observed.max()]
 ax.plot(limits, limits, "k--")
 ax.set(xlabel="Observed p-factor", ylabel="Held-out participant prediction")

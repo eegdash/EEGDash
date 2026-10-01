@@ -13,7 +13,7 @@ See the `source study <https://doi.org/10.1371/journal.pone.0140703>`_
 and `NEMAR release <https://nemar.org/dataset/nm000118>`_.
 
 Prerequisites: tutorial 51's LOSO loop and scikit-learn pipelines. This page
-loads its own recordings and requires SciPy for the optional paired test.
+loads its own recordings and reports descriptive paired differences.
 The question is whether one fixed classifier improves the same participants'
 scores. Neither classifier is selected or tuned using these test results.
 
@@ -24,9 +24,7 @@ scores. Neither classifier is selected or tuned using these test results.
 # ----------------------------------
 # Filtering subjects, session and run bounds the download. Cropping after
 # opening a recording would reduce computation but not its download size.
-import os
 from functools import partial
-from pathlib import Path
 
 import matplotlib.pyplot as plt
 import numpy as np
@@ -38,6 +36,8 @@ from sklearn.model_selection import LeaveOneGroupOut
 from sklearn.pipeline import make_pipeline
 from sklearn.preprocessing import StandardScaler
 
+from eegdash.paths import get_default_cache_dir
+
 from eegdash import EEGDashDataset
 from eegdash.features import (
     FeatureExtractor,
@@ -46,7 +46,7 @@ from eegdash.features import (
     spectral_preprocessor,
 )
 
-cache_dir = Path(os.environ.get("EEGDASH_CACHE_DIR", ".eegdash_cache"))
+cache_dir = get_default_cache_dir()
 subjects = ["1", "2", "3"]
 dataset = EEGDashDataset(
     cache_dir=cache_dir,
@@ -57,7 +57,10 @@ dataset = EEGDashDataset(
     task="ssvep",
     n_jobs=1,
 )
-assert len(dataset.datasets) == len(subjects), "Expected one recording per subject"
+if not (len(dataset.datasets) == len(subjects)):
+    raise ValueError(
+        "Expected one recording per requested participant; inspect the query results."
+    )
 print(dataset.description[["subject", "session", "run"]])
 
 # %%
@@ -71,12 +74,16 @@ sfreq = raw.info["sfreq"]
 channel_names = raw.ch_names
 class_names = sorted(set(raw.annotations.description), key=float)
 mapping = {name: index for index, name in enumerate(class_names)}
-assert len(mapping) == 12, "Expected the twelve SSVEP stimulus frequencies"
 for recording in dataset.datasets:
     recording_raw = recording.raw
-    assert recording_raw.ch_names == channel_names
-    assert recording_raw.info["sfreq"] == sfreq
-    assert set(recording_raw.annotations.description) == set(mapping)
+    if (
+        recording_raw.ch_names != channel_names
+        or recording_raw.info["sfreq"] != sfreq
+        or set(recording_raw.annotations.description) != set(mapping)
+    ):
+        raise ValueError(
+            "Recordings must share channel order, sampling rate and cue vocabulary."
+        )
 print(f"Channels: {channel_names}; sampling frequency: {sfreq} Hz")
 print("Stimulus frequencies (Hz):", class_names)
 
@@ -104,14 +111,22 @@ windows = create_windows_from_events(
     preload=True,
 )
 metadata = windows.get_metadata()
-assert (metadata.i_window_in_trial == 0).all(), "Expected one window per trial"
-assert not metadata.duplicated(["subject", "session", "run", "i_start_in_trial"]).any()
+if not ((metadata.i_window_in_trial == 0).all()):
+    raise ValueError(
+        "Multiple windows represent a trial; group by trial before splitting."
+    )
+if not (
+    not metadata.duplicated(["subject", "session", "run", "i_start_in_trial"]).any()
+):
+    raise ValueError(
+        "Duplicate recording/window identities; inspect metadata before splitting."
+    )
 y = metadata["target"].to_numpy(dtype=int)
 groups = metadata["subject"].astype(str).to_numpy()
-X = np.stack([window[0] for window in windows])
-assert X.shape == (len(metadata), len(channel_names), window_size)
-assert set(groups) == set(subjects)
-assert np.isfinite(X).all()
+if not (set(groups) == set(subjects)):
+    raise ValueError(
+        "Some requested participants have no retained windows; inspect exclusions."
+    )
 print(pd.crosstab(groups, y, rownames=["subject"], colnames=["class"]))
 
 # %%
@@ -148,16 +163,21 @@ spectral = FeatureExtractor(
 feature_table = extract_features(
     windows, {"spectral": spectral}, batch_size=64, n_jobs=1
 ).to_dataframe()
-assert feature_table.shape == (len(y), len(class_names) * len(channel_names))
+if len(feature_table) != len(metadata):
+    raise ValueError(
+        "Feature rows no longer match window metadata; inspect extraction."
+    )
 features = np.log(np.maximum(feature_table.to_numpy() * sfreq / window_size, 1e-30))
-assert np.isfinite(features).all()
+if not (np.isfinite(features).all()):
+    raise ValueError(
+        "Nonfinite spectral features; inspect signals and extraction parameters."
+    )
 
 # %%
 # 5. Evaluate both classifiers on exactly the same LOSO folds
 # -----------------------------------------------------------
 # Both pipelines fit their scaler on training participants only. All choices
 # are fixed before evaluation; tune alternatives within training folds.
-from scipy.stats import wilcoxon
 from sklearn.discriminant_analysis import LinearDiscriminantAnalysis
 
 # %%
@@ -168,8 +188,14 @@ from sklearn.discriminant_analysis import LinearDiscriminantAnalysis
 # and exactly the same 360/180 training/test trial assignment in each fold.
 rows = []
 for train, test in LeaveOneGroupOut().split(features, y, groups):
-    assert set(groups[train]).isdisjoint(groups[test])
-    assert set(y[train]) == set(y[test]) == set(mapping.values())
+    if not (set(groups[train]).isdisjoint(groups[test])):
+        raise ValueError(
+            "Training and test identities overlap; repair the group split."
+        )
+    if not (set(y[train]) == set(y[test]) == set(mapping.values())):
+        raise ValueError(
+            "Each train/test split must contain every mapped class; inspect retained class counts."
+        )
     row = {"subject": groups[test][0]}
     for name, classifier in {
         "Logistic": LogisticRegression(max_iter=1000),
@@ -180,23 +206,27 @@ for train, test in LeaveOneGroupOut().split(features, y, groups):
         row[name] = balanced_accuracy_score(y[test], model.predict(features[test]))
     rows.append(row)
 results = pd.DataFrame(rows).set_index("subject")
-assert len(results) == len(subjects) and results.index.is_unique
+if not (len(results) == len(subjects) and results.index.is_unique):
+    raise ValueError(
+        "Invalid len(results) == len(subjects) and results.index.is_unique; inspect cohort, windows and split before fitting."
+    )
 print(results)
 difference = results["LDA"] - results["Logistic"]
 print("Paired differences (LDA minus Logistic):", difference.to_dict())
-# With three participants a two-sided test has very little resolution. Exact
-# signed-rank inference below requires nonzero differences with distinct ranks;
-# report the measured differences alone when zeros or ties violate that case.
-if (difference != 0).all() and difference.abs().is_unique:
-    print("Exploratory exact Wilcoxon:", wilcoxon(difference, method="exact"))
-else:
-    print("Zeros or tied absolute differences: report paired differences only.")
+print("Descriptive mean / median difference:", difference.mean(), difference.median())
+fig, ax = plt.subplots(figsize=(6, 3))
+ax.scatter(difference, difference.index)
+ax.axvline(0, color="black", linestyle="--")
+ax.set(xlabel="LDA minus logistic balanced accuracy", ylabel="Held-out participant")
+plt.show()
 
 # %%
 # 6. Connect the two scores for each participant
 # ----------------------------------------------
+fig, ax = plt.subplots(figsize=(6, 4))
 for subject, row in results.iterrows():
     plt.plot(["Logistic", "LDA"], row, "o-", label=f"Subject {subject}")
+plt.axhline(1 / len(mapping), color="black", linestyle="--", label="Chance")
 plt.ylabel("LOSO balanced accuracy")
 plt.ylim(0, 1)
 plt.legend()
@@ -211,10 +241,8 @@ plt.show()
 # different people. The unit of replication remains the participant, not each
 # of the 540 trials.
 #
-# The signed-rank calculation uses the magnitudes and signs of three paired
-# differences and assumes a symmetric distribution of differences for its usual
-# location interpretation. Distinct nonzero absolute differences permit the
-# exact small-sample calculation used here. Three pairs cannot support strong
-# evidence: even all differences in the same direction give a two-sided exact
-# p-value of 0.25. Report effect sizes and additional independent participants
-# before claiming a reliable advantage.
+# No signed-rank p-value is computed here. Three paired scores have very low
+# resolution, and LOSO fits share training people, so paired differences need
+# not be independent. Pairing alone does not justify signed-rank inference.
+# A prespecified larger independent evaluation and multiplicity policy are
+# needed before an inferential comparison; these effects are descriptive.

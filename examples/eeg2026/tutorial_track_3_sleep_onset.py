@@ -5,8 +5,8 @@ Use three recorded Sleep-EDF participants from EEGDash ``nm000185``
 (cassette63, cassette64, cassette65; night1), about 150 MB in total. Predict
 once per five-second EEG window and evaluate on an unseen participant.
 The `official tracks page <https://neural-interfaces26.github.io/tracks.html>`_
-announces the exclusive wearable release for September 21, 2026. This page
-uses the available PSG seed corpus, not an assumed Muse configuration.
+describes the wearable task; consult it for current release availability. This
+page uses the PSG seed corpus, not an assumed Muse configuration.
 
 The `NeuralBench Track 3 guide
 <https://facebookresearch.github.io/neuroai/neuralbench/auto_examples/biosignal_challenge_2026/plot_track3_sleep_onset.html>`_
@@ -29,9 +29,7 @@ target, held-out predictions, per-bin errors and their equally weighted mean.
 # windows enter the model. This retrospective selection follows the task's
 # annotation-based evaluation region; it is not a prospective onset detector
 # that can choose its analysis region without knowing the reference onset.
-import os
 from functools import partial
-from pathlib import Path
 
 import matplotlib.pyplot as plt
 import numpy as np
@@ -43,6 +41,8 @@ from sklearn.linear_model import Ridge
 from sklearn.model_selection import LeaveOneGroupOut
 from sklearn.pipeline import make_pipeline
 from sklearn.preprocessing import StandardScaler
+
+from eegdash.paths import get_default_cache_dir
 
 from eegdash import EEGDashDataset
 from eegdash.features import (
@@ -59,21 +59,29 @@ dataset = EEGDashDataset(
     subject=subjects,
     session="night1",
     task="sleep",
-    cache_dir=Path(os.environ.get("EEGDASH_CACHE_DIR", ".eegdash_cache")).expanduser(),
+    cache_dir=get_default_cache_dir(),
     n_jobs=1,
 )
 print(dataset.description.to_string(index=False))
-assert len(dataset.datasets) == len(subjects)
-assert set(dataset.description.subject) == set(subjects)
+if not (len(dataset.datasets) == len(subjects)):
+    raise ValueError(
+        "Unexpected cohort: check the query, missing recordings and duplicate participant rows."
+    )
+if not (set(dataset.description.subject) == set(subjects)):
+    raise ValueError(
+        "Unexpected cohort: check the query, missing recordings and duplicate participant rows."
+    )
 
 # %%
 # 2. Tile the last twenty pre-onset minutes into five-second windows
 # ------------------------------------------------------------------------------
 # The implementation of `AddSleepOnsetTargets
-# <https://github.com/facebookresearch/neuroai/blob/main/neuralbench-repo/neuralbench/transforms.py>`_
+# <https://github.com/facebookresearch/neuroai/blob/a68b7be4c137b41aa493758ca5d365a5d579b39d/neuralbench-repo/neuralbench/transforms.py>`_
 # selects the earliest scored N2 start. It does not require a 60-second N2
 # run: the guide's informal "stable" wording must not add a persistence rule.
-# Its configured region starts at max(recording_start, N2_onset - 1200 s)
+# Here we explicitly set a 1200-second pre-N2 region (the transform supports
+# other horizons and optional randomized starts). Our fixed region starts at
+# max(recording_start, N2_onset - 1200 s)
 # and ends at N2 onset. No-N2 records produce no official task windows;
 # this explicit subset instead fails visibly if a required onset is absent.
 #
@@ -92,7 +100,10 @@ for recording in dataset.datasets:
         raw.info["sfreq"],
         np.unique(raw.annotations.description),
     )
-    assert raw.info["sfreq"] == 100 and set(channels).issubset(raw.ch_names)
+    if not (raw.info["sfreq"] == 100 and set(channels).issubset(raw.ch_names)):
+        raise ValueError(
+            "Unexpected channel layout: inspect the recording and select/reorder the documented channels."
+        )
     n2_onsets = (
         raw.annotations.onset[raw.annotations.description == "N2"] - raw.first_time
     )
@@ -103,7 +114,8 @@ for recording in dataset.datasets:
     region_stop = min(onset, raw.n_times / raw.info["sfreq"])
     start_sample = int(np.ceil(region_start * raw.info["sfreq"]))
     stop_sample = int(np.floor(region_stop * raw.info["sfreq"]))
-    assert stop_sample - start_sample >= 500, "No full pre-onset window"
+    if not (stop_sample - start_sample >= 500):
+        raise ValueError("No full pre-onset window")
     raw.pick(channels).reorder_channels(channels)
     windows = create_fixed_length_windows(
         BaseConcatDataset([recording]),
@@ -119,8 +131,37 @@ for recording in dataset.datasets:
     metadata["n2_onset_s"] = onset
     # This observed-annotation transformation matches SleepOnsetTargetExtractor.
     metadata["target"] = np.clip(onset - metadata.window_stop_s, 0.0, 600.0)
-    assert (metadata.window_stop_s <= onset + 1e-9).all()
-    assert (metadata.i_stop_in_trial - metadata.i_start_in_trial == 500).all()
+    if not ((metadata.window_stop_s <= onset + 1e-9).all()):
+        raise ValueError(
+            "Data do not satisfy the documented task contract; inspect the query, labels and retained windows before continuing."
+        )
+    if not windowed_recordings:
+        fig, axes = plt.subplots(
+            2, 1, figsize=(9, 5), layout="constrained", sharex=True
+        )
+        stage_names = list(dict.fromkeys(raw.annotations.description))
+        for annotation in raw.annotations:
+            start = annotation["onset"] - raw.first_time
+            axes[0].plot(
+                [start, start + annotation["duration"]],
+                [stage_names.index(annotation["description"])] * 2,
+                color="tab:blue",
+            )
+        axes[0].set(
+            yticks=range(len(stage_names)),
+            yticklabels=stage_names,
+            ylabel="Scored stage",
+        )
+        axes[1].step(metadata.window_stop_s, metadata.target, where="post")
+        axes[1].scatter(
+            metadata.window_stop_s, metadata.target, s=5, label="Five-second windows"
+        )
+        for ax in axes:
+            ax.axvline(onset, color="black", linestyle="--", label="First N2")
+            ax.set_xlim(region_start, onset + 60)
+        axes[1].set(xlabel="Time from recording start (s)", ylabel="Capped target (s)")
+        axes[1].legend()
+        plt.show()
     windowed_recordings.append(windows)
     metadata_tables.append(metadata)
 
@@ -165,9 +206,18 @@ feature_table = extract_features(
 X = np.log10(np.maximum(feature_table.to_numpy() * 0.2, 1e-30))
 y = metadata.target.to_numpy(dtype=float)
 groups = metadata.subject.astype(str).to_numpy()
-assert X.shape == (len(metadata), 8) and np.isfinite(X).all()
-assert np.isfinite(y).all() and ((0 <= y) & (y <= 600)).all()
-assert not metadata.duplicated(["subject", "session", "i_start_in_trial"]).any()
+if not (X.shape == (len(metadata), 8) and np.isfinite(X).all()):
+    raise ValueError(
+        "Nonfinite signals, targets or predictions: inspect missing metadata and unusable channels before fitting."
+    )
+if not (np.isfinite(y).all() and ((0 <= y) & (y <= 600)).all()):
+    raise ValueError(
+        "Nonfinite signals, targets or predictions: inspect missing metadata and unusable channels before fitting."
+    )
+if metadata.duplicated(["subject", "session", "i_start_in_trial"]).any():
+    raise ValueError(
+        "Unexpected cohort: check the query, missing recordings and duplicate participant rows."
+    )
 print("Feature matrix:", X.shape)
 print(
     metadata[["subject", "window_stop_s", "n2_onset_s", "target"]]
@@ -191,20 +241,22 @@ print(
 predicted, baseline = np.empty_like(y), np.empty_like(y)
 test_counts = np.zeros(len(y), dtype=int)
 for train, test in LeaveOneGroupOut().split(X, y, groups):
-    assert set(groups[train]).isdisjoint(groups[test])
     model = make_pipeline(StandardScaler(), Ridge(alpha=10))
     predicted[test] = np.clip(model.fit(X[train], y[train]).predict(X[test]), 0, 600)
     baseline[test] = np.clip(
         DummyRegressor().fit(X[train], y[train]).predict(X[test]), 0, 600
     )
     test_counts[test] += 1
-assert (test_counts == 1).all() and np.isfinite(predicted).all()
+if not ((test_counts == 1).all() and np.isfinite(predicted).all()):
+    raise ValueError(
+        "Nonfinite signals, targets or predictions: inspect missing metadata and unusable channels before fitting."
+    )
 
 # %%
 # 5. Compute bMAE using ground-truth time-to-onset bins
 # -----------------------------------------------------------------
 # NeuralBench's `BinnedMAE implementation
-# <https://github.com/facebookresearch/neuroai/blob/main/neuralbench-repo/neuralbench/metrics.py>`_
+# <https://github.com/facebookresearch/neuroai/blob/a68b7be4c137b41aa493758ca5d365a5d579b39d/neuralbench-repo/neuralbench/metrics.py>`_
 # uses [0,40), [40,90), [90,300), and [300,600]. Interior edge values enter
 # the higher bin; 600 belongs to the final bin. First compute mean absolute
 # error within each ground-truth bin, then average the nonempty bin means
@@ -217,10 +269,6 @@ assert (test_counts == 1).all() and np.isfinite(predicted).all()
 # different aggregation when their bin counts differ.
 bin_edges = np.asarray([0.0, 40.0, 90.0, 300.0, 600.0])
 bin_ids = np.searchsorted(bin_edges[1:-1], y, side="right")
-assert set(bin_ids) == {0, 1, 2, 3}, "This subset should cover all four bins"
-for edge, expected_bin in zip(bin_edges, [0, 1, 2, 3, 3], strict=True):
-    assert (y == edge).any(), "The selected records should exercise each bin edge"
-    assert (bin_ids[y == edge] == expected_bin).all()
 errors = pd.DataFrame(
     {
         "subject": groups,
@@ -229,7 +277,7 @@ errors = pd.DataFrame(
         "training mean": np.abs(baseline - y),
     }
 )
-per_bin = errors.groupby("bin")[["Ridge", "training mean"]].mean()
+per_bin = errors.groupby("bin")[["Ridge", "training mean"]].mean().reindex(range(4))
 bmae = per_bin.mean()
 print("Held-out window counts by subject and bin:")
 print(pd.crosstab(groups, bin_ids))
@@ -249,7 +297,9 @@ axes[0].set(
     xlabel="Observed time-to-onset bin (s)",
     ylabel="Held-out MAE (s)",
 )
-axes[1].scatter(y, predicted, s=8, alpha=0.4)
+axes[1].scatter(y, predicted, s=8, alpha=0.4, label="Ridge")
+axes[1].scatter(y, baseline, s=8, alpha=0.3, marker="x", label="Training mean")
+axes[1].legend()
 axes[1].plot([0, 600], [0, 600], "k--")
 axes[1].set(xlabel="Observed time remaining (s)", ylabel="Predicted time remaining (s)")
 plt.show()

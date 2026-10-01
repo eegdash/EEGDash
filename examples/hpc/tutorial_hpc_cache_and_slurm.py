@@ -23,8 +23,9 @@ EEGLAB reader (``pip install 'eegprep[eeglabio]>=0.2.23,<0.3'``). A CPU can run 
 cohort; the GPU Slurm template requests a GPU but training selects CUDA only
 when PyTorch can access one. Cluster accounts and partitions are site-specific.
 
-The deliverables are an actual voltage-window plot and a final held-out
-accuracy in the job log. The script does not save a reusable trained model;
+The deliverables are labelled voltage/loss plots, metrics and configuration
+in a unique run directory under EEGDASH_OUTPUT_DIR (default: cache/hpc-runs).
+The script does not save a reusable trained model;
 write model state and the preprocessing/subject configuration explicitly
 if a later inference job needs them.
 
@@ -32,15 +33,16 @@ if a later inference job needs them.
 
 from pathlib import Path
 import os
+import json
+import tempfile
+from time import perf_counter
+from importlib.metadata import version
+
+import pandas as pd
 
 import numpy as np
 import torch
 
-
-os.environ.setdefault("NUMBA_DISABLE_JIT", "1")
-os.environ.setdefault("MNE_USE_NUMBA", "false")
-os.environ.setdefault("_MNE_FAKE_HOME_DIR", str(Path.cwd()))
-(Path(os.environ["_MNE_FAKE_HOME_DIR"]) / ".mne").mkdir(exist_ok=True)
 
 from eegdash import EEGDashDataset
 from eegdash.paths import get_default_cache_dir
@@ -74,6 +76,23 @@ window_size_samples = 256
 # training params
 epochs = int(os.environ.get("EPOCHS", "6"))
 batch_size = int(os.environ.get("BATCH_SIZE", "32"))
+allocated_cpus = int(os.environ.get("SLURM_CPUS_PER_TASK", "1"))
+if epochs < 1 or batch_size < 1 or allocated_cpus < 1 or random_state < 0:
+    raise ValueError(
+        "EPOCHS, BATCH_SIZE and CPU count must be positive; SEED nonnegative."
+    )
+torch.set_num_threads(allocated_cpus)
+offline_value = os.environ.get("EEGDASH_OFFLINE", "0")
+if offline_value not in {"0", "1"}:
+    raise ValueError("EEGDASH_OFFLINE must be 0 (acquire) or 1 (local-only).")
+download = offline_value == "0"
+output_root = Path(os.environ.get("EEGDASH_OUTPUT_DIR", str(cache_folder / "hpc-runs")))
+output_root = output_root.expanduser().resolve()
+output_root.mkdir(parents=True, exist_ok=True)
+# Exclusive creation gives concurrent/requeued jobs distinct destinations.
+run_dir = Path(tempfile.mkdtemp(prefix="eoec-", dir=output_root))
+print("Run output (preserved on failure):", run_dir)
+run_start = perf_counter()
 
 
 # %%
@@ -95,36 +114,14 @@ batch_size = int(os.environ.get("BATCH_SIZE", "32"))
 # resampling preserved the time origin and duration within one output sample.
 # Reannotation then creates state markers on the resampled grid. This is
 # component-level EEGPrep preprocessing, not automatic ASR/artifact rejection.
+channels = (
+    "E22 E9 E33 E24 E11 E124 E122 E29 E6 E111 E45 E36 "
+    "E104 E108 E42 E55 E93 E58 E52 E62 E92 E96 E70 Cz"
+).split()
+
 preprocessors = [
-    Preprocessor(
-        "pick_channels",
-        ch_names=[
-            "E22",
-            "E9",
-            "E33",
-            "E24",
-            "E11",
-            "E124",
-            "E122",
-            "E29",
-            "E6",
-            "E111",
-            "E45",
-            "E36",
-            "E104",
-            "E108",
-            "E42",
-            "E55",
-            "E93",
-            "E58",
-            "E52",
-            "E62",
-            "E92",
-            "E96",
-            "E70",
-            "Cz",
-        ],
-    ),
+    Preprocessor("pick", picks=channels),
+    Preprocessor("reorder_channels", ch_names=channels),
     RemoveDCOffset(),
     RemoveDrifts(transition=(0.5, 1.0)),
     Resampling(sfreq=128),
@@ -143,36 +140,84 @@ preprocessors = [
 subjects_all = os.environ.get(
     "SUBJECTS", "NDARAE710YWG,NDARAH239PGG,NDARAL897CYV"
 ).split(",")
-assert len(set(subjects_all)) == len(subjects_all)
+subjects_all = [subject.strip() for subject in subjects_all]
+if not all(subjects_all) or len(set(subjects_all)) != len(subjects_all):
+    raise ValueError("SUBJECTS must contain unique, nonempty comma-separated IDs.")
 
 all_windows = []
 all_subject_ids = []
 valid_subjects = []
 
-assert 2 <= num_subjects <= len(subjects_all)
-assert 1 <= num_test_subjects < num_subjects
+if not 2 <= num_subjects <= len(subjects_all):
+    raise ValueError("NUM_SUBJECTS must select at least two IDs from SUBJECTS.")
+if not 1 <= num_test_subjects < num_subjects:
+    raise ValueError("Reserve at least one training and one test participant.")
 selected_subjects = subjects_all[:num_subjects]
 print("Selected subjects:", selected_subjects)
+configuration = {
+    "dataset": dataset_id,
+    "task": task,
+    "subjects": selected_subjects,
+    "num_test_subjects": num_test_subjects,
+    "seed": random_state,
+    "epochs": epochs,
+    "batch_size": batch_size,
+    "download": download,
+    "channels": channels,
+    "sfreq": 128,
+    "window_samples": window_size_samples,
+    "labels": {"eyes_closed": 0, "eyes_open": 1},
+    "source_units": "V",
+    "preprocessing": [
+        "channel median removal",
+        "drift transition 0.5–1 Hz",
+        "resample 128 Hz",
+        "low-pass 55 Hz",
+        "HBN instructed-state windows",
+    ],
+    "optimizer": {"name": "Adamax", "lr": 0.002, "weight_decay": 0.001},
+    "versions": {
+        name: version(name)
+        for name in ("eegdash", "braindecode", "mne", "eegprep", "torch", "numpy")
+    },
+}
+(run_dir / "configuration.json").write_text(json.dumps(configuration, indent=2))
+recording_rows = []
 for subj in selected_subjects:
     ds_eoec = EEGDashDataset(
         dataset=dataset_id,
         task=task,
         subject=subj,
         cache_dir=cache_folder,
+        download=download,
+        n_jobs=1,
     )
+    if len(ds_eoec.datasets) != 1:
+        raise ValueError(
+            f"Expected one RestingState recording for {subj}; refine selection."
+        )
+    recording_rows.extend(ds_eoec.description.to_dict(orient="records"))
     print(ds_eoec.description)
     original_annotations = []
     original_timing = []
     for recording in ds_eoec.datasets:
         raw = recording.raw
+        # The current HBN reannotation helper assumes a zero sample origin.
+        if raw.first_samp != 0:
+            raise ValueError(
+                "HBN reannotation requires first_samp=0; inspect source timing."
+            )
         original_annotations.append(raw.annotations.copy())
         original_timing.append(
             (raw.first_time, raw.n_times / raw.info["sfreq"], raw.info["meas_date"])
         )
         print(raw.ch_names, raw.info["sfreq"], np.unique(raw.annotations.description))
-        assert {"instructed_toCloseEyes", "instructed_toOpenEyes"}.issubset(
+        if not {"instructed_toCloseEyes", "instructed_toOpenEyes"}.issubset(
             raw.annotations.description
-        )
+        ):
+            raise ValueError(f"Missing open/close instruction labels for {subj}.")
+        if not set(channels) <= set(raw.ch_names):
+            raise ValueError(f"Missing requested montage channels for {subj}.")
     preprocess(ds_eoec, preprocessors)
     # These EEGPrep components never remove time. Preserve source cue times
     # across EEGLAB/MNE conversion rather than accepting sample-origin shifts.
@@ -180,8 +225,17 @@ for subj in selected_subjects:
         ds_eoec.datasets, original_annotations, original_timing, strict=True
     ):
         raw = recording.raw
-        assert abs(raw.first_time - origin) <= 1 / raw.info["sfreq"]
-        assert abs(raw.n_times / raw.info["sfreq"] - duration) <= 1 / raw.info["sfreq"]
+        if raw.info["sfreq"] != 128 or raw.ch_names != channels:
+            raise ValueError(
+                "Preprocessing changed the requested rate/channel contract."
+            )
+        if (
+            abs(raw.first_time - origin) > 1 / 128
+            or abs(raw.n_times / 128 - duration) > 1 / 128
+        ):
+            raise ValueError(
+                "Preprocessing changed the timeline; cannot restore cues safely."
+            )
         raw.set_meas_date(measurement_date)
         raw.set_annotations(annotations)
         np.testing.assert_allclose(
@@ -190,7 +244,18 @@ for subj in selected_subjects:
         np.testing.assert_array_equal(
             raw.annotations.description, annotations.description
         )
+    # The helper replaces annotations. Preserve BAD spans for epoch rejection.
+    bad_spans = [
+        recording.raw.annotations[
+            np.char.startswith(
+                np.char.upper(recording.raw.annotations.description), "BAD"
+            )
+        ].copy()
+        for recording in ds_eoec.datasets
+    ]
     preprocess(ds_eoec, [hbn_ec_ec_reannotation()])
+    for recording, bad in zip(ds_eoec.datasets, bad_spans, strict=True):
+        recording.raw.set_annotations(recording.raw.annotations + bad)
     # Each derived annotation is a point marker. The stop offset extends it by
     # 256 samples (two seconds after resampling), while the matching size/stride
     # creates one full window per marker. This differs from a source annotation
@@ -205,10 +270,12 @@ for subj in selected_subjects:
         window_stride_samples=window_size_samples,
         on_last_window="drop",
         preload=True,
+        use_mne_epochs=True,
+        drop_bad_windows=True,
     )
     n_win = len(windows_ds)
-    assert n_win > 0, f"No valid windows for {subj}"
-    assert set(windows_ds.get_metadata().target) == {0, 1}
+    if n_win == 0 or set(windows_ds.get_metadata().target) != {0, 1}:
+        raise ValueError(f"Need retained windows for both instructed states in {subj}.")
     print("Windows for subject:", n_win)
     all_windows.append(windows_ds)
     all_subject_ids.extend([subj] * n_win)
@@ -235,19 +302,18 @@ print("Total windows across valid subjects:", len(concat_ds))
 # %%
 # 4. Inspect one recorded window without a display server
 # -------------------------------------------------------
-# The saved trace is channel zero of a real window, in volts against sample
-# index. It checks waveform extraction, not class separability. Divide the
-# horizontal indices by 128 when interpreting elapsed seconds.
-import matplotlib
-
-matplotlib.use("Agg")
+# A labelled excerpt checks waveform extraction, not class separability.
 import matplotlib.pyplot as plt
 
-if len(concat_ds) > 2:
-    plt.figure()
-    plt.plot(concat_ds[2][0][0, :].transpose())
-    plt.savefig("sample_epoch.png", dpi=150, bbox_inches="tight")
-    print("Saved plot to sample_epoch.png")
+signal, label, _ = concat_ds[0]
+fig, ax = plt.subplots(figsize=(8, 3), layout="constrained")
+ax.plot(np.arange(signal.shape[-1]) / 128, signal[0] * 1e6)
+ax.set(
+    xlabel="Time from window start (s)",
+    ylabel=f"{channels[0]} (µV)",
+    title=f"{valid_subjects[0]} · instructed {'closed' if label == 0 else 'open'}",
+)
+fig.savefig(run_dir / "sample_epoch.png", dpi=150)
 
 
 # %%
@@ -263,7 +329,14 @@ rng.shuffle(subjects_shuffled)
 
 test_subjects = set(subjects_shuffled[:num_test_subjects])
 train_subjects = set(subjects_shuffled[num_test_subjects:])
-assert train_subjects.isdisjoint(test_subjects)
+configuration.update(
+    train_subjects=sorted(train_subjects),
+    test_subjects=sorted(test_subjects),
+    recordings=recording_rows,
+)
+(run_dir / "configuration.json").write_text(
+    json.dumps(configuration, indent=2, default=str)
+)
 
 print("\nTrain subjects:", sorted(train_subjects))
 print("Test subjects :", sorted(test_subjects))
@@ -296,8 +369,12 @@ y_test = torch.LongTensor(np.array([concat_ds[i][1] for i in test_indices]))
 
 from torch.utils.data import DataLoader, TensorDataset
 
-assert torch.isfinite(X_train).all() and torch.isfinite(X_test).all()
-assert set(y_train.tolist()) == set(y_test.tolist()) == {0, 1}
+if not (torch.isfinite(X_train).all() and torch.isfinite(X_test).all()):
+    raise ValueError("Nonfinite voltages: inspect preprocessing before training.")
+if set(y_train.tolist()) != {0, 1} or set(y_test.tolist()) != {0, 1}:
+    raise ValueError(
+        "Both train and held-out cohorts must contain both instructed states."
+    )
 dataset_train = TensorDataset(X_train, y_train)
 dataset_test = TensorDataset(X_test, y_test)
 
@@ -357,14 +434,21 @@ print("Using epochs =", epochs, "| device =", device, "| batch_size =", batch_si
 # the training model. model.train() enables training behavior such as dropout
 # and BatchNorm updates. The final model.eval() and no_grad() disable those
 # updates and gradient tracking for the reserved participant.
+history = []
 for e in range(epochs):
     model.train()
     correct_train = 0.0
+    total_loss = 0.0
     for x, y in train_loader:
         scores = model(x.to(device=device, dtype=torch.float32))
         y = y.to(device=device, dtype=torch.long)
 
         loss = F.cross_entropy(scores, y)
+        if not torch.isfinite(loss):
+            raise ValueError(
+                "Nonfinite training loss; this run cannot be marked successful."
+            )
+        total_loss += loss.item() * len(y)
         optimizer.zero_grad()
         loss.backward()
         optimizer.step()
@@ -372,7 +456,14 @@ for e in range(epochs):
         preds = scores.argmax(dim=1)
         correct_train += (preds == y).sum().item()
 
-    print(f"Epoch {e}, train accuracy: {correct_train / len(dataset_train):.3f}")
+    history.append(
+        {
+            "epoch": e + 1,
+            "training loss": total_loss / len(dataset_train),
+            "training accuracy": correct_train / len(dataset_train),
+        }
+    )
+    print(history[-1])
 
 # Evaluate the held-out subjects once after the fixed training schedule.
 model.eval()
@@ -380,8 +471,49 @@ correct_test = 0
 with torch.no_grad():
     for x, y in test_loader:
         scores = model(x.to(device=device, dtype=torch.float32))
+        if not torch.isfinite(scores).all():
+            raise ValueError(
+                "Nonfinite held-out scores; this run cannot be marked successful."
+            )
         correct_test += (scores.argmax(dim=1).cpu() == y).sum().item()
-print(f"Final held-out subject accuracy: {correct_test / len(dataset_test):.3f}")
+test_accuracy = correct_test / len(dataset_test)
+metrics = {
+    "held-out window accuracy": test_accuracy,
+    "train windows": len(dataset_train),
+    "test windows": len(dataset_test),
+    "train participants": len(train_subjects),
+    "test participants": len(test_subjects),
+    "total seconds": perf_counter() - run_start,
+    "device": str(device),
+    "torch threads": torch.get_num_threads(),
+}
+pd.DataFrame(history).to_csv(run_dir / "training.csv", index=False)
+(run_dir / "metrics.json").write_text(json.dumps(metrics, indent=2))
+fig, axes = plt.subplots(1, 2, figsize=(9, 3), layout="constrained")
+axes[0].plot(
+    [row["epoch"] for row in history],
+    [row["training loss"] for row in history],
+    marker="o",
+)
+axes[0].set(xlabel="Training epoch", ylabel="Cross-entropy", title="Training only")
+axes[1].bar(["Held-out windows"], [test_accuracy])
+axes[1].set(
+    ylim=(0, 1),
+    ylabel="Accuracy",
+    title=f"{len(test_subjects)} held-out participant(s)",
+)
+axes[1].axhline(
+    max(torch.bincount(y_test)).item() / len(y_test),
+    color="0.4",
+    linestyle="--",
+    label="Held-out majority fraction",
+)
+axes[1].legend()
+fig.savefig(run_dir / "training_and_test.png", dpi=150)
+# A completion marker is written only after all requested artifacts succeed.
+(run_dir / "_SUCCESS").write_text("Completed fixed-budget EO/EC workload\n")
+print(pd.DataFrame([metrics]).to_string(index=False))
+pd.DataFrame([metrics])
 
 # %%
 # 9. Interpret the job outputs and plan validation

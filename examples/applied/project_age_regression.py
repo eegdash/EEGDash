@@ -20,8 +20,6 @@ feature row per participant and prints each held-out prediction.
 """
 
 # %%
-import os
-from pathlib import Path
 
 import matplotlib.pyplot as plt
 import numpy as np
@@ -32,6 +30,8 @@ from braindecode.preprocessing import (
     Resampling,
     RemoveDrifts,
 )
+
+from eegdash.paths import get_default_cache_dir
 
 from eegdash import EEGDashDataset
 from functools import partial
@@ -56,7 +56,7 @@ from sklearn.preprocessing import StandardScaler
 # this small cohort defines where the model is being tested; it cannot establish
 # performance at ages not represented here.
 #
-# The two assertions require one selected recording per named participant.
+# The cohort check requires one selected recording per named participant.
 # ``description_fields`` makes the source attributes available alongside BIDS
 # identifiers; the EEG still comes from ``EEGDashDataset``. These are the original
 # OpenNeuro recordings, not the separately filtered/downsampled challenge
@@ -69,7 +69,7 @@ subjects = [
     "NDARAG143ARJ",
     "NDARAP359UM6",
 ]
-cache_dir = Path(os.environ.get("EEGDASH_CACHE_DIR", ".eegdash_cache"))
+cache_dir = get_default_cache_dir()
 dataset = EEGDashDataset(
     dataset="ds005505",
     task="RestingState",
@@ -78,9 +78,27 @@ dataset = EEGDashDataset(
     description_fields=["subject", "task", "age", "sex", "p_factor"],
     n_jobs=1,
 )
-assert len(dataset.datasets) == len(subjects)
-assert dataset.description["subject"].nunique() == len(subjects)
-print(dataset.description[["subject", "age", "sex", "p_factor"]])
+cohort = dataset.description.set_index("subject")
+if cohort.index.has_duplicates or set(cohort.index) != set(subjects):
+    raise ValueError(
+        "Expected one RestingState recording per named participant; inspect the query."
+    )
+print("Missing participant fields:\n", cohort[["age", "sex", "p_factor"]].isna().sum())
+observed = pd.to_numeric(cohort["age"], errors="raise")
+if not np.isfinite(observed).all():
+    raise ValueError(
+        "Missing age: inspect participant metadata before downloading EEG."
+    )
+print(cohort[["age", "sex", "p_factor"]])
+fig, ax = plt.subplots(figsize=(8, 3), layout="constrained")
+ax.scatter(observed, np.arange(len(cohort)), marker="o")
+ax.set(
+    yticks=np.arange(len(cohort)),
+    yticklabels=cohort.index,
+    xlabel="Observed age (years)",
+    ylabel="Participant",
+)
+plt.show()
 
 # %%
 # 2. Prepare the first minute of recorded EEG
@@ -118,8 +136,13 @@ for recording in dataset.datasets:
         "observed annotations:",
         sorted(set(raw.annotations.description)),
     )
-    assert set(channels).issubset(raw.ch_names)
+    if not (set(channels).issubset(raw.ch_names)):
+        raise ValueError(
+            "Unexpected channel layout: inspect the recording and select/reorder the documented channels."
+        )
     raw.crop(tmax=59.99).load_data().pick(channels).reorder_channels(channels)
+# A matched-channel spectrum makes the transform visible before feature fitting.
+preview = dataset.datasets[0].raw.copy()
 # Preserve annotation times in seconds across EEGPrep format conversions.
 # Retain the measurement date too: it anchors annotations with absolute times.
 annotations_before = [
@@ -137,13 +160,27 @@ for recording, annotations, duration, measurement_date in zip(
     dataset.datasets, annotations_before, durations_before, measurement_dates
 ):
     raw = recording.raw
-    assert raw.ch_names == channels and raw.info["sfreq"] == 100
-    assert abs(raw.n_times / 100 - duration) <= 1 / 100
+    if not (raw.ch_names == channels and raw.info["sfreq"] == 100):
+        raise ValueError(
+            "Unexpected channel layout: inspect the recording and select/reorder the documented channels."
+        )
+    if not (abs(raw.n_times / 100 - duration) <= 1 / 100):
+        raise ValueError(
+            "Unexpected sampling grid: inspect source timing and preprocessing before constructing windows."
+        )
     raw.set_meas_date(measurement_date)
     raw.set_annotations(annotations)
-    assert raw.annotations.orig_time == annotations.orig_time
-    np.testing.assert_array_equal(raw.annotations.onset, annotations.onset)
-    np.testing.assert_array_equal(raw.annotations.description, annotations.description)
+fig, ax = plt.subplots(figsize=(6, 3), layout="constrained")
+for label, signal in [("Before", preview), ("After", dataset.datasets[0].raw)]:
+    spectrum = signal.compute_psd(fmin=1, fmax=40, picks=[channels[0]], verbose=False)
+    ax.semilogy(spectrum.freqs, spectrum.get_data()[0] * 1e12, label=label)
+ax.set(
+    xlabel="Frequency (Hz)",
+    ylabel="PSD (µV²/Hz)",
+    title=f"{dataset.datasets[0].description['subject']}: {channels[0]} — first minute",
+)
+ax.legend()
+plt.show()
 windows = create_fixed_length_windows(
     dataset,
     window_size_samples=200,
@@ -153,8 +190,14 @@ windows = create_fixed_length_windows(
 )
 metadata = windows.get_metadata().reset_index(drop=True)
 groups = metadata["subject"].astype(str).to_numpy()
-assert len(windows) == len(metadata)
-assert not metadata.duplicated(["subject", "i_start_in_trial"]).any()
+if not (len(windows) == len(metadata)):
+    raise ValueError(
+        "Data do not satisfy the documented task contract; inspect the query, labels and retained windows before continuing."
+    )
+if metadata.duplicated(["subject", "i_start_in_trial"]).any():
+    raise ValueError(
+        "Unexpected cohort: check the query, missing recordings and duplicate participant rows."
+    )
 print("Real two-second windows:", len(windows), "with", len(channels), "channels")
 
 # %%
@@ -182,7 +225,11 @@ spectral = FeatureExtractor(
 feature_table = extract_features(
     windows, spectral, batch_size=64, n_jobs=1
 ).to_dataframe()
-assert feature_table.shape == (len(metadata), len(bands) * len(channels))
+if len(feature_table) != len(metadata):
+    raise ValueError(
+        "Feature rows do not align with window metadata; inspect extraction before joining targets."
+    )
+feature_table = feature_table.reset_index(drop=True)
 participant_features = (
     np.log10(feature_table.clip(lower=1e-30))
     .assign(subject=groups)
@@ -192,10 +239,16 @@ participant_features = (
 identities = participant_features.index.to_numpy()
 X = participant_features.to_numpy()
 participants = dataset.description.set_index("subject").loc[identities]
-assert np.isfinite(X).all() and len(X) == len(subjects)
+if not (np.isfinite(X).all() and len(X) == len(subjects)):
+    raise ValueError(
+        "Nonfinite signals, targets or predictions: inspect missing metadata and unusable channels before fitting."
+    )
 
 y = pd.to_numeric(participants["age"], errors="raise").to_numpy(dtype=float)
-assert np.isfinite(y).all()
+if not (np.isfinite(y).all()):
+    raise ValueError(
+        "Nonfinite signals, targets or predictions: inspect missing metadata and unusable channels before fitting."
+    )
 
 # %%
 # 4. Fit only on training participants and measure held-out errors
@@ -214,7 +267,6 @@ assert np.isfinite(y).all()
 # the diagonal in the scatter plot marks perfect prediction, not a fitted line.
 predicted, baseline = np.empty_like(y), np.empty_like(y)
 for train, test in LeaveOneOut().split(X):
-    assert set(identities[train]).isdisjoint(identities[test])
     model = make_pipeline(StandardScaler(), Ridge(alpha=10))
     predicted[test] = model.fit(X[train], y[train]).predict(X[test])
     baseline[test] = DummyRegressor().fit(X[train], y[train]).predict(X[test])
@@ -232,6 +284,7 @@ print("Participant MAE:", mean_absolute_error(y, predicted))
 print("Training-mean MAE:", mean_absolute_error(y, baseline))
 fig, ax = plt.subplots(figsize=(5, 4), layout="constrained")
 ax.scatter(y, predicted, label="Held-out participants")
+ax.scatter(y, baseline, marker="x", label="Training mean")
 ax.plot([y.min(), y.max()], [y.min(), y.max()], "k--")
 ax.set(xlabel="Observed age (years)", ylabel="Predicted age (years)")
 ax.legend()

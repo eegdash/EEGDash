@@ -24,9 +24,7 @@ count and trial count reported so the horizontal axis is unambiguous.
 # ----------------------------------
 # Filtering subjects, session and run bounds the download. Cropping after
 # opening a recording would reduce computation but not its download size.
-import os
 from functools import partial
-from pathlib import Path
 
 import matplotlib.pyplot as plt
 import numpy as np
@@ -37,6 +35,8 @@ from sklearn.metrics import balanced_accuracy_score
 from sklearn.pipeline import make_pipeline
 from sklearn.preprocessing import StandardScaler
 
+from eegdash.paths import get_default_cache_dir
+
 from eegdash import EEGDashDataset
 from eegdash.features import (
     FeatureExtractor,
@@ -45,7 +45,7 @@ from eegdash.features import (
     spectral_preprocessor,
 )
 
-cache_dir = Path(os.environ.get("EEGDASH_CACHE_DIR", ".eegdash_cache"))
+cache_dir = get_default_cache_dir()
 subjects = ["1", "2", "3"]
 dataset = EEGDashDataset(
     cache_dir=cache_dir,
@@ -56,7 +56,10 @@ dataset = EEGDashDataset(
     task="ssvep",
     n_jobs=1,
 )
-assert len(dataset.datasets) == len(subjects), "Expected one recording per subject"
+if not (len(dataset.datasets) == len(subjects)):
+    raise ValueError(
+        "Expected one recording per requested participant; inspect the query results."
+    )
 print(dataset.description[["subject", "session", "run"]])
 
 # %%
@@ -70,12 +73,16 @@ sfreq = raw.info["sfreq"]
 channel_names = raw.ch_names
 class_names = sorted(set(raw.annotations.description), key=float)
 mapping = {name: index for index, name in enumerate(class_names)}
-assert len(mapping) == 12, "Expected the twelve SSVEP stimulus frequencies"
 for recording in dataset.datasets:
     recording_raw = recording.raw
-    assert recording_raw.ch_names == channel_names
-    assert recording_raw.info["sfreq"] == sfreq
-    assert set(recording_raw.annotations.description) == set(mapping)
+    if (
+        recording_raw.ch_names != channel_names
+        or recording_raw.info["sfreq"] != sfreq
+        or set(recording_raw.annotations.description) != set(mapping)
+    ):
+        raise ValueError(
+            "Recordings must share channel order, sampling rate and cue vocabulary."
+        )
 print(f"Channels: {channel_names}; sampling frequency: {sfreq} Hz")
 print("Stimulus frequencies (Hz):", class_names)
 
@@ -103,14 +110,22 @@ windows = create_windows_from_events(
     preload=True,
 )
 metadata = windows.get_metadata()
-assert (metadata.i_window_in_trial == 0).all(), "Expected one window per trial"
-assert not metadata.duplicated(["subject", "session", "run", "i_start_in_trial"]).any()
+if not ((metadata.i_window_in_trial == 0).all()):
+    raise ValueError(
+        "Multiple windows represent a trial; group by trial before splitting."
+    )
+if not (
+    not metadata.duplicated(["subject", "session", "run", "i_start_in_trial"]).any()
+):
+    raise ValueError(
+        "Duplicate recording/window identities; inspect metadata before splitting."
+    )
 y = metadata["target"].to_numpy(dtype=int)
 groups = metadata["subject"].astype(str).to_numpy()
-X = np.stack([window[0] for window in windows])
-assert X.shape == (len(metadata), len(channel_names), window_size)
-assert set(groups) == set(subjects)
-assert np.isfinite(X).all()
+if not (set(groups) == set(subjects)):
+    raise ValueError(
+        "Some requested participants have no retained windows; inspect exclusions."
+    )
 print(pd.crosstab(groups, y, rownames=["subject"], colnames=["class"]))
 
 # %%
@@ -147,54 +162,69 @@ spectral = FeatureExtractor(
 feature_table = extract_features(
     windows, {"spectral": spectral}, batch_size=64, n_jobs=1
 ).to_dataframe()
-assert feature_table.shape == (len(y), len(class_names) * len(channel_names))
+if len(feature_table) != len(metadata):
+    raise ValueError(
+        "Feature rows no longer match window metadata; inspect extraction."
+    )
 features = np.log(np.maximum(feature_table.to_numpy() * sfreq / window_size, 1e-30))
-assert np.isfinite(features).all()
+if not (np.isfinite(features).all()):
+    raise ValueError(
+        "Nonfinite spectral features; inspect signals and extraction parameters."
+    )
 
 # %%
 # 5. Grow a nested training cohort; keep validation fixed
 # -------------------------------------------------------
-# The seeded permutation picks subject order, never fabricates observations.
+# Show both possible starting participants at the same download budget.
 # Repeated inspection makes subject 3 a validation set, not a final test set.
 # A larger study needs additional untouched test subjects and repeated orders.
 # Both training subsets contain every frequency class. The one-participant
 # subset contributes 180 trials; the two-participant subset contains those
 # same trials plus the other person's 180 trials. This nesting prevents a
-# change in training membership from being mistaken for a change in size.
+# loss of the earlier trials; identity and sample size still change together.
 # Subject 3 supplies the same 180 validation trials at both points.
 #
 # The feature extraction is fixed, but the scaler and classifier are refitted
 # for each size. Reusing the larger fit would let information from the added
 # participant enter the smaller-size result.
-rng = np.random.default_rng(42)
-training_order = rng.permutation(["1", "2"])
 validation = np.flatnonzero(groups == "3")
 rows = []
-previous = set()
-for n_subjects in (1, 2):
-    train = np.flatnonzero(np.isin(groups, training_order[:n_subjects]))
-    assert previous.issubset(set(train))
-    assert set(groups[train]).isdisjoint(groups[validation])
-    assert set(y[train]) == set(y[validation]) == set(mapping.values())
-    previous = set(train)
-    model = make_pipeline(StandardScaler(), LogisticRegression(max_iter=1000))
-    model.fit(features[train], y[train])
-    prediction = model.predict(features[validation])
-    rows.append(
-        dict(
-            n_subjects=n_subjects,
-            n_trials=len(train),
-            balanced_accuracy=balanced_accuracy_score(y[validation], prediction),
+for training_order in [("1", "2"), ("2", "1")]:
+    previous = set()
+    for n_subjects in (1, 2):
+        train = np.flatnonzero(np.isin(groups, training_order[:n_subjects]))
+        if not (previous.issubset(set(train))):
+            raise ValueError(
+                "Training subsets are not nested; retain all earlier trials."
+            )
+        if not (set(groups[train]).isdisjoint(groups[validation])):
+            raise ValueError(
+                "Validation participants overlap training; repair the split."
+            )
+        if not (set(y[train]) == set(y[validation]) == set(mapping.values())):
+            raise ValueError(
+                "Every mapped class must occur in train and validation; inspect class counts."
+            )
+        previous = set(train)
+        model = make_pipeline(StandardScaler(), LogisticRegression(max_iter=1000))
+        model.fit(features[train], y[train])
+        prediction = model.predict(features[validation])
+        rows.append(
+            dict(
+                order=" → ".join(training_order),
+                n_subjects=n_subjects,
+                n_trials=len(train),
+                balanced_accuracy=balanced_accuracy_score(y[validation], prediction),
+            )
         )
-    )
 results = pd.DataFrame(rows)
-print("Training order:", training_order)
 print(results.to_string(index=False))
 
 # %%
 # 6. Display measured validation scores without extrapolation
 # -----------------------------------------------------------
-plt.plot(results.n_subjects, results.balanced_accuracy, "o-")
+for order, curve in results.groupby("order", sort=False):
+    plt.plot(curve.n_subjects, curve.balanced_accuracy, "o-", label=order)
 plt.axhline(1 / len(mapping), color="black", linestyle="--", label="Chance (1/12)")
 plt.xticks([1, 2])
 plt.xlabel("Training participants")
@@ -209,7 +239,8 @@ plt.show()
 # A rising segment indicates improvement on this one validation participant
 # for this particular order of training subjects. A flat or falling segment
 # is equally valid: adding a participant changes both size and population
-# composition. There are no error bars because only one order is evaluated.
+# composition. Both orders share the same two-person endpoint; they are not
+# independent cohorts and do not supply population uncertainty.
 #
 # With a larger cohort, repeat several nested training-subject orders while
 # keeping validation identities fixed, and report the spread at each size.

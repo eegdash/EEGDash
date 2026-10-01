@@ -49,7 +49,6 @@ evaluated on 123, whose signals and labels are excluded from fitting.
 # simple representation uses voltages directly rather than engineered P300
 # amplitudes, but it does not exploit convolutional time structure.
 import os
-from pathlib import Path
 
 import matplotlib.pyplot as plt
 import mne
@@ -61,9 +60,11 @@ from sklearn.metrics import balanced_accuracy_score
 from sklearn.preprocessing import StandardScaler
 from torch import nn
 
+from eegdash.paths import get_default_cache_dir
+
 from eegdash import EEGDashDataset
 
-cache_dir = Path(os.environ.get("EEGDASH_CACHE_DIR", ".eegdash_cache"))
+cache_dir = get_default_cache_dir()
 subjects = ["054", "119", "123"]
 channels = ["Fz", "CP1", "Pz", "P3", "P4"]
 dataset = EEGDashDataset(
@@ -73,27 +74,42 @@ dataset = EEGDashDataset(
     task="visualoddball",
     n_jobs=1,
 )
-assert len(dataset.datasets) == 3
+if not (len(dataset.datasets) == 3):
+    raise ValueError(
+        "Unexpected cohort: check the query, missing recordings and duplicate participant rows."
+    )
 cohort = {}
 for recording in dataset.datasets:
     raw = recording.raw.copy().load_data().pick("eeg")
-    assert set(channels) <= set(raw.ch_names)
+    if not (set(channels) <= set(raw.ch_names)):
+        raise ValueError(
+            "Unexpected channel layout: inspect the recording and select/reorder the documented channels."
+        )
     source_annotations = raw.annotations.copy()
     source_date = raw.info["meas_date"]
     source_grid = (raw.info["sfreq"], raw.n_times, raw.first_samp)
     RemoveDCOffset().apply(raw)
     RemoveCommonAverageReference().apply(raw)
-    assert (raw.info["sfreq"], raw.n_times, raw.first_samp) == source_grid
+    if not ((raw.info["sfreq"], raw.n_times, raw.first_samp) == source_grid):
+        raise ValueError(
+            "Unexpected sampling grid: inspect source timing and preprocessing before constructing windows."
+        )
     raw.set_meas_date(source_date)
+    # With no absolute origin, set_annotations adds first_time itself.
+    if source_annotations.orig_time is None:
+        source_annotations.onset -= raw.first_time
     raw.set_annotations(source_annotations)
     raw.filter(0.5, 30)
-    raw.pick(channels)
+    raw.pick(channels).reorder_channels(channels)
     mapping = {}
     for name in set(raw.annotations.description):
         code = name.split("/")[-1].replace(" ", "")
         if len(code) == 3 and code[0] == "S" and set(code[1:]) <= set("12345"):
             mapping[name] = 2 if code[1] == code[2] else 1
-    assert set(mapping.values()) == {1, 2}
+    if not (set(mapping.values()) == {1, 2}):
+        raise ValueError(
+            "Data do not satisfy the documented task contract; inspect the query, labels and retained windows before continuing."
+        )
     events, _ = mne.events_from_annotations(raw, event_id=mapping)
     epochs = mne.Epochs(
         raw,
@@ -107,15 +123,54 @@ for recording in dataset.datasets:
     epochs.resample(64)
     X = epochs.get_data().reshape(len(epochs), -1) * 1e6
     y = epochs.events[:, 2] - 1
-    assert np.isfinite(X).all() and set(y) == {0, 1}
-    cohort[str(recording.description["subject"])] = (X, y)
-assert set(cohort) == set(subjects)
+    if not (np.isfinite(X).all() and set(y) == {0, 1}):
+        raise ValueError(
+            "Nonfinite signals, targets or predictions: inspect missing metadata and unusable channels before fitting."
+        )
+    identity = str(recording.description["subject"])
+    cohort[identity] = (X, y)
+    if identity == subjects[0]:
+        fig, ax = plt.subplots(figsize=(6, 3), layout="constrained")
+        for condition in ["standard", "target"]:
+            evoked = epochs[condition].average()
+            ax.plot(
+                evoked.times,
+                evoked.data[channels.index("Pz")] * 1e6,
+                label=f"{condition}: n={len(epochs[condition])}",
+            )
+        ax.axvline(0, color="black", linestyle="--")
+        ax.set(
+            xlabel="Time from stimulus (s)",
+            ylabel="Pz (µV)",
+            title=f"Source {identity}",
+        )
+        ax.legend()
+        plt.show()
+print(
+    pd.DataFrame(
+        {
+            "participant": subjects,
+            "role": [
+                "labelled source",
+                "unlabelled adaptation / labelled reference",
+                "held-out test",
+            ],
+        }
+    )
+)
+if not (set(cohort) == set(subjects)):
+    raise ValueError(
+        "Unexpected cohort: check the query, missing recordings and duplicate participant rows."
+    )
 source_subject, adaptation_subject, test_subject = subjects
-assert len({source_subject, adaptation_subject, test_subject}) == 3
+if not (len({source_subject, adaptation_subject, test_subject}) == 3):
+    raise ValueError(
+        "Unexpected cohort: check the query, missing recordings and duplicate participant rows."
+    )
 
 # %%
-# 2. Define the model and a distribution discrepancy
-# --------------------------------------------------
+# 2. Understand the model and discrepancy defined in the training loop
+# --------------------------------------------------------------------
 # A small neural encoder operates on flattened voltage windows. The biased
 # RBF MMD estimator compares hidden activations, including kernel diagonals.
 # Its bandwidth and weight are fixed; they are not selected using test scores.
@@ -156,9 +211,10 @@ torch.set_num_threads(max(1, min(2, os.cpu_count() or 1)))
 # The comparison is a single demonstration run, not an estimate across seeds.
 rows = []
 histories = {}
-for regime in ["source only", "MMD", "target supervised"]:
+components = {}
+for regime in ["source only", "MMD", "adaptation supervised"]:
     training_subject = (
-        adaptation_subject if regime == "target supervised" else source_subject
+        adaptation_subject if regime == "adaptation supervised" else source_subject
     )
     X_train, y_train = cohort[training_subject]
     scaler = StandardScaler().fit(X_train)
@@ -178,12 +234,14 @@ for regime in ["source only", "MMD", "target supervised"]:
     )
     criterion = nn.CrossEntropyLoss(weight=weights)
     history = []
+    classification_history, discrepancy_history = [], []
     for epoch in range(10):
-        losses = []
+        losses, classification_losses, discrepancies = [], [], []
         for indices in torch.randperm(len(train_X)).split(32):
             optimizer.zero_grad()
             hidden = encoder(train_X[indices])
             loss = criterion(head(hidden), train_y[indices])
+            classification_losses.append(loss.item())
             if regime == "MMD":
                 target_indices = torch.randperm(len(adaptation_X))[: len(indices)]
                 adaptation_hidden = encoder(adaptation_X[target_indices])
@@ -197,12 +255,20 @@ for regime in ["source only", "MMD", "target supervised"]:
                         -torch.cdist(hidden, adaptation_hidden).square() / 2
                     ).mean()
                 )
+                discrepancies.append(discrepancy.item())
                 loss = loss + 0.1 * discrepancy
-            assert torch.isfinite(loss)
+            if not (torch.isfinite(loss)):
+                raise ValueError(
+                    "Nonfinite signals, targets or predictions: inspect missing metadata and unusable channels before fitting."
+                )
             loss.backward()
             optimizer.step()
             losses.append(loss.item())
         history.append(float(np.mean(losses)))
+        classification_history.append(float(np.mean(classification_losses)))
+        discrepancy_history.append(
+            float(np.mean(discrepancies)) if discrepancies else 0.0
+        )
     encoder.eval()
     head.eval()
     with torch.no_grad():
@@ -219,11 +285,12 @@ for regime in ["source only", "MMD", "target supervised"]:
         }
     )
     histories[regime] = history
+    components[regime] = classification_history, discrepancy_history
 
 # %%
 # 4. Report the observed comparison
 # ---------------------------------
-# The target-supervised model is a reference, not a guaranteed upper bound.
+# The adaptation-supervised model is a reference, not a guaranteed upper bound.
 # Negative transfer and below-chance results remain valid outcomes.
 # Binary balanced accuracy is the mean of target and standard recall, so an
 # always-standard classifier scores 0.5 even though standards are more common.
@@ -234,6 +301,15 @@ for regime in ["source only", "MMD", "target supervised"]:
 # discrepancy penalty, whereas the other curves show classification loss
 # alone. Their absolute heights are therefore not comparable model-quality
 # scores. Decreasing training loss also does not establish generalization.
+fig, axes = plt.subplots(1, 2, figsize=(9, 3), layout="constrained")
+for regime, (classification, discrepancy) in components.items():
+    axes[0].plot(range(1, 11), classification, label=regime)
+    if regime == "MMD":
+        axes[1].plot(range(1, 11), discrepancy)
+axes[0].set(xlabel="Epoch", ylabel="Classification loss")
+axes[0].legend()
+axes[1].set(xlabel="Epoch", ylabel="Unweighted MMD")
+plt.show()
 results = pd.DataFrame(rows)
 print(results.to_string(index=False))
 fig, axes = plt.subplots(1, 2, figsize=(10, 4), layout="constrained")

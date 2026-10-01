@@ -1,336 +1,209 @@
-"""Eyes open vs. closed from one participant with ShallowFBCSPNet
-==============================================================
+"""Exploratory eye-state decoding in an outcome-selected participant
+==================================================================
 
-Train a small convolutional network on the resting-state EEG of a single
-Healthy Brain Network participant and predict, from two-second windows,
-whether the eyes were open or closed. EEGDashDataset downloads one
-``ds005514`` recording (about 90 MB); set ``EEGDASH_CACHE_DIR`` to reuse it.
-CPU is sufficient: the whole script runs in about a minute.
+Train ShallowFBCSPNet on real two-second EEG windows from HBN participant
+NDARAC589YMB (ds005514, about 90 MB). Install EEGDash, Braindecode,
+PyTorch, MNE, scikit-learn and Matplotlib. CPU training uses 30 epochs;
+wall time depends on hardware. ``EEGDASH_CACHE_DIR`` retains the recording.
 
-The workflow is: retrieve the recording, re-annotate the eyes-open and
-eyes-closed instruction periods, preprocess with Braindecode (channel
-selection, resampling to 128 Hz, 1-55 Hz band-pass, scaling to microvolts),
-cut 70 two-second windows, split whole instruction blocks into training and
-test sets, and train ShallowFBCSPNet with AdamW for 30 epochs.
+This participant was selected after inspecting outcomes across twelve people
+and several pipeline settings. Neither a fresh block split nor scoring once
+removes that selection bias. The result is an exploratory workflow illustration,
+not unbiased evidence of within-person or population performance. Prespecify
+participants, preprocessing and development/validation blocks for a new study.
 
-Participant NDARAC589YMB was chosen after running this pipeline on twelve
-``ds005514`` participants with block-wise splits: it has strong alpha
-reactivity and reaches 0.93 +/- 0.06 held-out accuracy over five repeated
-splits, where the original settings (Adamax, learning rate 0.002, per-window
-standardization) gave 0.79 on the same participant. Two changes matter.
-Absolute amplitude is kept, because per-window standardization removes the
-alpha-power difference the network needs. A lower learning rate with stronger
-weight decay slows the overfitting of a 56-window training set. One
-participant and one split describe this recording, not a population.
-
-Before you start
-----------------
-The resting-state tutorial decodes the same eye conditions with alpha-power
-features across participants; this project instead trains a network within
-one participant. Familiarity with PyTorch DataLoaders and a training loop is
-assumed. The outputs are a label check, a model summary and train/test
-accuracy every five epochs.
+We retain original instruction-block identities, reject BAD-annotated epochs,
+and score reserved blocks only after a fixed training budget. Filtering is
+offline, not a causal real-time deployment pipeline. The labels describe the
+instructions, not verified compliance with eye opening/closing.
 """
 
 # %%
-# Data Retrieval Using EEGDash
-# ----------------------------
-#
-# First we find one resting state dataset. This dataset contains both eyes open and eyes closed data.
-
-import os
-from pathlib import Path
+# Load one recording and retain its actual instruction boundaries
+# ---------------------------------------------------------------
+import matplotlib.pyplot as plt
+import mne
+import numpy as np
+import torch
+from braindecode.models import ShallowFBCSPNet
+from sklearn.metrics import balanced_accuracy_score, ConfusionMatrixDisplay
+from sklearn.model_selection import train_test_split
+from torch.utils.data import DataLoader, TensorDataset
 
 from eegdash import EEGDashDataset
+from eegdash.paths import get_default_cache_dir
 
-ds_eoec = EEGDashDataset(
-    cache_dir=Path(
-        os.environ.get("EEGDASH_CACHE_DIR", "~/.eegdash_cache")
-    ).expanduser(),
+dataset = EEGDashDataset(
+    cache_dir=get_default_cache_dir(),
     dataset="ds005514",
     task="RestingState",
     subject="NDARAC589YMB",
-    description_fields=[
-        "subject",
-        "session",
-        "run",
-        "task",
-        "icaweights",
-        "rejectedchannels",
-    ],
 )
-
-# %%
-# Data Preprocessing Using Braindecode
-# ------------------------------------
-#
-# `BrainDecode <https://braindecode.org/stable/install/install.html>`_ is a specialized library for preprocessing EEG and MEG data. In this dataset, there are two key events in the continuous data: **instructed_toCloseEyes**, marking the start of a 40-second eyes-closed period, and **instructed_toOpenEyes**, indicating the start of a 20-second eyes-open period.
-#
-# For the eyes-closed event, we extract 14 seconds of data from 15 to 29 seconds after the event onset. Similarly, for the eyes-open event, we extract data from 5 to 19 seconds after the event onset. This ensures an equal amount of data for both conditions. The event extraction is handled by the custom function **hbn_ec_ec_reannotation**.
-#
-# Next, we apply five preprocessing steps in Braindecode:
-# 1. **Reannotation** of event markers using hbn_ec_ec_reannotation().
-# 2. **Selection** of 24 specific EEG channels from the original 128.
-# 3. **Resampling** the EEG data to a frequency of 128 Hz.
-# 4. **Filtering** the EEG signals to retain frequencies between 1 Hz and 55 Hz.
-# 5. **Scaling** from volts (MNE's internal unit) to microvolts, so the network sees EEG-sized numbers.
-#
-# When calling the **preprocess** function, the data is retrieved from the remote repository.
-#
-# Finally, we use **create_windows_from_events** to extract 2-second epochs from the data. These epochs serve as the dataset samples. At this stage, each sample is automatically labeled with the corresponding event type (eyes-open or eyes-closed). windows_ds is a PyTorch dataset, and when queried, it returns labels for eyes-open and eyes-closed (assigned as labels 0 and 1, corresponding to their respective event markers).
-
-from braindecode.preprocessing import (
-    preprocess,
-    Preprocessor,
-    create_windows_from_events,
-)
-import numpy as np
-import mne
-import warnings
-
-warnings.simplefilter("ignore", category=RuntimeWarning)
-
-
-class hbn_ec_ec_reannotation(Preprocessor):
-    def __init__(self):
-        super().__init__(
-            fn=self.transform, apply_on_array=False
-        )  # Pass the transform method as the function
-
-    def transform(self, raw):
-        # Create events array from annotations
-        events, event_id = mne.events_from_annotations(raw)
-
-        print(event_id)
-
-        # Create new events array for 2-second segments
-        new_events = []
-        sfreq = raw.info["sfreq"]
-        for event in events[events[:, 2] == event_id["instructed_toCloseEyes"]]:
-            # For each original event, create events every 2 seconds from 15s to 29s after
-            start_times = event[0] + np.arange(15, 29, 2) * sfreq
-            new_events.extend([[int(t), 0, 1] for t in start_times])
-
-        for event in events[events[:, 2] == event_id["instructed_toOpenEyes"]]:
-            # For each original event, create events every 2 seconds from 5s to 19s after
-            start_times = event[0] + np.arange(5, 19, 2) * sfreq
-            new_events.extend([[int(t), 0, 2] for t in start_times])
-
-        # replace events in raw
-        new_events = np.array(new_events)
-        annot_from_events = mne.annotations_from_events(
-            events=new_events,
-            event_desc={1: "eyes_closed", 2: "eyes_open"},
-            sfreq=raw.info["sfreq"],
-        )
-        raw.set_annotations(annot_from_events)
-        return raw
-
-
-# BrainDecode preprocessors
-preprocessors = [
-    hbn_ec_ec_reannotation(),
-    Preprocessor(
-        "pick",
-        picks=[
-            "E22",
-            "E9",
-            "E33",
-            "E24",
-            "E11",
-            "E124",
-            "E122",
-            "E29",
-            "E6",
-            "E111",
-            "E45",
-            "E36",
-            "E104",
-            "E108",
-            "E42",
-            "E55",
-            "E93",
-            "E58",
-            "E52",
-            "E62",
-            "E92",
-            "E96",
-            "E70",
-            "Cz",
-        ],
-    ),
-    Preprocessor("resample", sfreq=128),
-    Preprocessor("filter", l_freq=1, h_freq=55),
-    Preprocessor(lambda x: x * 1e6),  # V -> uV
+if len(dataset.datasets) != 1:
+    raise ValueError(
+        "Expected one RestingState recording; inspect session/run metadata."
+    )
+raw = dataset.datasets[0].raw.copy().load_data()
+channels = [
+    "E22",
+    "E9",
+    "E33",
+    "E24",
+    "E11",
+    "E124",
+    "E122",
+    "E29",
+    "E6",
+    "E111",
+    "E45",
+    "E36",
+    "E104",
+    "E108",
+    "E42",
+    "E55",
+    "E93",
+    "E58",
+    "E52",
+    "E62",
+    "E92",
+    "E96",
+    "E70",
+    "Cz",
 ]
-preprocess(ds_eoec, preprocessors)
-
-# Extract 2-second segments
-windows_ds = create_windows_from_events(
-    ds_eoec,
-    trial_start_offset_samples=0,
-    trial_stop_offset_samples=256,
+raw.pick(channels).reorder_channels(channels).resample(128).filter(1, 55)
+# Keep the original annotations, including BAD spans. Each new epoch carries
+# the index of its original instruction, rather than inferring blocks by // 7.
+cue_specs = {"instructed_toCloseEyes": (0, 15), "instructed_toOpenEyes": (1, 5)}
+events, block_ids = [], []
+for block_id, annotation in enumerate(raw.annotations):
+    if annotation["description"] not in cue_specs:
+        continue
+    label, delay = cue_specs[annotation["description"]]
+    onset = annotation["onset"] - raw.first_time
+    for offset in np.arange(delay, delay + 14, 2):
+        sample = int(round((onset + offset) * raw.info["sfreq"])) + raw.first_samp
+        events.append([sample, 0, label + 1])
+        block_ids.append(block_id)
+if not events:
+    raise ValueError(
+        "No eye-state instructions found; inspect the source event vocabulary."
+    )
+order = np.argsort(np.asarray(events)[:, 0])
+events = np.asarray(events)[order]
+block_ids = np.asarray(block_ids)[order]
+epochs = mne.Epochs(
+    raw,
+    events,
+    event_id={"eyes_closed": 1, "eyes_open": 2},
+    tmin=0,
+    tmax=2 - 1 / 128,
+    baseline=None,
     preload=True,
+    reject_by_annotation=True,
 )
+X = epochs.get_data().astype(np.float32) * 1e6
+y = epochs.events[:, 2] - 1
+blocks = block_ids[epochs.selection]
+if not len(X) or not np.isfinite(X).all() or set(y) != {0, 1}:
+    raise ValueError(
+        "Need finite retained epochs in both eye conditions; inspect the drop log."
+    )
+print("Retained / requested epochs:", len(epochs), len(events))
+print("Drop reasons:", epochs.drop_log)
 
 # %%
-# Plotting a Single Channel for One Sample
-# ----------------------------------------
-#
-# It’s always a good practice to verify that the data has been properly loaded and processed. Here, we plot a single channel from one sample to ensure the signal is present and looks as expected.
-
-import matplotlib.pyplot as plt
-
-plt.figure()
-plt.plot(windows_ds[2][0][0, :].transpose())  # first channel of first epoch
+# Inspect the waveform, spectral representation and original block coverage
+# -------------------------------------------------------------------------
+posterior = channels.index("E70")
+fig, axes = plt.subplots(1, 2, figsize=(10, 3), layout="constrained")
+for code, name in enumerate(["eyes_closed", "eyes_open"]):
+    first = np.flatnonzero(y == code)[0]
+    axes[0].plot(epochs.times, X[first, posterior], label=name)
+    spectrum = epochs[name].compute_psd(fmin=1, fmax=40, picks=["E70"], verbose=False)
+    axes[1].semilogy(
+        spectrum.freqs, spectrum.get_data().mean(axis=(0, 1)) * 1e12, label=name
+    )
+axes[0].set(xlabel="Time within epoch (s)", ylabel="E70 (µV)")
+axes[1].axvspan(8, 13, alpha=0.15, color="gray")
+axes[1].set(xlabel="Frequency (Hz)", ylabel="Mean E70 PSD (µV²/Hz)")
+axes[0].legend()
+axes[1].legend()
 plt.show()
 
 # %%
-# Creating training and test sets
-# -------------------------------
-#
-# The code below creates a training and test set. We first split the data into training and test sets using the **train_test_split** function from the **sklearn** library, applied to whole instruction blocks rather than to single windows. We then create a **TensorDataset** for the training and test sets.
-#
-# 1. **Set Random Seed** – The random seed is fixed using torch.manual_seed(random_state) to ensure reproducibility in dataset splitting and model training.
-# 2. **Extract Labels from the Dataset** – Labels (eye-open or eye-closed events) are extracted from windows_ds, stored as a NumPy array, and printed for verification.
-# 3. **Split Dataset into Train and Test Sets** – The seven consecutive windows cut from one 14-second instruction block are strongly correlated, so a random split of windows would put near-copies of test windows into the training set. We therefore split the ten blocks: one eyes-closed and one eyes-open block (14 windows) form the test set, stratified by label.
-# 4. **Convert Data to PyTorch Tensors** – The selected training and testing samples are converted into FloatTensor for input features and LongTensor for labels, making them compatible with PyTorch models.
-# 5. **Create DataLoaders** – The datasets are wrapped in PyTorch DataLoader objects with a batch size of 10, enabling efficient mini-batch training and shuffling.
-
-import torch
-from sklearn.model_selection import train_test_split
-from torch.utils.data import DataLoader
-from torch.utils.data import TensorDataset
-
-# Set random seed for reproducibility
-random_state = 42
-torch.manual_seed(random_state)
-np.random.seed(random_state)
-
-# Extract labels from the dataset
-eo_ec = np.array([ds[1] for ds in windows_ds]).transpose()  # check labels
-print("labels: ", eo_ec)
-
-# Split whole instruction blocks (7 consecutive windows each), not single windows
-block = np.arange(len(windows_ds)) // 7
+# Split complete instructions, including after any epoch rejection
+# ----------------------------------------------------------------
+# Amplitudes remain in microvolts: this example does not standardize every
+# window separately. The spectra above allow inspection without assuming an
+# alpha difference must occur. All settings are fixed before this run's score.
+unique_blocks = np.unique(blocks)
+block_labels = np.asarray([y[blocks == block][0] for block in unique_blocks])
+if np.bincount(block_labels, minlength=2).min() < 2:
+    raise ValueError(
+        "Need at least two retained instruction blocks per class for this split."
+    )
 train_blocks, test_blocks = train_test_split(
-    np.unique(block), test_size=0.2, stratify=eo_ec[::7], random_state=random_state
+    unique_blocks,
+    test_size=max(2, int(np.ceil(0.2 * len(unique_blocks)))),
+    stratify=block_labels,
+    random_state=42,
 )
-train_indices = np.flatnonzero(np.isin(block, train_blocks))
-test_indices = np.flatnonzero(np.isin(block, test_blocks))
-
-# Convert the data to tensors
-X_train = torch.FloatTensor(
-    np.array([windows_ds[i][0] for i in train_indices])
-)  # Convert list of arrays to single tensor
-X_test = torch.FloatTensor(
-    np.array([windows_ds[i][0] for i in test_indices])
-)  # Convert list of arrays to single tensor
-y_train = torch.LongTensor(eo_ec[train_indices])  # Convert targets to tensor
-y_test = torch.LongTensor(eo_ec[test_indices])  # Convert targets to tensor
-dataset_train = TensorDataset(X_train, y_train)
-dataset_test = TensorDataset(X_test, y_test)
-
-# Create data loaders for training and testing (batch size 10)
-train_loader = DataLoader(dataset_train, batch_size=10, shuffle=True)
-test_loader = DataLoader(dataset_test, batch_size=10, shuffle=True)
-
-# Print shapes and sizes to verify split
-print(
-    f"Shape of data {X_train.shape} number of samples - Train: {len(train_loader)}, Test: {len(test_loader)}"
-)
-print(
-    f"Eyes-Open/Eyes-Closed balance, train: {np.mean(eo_ec[train_indices]):.2f}, test: {np.mean(eo_ec[test_indices]):.2f}"
-)
+train, test = np.isin(blocks, train_blocks), np.isin(blocks, test_blocks)
+print("Training blocks:", train_blocks, "reserved blocks:", test_blocks)
+print("Training / reserved windows:", train.sum(), test.sum())
+fig, ax = plt.subplots(figsize=(7, 3), layout="constrained")
+for mask, name, marker in [(train, "Training", "o"), (test, "Reserved", "x")]:
+    ax.scatter(
+        (epochs.events[mask, 0] - raw.first_samp) / raw.info["sfreq"],
+        blocks[mask],
+        marker=marker,
+        label=name,
+    )
+ax.set(xlabel="Time from recording start (s)", ylabel="Original instruction ID")
+ax.legend()
+plt.show()
 
 # %%
-# Check labels
-# ------------
-#
-# It is good practice to verify the labels and ensure the random seed is functioning correctly. If all labels are 0s (eyes closed) or 1s (eyes open), it could indicate an issue with data loading or stratification, requiring further investigation.
-
-# Visualize a batch of target labels
-dataiter = iter(train_loader)
-first_item, label = dataiter.__next__()
-label
-
-# %%
-# Create model
-# ------------
-#
-# The model is a shallow convolutional neural network (ShallowFBCSPNet) with 24 input channels (EEG channels), 2 output classes (eyes-open and eyes-closed), and an input window size of 256 samples (2 seconds of EEG data).
-
-import torch
-import numpy as np
-from torch.nn import functional as F
-from braindecode.models import ShallowFBCSPNet
-from torchinfo import summary
-
-torch.manual_seed(random_state)
-model = ShallowFBCSPNet(24, 2, n_times=256, final_conv_length="auto")
-summary(model, input_size=(1, 24, 256))
-
-# %%
-# Model Training and Evaluation Process
-# -------------------------------------
-#
-# This section trains the neural network using the AdamW optimizer, computes cross-entropy loss, updates model parameters, and tracks accuracy across 30 epochs.
-#
-# 1. **Set Up Optimizer and Learning Rate Scheduler** – The `AdamW` optimizer uses a learning rate of 0.001 and a weight decay of 0.01. With only 56 training windows the network fits the training set perfectly within a few epochs, so the weight decay is the main protection against overfitting. An `ExponentialLR` scheduler with a decay factor of 1 keeps the learning rate constant.
-#
-# 2. **Allocate Model to Device** – The model moves to the specified device (CPU, GPU, or MPS for Mac silicon) to optimize computation efficiency.
-#
-# 3. **Move Batches to the Device** – The `to_device` function only converts each batch to `float32` on the right device. The windows are deliberately not standardized: the absolute alpha amplitude is what separates eyes closed from eyes open, and per-window standardization would remove it.
-#
-# 4. **Train for 30 Epochs** – The training loop iterates through data batches with the model in training mode, computes predictions, calculates cross-entropy loss, performs backpropagation, updates model parameters, and steps the learning rate scheduler. It tracks correct predictions to compute accuracy.
-#
-# 5. **Evaluate on Test Data** – After each epoch, the model runs in evaluation mode on the held-out blocks and computes test accuracy. Accuracies are printed every five epochs. With 14 test windows, one window is worth 7 percentage points.
-
+# Train for a fixed budget without monitoring reserved blocks
+# -----------------------------------------------------------
+torch.manual_seed(42)
+torch.set_num_threads(2)
+loader = DataLoader(
+    TensorDataset(torch.from_numpy(X[train]), torch.from_numpy(y[train]).long()),
+    batch_size=10,
+    shuffle=True,
+)
+model = ShallowFBCSPNet(len(channels), 2, n_times=X.shape[-1], final_conv_length="auto")
 optimizer = torch.optim.AdamW(model.parameters(), lr=0.001, weight_decay=0.01)
-scheduler = torch.optim.lr_scheduler.ExponentialLR(optimizer, gamma=1)
-
-device = torch.device(
-    "cuda"
-    if torch.cuda.is_available()
-    else "mps"
-    if torch.backends.mps.is_available()
-    else "cpu"
-)
-model = model.to(device=device)  # move the model parameters to CPU/GPU
-epochs = 30
-
-
-def to_device(x):
-    return x.to(device=device, dtype=torch.float32)  # move to device, e.g. GPU
-
-
-for e in range(epochs):
-    # training
-    correct_train = 0
-    for t, (x, y) in enumerate(train_loader):
-        model.train()  # put model to training mode
-        scores = model(to_device(x))
-        y = y.to(device=device, dtype=torch.long)
-        _, preds = scores.max(1)
-        correct_train += (preds == y).sum() / len(dataset_train)
-
-        loss = F.cross_entropy(scores, y)
+history = []
+for epoch in range(30):
+    model.train()
+    losses = []
+    for signals, targets in loader:
         optimizer.zero_grad()
+        loss = torch.nn.functional.cross_entropy(model(signals), targets)
+        if not torch.isfinite(loss):
+            raise ValueError(
+                "Nonfinite loss: inspect signal amplitudes and learning rate."
+            )
         loss.backward()
         optimizer.step()
-        scheduler.step()
-
-    # Validation
-    correct_test = 0
-    for t, (x, y) in enumerate(test_loader):
-        model.eval()  # put model to testing mode
-        scores = model(to_device(x))
-        y = y.to(device=device, dtype=torch.long)
-        _, preds = scores.max(1)
-        correct_test += (preds == y).sum() / len(dataset_test)
-
-    # Reporting, every five epochs
-    if (e + 1) % 5 == 0:
-        print(
-            f"Epoch {e + 1}, Train accuracy: {correct_train:.2f}, Test accuracy: {correct_test:.2f}"
-        )
+        losses.append(loss.item())
+    history.append(float(np.mean(losses)))
+model.eval()
+with torch.inference_mode():
+    predicted = model(torch.from_numpy(X[test])).argmax(dim=1).numpy()
+print(
+    "Exploratory reserved-block balanced accuracy:",
+    balanced_accuracy_score(y[test], predicted),
+)
+print("Constant-class balanced-accuracy reference: 0.5")
+fig, ax = plt.subplots(figsize=(5, 3), layout="constrained")
+ax.plot(np.arange(1, 31), history)
+ax.set(xlabel="Epoch", ylabel="Training cross-entropy")
+plt.show()
+ConfusionMatrixDisplay.from_predictions(
+    y[test], predicted, display_labels=["Closed", "Open"]
+)
+plt.title("Outcome-selected participant: exploratory reserved blocks")
+plt.show()

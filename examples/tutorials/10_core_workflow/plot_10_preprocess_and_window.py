@@ -21,14 +21,16 @@ output as well as the original download.
 """
 
 # %%
-import os
-from pathlib import Path
+
+import json
+from importlib.metadata import version
 
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 from braindecode.preprocessing import create_windows_from_events
 
+from eegdash.paths import get_default_cache_dir
 from eegdash import EEGDashDataset
 from braindecode.preprocessing import (
     Preprocessor,
@@ -45,7 +47,7 @@ from braindecode.preprocessing import (
 # generic filtering recipe intended for unprocessed acquisition would not be an
 # appropriate default. The following DC-offset and reference operations are explicit changes
 # to the source representation, separate from its existing filtering.
-cache_dir = Path(os.environ.get("EEGDASH_CACHE_DIR", ".eegdash_cache"))
+cache_dir = get_default_cache_dir()
 subjects = ["1"]
 dataset = EEGDashDataset(
     cache_dir=cache_dir,
@@ -56,18 +58,15 @@ dataset = EEGDashDataset(
     task="ssvep",
     n_jobs=1,
 )
-assert len(dataset.datasets) == len(subjects)
-print(dataset.description[["subject", "session", "run"]])
-raw = dataset.datasets[0].raw
+dataset.description[["subject", "session", "run"]]
+
+# %%
+(recording,) = dataset.datasets  # This lesson opens exactly one recording.
+raw = recording.raw
 sfreq = raw.info["sfreq"]
 channel_names = raw.ch_names
 class_names = sorted(set(raw.annotations.description), key=float)
 mapping = {name: index for index, name in enumerate(class_names)}
-assert len(mapping) == 12
-for recording in dataset.datasets:
-    assert recording.raw.ch_names == channel_names
-    assert recording.raw.info["sfreq"] == sfreq
-    assert set(recording.raw.annotations.description) == set(mapping)
 print(f"Channels: {channel_names}; sampling rate: {sfreq} Hz")
 print("Observed stimulus frequencies (Hz):", class_names)
 
@@ -95,7 +94,11 @@ print("Observed stimulus frequencies (Hz):", class_names)
 # Average reference needs voltage channels, not electrode coordinates.
 annotations_before = raw.annotations.copy()
 measurement_date = raw.info["meas_date"]
-n_samples_before = raw.n_times
+source_grid = (raw.info["sfreq"], raw.n_times, raw.first_samp)
+excerpt = raw.get_data(start=0, stop=int(4 * sfreq))
+median = np.median(raw.get_data(), axis=1, keepdims=True)
+centered_excerpt = excerpt - median
+common_average = centered_excerpt.mean(axis=0)
 preprocess(
     dataset,
     [
@@ -104,20 +107,37 @@ preprocess(
         RemoveCommonAverageReference(),
     ],
 )
-channel_names = dataset.datasets[0].raw.ch_names
+raw = dataset.datasets[0].raw  # Adapters may replace the Raw object.
+channel_names = raw.ch_names
 # These two components do not resample or cut data. The format conversion
 # can quantize annotation latencies, so preserve original event timing once
 # the sample-grid invariants have been verified. Restore the measurement date
 # first because annotations may use it as their absolute time origin.
-assert raw.n_times == n_samples_before and raw.info["sfreq"] == sfreq
+if (raw.info["sfreq"], raw.n_times, raw.first_samp) != source_grid:
+    raise RuntimeError(
+        "Offset/reference changed the sample grid; do not restore events"
+    )
 raw.set_meas_date(measurement_date)
+# With no absolute origin, set_annotations adds first_time itself.
+if annotations_before.orig_time is None:
+    annotations_before.onset -= raw.first_time
 raw.set_annotations(annotations_before)
-assert raw.annotations.orig_time == annotations_before.orig_time
-np.testing.assert_array_equal(
-    raw.annotations.description, annotations_before.description
-)
-np.testing.assert_array_equal(raw.annotations.onset, annotations_before.onset)
-np.testing.assert_array_equal(raw.annotations.duration, annotations_before.duration)
+after = raw.get_data(start=0, stop=excerpt.shape[1])
+np.testing.assert_allclose(after.mean(axis=0), 0, atol=1e-10)
+fig, axes = plt.subplots(3, 1, figsize=(9, 7), sharex=True, layout="constrained")
+times = np.arange(excerpt.shape[1]) / sfreq
+for values, label in [
+    (excerpt[0], "Source"),
+    (centered_excerpt[0], "Median removed"),
+    (after[0], "Average referenced"),
+]:
+    axes[0].plot(times, values * 1e6, label=label, alpha=0.8)
+axes[0].set_ylabel(f"{channel_names[0]} (µV)")
+axes[0].legend()
+axes[1].plot(times, common_average * 1e6)
+axes[1].set_ylabel("Subtracted mean (µV)")
+axes[2].plot(times, after.mean(axis=0) * 1e6)
+axes[2].set(xlabel="Recording time (s)", ylabel="Residual mean (µV)")
 
 # %%
 # 2. Window the observed trials
@@ -142,17 +162,20 @@ windows = create_windows_from_events(
 )
 metadata = windows.get_metadata().reset_index(drop=True)
 y = metadata["target"].to_numpy(dtype=int)
-assert len(windows) == len(metadata)
-assert set(y) == set(mapping.values())
-assert not metadata.duplicated(["subject", "session", "run", "i_start_in_trial"]).any()
+if (
+    len(windows) != len(metadata)
+    or metadata.duplicated(["subject", "session", "run", "i_start_in_trial"]).any()
+):
+    raise ValueError("Window rows must have aligned, unique recording/start identities")
 print(pd.crosstab(metadata["subject"], y))
 
 X = np.stack([window[0] for window in windows])
-assert X.shape == (len(metadata), len(channel_names), window_size)
-assert np.isfinite(X).all()
+if not (np.isfinite(X).all()):
+    raise ValueError(
+        "Unexpected shape or nonfinite values; inspect input signals and extraction settings"
+    )
 print("Windows:", X.shape)
 
-assert np.allclose(X.mean(axis=1), 0, atol=1e-10)
 
 # %%
 # 3. Save the prepared data in the persistent cache
@@ -171,8 +194,31 @@ assert np.allclose(X.mean(axis=1), 0, atol=1e-10)
 prepared_path = cache_dir / "tutorial_10_nm000118_average_reference"
 prepared_path.mkdir(parents=True, exist_ok=True)
 windows.save(str(prepared_path), overwrite=True)
+prepared_path.with_suffix(".manifest.json").write_text(
+    json.dumps(
+        {
+            "dataset": "nm000118",
+            "subjects": subjects,
+            "session": "0",
+            "run": "0",
+            "transforms": [
+                "pick EEG",
+                "temporal median removal",
+                "posterior common average",
+            ],
+            "channels": channel_names,
+            "sfreq": sfreq,
+            "mapping": mapping,
+            "window_samples": window_size,
+            "stride_samples": window_size,
+            "on_last_window": "drop",
+            "versions": {
+                name: version(name)
+                for name in ["eegdash", "braindecode", "mne", "eegprep"]
+            },
+        },
+        indent=2,
+    )
+)
 print("Saved reusable windows:", prepared_path.resolve())
-fig, ax = plt.subplots(figsize=(8, 3), layout="constrained")
-ax.plot(np.arange(window_size) / sfreq, X[0].T * 1e6)
-ax.set(xlabel="Time (s)", ylabel="Voltage (µV)", title="Average-referenced trial")
 plt.show()

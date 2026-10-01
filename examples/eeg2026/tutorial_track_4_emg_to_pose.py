@@ -29,9 +29,6 @@ https://facebookresearch.github.io/neuroai/neuralbench/auto_examples/biosignal_c
 # Mean absolute angular error is reported in degrees, averaging over joints
 # and time. This is neither a character error rate nor a fingertip distance.
 
-import os
-from pathlib import Path
-
 import matplotlib.pyplot as plt
 import mne
 import numpy as np
@@ -43,6 +40,8 @@ from sklearn.linear_model import Ridge
 from sklearn.metrics import mean_absolute_error
 from sklearn.pipeline import make_pipeline
 from sklearn.preprocessing import StandardScaler
+
+from eegdash.paths import get_default_cache_dir
 
 from eegdash import EEGDash, EEGDashDataset
 
@@ -61,7 +60,7 @@ from eegdash import EEGDash, EEGDashDataset
 # users and held-out stages separately. One recording per split cannot estimate
 # population performance or reproduce those full benchmark comparisons.
 
-cache = Path(os.environ.get("EEGDASH_CACHE_DIR", "~/.eegdash_cache")).expanduser()
+cache = get_default_cache_dir()
 revision = "90cb29b450de36bb275b226cbc47918f6cbc3b09"
 source = f"https://raw.githubusercontent.com/nemarDatasets/nm000281/{revision}"
 selections = [
@@ -99,7 +98,9 @@ api = EEGDash()
 # signal, before taking its square root. It starts with zero filter state at
 # the recording boundary. Envelopes are computed continuously before windowing
 # so later windows retain their preceding EMG context. Joint trajectories remain
-# at 2 kHz; no temporal average replaces the dense pose target.
+# at 2 kHz; no temporal average replaces the dense pose target. The source
+# preprocessing is not claimed causal: only this local envelope uses past samples.
+# Dense float64 copies and three Ridge fits can require hundreds of MB of RAM.
 
 for split, subject, session, run in selections:
     filename = (
@@ -115,21 +116,40 @@ for split, subject, session, run in selections:
     )
     scans = pd.read_csv(scans_path, sep="\t").set_index("filename")
     assignment = scans.loc[f"emg/{filename}"]
-    assert assignment["split"] == split and assignment["side"] == "right"
+    if not (assignment["split"] == split and assignment["side"] == "right"):
+        raise ValueError(
+            "Data do not satisfy the documented task contract; inspect the query, labels and retained windows before continuing."
+        )
     if split == "test":
-        assert assignment["generalization"] == "user_stage"
+        if not (assignment["generalization"] == "user_stage"):
+            raise ValueError(
+                "Data do not satisfy the documented task contract; inspect the query, labels and retained windows before continuing."
+            )
     records = api.find(dataset="nm000281", subject=subject, session=session, run=run)
     records = [record for record in records if record["bids_relpath"] == relative]
-    assert len(records) == 1
+    if not (len(records) == 1):
+        raise ValueError(
+            "Data do not satisfy the documented task contract; inspect the query, labels and retained windows before continuing."
+        )
     users[split] = records[0]["participant_tsv"]["original_user"]
     stages[split] = assignment["stage"]
     dataset = EEGDashDataset(records=records, cache_dir=cache)
     raw = dataset.datasets[0].raw
-    assert raw.info["sfreq"] == 2000 and raw.first_samp == 0
-    assert raw.ch_names == [f"emg{i}" for i in range(16)] + [
-        f"joint{i}" for i in range(20)
-    ]
-    assert raw.get_channel_types() == ["emg"] * 16 + ["misc"] * 20
+    if not (raw.info["sfreq"] == 2000 and raw.first_samp == 0):
+        raise ValueError(
+            "Unexpected sampling grid: inspect source timing and preprocessing before constructing windows."
+        )
+    if not (
+        raw.ch_names
+        == [f"emg{i}" for i in range(16)] + [f"joint{i}" for i in range(20)]
+    ):
+        raise ValueError(
+            "Unexpected channel layout: inspect the recording and select/reorder the documented channels."
+        )
+    if not (raw.get_channel_types() == ["emg"] * 16 + ["misc"] * 20):
+        raise ValueError(
+            "Expected 16 EMG channels and 20 MISC joint-angle channels; inspect the BIDS channel sidecar before interpreting units."
+        )
     stop = int(round(float(assignment["duration"]) * raw.info["sfreq"]))
     raw.crop(tmax=(stop - 1) / raw.info["sfreq"])
     signal = raw.get_data(picks="emg")
@@ -144,15 +164,51 @@ for split, subject, session, run in selections:
     finite = np.isfinite(targets).all(axis=(1, 2)) & np.isfinite(inputs).all(
         axis=(1, 2)
     )
+    print(
+        split,
+        "requested / annotation-retained / finite windows:",
+        len(epochs.drop_log),
+        len(epochs),
+        int(finite.sum()),
+    )
     inputs, targets = inputs[finite], targets[finite]
-    assert len(targets) > 0 and inputs.shape[1:] == (10000, 16)
-    assert targets.shape[1:] == (10000, 20)
+    if not (len(targets) > 0 and inputs.shape[1:] == (10000, 16)):
+        raise ValueError(
+            "Data do not satisfy the documented task contract; inspect the query, labels and retained windows before continuing."
+        )
+    if not (targets.shape[1:] == (10000, 20)):
+        raise ValueError(
+            "Data do not satisfy the documented task contract; inspect the query, labels and retained windows before continuing."
+        )
+    if split == "train":
+        fig, axes = plt.subplots(
+            2, 1, figsize=(9, 5), layout="constrained", sharex=True
+        )
+        time = np.arange(inputs.shape[1]) / raw.info["sfreq"]
+        for channel in range(3):
+            axes[0].plot(time, inputs[0, :, channel] * 1e6, label=f"emg{channel}")
+        for joint in range(3):
+            axes[1].plot(time, np.rad2deg(targets[0, :, joint]), label=f"joint{joint}")
+        axes[0].set(ylabel="Processed EMG RMS (µV)")
+        axes[1].set(
+            xlabel="Time in first retained train window (s)",
+            ylabel="Observed angle (degrees)",
+        )
+        for ax in axes:
+            ax.legend()
+        plt.show()
     arrays[split] = (inputs, targets)
     print(split, users[split], stages[split], assignment["generalization"])
     print("EMG envelope / pose shapes:", inputs.shape, targets.shape)
 
-assert len(set(users.values())) == 3
-assert stages["test"] not in (stages["train"], stages["val"])
+if not (len(set(users.values())) == 3):
+    raise ValueError(
+        "Data do not satisfy the documented task contract; inspect the query, labels and retained windows before continuing."
+    )
+if not (stages["test"] not in (stages["train"], stages["val"])):
+    raise ValueError(
+        "Data do not satisfy the documented task contract; inspect the query, labels and retained windows before continuing."
+    )
 
 # %%
 # Fit a dense regression baseline using training data only
@@ -221,7 +277,30 @@ time = np.arange(10000) / 2000
 fig, ax = plt.subplots(figsize=(9, 3))
 ax.plot(time, np.rad2deg(y_test[0, :, 0]), label="Recorded joint0")
 ax.plot(time, np.rad2deg(prediction[0, :, 0]), label="Predicted joint0")
+ax.plot(
+    time,
+    np.rad2deg(dummy_prediction[:10000, 0]),
+    linestyle="--",
+    label="Training-mean joint0",
+)
 ax.set(xlabel="Time within retained test window (s)", ylabel="Joint angle (degrees)")
 ax.legend()
 fig.tight_layout()
+plt.show()
+
+
+# %%
+# All retained samples contribute, but are temporally correlated.
+joint_errors = pd.DataFrame(
+    {
+        "Ridge": np.rad2deg(np.abs(y_test - prediction).mean(axis=(0, 1))),
+        "Training mean": np.rad2deg(
+            np.abs(y_test.reshape(-1, 20) - dummy_prediction).mean(axis=0)
+        ),
+    },
+    index=[f"joint{i}" for i in range(20)],
+)
+ax = joint_errors.plot.bar(figsize=(10, 4))
+ax.set(xlabel="Released joint index", ylabel="Held-out MAE (degrees)")
+plt.tight_layout()
 plt.show()

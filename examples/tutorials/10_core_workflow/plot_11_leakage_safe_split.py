@@ -21,14 +21,13 @@ Use it to choose the evaluation unit before fitting the baseline in tutorial 12.
 """
 
 # %%
-import os
-from pathlib import Path
 
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 from braindecode.preprocessing import create_windows_from_events
 
+from eegdash.paths import get_default_cache_dir
 from eegdash import EEGDashDataset
 from sklearn.model_selection import GroupShuffleSplit, train_test_split
 
@@ -39,7 +38,7 @@ from sklearn.model_selection import GroupShuffleSplit, train_test_split
 # splitting visible while keeping acquisition small. The channel/rate checks
 # ensure that all recordings could enter the same model; they do not make
 # participants statistically interchangeable.
-cache_dir = Path(os.environ.get("EEGDASH_CACHE_DIR", ".eegdash_cache"))
+cache_dir = get_default_cache_dir()
 subjects = ["1", "2", "3"]
 dataset = EEGDashDataset(
     cache_dir=cache_dir,
@@ -50,18 +49,28 @@ dataset = EEGDashDataset(
     task="ssvep",
     n_jobs=1,
 )
-assert len(dataset.datasets) == len(subjects)
-print(dataset.description[["subject", "session", "run"]])
+if len(dataset.datasets) != len(subjects):
+    raise ValueError(
+        "Query did not return one recording per requested subject; inspect dataset.description"
+    )
+dataset.description[["subject", "session", "run"]]
+
+# %%
 raw = dataset.datasets[0].raw
 sfreq = raw.info["sfreq"]
 channel_names = raw.ch_names
 class_names = sorted(set(raw.annotations.description), key=float)
 mapping = {name: index for index, name in enumerate(class_names)}
-assert len(mapping) == 12
 for recording in dataset.datasets:
-    assert recording.raw.ch_names == channel_names
-    assert recording.raw.info["sfreq"] == sfreq
-    assert set(recording.raw.annotations.description) == set(mapping)
+    other = recording.raw
+    if (
+        other.ch_names != channel_names
+        or other.info["sfreq"] != sfreq
+        or set(other.annotations.description) != set(mapping)
+    ):
+        raise ValueError(
+            "Recordings must share channel order, sample rate and event vocabulary"
+        )
 print(f"Channels: {channel_names}; sampling rate: {sfreq} Hz")
 print("Observed stimulus frequencies (Hz):", class_names)
 
@@ -85,9 +94,11 @@ windows = create_windows_from_events(
 )
 metadata = windows.get_metadata().reset_index(drop=True)
 y = metadata["target"].to_numpy(dtype=int)
-assert len(windows) == len(metadata)
-assert set(y) == set(mapping.values())
-assert not metadata.duplicated(["subject", "session", "run", "i_start_in_trial"]).any()
+if (
+    len(windows) != len(metadata)
+    or metadata.duplicated(["subject", "session", "run", "i_start_in_trial"]).any()
+):
+    raise ValueError("Window rows must have aligned, unique recording/start identities")
 print(pd.crosstab(metadata["subject"], y))
 
 # %%
@@ -100,8 +111,8 @@ print(pd.crosstab(metadata["subject"], y))
 # the equal-sized participant recordings happen to make those fractions agree.
 #
 # The fixed seed makes the assignments repeatable. It does not protect against
-# leakage; the disjoint-group assertion does that. Group splitting does not
-# promise class balance, so the separate class-set assertion checks that the
+# leakage; the disjoint-group check does that. Group splitting does not
+# promise class balance, so the separate class-set check checks that the
 # chosen train and test groups both contain every target class.
 groups = metadata["subject"].astype(str).to_numpy()
 indices = np.arange(len(y))
@@ -113,14 +124,17 @@ train, test = next(
         indices, y, groups
     )
 )
-assert set(groups[train]).isdisjoint(groups[test])
-assert set(train).isdisjoint(test)
-assert len(train) + len(test) == len(windows)
-assert set(y[train]) == set(y[test]) == set(mapping.values())
+if not (set(groups[train]).isdisjoint(groups[test])):
+    raise ValueError("Training and test participants overlap; fix the evaluation split")
+if not (set(y[train]) == set(y[test]) == set(mapping.values())):
+    raise ValueError(
+        "Required event classes are missing; inspect annotation/retained-condition counts"
+    )
+print("Held-out identities:", sorted(set(groups[test])))
 fig, axes = plt.subplots(1, 2, figsize=(10, 4), layout="constrained")
 for ax, title, training, testing in [
-    (axes[0], "Random trials", random_train, random_test),
-    (axes[1], "Held-out participant", train, test),
+    (axes[0], "Known-participant trial prediction", random_train, random_test),
+    (axes[1], "New-participant prediction", train, test),
 ]:
     assignments = np.full(len(y), "train", dtype=object)
     assignments[testing] = "test"
@@ -131,6 +145,23 @@ for ax, title, training, testing in [
     print(counts)
     counts.plot.bar(stacked=True, ax=ax, rot=0, title=title)
     ax.set(xlabel="Subject", ylabel="Real trial count")
+plt.show()
+
+# %%
+# Actual trial assignments: adjacent rows are not necessarily chronological.
+fig, ax = plt.subplots(figsize=(10, 2), layout="constrained")
+assignment = np.zeros((2, len(y)))
+assignment[0, random_test] = 1
+assignment[1, test] = 1
+ax.imshow(
+    assignment, aspect="auto", interpolation="nearest", cmap="coolwarm", vmin=0, vmax=1
+)
+ax.set(
+    yticks=[0, 1],
+    yticklabels=["Known-person", "New-person"],
+    xlabel="Metadata row (one window per trial)",
+    title="Blue: train; red: test — keep all crops of a trial on one side",
+)
 plt.show()
 
 # %%
@@ -145,7 +176,9 @@ plt.show()
 # the actual assignments printed above. This demonstrates who is shared; it
 # does not measure how much sharing would inflate a particular classifier.
 #
-# The grouped indices can now select feature rows in tutorial 12. If a revised
+# Participant overlap is appropriate for known-person trial prediction, but not
+# for claims about new people. Tutorial 12 repeats the grouping principle with
+# a different explicit split (subject 3 held out), not these seeded indices. If a revised
 # experiment learns filters, feature selection or normalization across examples,
 # fit those operations on its training indices. To tune choices, reserve
 # validation participants inside training rather than changing settings after

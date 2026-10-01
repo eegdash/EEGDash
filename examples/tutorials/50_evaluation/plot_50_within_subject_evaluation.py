@@ -24,18 +24,18 @@ Choose this protocol when calibration trials from that person are available.
 # ----------------------------------
 # Filtering subjects, session and run bounds the download. Cropping after
 # opening a recording would reduce computation but not its download size.
-import os
 from functools import partial
-from pathlib import Path
 
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 from braindecode.preprocessing import create_windows_from_events
 from sklearn.linear_model import LogisticRegression
-from sklearn.metrics import balanced_accuracy_score
+from sklearn.metrics import ConfusionMatrixDisplay, balanced_accuracy_score
 from sklearn.pipeline import make_pipeline
 from sklearn.preprocessing import StandardScaler
+
+from eegdash.paths import get_default_cache_dir
 
 from eegdash import EEGDashDataset
 from eegdash.features import (
@@ -45,7 +45,7 @@ from eegdash.features import (
     spectral_preprocessor,
 )
 
-cache_dir = Path(os.environ.get("EEGDASH_CACHE_DIR", ".eegdash_cache"))
+cache_dir = get_default_cache_dir()
 subjects = ["1", "2", "3"]
 dataset = EEGDashDataset(
     cache_dir=cache_dir,
@@ -56,7 +56,10 @@ dataset = EEGDashDataset(
     task="ssvep",
     n_jobs=1,
 )
-assert len(dataset.datasets) == len(subjects), "Expected one recording per subject"
+if not (len(dataset.datasets) == len(subjects)):
+    raise ValueError(
+        "Expected one recording per requested participant; inspect the query results."
+    )
 print(dataset.description[["subject", "session", "run"]])
 
 # %%
@@ -70,12 +73,16 @@ sfreq = raw.info["sfreq"]
 channel_names = raw.ch_names
 class_names = sorted(set(raw.annotations.description), key=float)
 mapping = {name: index for index, name in enumerate(class_names)}
-assert len(mapping) == 12, "Expected the twelve SSVEP stimulus frequencies"
 for recording in dataset.datasets:
     recording_raw = recording.raw
-    assert recording_raw.ch_names == channel_names
-    assert recording_raw.info["sfreq"] == sfreq
-    assert set(recording_raw.annotations.description) == set(mapping)
+    if (
+        recording_raw.ch_names != channel_names
+        or recording_raw.info["sfreq"] != sfreq
+        or set(recording_raw.annotations.description) != set(mapping)
+    ):
+        raise ValueError(
+            "Recordings must share channel order, sampling rate and cue vocabulary."
+        )
 print(f"Channels: {channel_names}; sampling frequency: {sfreq} Hz")
 print("Stimulus frequencies (Hz):", class_names)
 
@@ -103,14 +110,22 @@ windows = create_windows_from_events(
     preload=True,
 )
 metadata = windows.get_metadata()
-assert (metadata.i_window_in_trial == 0).all(), "Expected one window per trial"
-assert not metadata.duplicated(["subject", "session", "run", "i_start_in_trial"]).any()
+if not ((metadata.i_window_in_trial == 0).all()):
+    raise ValueError(
+        "Multiple windows represent a trial; group by trial before splitting."
+    )
+if not (
+    not metadata.duplicated(["subject", "session", "run", "i_start_in_trial"]).any()
+):
+    raise ValueError(
+        "Duplicate recording/window identities; inspect metadata before splitting."
+    )
 y = metadata["target"].to_numpy(dtype=int)
 groups = metadata["subject"].astype(str).to_numpy()
-X = np.stack([window[0] for window in windows])
-assert X.shape == (len(metadata), len(channel_names), window_size)
-assert set(groups) == set(subjects)
-assert np.isfinite(X).all()
+if not (set(groups) == set(subjects)):
+    raise ValueError(
+        "Some requested participants have no retained windows; inspect exclusions."
+    )
 print(pd.crosstab(groups, y, rownames=["subject"], colnames=["class"]))
 
 # %%
@@ -119,7 +134,7 @@ print(pd.crosstab(groups, y, rownames=["subject"], colnames=["class"]))
 # SSVEP responses contain energy at the stimulus frequency. Use log spectral
 # power around each stimulus frequency, retaining all eight posterior channels.
 # This per-window transform learns nothing from other trials or subjects.
-# The scaler below, in contrast, must be fitted only on training subjects.
+# The scaler below, in contrast, must be fitted only on training trials of the same person.
 # EEGDash's shared spectral preprocessor computes a Welch PSD with one
 # four-second Hann segment and 0.25 Hz bins. Each narrow band is centered
 # on a documented stimulus frequency; these centers define the task, not
@@ -129,7 +144,7 @@ print(pd.crosstab(groups, y, rownames=["subject"], colnames=["class"]))
 #
 # spectral_bands_power sums selected PSD bins. Multiplying by their 0.25 Hz
 # spacing converts V²/Hz to approximate band power in V². The log compresses
-# that scale; the StandardScaler still fits only on training participants.
+# that scale; the StandardScaler still fits only on training trials of the same person.
 bands = {
     f"hz_{name}": (float(name) - 0.125, float(name) + 0.125) for name in class_names
 }
@@ -147,9 +162,15 @@ spectral = FeatureExtractor(
 feature_table = extract_features(
     windows, {"spectral": spectral}, batch_size=64, n_jobs=1
 ).to_dataframe()
-assert feature_table.shape == (len(y), len(class_names) * len(channel_names))
+if len(feature_table) != len(metadata):
+    raise ValueError(
+        "Feature rows no longer match window metadata; inspect extraction."
+    )
 features = np.log(np.maximum(feature_table.to_numpy() * sfreq / window_size, 1e-30))
-assert np.isfinite(features).all()
+if not (np.isfinite(features).all()):
+    raise ValueError(
+        "Nonfinite spectral features; inspect signals and extraction parameters."
+    )
 
 # %%
 # 5. Hold out complete trials within each participant
@@ -177,15 +198,33 @@ for subject in subjects:
     train, test = train_test_split(
         indices, test_size=0.25, random_state=42, stratify=y[indices]
     )
-    assert set(train).isdisjoint(test)
-    assert set(y[train]) == set(y[test]) == set(mapping.values())
+    if not (set(train).isdisjoint(test)):
+        raise ValueError(
+            "Invalid set(train).isdisjoint(test); inspect cohort, windows and split before fitting."
+        )
+    if not (set(y[train]) == set(y[test]) == set(mapping.values())):
+        raise ValueError(
+            "Each train/test split must contain every mapped class; inspect retained class counts."
+        )
     model = make_pipeline(StandardScaler(), LogisticRegression(max_iter=1000))
     model.fit(features[train], y[train])
     prediction = model.predict(features[test])
+    if subject == subjects[0]:
+        ConfusionMatrixDisplay.from_predictions(
+            y[test],
+            prediction,
+            labels=list(mapping.values()),
+            display_labels=class_names,
+            normalize="true",
+            xticks_rotation=90,
+        )
+        plt.title(f"Subject {subject}: held-out trial recall by frequency (Hz)")
+        plt.show()
     rows.append(
         dict(
             subject=subject,
             balanced_accuracy=balanced_accuracy_score(y[test], prediction),
+            n_train=len(train),
             n_test=len(test),
         )
     )

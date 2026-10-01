@@ -15,7 +15,7 @@ Source: https://nemar.org/dataset/nm000135
 # Before you start
 # ----------------------------
 #
-# Use an installed EEGDash environment with Braindecode, EEGPrep, MNE, NumPy,
+# Use an installed EEGDash environment with Braindecode, MNE, NumPy,
 # scikit-learn and Matplotlib. This two-recording CPU example needs about 11 MB
 # of cached signal data. ``EEGDASH_CACHE_DIR`` chooses the persistent download
 # location; a network connection is needed when either session is absent.
@@ -47,16 +47,15 @@ Source: https://nemar.org/dataset/nm000135
 # labelled as a local warm-up; neither extra classes nor contexts can be
 # reconstructed by renaming its existing labels.
 
-import os
-from pathlib import Path
-
 import matplotlib.pyplot as plt
 import numpy as np
-from braindecode.preprocessing import create_windows_from_events, Resampling
+from braindecode.preprocessing import create_windows_from_events
 from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import balanced_accuracy_score, ConfusionMatrixDisplay
 from sklearn.pipeline import make_pipeline
 from sklearn.preprocessing import StandardScaler
+
+from eegdash.paths import get_default_cache_dir
 
 from eegdash import EEGDashDataset
 from eegdash.features import signal_variance
@@ -73,17 +72,14 @@ from eegdash.features import signal_variance
 # C3, Cz and C4 cover the motor region and are the source's three EEG channels.
 # The release is already processed; the additional 8–30 Hz filter selects the
 # sensorimotor frequency range for this particular power baseline rather than
-# claiming to redo acquisition preprocessing. EEGPrep's ``Resampling`` adapter
+# claiming to redo acquisition preprocessing. MNE's ``Raw.resample``
 # converts to 100 Hz and reduces the
 # number of samples while retaining that passband. These fixed operations do not
 # learn their parameters from the held-out session, but the offline filtering
 # here should not be mistaken for causal streaming preprocessing.
 
-# The EEGPrep adapter converts through EEGLAB and can round event times or
-# discard the measurement date. Because this step only resamples, we retain
-# the original date and annotations, verify the origin, duration, channel order
-# and new rate, then restore the observed event times in seconds. The final
-# onset assertion prevents a silent cue shift from changing window labels.
+# Native MNE resampling preserves annotations in seconds. No format conversion
+# or manual event restoration is needed for this small three-channel recipe.
 
 dataset = EEGDashDataset(
     dataset="nm000135",
@@ -91,35 +87,19 @@ dataset = EEGDashDataset(
     session=["0train", "1train"],
     run="0",
     task="imagery",
-    cache_dir=Path(
-        os.environ.get("EEGDASH_CACHE_DIR", "~/.eegdash_cache")
-    ).expanduser(),
+    cache_dir=get_default_cache_dir(),
 )
 print(dataset.description.to_string(index=False))
-assert len(dataset.datasets) == 2
+if not (len(dataset.datasets) == 2):
+    raise ValueError(
+        "Unexpected cohort: check the query, missing recordings and duplicate participant rows."
+    )
 for recording in dataset.datasets:
     raw = recording.raw.pick("eeg")
     print(raw.ch_names, raw.info["sfreq"], np.unique(raw.annotations.description))
     # Limit RAM to three motor channels before filtering and resampling.
     raw.pick(["C3", "Cz", "C4"]).load_data().filter(8, 30)
-    annotations = raw.annotations.copy()
-    measurement_date = raw.info["meas_date"]
-    recording_duration = raw.n_times / raw.info["sfreq"]
-    assert raw.first_samp == 0
-    Resampling(sfreq=100).apply(raw.load_data())
-    assert raw.ch_names == ["C3", "Cz", "C4"] and raw.info["sfreq"] == 100
-    assert raw.first_samp == 0
-    assert abs(raw.n_times / raw.info["sfreq"] - recording_duration) <= 1 / 100
-    # EEGPrep's file conversion can round annotation times; retain source seconds.
-    raw.set_meas_date(measurement_date)
-    raw.set_annotations(annotations)
-    np.testing.assert_allclose(
-        raw.annotations.onset, annotations.onset, atol=1e-12, rtol=0
-    )
-    np.testing.assert_allclose(
-        raw.annotations.duration, annotations.duration, atol=1 / 100, rtol=0
-    )
-    np.testing.assert_array_equal(raw.annotations.description, annotations.description)
+    raw.reorder_channels(["C3", "Cz", "C4"]).resample(100)
 # %%
 # Window the actual imagery intervals
 # -----------------------------------------------
@@ -151,6 +131,18 @@ metadata = windows.get_metadata()
 X = np.stack([windows[i][0] for i in range(len(windows))])
 y = metadata.target.to_numpy(dtype=int)
 X = np.log(np.maximum(signal_variance(X), 1e-30))
+fig, axes = plt.subplots(1, 2, figsize=(9, 3), layout="constrained", sharey=True)
+for ax, session in zip(axes, ["0train", "1train"]):
+    for label, code in classes.items():
+        selected = metadata.session.eq(session).to_numpy() & (y == code)
+        if not selected.any():
+            raise ValueError(f"No {label} windows in {session}; inspect event labels.")
+        ax.plot(["C3", "Cz", "C4"], X[selected].mean(axis=0), marker="o", label=label)
+    ax.set(
+        title=session, ylabel="Mean log variance (V² reference)", xlabel="Motor channel"
+    )
+    ax.legend()
+plt.show()
 # %%
 # Hold out a genuine session without recalibration
 # ------------------------------------------------------------
@@ -158,7 +150,7 @@ X = np.log(np.maximum(signal_variance(X), 1e-30))
 # Only ``0train`` fits the model; ``1train`` is the held-out session. Those
 # strings are source identifiers, not instructions to include both in training.
 # The two sessions share a participant intentionally. The masks and class-set
-# assertions verify that both sessions contain the same observed two-class task.
+# checks verify that both sessions contain the same observed two-class task.
 #
 # Feature standardization belongs inside the pipeline so the test-session mean
 # and variance remain unseen during fitting. Logistic regression uses its default
@@ -168,9 +160,14 @@ X = np.log(np.maximum(signal_variance(X), 1e-30))
 
 train = metadata.session.eq("0train").to_numpy()
 test = metadata.session.eq("1train").to_numpy()
-assert train.any() and test.any() and np.isfinite(X).all()
-assert set(metadata.session[train]).isdisjoint(metadata.session[test])
-assert set(y[train]) == set(y[test]) == set(classes.values())
+if not (train.any() and test.any() and np.isfinite(X).all()):
+    raise ValueError(
+        "Nonfinite signals, targets or predictions: inspect missing metadata and unusable channels before fitting."
+    )
+if not (set(y[train]) == set(y[test]) == set(classes.values())):
+    raise ValueError(
+        "Data do not satisfy the documented task contract; inspect the query, labels and retained windows before continuing."
+    )
 print("Features:", X.shape, "classes:", np.unique(y, return_counts=True))
 
 # %%
@@ -179,6 +176,7 @@ predicted = model.fit(X[train], y[train]).predict(X[test])
 print(
     "Held-out session balanced accuracy:", balanced_accuracy_score(y[test], predicted)
 )
+print("Constant-class balanced-accuracy reference: 0.5")
 ConfusionMatrixDisplay.from_predictions(
     y[test], predicted, display_labels=list(classes)
 )

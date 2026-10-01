@@ -14,7 +14,8 @@ trials, and average each condition. An ERP is an average voltage time course;
 it does not assign a predicted label to a new trial. This page therefore
 ends with a descriptive comparison rather than a fitted classifier.
 
-With EEGDash installed, run the blocks in order. Basic MNE Raw concepts from
+Install ``eegprep[eeglabio]>=0.2.23,<0.3`` as well as EEGDash for the
+EEGPrep adapters used below, then run the blocks in order. Basic MNE Raw concepts from
 the first-recording page are sufficient. You will inspect the retained trial
 counts and array shape, a Cz waveform plot and a mean difference in microvolts.
 """
@@ -26,8 +27,6 @@ counts and array shape, a Cz waveform plot and a mean difference in microvolts.
 # The task and run filters bound acquisition before any samples are read.
 # Printing annotation counts makes the source vocabulary visible and avoids
 # accidentally treating responses or unrelated markers as standard stimuli.
-import os
-from pathlib import Path
 
 import matplotlib.pyplot as plt
 import mne
@@ -35,10 +34,11 @@ import numpy as np
 import pandas as pd
 from braindecode.preprocessing import RemoveCommonAverageReference, RemoveDCOffset
 
+from eegdash.paths import get_default_cache_dir
 from eegdash import EEGDashDataset
 from eegdash.features import signal_mean
 
-cache_dir = Path(os.environ.get("EEGDASH_CACHE_DIR", ".eegdash_cache"))
+cache_dir = get_default_cache_dir()
 dataset = EEGDashDataset(
     cache_dir=cache_dir,
     dataset="ds003061",
@@ -47,16 +47,27 @@ dataset = EEGDashDataset(
     run="2",
     n_jobs=1,
 )
-assert len(dataset.datasets) == 1
+if not (len(dataset.datasets) == 1):
+    raise ValueError(
+        "Expected one recording; inspect query descriptions before proceeding"
+    )
 raw = dataset.datasets[0].raw.copy().load_data().pick("eeg")
 print(pd.Series(raw.annotations.description).value_counts())
+# Source event files and vocabulary: `ds003061 source tree
+# <https://github.com/OpenNeuroDatasets/ds003061>`_.
 # Preserve the source marker spelling below, including its typo.
 # These literal names are the label source, including the response qualification
 # on the oddball class. Consequently the comparison concerns the selected
 # response-associated oddballs, not every possible rare-stimulus outcome.
 mapping = {"stimulus/standard": 1, "stimulus/oddball_with_reponse": 2}
-assert set(mapping) <= set(raw.annotations.description)
-assert "Cz" in raw.ch_names, "This ERP comparison requires Cz"
+if not (set(mapping) <= set(raw.annotations.description)):
+    raise ValueError(
+        "Required event classes are missing; inspect annotation/retained-condition counts"
+    )
+if "Cz" not in raw.ch_names:
+    raise ValueError(
+        "Required EEG channels or their order differ; inspect channel metadata"
+    )
 
 # %%
 # 2. Filter and epoch relative to the actual stimulus onset
@@ -84,8 +95,14 @@ source_date = raw.info["meas_date"]
 source_grid = (raw.info["sfreq"], raw.n_times, raw.first_samp)
 RemoveDCOffset().apply(raw)
 RemoveCommonAverageReference().apply(raw)
-assert (raw.info["sfreq"], raw.n_times, raw.first_samp) == source_grid
+if not ((raw.info["sfreq"], raw.n_times, raw.first_samp) == source_grid):
+    raise ValueError(
+        "Preprocessing changed the sample grid; do not restore event times"
+    )
 raw.set_meas_date(source_date)
+# With no absolute origin, set_annotations adds first_time itself.
+if source_annotations.orig_time is None:
+    source_annotations.onset -= raw.first_time
 raw.set_annotations(source_annotations)
 raw.filter(0.5, 30.0)
 events, _ = mne.events_from_annotations(raw, event_id=mapping)
@@ -100,10 +117,45 @@ epochs = mne.Epochs(
     reject_by_annotation=True,
 )
 epochs.resample(128)
-assert np.isfinite(epochs.get_data()).all()
-assert all(len(epochs[name]) > 1 for name in epochs.event_id)
-print({name: len(epochs[name]) for name in epochs.event_id})
-print("Epoch shape:", epochs.get_data().shape)
+epoch_data = epochs.get_data()
+if not np.isfinite(epoch_data).all() or any(
+    len(epochs[name]) < 2 for name in epochs.event_id
+):
+    raise ValueError("Need finite data and at least two retained epochs per condition")
+print(
+    pd.DataFrame(
+        {
+            "before": {
+                name: int(np.sum(events[:, 2] == code))
+                for name, code in epochs.event_id.items()
+            },
+            "retained": {name: len(epochs[name]) for name in epochs.event_id},
+        }
+    )
+)
+print(
+    "Drop reasons:",
+    pd.Series(
+        [reason for reasons in epochs.drop_log for reason in reasons]
+    ).value_counts(),
+)
+print("Epoch shape:", epoch_data.shape)
+fig, ax = plt.subplots(figsize=(8, 4), layout="constrained")
+image = ax.imshow(
+    epoch_data[:, epochs.ch_names.index("Cz")] * 1e6,
+    aspect="auto",
+    origin="lower",
+    extent=[epochs.times[0], epochs.times[-1], 0, len(epochs)],
+    cmap="RdBu_r",
+)
+ax.axvline(0, color="black", linestyle=":")
+ax.set(
+    xlabel="Time from stimulus (s)",
+    ylabel="Retained trial",
+    title="Subject 001, run 2: Cz trial variability",
+)
+fig.colorbar(image, ax=ax, label="µV")
+plt.show()
 
 # %%
 # 3. Plot the measured response at Cz
@@ -128,6 +180,17 @@ cz = difference.ch_names.index("Cz")
 print(
     "Mean oddball-minus-standard at Cz, 250–400 ms (µV):",
     signal_mean(difference.data[cz, interval]) * 1e6,
+)
+fig, ax = plt.subplots(figsize=(8, 3), layout="constrained")
+mean_difference = float(signal_mean(difference.data[cz, interval]) * 1e6)
+ax.plot(difference.times, difference.data[cz] * 1e6)
+ax.axvspan(0.25, 0.4, color="gray", alpha=0.2)
+ax.axvline(0, color="black", linestyle=":")
+ax.axhline(0, color="gray", linewidth=0.5)
+ax.set(
+    xlabel="Time from stimulus (s)",
+    ylabel="Cz difference (µV)",
+    title=f"Response-associated oddball − standard: interval mean {mean_difference:.2f} µV",
 )
 plt.show()
 

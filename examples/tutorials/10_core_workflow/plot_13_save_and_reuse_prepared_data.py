@@ -21,14 +21,13 @@ Keep ``EEGDASH_CACHE_DIR`` stable across sessions to reuse the printed path.
 """
 
 # %%
-import os
-from pathlib import Path
 
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 from braindecode.preprocessing import create_windows_from_events
 
+from eegdash.paths import get_default_cache_dir
 from eegdash import EEGDashDataset
 import json
 from importlib.metadata import version
@@ -42,7 +41,7 @@ from braindecode.datautil import load_concat_dataset
 # representation and indexing choices used by your analysis. Here we retain
 # the source reference. Tutorial 10's average-referenced output deliberately
 # has a different directory name.
-cache_dir = Path(os.environ.get("EEGDASH_CACHE_DIR", ".eegdash_cache"))
+cache_dir = get_default_cache_dir()
 subjects = ["1"]
 dataset = EEGDashDataset(
     cache_dir=cache_dir,
@@ -53,18 +52,18 @@ dataset = EEGDashDataset(
     task="ssvep",
     n_jobs=1,
 )
-assert len(dataset.datasets) == len(subjects)
-print(dataset.description[["subject", "session", "run"]])
+if len(dataset.datasets) != len(subjects):
+    raise ValueError(
+        "Query did not return one recording per requested subject; inspect dataset.description"
+    )
+dataset.description[["subject", "session", "run"]]
+
+# %%
 raw = dataset.datasets[0].raw
 sfreq = raw.info["sfreq"]
 channel_names = raw.ch_names
 class_names = sorted(set(raw.annotations.description), key=float)
 mapping = {name: index for index, name in enumerate(class_names)}
-assert len(mapping) == 12
-for recording in dataset.datasets:
-    assert recording.raw.ch_names == channel_names
-    assert recording.raw.info["sfreq"] == sfreq
-    assert set(recording.raw.annotations.description) == set(mapping)
 print(f"Channels: {channel_names}; sampling rate: {sfreq} Hz")
 print("Observed stimulus frequencies (Hz):", class_names)
 
@@ -87,14 +86,18 @@ windows = create_windows_from_events(
 )
 metadata = windows.get_metadata().reset_index(drop=True)
 y = metadata["target"].to_numpy(dtype=int)
-assert len(windows) == len(metadata)
-assert set(y) == set(mapping.values())
-assert not metadata.duplicated(["subject", "session", "run", "i_start_in_trial"]).any()
+if (
+    len(windows) != len(metadata)
+    or metadata.duplicated(["subject", "session", "run", "i_start_in_trial"]).any()
+):
+    raise ValueError("Window rows must have aligned, unique recording/start identities")
 print(pd.crosstab(metadata["subject"], y))
 
 X = np.stack([window[0] for window in windows])
-assert X.shape == (len(metadata), len(channel_names), window_size)
-assert np.isfinite(X).all()
+if not (np.isfinite(X).all()):
+    raise ValueError(
+        "Unexpected shape or nonfinite values; inspect input signals and extraction settings"
+    )
 print("Windows:", X.shape)
 
 # %%
@@ -122,6 +125,15 @@ manifest = {
     "run": "0",
     "task": "ssvep",
     "window_samples": window_size,
+    "stride_samples": window_size,
+    "on_last_window": "drop",
+    "trial_start_offset_samples": 0,
+    "trial_stop_offset_samples": 0,
+    "reference": "source release reference unchanged",
+    "additional_preprocessing": [],
+    "record_identities": dataset.description[["subject", "session", "run"]]
+    .astype(str)
+    .to_dict("records"),
     "mapping": mapping,
     "channels": channel_names,
     "sfreq": sfreq,
@@ -142,7 +154,8 @@ prepared_path.with_suffix(".manifest.json").write_text(json.dumps(manifest, inde
 # does not depend on the original Python object's lifetime. ``Saved bytes``
 # measures this prepared directory on disk; it is not a network-download count.
 reloaded = load_concat_dataset(str(prepared_path), preload=True)
-assert len(reloaded) == len(windows)
+if not (len(reloaded) == len(windows)):
+    raise ValueError("Roundtrip length changed; inspect saved windows")
 np.testing.assert_allclose(
     np.stack([item[0] for item in reloaded]), X, rtol=1e-6, atol=1e-12
 )
@@ -153,9 +166,18 @@ print(
     "Saved bytes:",
     sum(p.stat().st_size for p in prepared_path.rglob("*") if p.is_file()),
 )
-fig, ax = plt.subplots(figsize=(8, 3), layout="constrained")
-ax.plot(np.arange(window_size) / sfreq, reloaded[0][0][0] * 1e6)
-ax.set(xlabel="Time (s)", ylabel=f"{channel_names[0]} (µV)", title="Reloaded trial")
+fig, axes = plt.subplots(2, 1, figsize=(8, 5), sharex=True, layout="constrained")
+times = np.arange(window_size) / sfreq
+original, restored = X[0, 0], reloaded[0][0][0]
+axes[0].plot(times, original * 1e6, label="Original")
+axes[0].plot(times, restored * 1e6, "--", label="Reloaded")
+axes[0].set(
+    ylabel=f"{channel_names[0]} (µV)",
+    title="Verified roundtrip: rtol=1e-6, atol=1e-12 V",
+)
+axes[0].legend()
+axes[1].plot(times, (restored - original) * 1e6)
+axes[1].set(xlabel="Time (s)", ylabel="Residual (µV)")
 plt.show()
 
 # %%
@@ -166,4 +188,12 @@ plt.show()
 # that data with another prepared dataset. For large recordings you can choose
 # ``preload=False`` and load samples on access. If you change the query,
 # reference or window duration, give the new preparation its own output name
-# so an earlier analysis remains reproducible.
+# so an earlier analysis remains reproducible. Full stacking here is bounded
+# to one recording. For large datasets, compare original/reloaded windows one
+# at a time rather than holding two full copies in memory.
+#
+# .. code-block:: python
+#
+#     from braindecode.datautil import load_concat_dataset
+#     prepared = load_concat_dataset("/your/printed/prepared/path", preload=False)
+#     signal, target, crop_indices = prepared[0]

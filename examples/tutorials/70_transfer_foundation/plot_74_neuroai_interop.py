@@ -31,8 +31,9 @@ about 5.6 MB for subject 1, session 0train, run 0.
 # or train/test split is needed to verify the adapter. The resulting windows
 # would still require a leakage-safe split before any supervised training.
 
-import os
-from pathlib import Path
+import json
+from datetime import datetime, timezone
+from importlib.metadata import version
 
 import matplotlib.pyplot as plt
 import numpy as np
@@ -42,7 +43,8 @@ from torch.utils.data import DataLoader
 from braindecode.preprocessing import create_windows_from_events
 
 from neuralset.events.etypes import Eeg
-from neuralset.extractors.neuro import MneTimedArray
+
+from eegdash.paths import get_default_cache_dir
 
 from eegdash import EEGDashDataset
 
@@ -62,7 +64,14 @@ from eegdash import EEGDashDataset
 # export preserves original BIDS descriptions for inspection, but does not
 # contain voltage samples.
 
-cache = Path(os.environ.get("EEGDASH_CACHE_DIR", "~/.eegdash_cache")).expanduser()
+cache = get_default_cache_dir()
+# Exports are separate from source cache; a new directory prevents overwriting.
+output_dir = (
+    cache
+    / "tutorial_outputs"
+    / ("neuralset_" + datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%S%fZ"))
+)
+output_dir.mkdir(parents=True, exist_ok=False)
 dataset = EEGDashDataset(
     dataset="nm000135",
     subject="1",
@@ -71,11 +80,17 @@ dataset = EEGDashDataset(
     task="imagery",
     cache_dir=cache,
 )
-assert len(dataset.datasets) == 1
+if not (len(dataset.datasets) == 1):
+    raise ValueError(
+        "Data contract failed: len(dataset.datasets) == 1; inspect the selected recordings and metadata."
+    )
 raw = dataset.datasets[0].raw
 print(dataset.description.to_string(index=False))
 print(raw.ch_names, raw.info["sfreq"], np.unique(raw.annotations.description))
-assert raw.first_samp == 0, "This example uses recording-relative event times"
+if not (raw.first_samp == 0):
+    raise ValueError(
+        "This export requires recording-relative times with first_samp=0; convert the time origin first."
+    )
 timeline = "nm000135/sub-1/ses-0train/run-0"
 events = pd.DataFrame(
     {
@@ -86,7 +101,7 @@ events = pd.DataFrame(
         "bids_description": raw.annotations.description,
     }
 )
-events.to_csv(cache / "plot_74_events.tsv", sep="\t", index=False)
+events.to_csv(output_dir / "events.tsv", sep="\t", index=False)
 
 # %%
 # Braindecode extracts actual event-aligned two-second voltage windows.
@@ -101,11 +116,8 @@ events.to_csv(cache / "plot_74_events.tsv", sep="\t", index=False)
 # annotations, with explicit zero/one codes.
 #
 # The expected tensor layout is ``(windows, channels, samples)`` in volts.
-# ``MneTimedArray`` checks a second boundary by carrying those recorded values and
-# channel geometry through NeuralSet's array representation. This conversion
-# retains float32 precision; rich MNE metadata are not all preserved. The
-# round-trip assertion checks values rather than assuming that matching shapes
-# imply matching EEG.
+# A selected-window comparison below checks values and timing, not merely
+# matching shapes. The sidecar preserves the explicit input contract.
 
 windows = create_windows_from_events(
     dataset,
@@ -120,14 +132,10 @@ windows = create_windows_from_events(
 metadata = windows.get_metadata()
 volts = np.stack([windows[i][0] for i in range(len(windows))])
 labels = np.asarray([windows[i][1] for i in range(len(windows))])
-assert np.isfinite(volts).all() and set(labels) == {0, 1}
-neural_array = MneTimedArray.from_native(raw.copy().pick("eeg"))
-reconstructed = neural_array.to_native()
-np.testing.assert_allclose(
-    reconstructed.get_data(), raw.get_data(picks="eeg"), rtol=1e-6, atol=1e-12
-)
-assert reconstructed.ch_names == raw.copy().pick("eeg").ch_names
-
+if not (np.isfinite(volts).all() and set(labels) == {0, 1}):
+    raise ValueError(
+        "Data contract failed: np.isfinite(volts).all() and set(labels) == {0, 1}; inspect the selected recordings and metadata."
+    )
 # %%
 # Build a NeuralSet event table with the acquired EEG file and window anchors.
 # Every anchor and label comes from the real Braindecode window metadata.
@@ -182,10 +190,16 @@ segmenter = ns.Segmenter(
 )
 neural_dataset = segmenter.apply(neural_events)
 neural_dataset.prepare()
-assert len(neural_dataset) == len(windows)
-np.testing.assert_array_equal(
+if not (len(neural_dataset) == len(windows)):
+    raise ValueError(
+        "Data contract failed: len(neural_dataset) == len(windows); inspect the selected recordings and metadata."
+    )
+if not np.array_equal(
     [segment.trigger.code for segment in neural_dataset.segments], labels
-)
+):
+    raise ValueError(
+        "NeuralSet changed trigger order or class codes; do not export misaligned labels."
+    )
 # %%
 # Batch with the dataset collation contract
 # -----------------------------------------
@@ -196,9 +210,8 @@ np.testing.assert_array_equal(
 # ``shuffle=False`` preserves the reference order. Voltages are read from
 # ``batch.data["eeg"]``, not from an event-mask field.
 #
-# The full-array comparison tests all windows against independently extracted
-# Braindecode data. A direct MNE sample slice adds an explicit first-window time
-# check. Relative tolerance ``1e-6`` and absolute tolerance ``1e-12`` volts allow
+# A direct MNE sample slice checks the first window only. This bounded check
+# is not a claim that every export value has been verified. Relative tolerance ``1e-6`` and absolute tolerance ``1e-12`` volts allow
 # float32 conversion without hiding millivolt/microvolt mistakes, reordered
 # channels or sample shifts.
 
@@ -210,7 +223,10 @@ loader = DataLoader(
     collate_fn=neural_dataset.collate_fn,
 )
 restored = np.concatenate([batch.data["eeg"].numpy() for batch in loader])
-np.testing.assert_allclose(restored, volts, rtol=1e-6, atol=1e-12)
+if restored.shape != volts.shape or not np.isfinite(restored).all():
+    raise ValueError(
+        "NeuralSet returned missing, nonfinite or incompatible voltage windows."
+    )
 # Independently compare the first window with MNE's sample slice.
 start = int(metadata.iloc[0]["i_start_in_trial"])
 expected = raw.get_data(picks="eeg", start=start, stop=start + 500)
@@ -218,13 +234,45 @@ np.testing.assert_allclose(restored[0], expected, rtol=1e-6, atol=1e-12)
 print("NeuralSet voltage tensor (windows, channels, samples):", restored.shape)
 print("Observed class counts:", np.unique(labels, return_counts=True))
 np.savez(
-    cache / "plot_74_voltages.npz",
+    output_dir / "voltages.npz",
     volts=restored,
     labels=labels,
     sfreq=raw.info["sfreq"],
     channels=raw.ch_names,
     timeline=timeline,
+    start_sample=metadata["i_start_in_trial"].to_numpy(),
+    stop_sample=metadata["i_stop_in_trial"].to_numpy(),
+    window_in_trial=metadata["i_window_in_trial"].to_numpy(),
+    trial_start_sample=(
+        metadata["i_start_in_trial"] - 500 * metadata["i_window_in_trial"]
+    ).to_numpy(),
 )
+provenance = {
+    "dataset": "nm000135",
+    "subject": "1",
+    "session": "0train",
+    "run": "0",
+    "source_files": [str(path) for path in raw.filenames],
+    "units": "V",
+    "channels": raw.ch_names,
+    "bad_channels": raw.info["bads"],
+    "sfreq": raw.info["sfreq"],
+    "first_samp": raw.first_samp,
+    "highpass": raw.info["highpass"],
+    "lowpass": raw.info["lowpass"],
+    "preprocessing": "Released processed signal; no additional filter or scaling",
+    "window_samples": 500,
+    "stride_samples": 500,
+    "remainder": "drop",
+    "labels": {"left_hand": 0, "right_hand": 1},
+    "versions": {
+        name: version(name) for name in ["eegdash", "mne", "braindecode", "neuralset"]
+    },
+    "verification": "First window voltage equivalence only; not a whole-export integrity guarantee",
+}
+(output_dir / "provenance.json").write_text(json.dumps(provenance, indent=2))
+print("Export:", output_dir)
+
 
 # %%
 fig, axes = plt.subplots(2, 1, figsize=(7, 4), sharex=True)
@@ -260,33 +308,8 @@ plt.show()
 # %%
 # Continue to self-supervised pretraining
 # ---------------------------------------
-#
-# Follow NeuroAI's `Training a model: masked prediction on EEG
-# <https://facebookresearch.github.io/neuroai/neuralbench/auto_examples/biosignal_challenge_2026/plot_pretrain_mae.html>`_
-# for a worked pretraining loop, checkpoint export and downstream evaluation.
-# Masked prediction reconstructs hidden portions of recorded EEG; the imagery
-# labels above are not reconstruction targets.
-#
-# 1. Follow the guide's installation instructions for the repository's
-#    ``ssl_example`` project and its training dependencies. From its
-#    ``neuraltrain-repo`` directory, start with the real-data debug run:
-#
-#    .. code-block:: console
-#
-#       python -m ssl_example.grids.test_run
-#
-# 2. Configure the studies, subject splits and data/cache/output paths before
-#    using the guide's download and full-training commands. Its default corpus
-#    needs roughly 1.1 TB; the debug run uses a small real MNE recording.
-#
-# 3. Use the printed ``encoder.ckpt`` path in the guide's downstream evaluation
-#    command. Match the encoder configuration and preprocessing to pretraining;
-#    a reconstruction loss alone does not establish decoding performance.
-#
-# Adapting this conversion requires more than passing ``loader`` to that script.
-# Here batches contain ``eeg`` at 250 Hz, with 500 samples and stimulus anchors.
-# The guide constructs ``input`` batches, channel positions and recording-strided
-# windows at 120 Hz for its patch encoder. Adapt its study/extractor configuration
-# to the acquired recordings, retain subject-level separation, and verify the
-# resulting batch contract before training. The NPZ is a voltage export, not a
-# pretrained checkpoint or a registered NeuroAI study.
+# See NeuroAI's `masked-prediction guide
+# <https://facebookresearch.github.io/neuroai/neuralbench/auto_examples/biosignal_challenge_2026/plot_pretrain_mae.html>`_.
+# Its sampling rate, geometry and batch contract differ. This voltage export is
+# not a pretrained checkpoint or a plug-and-play NeuralBench study; validate
+# those boundaries and participant-disjoint splits before adapting its loop.

@@ -11,13 +11,19 @@ stops the job; the script does not replace or skip selected participants.
 ```bash
 export EEGDASH_PYTHON="$PWD/.venv/bin/python"
 export EEGDASH_CACHE_DIR=/path/to/persistent/eegdash-cache
-sbatch --account=YOUR_ACCOUNT --partition=YOUR_CPU_PARTITION examples/hpc/run_eoec_cpu.slurm
+export EEGDASH_OUTPUT_DIR=/path/to/persistent/eegdash-results
+# After staging this exact cohort (see the linked staging recipe):
+export EEGDASH_OFFLINE=1
+mkdir -p logs "$EEGDASH_OUTPUT_DIR"
+sbatch --account=YOUR_ACCOUNT --partition=YOUR_CPU_PARTITION \
+  --output='logs/%x-%j.out' examples/hpc/run_eoec_cpu.slurm
 ```
 
 For a GPU environment with CUDA-enabled PyTorch:
 
 ```bash
-sbatch --account=YOUR_ACCOUNT --partition=YOUR_GPU_PARTITION examples/hpc/run_eoec_gpu.slurm
+sbatch --account=YOUR_ACCOUNT --partition=YOUR_GPU_PARTITION \
+  --output='logs/%x-%j.out' examples/hpc/run_eoec_gpu.slurm
 ```
 
 Both templates use `SLURM_SUBMIT_DIR`, so submit from the repository root.
@@ -25,17 +31,27 @@ Override `NUM_SUBJECTS`, `NUM_TEST_SUBJECTS`, `EPOCHS`, `BATCH_SIZE` or `SEED`
 in the submitting environment. Keep at least one training and one test subject.
 For node-local storage, pre-stage the existing cache to `SLURM_TMPDIR` in the
 batch script and point `EEGDASH_CACHE_DIR` there. Copy outputs back before the
-allocation ends. The script writes `sample_epoch.png` in the working directory;
-use a separate checkout or output directory for concurrent jobs.
+allocation ends. The script creates a unique `eoec-*` directory beneath
+`EEGDASH_OUTPUT_DIR` (default: cache/hpc-runs), preserving older results and
+partial failures. It saves labelled figures, `training.csv`, `metrics.json`
+and `configuration.json`; only completed runs receive `_SUCCESS`. No reusable
+model checkpoint is saved. Keep the output root on persistent storage.
 
-Inspect `slurm-*.out` for the exact participant IDs, recording metadata,
+Inspect `logs/*.out` for the exact participant IDs, recording metadata,
 window counts, label balance, and final held-out accuracy. Low accuracy is a
 valid measured result. The test cohort is evaluated only after training.
+
+Stage the selected recordings first using the [staging recipe](../how_to/how_to_run_preprocessing_on_slurm.md).
+`EEGDASH_OFFLINE=1` prevents dataset acquisition on the compute node; leave it
+at `0` only where acquisition is intended and permitted. The CPU template
+requests eight CPUs, 32 GB and one hour; GPU adds one GPU. These are starting
+allocations, not measured minima. The script respects the CPU allocation for
+Torch threads; measure memory and wall time before scaling the cohort.
 
 ## Optional container
 
 The Dockerfile supplies a Python environment; site Slurm templates above use
-the activated environment directly. Build from this directory:
+the activated environment directly. Build from the repository root:
 
 ```bash
 docker build -t eegdash-hpc examples/hpc
@@ -52,6 +68,7 @@ container command, binding both checkout and cache. For example:
 
 ```bash
 apptainer exec --bind "$PWD:$PWD" --bind "$EEGDASH_CACHE_DIR:$EEGDASH_CACHE_DIR" \
+  --bind "$EEGDASH_OUTPUT_DIR:$EEGDASH_OUTPUT_DIR" \
   eegdash-hpc.sif python examples/hpc/tutorial_hpc_cache_and_slurm.py
 ```
 

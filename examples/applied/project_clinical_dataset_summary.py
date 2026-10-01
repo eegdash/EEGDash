@@ -14,11 +14,12 @@ cohort summaries and separate recording-level acquisition summaries.
 """
 
 # %%
-import os
-from pathlib import Path
 
+import numpy as np
 import matplotlib.pyplot as plt
 import pandas as pd
+
+from eegdash.paths import get_default_cache_dir
 
 from eegdash import EEGDashDataset
 
@@ -37,14 +38,26 @@ from eegdash import EEGDashDataset
 # metadata checks cannot establish whether individual recordings are usable.
 dataset = EEGDashDataset(
     dataset="ds004504",
-    cache_dir=Path(os.environ.get("EEGDASH_CACHE_DIR", ".eegdash_cache")),
+    cache_dir=get_default_cache_dir(),
     description_fields=["subject", "age", "group", "sex"],
 )
 metadata = dataset.description.copy()
-assert not metadata.empty
+if metadata.empty:
+    raise ValueError(
+        "Data do not satisfy the documented task contract; inspect the query, labels and retained windows before continuing."
+    )
+# Do not silently resolve conflicting participant metadata by keeping the first run.
+conflicts = metadata.groupby("subject")[["age", "group", "sex"]].nunique(dropna=False)
+if (conflicts > 1).any().any():
+    raise ValueError(
+        f"Conflicting participant fields across recordings:\n{conflicts[conflicts.gt(1).any(axis=1)]}"
+    )
 # Count participants once even when they have several recordings.
 participants = metadata.drop_duplicates("subject")
-assert participants["subject"].notna().all()
+if not (participants["subject"].notna().all()):
+    raise ValueError(
+        "Unexpected cohort: check the query, missing recordings and duplicate participant rows."
+    )
 print("Recordings:", len(dataset.datasets), "participants:", len(participants))
 print(participants[["subject", "age", "group"]].head())
 
@@ -58,17 +71,21 @@ print(participants[["subject", "age", "group"]].head())
 #
 # The bars count people. The table's age ``count`` is the number with a numeric
 # age, while mean, standard deviation and range describe that observed sample.
-# Histograms use eight bins within each group for an overview; their edges need
-# not align between groups, so consult the numeric summaries for precise
-# comparisons. Group differences here may reflect recruitment and age structure,
+# Histograms share eight age-bin edges across groups for direct comparison. Group differences here may reflect recruitment and age structure,
 # not a specific EEG biomarker.
 labels = {
     "A": "Alzheimer's disease",
     "F": "Frontotemporal dementia",
     "C": "Healthy control",
 }
-assert participants["group"].notna().all()
-assert set(participants["group"]).issubset(labels)
+if not (participants["group"].notna().all()):
+    raise ValueError(
+        "Data do not satisfy the documented task contract; inspect the query, labels and retained windows before continuing."
+    )
+if not (set(participants["group"]).issubset(labels)):
+    raise ValueError(
+        "Data do not satisfy the documented task contract; inspect the query, labels and retained windows before continuing."
+    )
 participants = participants.assign(
     condition=participants["group"].map(labels),
     age=pd.to_numeric(participants["age"], errors="raise"),
@@ -79,8 +96,9 @@ print(
 fig, axes = plt.subplots(1, 2, figsize=(11, 4), layout="constrained")
 participants["condition"].value_counts().plot.barh(ax=axes[0])
 axes[0].set(xlabel="Participants", ylabel="Recorded group")
+age_edges = np.histogram_bin_edges(participants["age"].dropna(), bins=8)
 for condition, group in participants.groupby("condition"):
-    axes[1].hist(group["age"].dropna(), bins=8, alpha=0.5, label=condition)
+    axes[1].hist(group["age"].dropna(), bins=age_edges, alpha=0.5, label=condition)
 axes[1].set(xlabel="Age (years)", ylabel="Participants")
 axes[1].legend()
 plt.show()
@@ -97,9 +115,19 @@ records = pd.DataFrame(dataset.records)
 duration = pd.to_numeric(records["ntimes"]) / pd.to_numeric(
     records["sampling_frequency"]
 )
-assert duration.notna().all() and (duration > 0).all()
+if not (duration.notna().all() and (duration > 0).all()):
+    raise ValueError(
+        "Unexpected sampling grid: inspect source timing and preprocessing before constructing windows."
+    )
 print("Recording duration (seconds):", duration.describe())
 print("Channel counts:", records["nchans"].value_counts())
+fig, ax = plt.subplots(figsize=(6, 3), layout="constrained")
+ax.hist(duration / 60, bins=12)
+ax.set(xlabel="Catalogue recording duration (min)", ylabel="Recordings")
+plt.show()
+print(
+    "Missing participant fields:\n", participants[["age", "sex", "group"]].isna().sum()
+)
 
 # %%
 # Turn the summary into an analysis plan

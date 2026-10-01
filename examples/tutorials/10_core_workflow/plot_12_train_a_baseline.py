@@ -1,7 +1,8 @@
 """Train a baseline on real SSVEP trials
 =====================================
 
-Fit a spectral decoder on subjects 1 and 2 and evaluate subject 3.
+Fit a first classical spectral baseline on subjects 1 and 2 and evaluate subject 3.
+This uses scikit-learn, not a neural network; the same window/label contract applies.
 
 These real Nakanishi2015 SSVEP recordings are distributed as the processed
 `nm000118 release <https://nemar.org/dataset/nm000118>`_
@@ -21,14 +22,13 @@ for subject 3 from a model fitted to subjects 1 and 2.
 """
 
 # %%
-import os
-from pathlib import Path
 
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 from braindecode.preprocessing import create_windows_from_events
 
+from eegdash.paths import get_default_cache_dir
 from eegdash import EEGDashDataset
 from functools import partial
 from eegdash.features import (
@@ -50,7 +50,7 @@ from sklearn.preprocessing import StandardScaler
 # numerical frequency order, and the same mapping is checked across subjects.
 # This baseline keeps the source reference and source preprocessing; it does
 # not load the optional average-referenced output from tutorial 10.
-cache_dir = Path(os.environ.get("EEGDASH_CACHE_DIR", ".eegdash_cache"))
+cache_dir = get_default_cache_dir()
 subjects = ["1", "2", "3"]
 dataset = EEGDashDataset(
     cache_dir=cache_dir,
@@ -61,18 +61,28 @@ dataset = EEGDashDataset(
     task="ssvep",
     n_jobs=1,
 )
-assert len(dataset.datasets) == len(subjects)
-print(dataset.description[["subject", "session", "run"]])
+if len(dataset.datasets) != len(subjects):
+    raise ValueError(
+        "Query did not return one recording per requested subject; inspect dataset.description"
+    )
+dataset.description[["subject", "session", "run"]]
+
+# %%
 raw = dataset.datasets[0].raw
 sfreq = raw.info["sfreq"]
 channel_names = raw.ch_names
 class_names = sorted(set(raw.annotations.description), key=float)
 mapping = {name: index for index, name in enumerate(class_names)}
-assert len(mapping) == 12
 for recording in dataset.datasets:
-    assert recording.raw.ch_names == channel_names
-    assert recording.raw.info["sfreq"] == sfreq
-    assert set(recording.raw.annotations.description) == set(mapping)
+    other = recording.raw
+    if (
+        other.ch_names != channel_names
+        or other.info["sfreq"] != sfreq
+        or set(other.annotations.description) != set(mapping)
+    ):
+        raise ValueError(
+            "Recordings must share channel order, sample rate and event vocabulary"
+        )
 print(f"Channels: {channel_names}; sampling rate: {sfreq} Hz")
 print("Observed stimulus frequencies (Hz):", class_names)
 
@@ -95,9 +105,11 @@ windows = create_windows_from_events(
 )
 metadata = windows.get_metadata().reset_index(drop=True)
 y = metadata["target"].to_numpy(dtype=int)
-assert len(windows) == len(metadata)
-assert set(y) == set(mapping.values())
-assert not metadata.duplicated(["subject", "session", "run", "i_start_in_trial"]).any()
+if (
+    len(windows) != len(metadata)
+    or metadata.duplicated(["subject", "session", "run", "i_start_in_trial"]).any()
+):
+    raise ValueError("Window rows must have aligned, unique recording/start identities")
 print(pd.crosstab(metadata["subject"], y))
 
 print(
@@ -135,6 +147,7 @@ spectral = FeatureExtractor(
         fs=sfreq,
         nperseg=window_size,
         noverlap=0,
+        window="hamming",
         f_min=8,
         f_max=16,
     ),
@@ -143,9 +156,60 @@ feature_table = extract_features(
     windows, spectral, batch_size=64, n_jobs=1
 ).to_dataframe()
 features = np.log(np.maximum(feature_table.to_numpy(), 1e-30))
-assert features.shape == (len(metadata), len(mapping) * len(channel_names))
-assert np.isfinite(features).all()
+if not (np.isfinite(features).all()):
+    raise ValueError(
+        "Unexpected shape or nonfinite values; inspect input signals and extraction settings"
+    )
 print("EEGDash spectral features:", features.shape)
+feature_table.head()
+
+# %%
+# Inspect only training rows before fitting; never choose bins from subject 3.
+groups = metadata["subject"].astype(str).to_numpy()
+train, test = groups != "3", groups == "3"
+first_train = np.flatnonzero(train)[0]
+freqs, density = spectral_preprocessor(
+    windows[first_train][0][None],
+    _metadata={"info": raw.info},
+    fs=sfreq,
+    nperseg=window_size,
+    noverlap=0,
+    window="hamming",
+    f_min=8,
+    f_max=16,
+)
+fig, axes = plt.subplots(1, 2, figsize=(12, 4), layout="constrained")
+axes[0].plot(freqs, density[0, 0] * 1e12)
+for name in class_names:
+    axes[0].axvline(float(name), color="gray", alpha=0.4)
+axes[0].set(
+    xlabel="Frequency (Hz)",
+    ylabel="PSD (µV²/Hz)",
+    title=f"Training trial: {channel_names[0]}",
+)
+# Select named columns rather than assuming the flattened feature order.
+channel_columns = [f"power_{name}_{channel_names[0]}" for name in class_names]
+class_means = np.array(
+    [
+        np.log10(
+            np.maximum(feature_table.loc[train & (y == label), channel_columns], 1e-30)
+        ).mean(axis=0)
+        for label in range(len(class_names))
+    ]
+)
+image = axes[1].imshow(class_means, aspect="auto")
+axes[1].set(
+    xticks=range(len(class_names)),
+    xticklabels=class_names,
+    yticks=range(len(class_names)),
+    yticklabels=class_names,
+    xlabel="Feature frequency (Hz)",
+    ylabel="Training target (Hz)",
+    title="Training-only mean log10 PSD-bin sum",
+)
+axes[1].tick_params(axis="x", rotation=90)
+fig.colorbar(image, ax=axes[1], label="log10(sum PSD / (1 V²/Hz))")
+plt.show()
 
 # %%
 # 4. Fit all learned transformations on training participants
@@ -158,14 +222,18 @@ print("EEGDash spectral features:", features.shape)
 #
 # Balanced accuracy averages recall over the twelve classes. The displayed
 # ``1/12`` is the expected value for uniform random guessing, not a simulated
-# score. Rows of the normalized confusion matrix correspond to true frequencies;
+# score. Rows of the count confusion matrix correspond to true frequencies;
 # columns show predicted frequencies. Concentration near the diagonal indicates
 # correct decisions; an off-diagonal pattern shows which frequencies are
 # confused. The code accepts a low measured score as a valid outcome.
 groups = metadata["subject"].astype(str).to_numpy()
 train, test = groups != "3", groups == "3"
-assert set(groups[train]).isdisjoint(groups[test])
-assert set(y[train]) == set(y[test]) == set(mapping.values())
+if not (set(groups[train]).isdisjoint(groups[test])):
+    raise ValueError("Training and test participants overlap; fix the evaluation split")
+if not (set(y[train]) == set(y[test]) == set(mapping.values())):
+    raise ValueError(
+        "Required event classes are missing; inspect annotation/retained-condition counts"
+    )
 model = make_pipeline(StandardScaler(), LogisticRegression(max_iter=1000))
 model.fit(features[train], y[train])
 predictions = model.predict(features[test])
@@ -175,11 +243,13 @@ ConfusionMatrixDisplay.from_predictions(
     y[test],
     predictions,
     display_labels=class_names,
-    normalize="true",
-    include_values=False,
+    normalize=None,
+    include_values=True,
     xticks_rotation=90,
 )
-plt.title("Subject 3: observed frequency (Hz)")
+plt.title(
+    f"Subject 3: counts; balanced accuracy {score:.2f}; chance {1 / len(mapping):.2f}"
+)
 plt.show()
 
 # %%

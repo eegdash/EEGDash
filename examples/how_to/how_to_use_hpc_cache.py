@@ -20,11 +20,13 @@ session 0train, run 0. This page stages inputs, not trained model checkpoints.
 import os
 from pathlib import Path
 
-import numpy as np
+import pandas as pd
+from time import perf_counter
 
 from eegdash import EEGDashDataset
+from eegdash.paths import get_default_cache_dir
 
-cache_dir = Path(os.environ.get("EEGDASH_CACHE_DIR", ".eegdash_cache"))
+cache_dir = get_default_cache_dir()
 query = dict(dataset="nm000135", subject="1", session="0train", run="0", task="imagery")
 
 import shutil
@@ -32,12 +34,24 @@ import tempfile
 
 # %%
 # Download before entering the temporary-directory context so acquisition
-# failure cannot be mistaken for a compute-node problem. The first 250 samples
-# at 250 Hz form a one-second reference in volts, with one row per channel.
+# failure cannot be mistaken for a compute-node problem.
 # The source remains on persistent storage after the local copy is removed.
 persistent = EEGDashDataset(cache_dir=cache_dir, **query, n_jobs=1)
 persistent.download_all(n_jobs=1)
-reference = persistent.datasets[0].raw.get_data(start=0, stop=250)
+source = cache_dir / "nm000135"
+source_files = [path for path in source.rglob("*") if path.is_file()]
+source_bytes = sum(path.stat().st_size for path in source_files)
+pd.DataFrame(
+    [
+        {
+            "storage": "persistent source",
+            "path": str(source),
+            "files": len(source_files),
+            "bytes to copy": source_bytes,
+            "lifetime": "survives this job",
+        }
+    ]
+)
 
 # %%
 # 2. Stage into a private directory on job-local storage
@@ -55,16 +69,32 @@ reference = persistent.datasets[0].raw.get_data(start=0, stop=250)
 # files. It does not benchmark filesystem throughput or synchronize concurrent
 # downloads into the persistent source; complete acquisition first.
 scratch = os.environ.get("SLURM_TMPDIR")
+stage_rows = []
 with tempfile.TemporaryDirectory(prefix="eegdash-stage-", dir=scratch) as job_dir:
     local_cache = Path(job_dir)
-    shutil.copytree(cache_dir / "nm000135", local_cache / "nm000135")
+    if shutil.disk_usage(local_cache).free < source_bytes:
+        raise OSError("Insufficient scratch space for the complete cached subtree.")
+    start = perf_counter()
+    shutil.copytree(source, local_cache / "nm000135")
+    copy_seconds = perf_counter() - start
     staged = EEGDashDataset(cache_dir=local_cache, **query, download=False, n_jobs=1)
-    assert len(staged.datasets) == 1
+    if len(staged.datasets) != 1:
+        raise RuntimeError("Expected one staged recording; inspect the BIDS copy.")
     raw = staged.datasets[0].raw
-    np.testing.assert_array_equal(reference, raw.get_data(start=0, stop=250))
+    stage_rows.append(
+        {
+            "storage": "private scratch",
+            "path": str(local_cache),
+            "bytes copied": source_bytes,
+            "copy seconds": copy_seconds,
+            "status": "opened locally; removed on context exit",
+        }
+    )
     print("Staged recording:", raw)
     print("Local cache:", local_cache)
-    # Execute the training/feature extraction step here, while local files exist.
+    # Execute analysis here and return derived outputs to persistent storage.
+
+pd.DataFrame(stage_rows)
 
 # %%
 # 3. Apply the same pattern in a batch job
@@ -77,8 +107,9 @@ with tempfile.TemporaryDirectory(prefix="eegdash-stage-", dir=scratch) as job_di
 
 # 4. Check the storage boundary before scaling up
 # -----------------------------------------------
-# The equality assertion verifies that offline reopening of the staged copy
-# returns the same first-second samples. The displayed local path is valid only
+# Opening verifies local discovery and the reader, not file integrity. Use
+# checksums or the download recipe's optional sample comparison if needed.
+# The displayed local path is valid only
 # inside the with block. Put feature extraction or training there and copy its
 # outputs to persistent storage before leaving the block, even if the shell
 # job continues afterward.

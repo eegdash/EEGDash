@@ -32,9 +32,7 @@ would turn the reported test scores into model-selection scores.
 # ----------------------------------
 # Filtering subjects, session and run bounds the download. Cropping after
 # opening a recording would reduce computation but not its download size.
-import os
 from functools import partial
-from pathlib import Path
 
 import matplotlib.pyplot as plt
 import numpy as np
@@ -46,6 +44,8 @@ from sklearn.model_selection import LeaveOneGroupOut
 from sklearn.pipeline import make_pipeline
 from sklearn.preprocessing import StandardScaler
 
+from eegdash.paths import get_default_cache_dir
+
 from eegdash import EEGDashDataset
 from eegdash.features import (
     FeatureExtractor,
@@ -54,7 +54,7 @@ from eegdash.features import (
     spectral_preprocessor,
 )
 
-cache_dir = Path(os.environ.get("EEGDASH_CACHE_DIR", ".eegdash_cache"))
+cache_dir = get_default_cache_dir()
 subjects = ["1", "2", "3"]
 dataset = EEGDashDataset(
     cache_dir=cache_dir,
@@ -65,7 +65,10 @@ dataset = EEGDashDataset(
     task="ssvep",
     n_jobs=1,
 )
-assert len(dataset.datasets) == len(subjects), "Expected one recording per subject"
+if not (len(dataset.datasets) == len(subjects)):
+    raise ValueError(
+        "Expected one recording per requested participant; inspect the query results."
+    )
 print(dataset.description[["subject", "session", "run"]])
 
 # %%
@@ -79,12 +82,16 @@ sfreq = raw.info["sfreq"]
 channel_names = raw.ch_names
 class_names = sorted(set(raw.annotations.description), key=float)
 mapping = {name: index for index, name in enumerate(class_names)}
-assert len(mapping) == 12, "Expected the twelve SSVEP stimulus frequencies"
 for recording in dataset.datasets:
     recording_raw = recording.raw
-    assert recording_raw.ch_names == channel_names
-    assert recording_raw.info["sfreq"] == sfreq
-    assert set(recording_raw.annotations.description) == set(mapping)
+    if (
+        recording_raw.ch_names != channel_names
+        or recording_raw.info["sfreq"] != sfreq
+        or set(recording_raw.annotations.description) != set(mapping)
+    ):
+        raise ValueError(
+            "Recordings must share channel order, sampling rate and cue vocabulary."
+        )
 print(f"Channels: {channel_names}; sampling frequency: {sfreq} Hz")
 print("Stimulus frequencies (Hz):", class_names)
 
@@ -112,12 +119,22 @@ windows = create_windows_from_events(
     preload=True,
 )
 metadata = windows.get_metadata()
+if not ((metadata.i_window_in_trial == 0).all()):
+    raise ValueError(
+        "Multiple windows represent a trial; group by trial before splitting."
+    )
+if not (
+    not metadata.duplicated(["subject", "session", "run", "i_start_in_trial"]).any()
+):
+    raise ValueError(
+        "Duplicate recording/window identities; inspect metadata before splitting."
+    )
 y = metadata["target"].to_numpy(dtype=int)
 groups = metadata["subject"].astype(str).to_numpy()
-X = np.stack([window[0] for window in windows])
-assert X.shape == (len(metadata), len(channel_names), window_size)
-assert set(groups) == set(subjects)
-assert np.isfinite(X).all()
+if not (set(groups) == set(subjects)):
+    raise ValueError(
+        "Some requested participants have no retained windows; inspect exclusions."
+    )
 print(pd.crosstab(groups, y, rownames=["subject"], colnames=["class"]))
 
 # %%
@@ -154,9 +171,15 @@ spectral = FeatureExtractor(
 feature_table = extract_features(
     windows, {"spectral": spectral}, batch_size=64, n_jobs=1
 ).to_dataframe()
-assert feature_table.shape == (len(y), len(class_names) * len(channel_names))
+if len(feature_table) != len(metadata):
+    raise ValueError(
+        "Feature rows no longer match window metadata; inspect extraction."
+    )
 features = np.log(np.maximum(feature_table.to_numpy() * sfreq / window_size, 1e-30))
-assert np.isfinite(features).all()
+if not (np.isfinite(features).all()):
+    raise ValueError(
+        "Nonfinite spectral features; inspect signals and extraction parameters."
+    )
 
 # %%
 # 5. Fit on two subjects and predict the third
@@ -175,12 +198,40 @@ assert np.isfinite(features).all()
 # again for inner validation before fitting the chosen setting on both. With
 # only two inner subjects, such tuning is unstable; adding participants is a
 # more informative extension than a large parameter grid.
+fold_membership = pd.DataFrame(
+    [
+        ["test" if held == person else "train" for person in subjects]
+        for held in subjects
+    ],
+    index=pd.Index(subjects, name="held-out subject"),
+    columns=subjects,
+)
+print(fold_membership)
+fig, ax = plt.subplots(figsize=(4, 3))
+ax.imshow((fold_membership == "test").to_numpy(), cmap="Blues", vmin=0, vmax=1)
+ax.set(
+    xticks=range(len(subjects)),
+    xticklabels=subjects,
+    yticks=range(len(subjects)),
+    yticklabels=subjects,
+    xlabel="Participant",
+    ylabel="Held-out participant",
+    title="Dark = test; light = train",
+)
+plt.show()
+
 predictions = np.full(len(y), -1, dtype=int)
 test_counts = np.zeros(len(y), dtype=int)
 rows = []
 for train, test in LeaveOneGroupOut().split(features, y, groups):
-    assert set(groups[train]).isdisjoint(groups[test])
-    assert set(y[train]) == set(y[test]) == set(mapping.values())
+    if not (set(groups[train]).isdisjoint(groups[test])):
+        raise ValueError(
+            "Training and test identities overlap; repair the group split."
+        )
+    if not (set(y[train]) == set(y[test]) == set(mapping.values())):
+        raise ValueError(
+            "Each train/test split must contain every mapped class; inspect retained class counts."
+        )
     model = make_pipeline(StandardScaler(), LogisticRegression(max_iter=1000))
     model.fit(features[train], y[train])
     predictions[test] = model.predict(features[test])
@@ -192,8 +243,14 @@ for train, test in LeaveOneGroupOut().split(features, y, groups):
             "n_test_trials": len(test),
         }
     )
-assert len(rows) == len(subjects)
-assert np.all(test_counts == 1), "Every trial must be evaluated exactly once"
+if not (len(rows) == len(subjects)):
+    raise ValueError(
+        "Invalid len(rows) == len(subjects); inspect cohort, windows and split before fitting."
+    )
+if not (np.all(test_counts == 1)):
+    raise ValueError(
+        "Invalid np.all(test_counts == 1); inspect cohort, windows and split before fitting."
+    )
 results = pd.DataFrame(rows)
 print(results.to_string(index=False))
 scores = results["balanced_accuracy"]

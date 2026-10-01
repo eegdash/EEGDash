@@ -27,8 +27,8 @@ from eegdash import EEGDash
 # fields must all match. This bounds the later signal acquisition before we
 # open a recording.
 #
-# ``limit=10`` is a result cap, not a request for ten participants. The assertion
-# checks that this particular query currently resolves to the three expected
+# ``limit=10`` is a result cap, not a request for ten participants. The check
+# verifies that this query resolves to the three requested
 # recordings. If it fails, inspect the returned identifiers before changing the
 # query; silently taking the first three rows could select a different cohort.
 client = EEGDash()
@@ -40,8 +40,13 @@ query = {
     "task": "ssvep",
 }
 records = pd.DataFrame(client.find(query, limit=10))
-assert len(records) == 3
-print(records[["dataset", "subject", "session", "run", "task"]])
+expected = {(subject, "0", "0") for subject in ["1", "2", "3"]}
+actual = list(records[["subject", "session", "run"]].itertuples(index=False, name=None))
+if set(actual) != expected or len(actual) != len(expected):
+    raise ValueError(
+        f"Inspect query: missing={expected - set(actual)}, unexpected={set(actual) - expected}; rows={actual}"
+    )
+records[["dataset", "subject", "session", "run", "task"]]
 
 # %%
 # 2. Inspect the signal metadata before committing to downloads
@@ -52,17 +57,31 @@ print(records[["dataset", "subject", "session", "run", "task"]])
 # help plan memory and window lengths, but they do not establish signal quality.
 #
 # The two counts deliberately answer different questions: a participant may
-# contribute multiple runs. In the bar chart, each bar counts matched files
-# for one participant; it does not count trials or measure EEG amplitude.
+# contribute multiple runs. Here the duration chart shows the acquisition
+# workload rather than repeating a one-recording-per-person count.
 fields = ["subject", "sampling_frequency", "nchans", "ntimes"]
-print(records[fields])
+records["duration_minutes"] = records["ntimes"] / records["sampling_frequency"] / 60
+records[fields + ["duration_minutes"]]
+
+# %%
 print("Recording count:", len(records))
 print("Participant count:", records["subject"].nunique())
 # This particular subset has approximately 21.1 MB of signal files. The
 # next tutorial opens only subject 1 (about 7 MB) with EEGDashDataset.
 fig, ax = plt.subplots(figsize=(6, 3), layout="constrained")
-records["subject"].value_counts().sort_index().plot.bar(ax=ax, rot=0)
-ax.set(xlabel="Subject", ylabel="Matched recordings", title="Explicit SSVEP subset")
+records.plot.bar(x="subject", y="duration_minutes", ax=ax, rot=0, legend=False)
+for i, row in enumerate(records.itertuples()):
+    ax.text(
+        i,
+        row.duration_minutes,
+        f"{row.sampling_frequency:g} Hz / {row.nchans} ch",
+        ha="center",
+        va="bottom",
+    )
+ax.margins(y=0.2)
+ax.set(
+    xlabel="Subject", ylabel="Recording duration (min)", title="Explicit SSVEP subset"
+)
 plt.show()
 
 # %%

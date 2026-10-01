@@ -75,6 +75,10 @@ EXPERIMENTAL_MODALITY_COLORS = {
     "multisensory": "#CC79A7",
     "Motor": "#E69F00",  # orange (Okabe-Ito)
     "motor": "#E69F00",
+    # Taxonomy v2: rest/sleep/uncued tasks are "No stimulus" on this axis
+    # (the paradigm lives on the type axis). Old values kept for old builds.
+    "No stimulus": "#D55E00",  # vermilion (Okabe-Ito)
+    "no stimulus": "#D55E00",
     "Resting State": "#D55E00",  # vermilion (Okabe-Ito)
     "resting state": "#D55E00",
     "resting-state": "#D55E00",
@@ -122,6 +126,20 @@ _BASE_PATHOLOGY_COLORS = {
     "Psychosis": "#67e8f9",  # cyan-300
     "Depression": "#a5b4fc",  # indigo-300
     "ADHD": "#fcd34d",  # amber-300
+    "Autism": "#fde68a",  # amber-200
+    "Schizophrenia spectrum": "#7dd3fc",  # sky-300
+    "Psychiatric (transdiagnostic)": "#bae6fd",  # sky-200
+    "Alcohol use disorder": "#93c5fd",  # blue-300
+    "Dyslexia": "#99f6e4",  # teal-200
+    # Neurological / neuromuscular (taxonomy v2)
+    "ALS": "#fcd4b4",  # warm sand
+    "Stroke": "#fecdd3",  # rose-200
+    "Spinal cord injury": "#fed7aa",  # orange-200
+    "Disorders of consciousness": "#e9d5ff",  # purple-200
+    "Chronic pain": "#fbcfe8",  # pink-200
+    "Cancer": "#f5d0fe",  # fuchsia-200
+    "Obesity": "#d9f99d",  # lime-200
+    "Other clinical": "#fda4af",  # rose-300
     # Developmental
     "Development": "#c4b5fd",  # violet-300
     "Neurodevelopmental": "#c4b5fd",  # violet-300
@@ -162,6 +180,10 @@ TYPE_COLOR_MAP = {
     "intervention": "#f472b6",
     "Learning": "#c084fc",  # purple-400
     "learning": "#c084fc",
+    "Language": "#2dd4bf",  # teal-400
+    "language": "#2dd4bf",
+    "Consciousness": "#64748b",  # slate-500
+    "consciousness": "#64748b",
     "Motor": "#f59e0b",  # amber-500 - matches modality motor
     "motor": "#f59e0b",
     "Other": "#94a3b8",  # slate-400
@@ -182,6 +204,7 @@ MODALITY_EMOJI = {
     "Motor": "🏃",
     "Resting State": "🧘",
     "Rest": "🧘",
+    "No stimulus": "🧘",
     "Other": "🧭",
     "Unknown": "❔",
     "EEG": "🧠",
@@ -218,6 +241,7 @@ CANONICAL_MAP = {
         "resting-state": "Resting State",
         "resting_state": "Resting State",
         "sleep": "Sleep",
+        "no stimulus": "No stimulus",
         "other": "Other",
         "eeg": "EEG",
         "ieeg": "iEEG",

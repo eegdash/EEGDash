@@ -33,7 +33,12 @@ from plot_dataset import (
 )
 from plot_dataset.utils import get_dataset_url as _get_dataset_url
 from plot_dataset.utils import human_readable_size
-from table_tag_utils import _normalize_values, parse_stat_counts, wrap_tags
+from table_tag_utils import (
+    _normalize_values,
+    parse_stat_counts,
+    prefer_api_record_modality,
+    wrap_tags,
+)
 
 # Ensure eegdash package is importable (this script lives in docs/)
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
@@ -73,10 +78,15 @@ DATASET_CANONICAL_MAP = {
         "visual": "Visual",
         "somatosensory": "Somatosensory",
         "multisensory": "Multisensory",
+        "no stimulus": "No stimulus",
     },
     "record_modality": {
         "eeg": "EEG",
         "emg": "EMG",
+        "meg": "MEG",
+        "ieeg": "iEEG",
+        "ecog": "ECoG",
+        "fnirs": "fNIRS",
     },
     "type": {
         "perception": "Perception",
@@ -990,15 +1000,7 @@ def main_from_api(target_dir: str, database: str = DEFAULT_DATABASE, limit: int 
             df_raw = df_raw.merge(
                 enrich_df, on="dataset", how="left", suffixes=("", "_csv")
             )
-            if "record_modality_csv" in df_raw.columns:
-                if "recording_modality" not in df_raw.columns:
-                    df_raw["recording_modality"] = pd.Series(
-                        index=df_raw.index, dtype="object"
-                    )
-                df_raw["recording_modality"] = df_raw[
-                    "record_modality_csv"
-                ].combine_first(df_raw["recording_modality"])
-                df_raw["record_modality"] = df_raw["record_modality_csv"]
+            df_raw = prefer_api_record_modality(df_raw)
 
     if df_raw.empty:
         print("No datasets fetched from API!")

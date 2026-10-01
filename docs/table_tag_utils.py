@@ -12,6 +12,8 @@ import re
 from html import escape
 from typing import Iterable
 
+import pandas as pd
+
 _TAG_SLUG_RE = re.compile(r"[^a-z0-9]+")
 
 
@@ -239,3 +241,32 @@ def wrap_tags(
 
 
 __all__ = ["wrap_tags"]
+
+
+def _non_empty(df, col: str):
+    """``df[col]`` with blank strings as NaN; an all-NaN Series if absent."""
+    if col not in df.columns:
+        return pd.Series(index=df.index, dtype="object")
+    return df[col].where(df[col].astype(str).str.strip().ne(""))
+
+
+def prefer_api_record_modality(df, csv_col: str = "record_modality_csv"):
+    """Resolve the recording modality after merging the packaged CSV in.
+
+    The API row is authoritative; the packaged ``dataset_summary.csv`` only
+    fills cells the API leaves empty. The CSV predates the ``ds`` -> ``on``
+    (NEMAR re-host) rename, so letting it win blanked the Recording column
+    for every dataset it does not list, about 70% of the catalog.
+
+    Returns ``df`` with ``record_modality`` / ``recording_modality``
+    resolved and ``csv_col`` dropped. A frame without ``csv_col`` is
+    returned unchanged.
+    """
+    if csv_col not in df.columns:
+        return df
+    df = df.copy()
+    df["record_modality"] = _non_empty(df, "record_modality").combine_first(df[csv_col])
+    df["recording_modality"] = _non_empty(df, "recording_modality").combine_first(
+        df["record_modality"]
+    )
+    return df.drop(columns=[csv_col])

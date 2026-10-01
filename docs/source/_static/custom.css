@@ -4027,3 +4027,61 @@ html[data-theme="dark"] .hf-quickstart .highlight .cs {
     scroll-behavior: auto !important;
   }
 }
+
+/* Gallery reading rhythm: scoped to generated tutorial pages, not landing pages.
+   Theme Pygments rules use html[data-theme] .highlight pre (125%); these
+   selectors deliberately outrank them in both light and dark mode. */
+html[data-theme] .sphx-glr-example-title .highlight pre {
+  line-height: 1.5;
+  overflow-x: auto;
+}
+
+article .sphx-glr-example-title .highlight a.reference {
+  border-bottom: 0;
+  font-weight: inherit;
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.16em;
+  text-decoration-color: var(--pst-color-primary);
+}
+
+article .sphx-glr-example-title .highlight a.reference:hover {
+  border-bottom: 0;
+  background: transparent;
+}
+
+article .sphx-glr-example-title .highlight a.reference:focus-visible {
+  outline: 2px solid var(--pst-color-primary);
+  outline-offset: 2px;
+}
+
+.sphx-glr-example-title h2 {
+  font-size: clamp(1.4rem, 1.15rem + 0.8vw, 1.8rem);
+  line-height: 1.25;
+}
+
+.sphx-glr-example-title h3 {
+  font-size: clamp(1.2rem, 1.05rem + 0.5vw, 1.45rem);
+  line-height: 1.3;
+}
+
+.sphx-glr-example-title {
+  min-width: 0;
+}
+
+.sphx-glr-example-title .sphx-glr-script-out,
+.sphx-glr-example-title .output_html {
+  max-width: 100%;
+  overflow-x: auto;
+}
+
+@media (max-width: 575.98px) {
+  .sphx-glr-example-title h1 {
+    font-size: clamp(1.8rem, 6vw, 2.4rem);
+    overflow-wrap: anywhere;
+  }
+
+  html[data-theme] .sphx-glr-example-title .highlight pre {
+    padding: 0.85rem;
+  }
+}

@@ -35,9 +35,8 @@ from sklearn.model_selection import GroupShuffleSplit, train_test_split
 # 1. Load and inspect the selected recordings
 # -------------------------------------------
 # Three participants make the difference between row-level and group-level
-# splitting visible while keeping acquisition small. The channel/rate checks
-# ensure that all recordings could enter the same model; they do not make
-# participants statistically interchangeable.
+# splitting visible while keeping acquisition small. These recordings share
+# channel order and sampling rate, not statistical interchangeability.
 cache_dir = get_default_cache_dir()
 subjects = ["1", "2", "3"]
 dataset = EEGDashDataset(
@@ -49,30 +48,13 @@ dataset = EEGDashDataset(
     task="ssvep",
     n_jobs=1,
 )
-if len(dataset.datasets) != len(subjects):
-    raise ValueError(
-        "Query did not return one recording per requested subject; inspect dataset.description"
-    )
 dataset.description[["subject", "session", "run"]]
 
 # %%
 raw = dataset.datasets[0].raw
 sfreq = raw.info["sfreq"]
-channel_names = raw.ch_names
 class_names = sorted(set(raw.annotations.description), key=float)
 mapping = {name: index for index, name in enumerate(class_names)}
-for recording in dataset.datasets:
-    other = recording.raw
-    if (
-        other.ch_names != channel_names
-        or other.info["sfreq"] != sfreq
-        or set(other.annotations.description) != set(mapping)
-    ):
-        raise ValueError(
-            "Recordings must share channel order, sample rate and event vocabulary"
-        )
-print(f"Channels: {channel_names}; sampling rate: {sfreq} Hz")
-print("Observed stimulus frequencies (Hz):", class_names)
 
 # %%
 # 2. Window the observed trials
@@ -94,12 +76,7 @@ windows = create_windows_from_events(
 )
 metadata = windows.get_metadata().reset_index(drop=True)
 y = metadata["target"].to_numpy(dtype=int)
-if (
-    len(windows) != len(metadata)
-    or metadata.duplicated(["subject", "session", "run", "i_start_in_trial"]).any()
-):
-    raise ValueError("Window rows must have aligned, unique recording/start identities")
-print(pd.crosstab(metadata["subject"], y))
+pd.crosstab(metadata["subject"], y)
 
 # %%
 # 3. Compare what each split evaluates
@@ -111,9 +88,8 @@ print(pd.crosstab(metadata["subject"], y))
 # the equal-sized participant recordings happen to make those fractions agree.
 #
 # The fixed seed makes the assignments repeatable. It does not protect against
-# leakage; the disjoint-group check does that. Group splitting does not
-# promise class balance, so the separate class-set check checks that the
-# chosen train and test groups both contain every target class.
+# leakage; grouping defines the evaluation unit. Inspect the class counts,
+# since group splitting does not promise class balance.
 groups = metadata["subject"].astype(str).to_numpy()
 indices = np.arange(len(y))
 random_train, random_test = train_test_split(
@@ -124,12 +100,6 @@ train, test = next(
         indices, y, groups
     )
 )
-if not (set(groups[train]).isdisjoint(groups[test])):
-    raise ValueError("Training and test participants overlap; fix the evaluation split")
-if not (set(y[train]) == set(y[test]) == set(mapping.values())):
-    raise ValueError(
-        "Required event classes are missing; inspect annotation/retained-condition counts"
-    )
 print("Held-out identities:", sorted(set(groups[test])))
 fig, axes = plt.subplots(1, 2, figsize=(10, 4), layout="constrained")
 for ax, title, training, testing in [
@@ -142,26 +112,8 @@ for ax, title, training, testing in [
     print(
         title, "shared subjects:", sorted(set(groups[training]) & set(groups[testing]))
     )
-    print(counts)
     counts.plot.bar(stacked=True, ax=ax, rot=0, title=title)
     ax.set(xlabel="Subject", ylabel="Real trial count")
-plt.show()
-
-# %%
-# Actual trial assignments: adjacent rows are not necessarily chronological.
-fig, ax = plt.subplots(figsize=(10, 2), layout="constrained")
-assignment = np.zeros((2, len(y)))
-assignment[0, random_test] = 1
-assignment[1, test] = 1
-ax.imshow(
-    assignment, aspect="auto", interpolation="nearest", cmap="coolwarm", vmin=0, vmax=1
-)
-ax.set(
-    yticks=[0, 1],
-    yticklabels=["Known-person", "New-person"],
-    xlabel="Metadata row (one window per trial)",
-    title="Blue: train; red: test — keep all crops of a trial on one side",
-)
 plt.show()
 
 # %%
@@ -173,7 +125,7 @@ plt.show()
 # -----------------------------------------
 # In the random-trial plot, a participant can have both train and test colors.
 # In the grouped plot, each participant should have only one. Both plots use
-# the actual assignments printed above. This demonstrates who is shared; it
+# the actual assignments. This demonstrates who is shared; it
 # does not measure how much sharing would inflate a particular classifier.
 #
 # Participant overlap is appropriate for known-person trial prediction, but not

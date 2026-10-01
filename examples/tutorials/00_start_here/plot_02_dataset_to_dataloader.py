@@ -16,7 +16,7 @@ Before you start
 ----------------
 Install EEGDash with Braindecode and PyTorch. Tutorial 01 explains the MNE
 recording used here; no earlier output file is required. This page stops at a
-checked minibatch so you can understand the data interface before fitting a
+real minibatch so you can understand the data interface before fitting a
 network.
 """
 
@@ -59,8 +59,6 @@ sfreq = raw.info["sfreq"]
 channel_names = raw.ch_names
 class_names = sorted(set(raw.annotations.description), key=float)
 mapping = {name: index for index, name in enumerate(class_names)}
-print(f"Channels: {channel_names}; sampling rate: {sfreq} Hz")
-print("Observed stimulus frequencies (Hz):", class_names)
 
 # %%
 # 2. Window the observed trials
@@ -86,7 +84,7 @@ windows = create_windows_from_events(
 )
 metadata = windows.get_metadata().reset_index(drop=True)
 y = metadata["target"].to_numpy(dtype=int)
-print(pd.crosstab(metadata["subject"], y))
+pd.crosstab(metadata["subject"], y)
 
 # %%
 # 3. Batch windows and their observed targets
@@ -101,43 +99,21 @@ print(pd.crosstab(metadata["subject"], y))
 # process, which is straightforward in both scripts and notebooks. The
 # non-shuffled order aligns batch labels with the first metadata rows.
 # It is an inspection choice, not the recommended training
-# order. The plots select up to four examples and the first channel without changing
+# order. The plot shows the first example and channel without changing
 # the arrays passed to a future network.
 batch_size = 16  # Try 7 or 32; the final batch may contain fewer examples.
 loader = DataLoader(windows, batch_size=batch_size, shuffle=False, num_workers=0)
 X_batch, y_batch, crop_indices = next(iter(loader))
 # With shuffle=True, batch labels still travel with their signals, but no longer
 # match the first metadata rows by position.
-if not np.isfinite(X_batch.numpy()).all():
-    raise ValueError("Nonfinite batch voltages; inspect the selected windows")
-print("Batch:", X_batch.shape, "labels:", y_batch.tolist())
-print("First batch crop indices:", crop_indices)
-fig, axes = plt.subplots(
-    min(4, len(y_batch)) + 1, 1, figsize=(9, 8), layout="constrained"
+print("Batch axes (examples, channels, samples):", tuple(X_batch.shape))
+fig, ax = plt.subplots(figsize=(8, 3), layout="constrained")
+ax.plot(np.arange(window_size) / sfreq, X_batch[0, 0].numpy() * 1e6)
+ax.set(
+    xlabel="Time (s)",
+    ylabel=f"{channel_names[0]} (µV)",
+    title=f"Observed target: {class_names[int(y_batch[0])]} Hz",
 )
-for i, ax in enumerate(axes[:-1]):
-    ax.plot(np.arange(window_size) / sfreq, X_batch[i, 0].numpy() * 1e6)
-    ax.set(
-        ylabel=f"{channel_names[0]} (µV)",
-        title=f"Batch row {i}: class {int(y_batch[i])} = {class_names[int(y_batch[i])]} Hz",
-    )
-axes[-2].set_xlabel("Time in window (s)")
-duration = raw.annotations.duration[0]
-axes[-1].broken_barh(
-    [(0, duration)], (0, 0.35), facecolors="lightgray", label="Source event"
-)
-axes[-1].broken_barh(
-    [(0, window_size / sfreq)],
-    (0.4, 0.35),
-    facecolors="tab:blue",
-    label="Retained window",
-)
-axes[-1].set(
-    xlabel="Time from first event onset (s)",
-    yticks=[],
-    title=f"Unused event tail: {duration - window_size / sfreq:.2f} s",
-)
-axes[-1].legend()
 plt.show()
 
 # %%

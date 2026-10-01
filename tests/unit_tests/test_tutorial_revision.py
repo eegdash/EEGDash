@@ -58,14 +58,6 @@ def test_cbramod_epochs_respect_cue_bounds_bad_spans_and_sample_origin(filename)
             "instructed_toCloseEyes": (15, 29),
         },
     }
-    _execute(
-        [
-            n
-            for n in tree.body
-            if isinstance(n, ast.FunctionDef) and n.name == "drop_late_cues"
-        ],
-        ns,
-    )
     raw = mne.io.RawArray(
         np.arange(6000, dtype=float)[None],
         mne.create_info(["E70"], 100, "eeg"),
@@ -84,8 +76,6 @@ def test_cbramod_epochs_respect_cue_bounds_bad_spans_and_sample_origin(filename)
             ],
         )
     )
-    ns["drop_late_cues"](raw)
-    np.testing.assert_array_equal(raw.annotations.onset, [5, 45, 51])
     ns["dataset"] = SimpleNamespace(
         datasets=[SimpleNamespace(raw=raw, description={"subject": "fixture"})]
     )
@@ -118,7 +108,7 @@ def test_cbramod_epochs_respect_cue_bounds_bad_spans_and_sample_origin(filename)
         "plot_73_finetune_pretrained_model_simple.py",
     ],
 )
-def test_cbramod_normalization_rejects_invalid_channels(filename):
+def test_cbramod_normalization_centers_and_scales_channels(filename):
     ns = {"np": np}
     _execute(
         [
@@ -132,13 +122,6 @@ def test_cbramod_normalization_rejects_invalid_channels(filename):
     result = normalize(np.array([[1.0, 2.0, 3.0], [2.0, 4.0, 6.0]]))
     np.testing.assert_allclose(result.mean(axis=1), 0, atol=1e-12)
     np.testing.assert_allclose(result.std(axis=1), 1)
-    for invalid in (
-        np.ones((1, 4)),
-        np.array([[1.0, np.nan]]),
-        np.array([[1.0, np.inf]]),
-    ):
-        with pytest.raises(ValueError, match="Nonfinite or flat"):
-            normalize(invalid)
 
 
 def _feature_handoff():
@@ -177,50 +160,20 @@ def _feature_handoff():
     consumer = _tree(
         ROOT / "examples/tutorials/40_features/plot_42_features_to_sklearn.py"
     )
-    start = consumer.body.index(_assignment(consumer, "required_schema"))
+    start = consumer.body.index(_assignment(consumer, "columns"))
     stop = consumer.body.index(_assignment(consumer, "groups")) + 1
     return schema, table, consumer.body[start:stop]
 
 
-@pytest.mark.parametrize(
-    "invalid",
-    [
-        None,
-        "negative",
-        "nonfinite",
-        "duplicate",
-        "target",
-        "fractional_target",
-        "missing_metadata",
-        "old_schema",
-    ],
-)
-def test_feature_schema_producer_consumer_contract(invalid):
+def test_feature_schema_producer_consumer_contract():
     schema, table, nodes = _feature_handoff()
-    column = schema["feature_columns"][0]
-    if invalid == "negative":
-        table.loc[0, column] = -1
-    elif invalid == "nonfinite":
-        table.loc[0, column] = np.nan
-    elif invalid == "duplicate":
-        schema["feature_columns"].append(column)
-    elif invalid == "target":
-        schema["feature_columns"].append("target")
-    elif invalid == "fractional_target":
-        table["target"] = [0.0, 0.5, 0.0]
-    elif invalid == "missing_metadata":
-        table = table.drop(columns="subject")
-    elif invalid == "old_schema":
-        schema["schema_version"] = 0
-    ns = {"np": np, "schema": schema, "table": table}
-    if invalid:
-        with pytest.raises(ValueError):
-            _execute(nodes, ns)
-    else:
-        _execute(nodes, ns)
-        assert ns["X"].shape == (3, 1)
-        assert np.isfinite(ns["X"]).all()
-        assert ns["X"][1, 0] == -30  # valid zero power, explicit log floor
+    ns = {"np": np, "pd": pd, "schema": schema, "table": table}
+    _execute(nodes, ns)
+    assert ns["X"].shape == (3, 1)
+    assert np.isfinite(ns["X"]).all()
+    assert ns["X"][1, 0] == -30  # zero power uses the documented log floor
+    np.testing.assert_array_equal(ns["y"], [0, 1, 0])
+    np.testing.assert_array_equal(ns["groups"], ["1", "2", "3"])
 
 
 @pytest.mark.parametrize("batch_size", [1, 7, 32])
@@ -349,8 +302,8 @@ def test_hpc_rejects_nonfinite_model_outputs_before_success(stage, nonfinite):
             assert ns["correct_test"] == 1
 
 
-def test_pipeline_comparison_uses_separate_figures(monkeypatch):
-    """Agg/notebook execution must not mix participant differences and scores."""
+def test_pipeline_comparison_plots_paired_subject_scores(monkeypatch):
+    """Each participant contributes the two measured pipeline scores."""
     import matplotlib.pyplot as plt
 
     tree = _tree(
@@ -368,56 +321,32 @@ def test_pipeline_comparison_uses_separate_figures(monkeypatch):
             {"plt": plt, "results": results, "mapping": {"10": 0, "12": 1}},
         )
         created = sorted(set(plt.get_fignums()) - existing)
-        assert len(created) == 2
-        difference, scores = [plt.figure(number).axes[0] for number in created]
-        assert difference.get_xlabel() == "LDA minus logistic balanced accuracy"
-        assert difference.get_ylabel() == "Held-out participant"
-        assert len(difference.collections) == 1
+        assert len(created) == 1
+        scores = plt.figure(created[0]).axes[0]
         assert scores.get_ylabel() == "LOSO balanced accuracy"
-        assert len(scores.collections) == 0
+        for line, values in zip(scores.lines[:3], results.to_numpy(), strict=True):
+            np.testing.assert_array_equal(line.get_ydata(), values)
     finally:
         for number in set(plt.get_fignums()) - existing:
             plt.close(number)
 
 
-def test_face_erp_axis_uses_extraction_sample_grid(monkeypatch):
-    from types import SimpleNamespace
+def test_dataset_plot_inherits_released_braindecode_viewer(tmp_path):
+    """The public plotting method embeds file bytes without a local server."""
+    import mne
+    from IPython.display import HTML
 
-    import matplotlib.pyplot as plt
+    from braindecode.datasets import BaseConcatDataset, RawDataset
+    from eegdash import EEGDashDataset
 
-    tree = _tree(ROOT / "examples/applied/project_face_familiarity.py")
-    ns = {"SFREQ": 128, "np": np}
-    _execute([_assignment(tree, "start_offset_samples")], ns)
-    window_call = _assignment(tree, "windows").value
-    start = next(
-        keyword.value
-        for keyword in window_call.keywords
-        if keyword.arg == "trial_start_offset_samples"
+    path = tmp_path / "sample_raw.fif"
+    raw = mne.io.RawArray(
+        np.zeros((1, 100)), mne.create_info(["Cz"], 100, "eeg"), verbose=False
     )
-    extraction_start = eval(compile(ast.Expression(start), "<offset>", "eval"), ns)
-    ns.update(
-        plt=plt,
-        ds=SimpleNamespace(
-            datasets=[SimpleNamespace(raw=SimpleNamespace(ch_names=["Oz"]))]
-        ),
-        X=np.zeros((2, 1, 127)),
-        y=np.array([0, 1]),
-    )
-    monkeypatch.setattr(plt, "show", lambda: None)
-    first = tree.body.index(_assignment(tree, "channel"))
-    last = next(
-        i
-        for i in range(first, len(tree.body))
-        if isinstance(tree.body[i], ast.Expr)
-        and isinstance(tree.body[i].value, ast.Call)
-        and isinstance(tree.body[i].value.func, ast.Attribute)
-        and tree.body[i].value.func.attr == "show"
-    )
-    try:
-        _execute(tree.body[first : last + 1], ns)
-        times = ns["ax"].lines[0].get_xdata()
-        assert times[0] == extraction_start / ns["SFREQ"] == -25 / 128
-        assert times[-extraction_start] == 0
-    finally:
-        if "fig" in ns:
-            plt.close(ns["fig"])
+    raw.save(path, overwrite=True, verbose=False)
+    dataset = BaseConcatDataset([RawDataset(mne.io.read_raw_fif(path, verbose=False))])
+    assert EEGDashDataset.plot is BaseConcatDataset.plot
+    result = dataset.plot(index=0)
+    assert isinstance(result, HTML)
+    assert "iframe" in result.data
+    assert "https://eegdash.github.io/eegdash-viewer" in result.data

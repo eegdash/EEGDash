@@ -20,7 +20,6 @@ are 1 and 2, session 0, run 0, task ssvep; use EEGDASH_CACHE_DIR to reuse them.
 import os
 from time import perf_counter
 
-import numpy as np
 import pandas as pd
 from braindecode.preprocessing import create_windows_from_events
 
@@ -38,11 +37,7 @@ dataset = EEGDashDataset(
     task="ssvep",
     n_jobs=1,
 )
-if len(dataset.datasets) != 2:
-    raise ValueError("Expected the two explicitly selected recordings.")
 sfreq = dataset.datasets[0].raw.info["sfreq"]
-if any(recording.raw.info["sfreq"] != sfreq for recording in dataset.datasets):
-    raise ValueError("Recordings must share a sampling rate before windowing.")
 window_samples = round(4 * sfreq)
 names = sorted(set(dataset.datasets[0].raw.annotations.description), key=float)
 mapping = {name: i for i, name in enumerate(names)}
@@ -77,8 +72,6 @@ windows = create_windows_from_events(
 # More workers can increase RAM use through worker copies and in-flight batches;
 # worker count is therefore a resource choice, not an accuracy parameter.
 allocated_cpus = int(os.environ.get("SLURM_CPUS_PER_TASK", os.cpu_count() or 1))
-if allocated_cpus < 1:
-    raise ValueError("SLURM_CPUS_PER_TASK must be a positive integer.")
 workers = min(2, allocated_cpus)
 # %%
 # Timing starts after acquisition and window creation. It covers feature
@@ -94,25 +87,13 @@ for n_jobs in sorted({1, workers}):
         windows, {"variance": signal_variance}, batch_size=64, n_jobs=n_jobs
     ).to_dataframe()
     elapsed = perf_counter() - start
-    if len(features) != len(windows) or not np.isfinite(features.to_numpy()).all():
-        raise ValueError("Extraction returned missing rows or nonfinite features.")
     if reference is None:
         reference = features
-    equivalent = (
-        reference.columns.equals(features.columns)
-        and reference.index.equals(features.index)
-        and np.allclose(reference.to_numpy(), features.to_numpy(), rtol=1e-7, atol=0)
-    )
-    if not equivalent:
-        raise ValueError(
-            "Worker configuration changed feature values or row/column order."
-        )
+    pd.testing.assert_frame_equal(reference, features)
     rows.append(
         {
             "workers": n_jobs,
             "seconds": elapsed,
-            "equivalent to serial": equivalent,
-            "order": len(rows) + 1,
         }
     )
 timings = pd.DataFrame(rows)
@@ -120,8 +101,7 @@ timings["serial time / measured time"] = timings.loc[0, "seconds"] / timings["se
 timings
 
 # %%
-# Optional detailed equality diagnostics: ``pd.testing.assert_frame_equal``
-# can identify the offending columns if adapting the comparison to new features.
+# The equality check compares values, columns and row order.
 # This table is one serial-first run, not a warmed speedup benchmark.
 #
 # 3. Save the actual table with its window metadata

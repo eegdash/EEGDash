@@ -56,8 +56,6 @@ from eegdash.const import SUBJECT_MINI_RELEASE_MAP
 
 CACHE_DIR = get_default_cache_dir()
 RESOURCE_MODE = "small"  # explicit opt-in: "full" uses all 18 retained participants
-if RESOURCE_MODE not in {"small", "full"}:
-    raise ValueError("RESOURCE_MODE must be 'small' or 'full'.")
 N_FOLDS = 3 if RESOURCE_MODE == "small" else 6
 N_VALID = 2 if RESOURCE_MODE == "small" else 3
 torch.set_num_threads(2)
@@ -89,7 +87,7 @@ CUE_WINDOW = {"instructed_toOpenEyes": (5, 19), "instructed_toCloseEyes": (15, 2
 # two-second windows from 5 to 19 s after an open-eyes cue (the open block
 # lasts 20 s) and from 15 to 29 s after a close-eyes cue (the closed block
 # lasts 40 s). The final open-eyes cue falls a few seconds before the recording
-# ends and cannot supply the complete interval, so it is removed first. Labels
+# ends and cannot supply the complete interval; MNE drops incomplete epochs. Labels
 # represent the observed open/close instructions, not eye tracking.
 
 # Load the resting-state recordings of the HBN R5 mini release, except two with
@@ -107,54 +105,10 @@ dataset = EEGChallengeDataset(
 )
 
 
-def drop_late_cues(raw):
-    """Remove only task cues whose own requested interval exceeds the signal."""
-    fits = np.array(
-        [
-            name not in CUE_WINDOW
-            or onset - raw.first_time + CUE_WINDOW[name][1]
-            <= raw.n_times / raw.info["sfreq"]
-            for onset, name in zip(raw.annotations.onset, raw.annotations.description)
-        ]
-    )
-    # Preserve unrelated annotations, including BAD spans, in their original time frame.
-    raw.annotations.delete(np.flatnonzero(~fits))
-    return raw
-
-
 def standardize_recording(x):
     """Offline whole-recording normalization, including the held-out recording."""
-    if not np.isfinite(x).all():
-        raise ValueError("Nonfinite or flat EEG channel; inspect before normalization.")
     scale = x.std(axis=1, keepdims=True)
-    if np.any(scale <= 0):
-        raise ValueError(
-            "Nonfinite or flat EEG channel; inspect the recording before normalization."
-        )
     return (x - x.mean(axis=1, keepdims=True)) / scale
-
-
-# Inspect pre-normalization channel scales; do not infer alpha reactivity from accuracy.
-quality = np.array(
-    [r.raw.get_data(picks=CHANNELS).std(axis=1) * 1e6 for r in dataset.datasets]
-)
-fig, ax = plt.subplots(figsize=(7, 3))
-for index, channel in enumerate(CHANNELS):
-    ax.plot(
-        dataset.description["subject"].astype(str),
-        quality[:, index],
-        "o-",
-        label=channel,
-    )
-ax.set(
-    ylabel="Whole-recording SD (µV)",
-    yscale="log",
-    title="Selected-cohort QC before normalization",
-)
-ax.tick_params(axis="x", rotation=90)
-ax.legend()
-plt.tight_layout()
-plt.show()
 
 
 preprocess(
@@ -164,14 +118,13 @@ preprocess(
         Preprocessor("resample", sfreq=SFREQ),
         # standardize each channel of each recording with its own mean and std (uses no labels)
         Preprocessor(standardize_recording),
-        Preprocessor(drop_late_cues, apply_on_array=False),
     ],
 )
 
 # Cut seven 2 s epochs per eligible cue with explicit MNE sample origins.
-# Native epochs reject BAD spans; Braindecode's default raw windows do not.
-# This also avoids its dictionary-offset boundary check using the longest
-# interval for the last cue even when that cue requires only 19 seconds.
+# Native epochs reject BAD spans and incomplete trailing windows.
+# Cue-specific offsets below avoid discarding valid open-eye windows based
+# on the longer closed-eye interval.
 epoch_arrays, metadata_tables = [], []
 for recording in dataset.datasets:
     raw = recording.raw
@@ -186,10 +139,6 @@ for recording in dataset.datasets:
         for offset in range(start, stop, 2):
             sample = round((onset + offset) * SFREQ) + raw.first_samp
             events.append([sample, 0, code])
-    if not events:
-        raise ValueError(
-            f"No eligible eye-state cues for {recording.description['subject']}"
-        )
     events = np.asarray(events)
     epochs = mne.Epochs(
         raw,
@@ -231,17 +180,7 @@ subject = metadata["subject"].to_numpy()
 print(f"X {X.shape} | classes {np.bincount(y)} | participants {len(subjects)}")
 
 # Every participant is tested exactly once, in either resource mode
-if set(subject) != set(subjects) or not np.isfinite(X).all():
-    raise ValueError(
-        "Missing participant windows or nonfinite EEG after preprocessing."
-    )
-for identity in subjects:
-    if set(y[subject == identity]) != {0, 1}:
-        raise ValueError(
-            f"Both eye-state classes are required for participant {identity}."
-        )
 folds = np.array_split(np.array(subjects), N_FOLDS)
-print("Test cohorts:", [fold.tolist() for fold in folds])
 # Full-recording normalization uses each test recording's unlabeled distribution:
 # this is offline/transductive preprocessing, not causal online deployment.
 

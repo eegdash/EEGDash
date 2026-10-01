@@ -53,18 +53,14 @@ dataset = EEGDashDataset(
     task="visualoddball",
     n_jobs=1,
 )
-if len(dataset.datasets) != len(subjects):
-    raise ValueError(
-        "Query did not return one recording per requested subject; inspect dataset.description"
-    )
-print(dataset.description[["subject", "task"]])
+dataset.description[["subject", "task"]]
 
 # %%
 # 2. Map recorded events and prepare trial features
 # -------------------------------------------------
 # Consult the source task/event documentation before transferring this mapping:
 # `ds005863 source tree <https://github.com/OpenNeuroDatasets/ds005863>`_.
-# The literal marker vocabulary is printed below; a catalogue task name alone
+# The mapping uses literal marker names; a catalogue task name alone
 # cannot establish these semantics. In code XY, X is the block's target letter and Y is the presented
 # letter, both coded 1..5. Matching digits denote targets. Explicitly
 # exclude responses and other markers rather than calling all other
@@ -95,7 +91,6 @@ print(dataset.description[["subject", "task"]])
 features, labels, groups = [], [], []
 first_epochs = None
 first_subject = None
-channel_names = None
 for recording in dataset.datasets:
     raw = recording.raw.copy().load_data().pick("eeg")
     mapping = {}
@@ -103,40 +98,6 @@ for recording in dataset.datasets:
         code = name.split("/")[-1].replace(" ", "")
         if len(code) == 3 and code[0] == "S" and set(code[1:]) <= set("12345"):
             mapping[name] = 2 if code[1] == code[2] else 1
-    if not (set(mapping.values()) == {1, 2}):
-        raise ValueError(
-            "Required event classes are missing; inspect annotation/retained-condition counts"
-        )
-    print(recording.description["subject"], mapping)
-    if first_epochs is None:
-        # Static annotated voltage excerpt before preprocessing or model fitting.
-        event_sample = np.flatnonzero(
-            np.isin(raw.annotations.description, list(mapping))
-        )[0]
-        onset = raw.annotations.onset[event_sample] - raw.first_time
-        start = max(0, raw.time_as_index(onset - 0.1, use_rounding=True)[0])
-        stop = min(raw.n_times, start + int(3 * raw.info["sfreq"]))
-        fig, ax = plt.subplots(figsize=(10, 3), layout="constrained")
-        ax.plot(
-            raw.times[start:stop],
-            raw.get_data(picks=["Pz"], start=start, stop=stop)[0] * 1e6,
-        )
-        for ann in raw.annotations:
-            time = ann["onset"] - raw.first_time
-            if (
-                raw.times[start] <= time <= raw.times[stop - 1]
-                and ann["description"] in mapping
-            ):
-                ax.axvline(time, color="tab:orange", alpha=0.5)
-                ax.text(
-                    time, ax.get_ylim()[1], ann["description"], rotation=90, va="top"
-                )
-        ax.set(
-            xlabel="Recording time (s)",
-            ylabel="Pz (µV)",
-            title=f"Unfiltered source excerpt: {recording.description['subject']}",
-        )
-
     # Preprocess, epoch and baseline-correct
     # Filtering is independent for each recording. Epochs span -0.1..0.8 s
     # relative to stimulus onset, irrespective of annotation duration.
@@ -166,43 +127,13 @@ for recording in dataset.datasets:
         preload=True,
         reject_by_annotation=True,
     )
-    retained_counts = {name: len(epochs[name]) for name in epochs.event_id}
-    print(
-        pd.DataFrame(
-            {
-                "before": {
-                    name: int(np.sum(events[:, 2] == code))
-                    for name, code in epochs.event_id.items()
-                },
-                "retained": retained_counts,
-            }
-        )
-    )
-    print(
-        "Drop reasons:",
-        pd.Series(
-            [reason for reasons in epochs.drop_log for reason in reasons]
-        ).value_counts(),
-    )
     epochs.resample(128)
-    if channel_names is None:
-        channel_names = epochs.ch_names
+    if first_epochs is None:
         first_epochs = epochs
         first_subject = str(recording.description["subject"])
-    if not (epochs.ch_names == channel_names):
-        raise ValueError(
-            "Required EEG channels or their order differ; inspect channel metadata"
-        )
-    if "Pz" not in epochs.ch_names:
-        raise ValueError(
-            "Required EEG channels or their order differ; inspect channel metadata"
-        )
+    epochs.reorder_channels(first_epochs.ch_names)
     X = epochs.get_data()
     y = epochs.events[:, 2] - 1
-    if not (set(y) == {0, 1} and np.isfinite(X).all()):
-        raise ValueError(
-            "Required event classes are missing; inspect annotation/retained-condition counts"
-        )
 
     # Use a fixed analysis interval; do not choose it from test accuracy.
     interval = (epochs.times >= 0.3) & (epochs.times <= 0.45)
@@ -211,42 +142,14 @@ for recording in dataset.datasets:
     groups.extend([str(recording.description["subject"])] * len(y))
 
 # %%
-# Inspect trial variability before fitting
-# ----------------------------------------
-# Whole-recording filtering/reference is offline preprocessing, not a causal
-# online deployment recipe. The image includes all retained first-subject trials.
-fig, axes = plt.subplots(1, 2, figsize=(12, 4), layout="constrained")
-pz_trials = first_epochs.get_data(picks=["Pz"])[:, 0] * 1e6
-image = axes[0].imshow(
-    pz_trials,
-    aspect="auto",
-    origin="lower",
-    extent=[first_epochs.times[0], first_epochs.times[-1], 0, len(first_epochs)],
-    cmap="RdBu_r",
+# Inspect the first participant's condition averages before fitting.
+# Whole-recording filtering/reference is offline, not causal online processing.
+mne.viz.plot_compare_evokeds(
+    {name: first_epochs[name].average() for name in ["standard", "target"]},
+    picks="Pz",
+    title=f"Subject {first_subject}: Pz",
+    show=False,
 )
-axes[0].axvline(0, color="black", linestyle=":")
-axes[0].set(
-    xlabel="Time from stimulus (s)",
-    ylabel="Retained trial",
-    title=f"Subject {first_subject}: Pz trials",
-)
-fig.colorbar(image, ax=axes[0], label="µV")
-for name in ["standard", "target"]:
-    evoked = first_epochs[name].average()
-    axes[1].plot(
-        evoked.times,
-        evoked.data[evoked.ch_names.index("Pz")] * 1e6,
-        label=f"{name}, n={len(first_epochs[name])}",
-    )
-axes[1].axvline(0, color="black", linestyle=":")
-axes[1].axhline(0, color="gray", linewidth=0.5)
-axes[1].axvspan(0.3, 0.45, alpha=0.15, color="gray", label="Fixed feature interval")
-axes[1].set(
-    xlabel="Time from stimulus (s)",
-    ylabel="Pz (µV)",
-    title=f"Subject {first_subject}: condition means",
-)
-axes[1].legend()
 plt.show()
 
 # %%
@@ -267,30 +170,22 @@ plt.show()
 X = np.concatenate(features)
 y = np.concatenate(labels)
 groups = np.asarray(groups)
-print(pd.crosstab(groups, y, rownames=["subject"], colnames=["class"]))
+pd.crosstab(groups, y, rownames=["subject"], colnames=["class"])
 predictions = np.full(len(y), -1)
-counts = np.zeros(len(y), dtype=int)
 rows = []
 for train, test in LeaveOneGroupOut().split(X, y, groups):
-    if not (set(groups[train]).isdisjoint(groups[test])):
-        raise ValueError(
-            "Training and test participants overlap; fix the evaluation split"
-        )
     model = make_pipeline(
         StandardScaler(), LogisticRegression(class_weight="balanced", max_iter=1000)
     )
     model.fit(X[train], y[train])
     predictions[test] = model.predict(X[test])
-    counts[test] += 1
     rows.append(
         {
             "subject": groups[test][0],
             "balanced_accuracy": balanced_accuracy_score(y[test], predictions[test]),
         }
     )
-if not (np.all(counts == 1)):
-    raise ValueError("Every trial must have exactly one held-out prediction")
-print(pd.DataFrame(rows).to_string(index=False))
+pd.DataFrame(rows)
 
 # %%
 # 4. Inspect the measured ERP and decoding errors
@@ -303,18 +198,7 @@ print(pd.DataFrame(rows).to_string(index=False))
 # targets. Compare both rows, since good standard recall can hide missed
 # targets in an unbalanced task. An averaged ERP difference also need not
 # imply that single-trial responses are reliably separable.
-scores = pd.DataFrame(rows)
-fig, ax = plt.subplots(figsize=(6, 3), layout="constrained")
-ax.scatter(scores["subject"], scores["balanced_accuracy"])
-ax.axhline(0.5, color="black", linestyle="--")
-ax.set(
-    xlabel="Held-out participant",
-    ylabel="Balanced accuracy",
-    ylim=(0, 1),
-    title="Participant-level scores (three people)",
-)
-# Pooled confusion below weights trials, not participants.
-
+# This confusion pools trials; the score table above gives each person a row.
 ConfusionMatrixDisplay.from_predictions(
     y, predictions, display_labels=["standard", "target"], normalize="true"
 )

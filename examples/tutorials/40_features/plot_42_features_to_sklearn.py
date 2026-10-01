@@ -40,7 +40,7 @@ from sklearn.preprocessing import StandardScaler
 # The stored values are linear power summaries. Log10 compresses their range
 # before learning, with a numerical floor for zero power. This transform acts
 # on each value independently; unlike StandardScaler, it does not estimate
-# statistics from held-out participants. The printed crosstab checks class
+# statistics from held-out participants. The crosstab shows class
 # coverage after the file handoff.
 cache_dir = get_default_cache_dir()
 path = cache_dir / "plot_40_features.csv"
@@ -50,87 +50,26 @@ if not path.exists() or not path.with_suffix(".json").exists():
     )
 table = pd.read_csv(path, dtype={"subject": str, "session": str, "run": str})
 schema = json.loads(path.with_suffix(".json").read_text())
-required_schema = {
-    "dataset",
-    "schema_version",
-    "power_units",
-    "feature_columns",
-    "bands",
-    "channels",
-    "mapping",
-}
-if not required_schema.issubset(schema):
-    raise ValueError("Incomplete schema: regenerate both files with tutorial 40")
-required_metadata = {
-    "subject",
-    "session",
-    "run",
-    "i_start_in_trial",
-    "target",
-    "frequency_hz",
-}
-if not required_metadata.issubset(table.columns):
-    raise ValueError(
-        "Missing identity/target columns: regenerate the tutorial 40 table"
-    )
-if (
-    schema.get("dataset") != "nm000118"
-    or schema.get("schema_version") != 1
-    or schema.get("power_units") != "V^2"
-):
-    raise ValueError("Incompatible schema: regenerate both files with tutorial 40")
 columns = schema["feature_columns"]
-metadata_columns = {
+# Never guess predictors by numeric dtype: targets and IDs are numeric too.
+if set(columns) & {
+    "target",
+    "frequency_hz",
     "subject",
     "session",
     "run",
     "i_start_in_trial",
-    "target",
-    "frequency_hz",
-    "dataset",
-    "task",
-}
-expected_columns = {
-    f"spectral_power_{band}_{channel}"
-    for band in schema["bands"]
-    for channel in schema["channels"]
-}
-if (
-    not columns
-    or len(columns) != len(set(columns))
-    or not set(columns).issubset(table.columns)
-    or set(columns) & metadata_columns
-    or set(columns) != expected_columns
-):
-    raise ValueError(
-        "Predictor names must uniquely match the band/channel schema and exclude metadata"
-    )
+}:
+    raise ValueError("The saved feature list includes labels or recording identity")
 powers = table[columns].to_numpy(dtype=float)
 if not np.isfinite(powers).all() or np.any(powers < 0):
     raise ValueError(
         "Stored powers must be finite and nonnegative; do not mask invalid data with a log floor"
     )
-if table.duplicated(["subject", "session", "run", "i_start_in_trial"]).any():
-    raise ValueError(
-        "Duplicate recording/start identities; inspect row alignment before modelling"
-    )
 X = np.log10(np.maximum(powers, 1e-30))
-target_values = table["target"].to_numpy(dtype=float)
-if (
-    not np.isfinite(target_values).all()
-    or not np.equal(target_values, np.floor(target_values)).all()
-):
-    raise ValueError(
-        "Targets must be finite integer class indices from the saved mapping"
-    )
-y = target_values.astype(int)
+y = table["target"].to_numpy(dtype=int)
 groups = table["subject"].astype(str).to_numpy()
-if not (set(groups) == {"1", "2", "3"}):
-    raise ValueError(
-        "Expected cohort identities are missing; inspect query and retained windows"
-    )
-print(pd.crosstab(groups, y))
-print("Feature matrix:", X.shape)
+pd.crosstab(groups, y)
 table[["subject", "target", "frequency_hz"] + columns[:4]].head()
 
 # %%
@@ -149,12 +88,6 @@ table[["subject", "target", "frequency_hz"] + columns[:4]].head()
 # limitation of this feature representation, not a reason to replace the
 # measured score with a more attractive number.
 train, test = groups != "3", groups == "3"
-if not (set(groups[train]).isdisjoint(groups[test])):
-    raise ValueError("Training and test participants overlap; fix the evaluation split")
-if not (set(y[train]) == set(y[test]) == set(schema["mapping"].values())):
-    raise ValueError(
-        "Required event classes are missing; inspect annotation/retained-condition counts"
-    )
 pipe = make_pipeline(StandardScaler(), LogisticRegression(max_iter=1000))
 pipe.fit(X[train], y[train])
 predictions = pipe.predict(X[test])

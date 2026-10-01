@@ -28,7 +28,7 @@ Before you start
 ----------------
 This project assumes the core tutorials on windows and splits and the
 eyes-open/closed tutorial for EEGPrep. It runs independently and prints the
-per-epoch training table, the held-out accuracy and a learning curve.
+per-epoch training table, exploratory balanced accuracy and learning curves.
 """
 
 # %%
@@ -43,7 +43,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 import torch
 from sklearn.model_selection import train_test_split
-from sklearn.metrics import ConfusionMatrixDisplay, balanced_accuracy_score
+from sklearn.metrics import balanced_accuracy_score
 from skorch.dataset import ValidSplit
 from eegdash.paths import get_default_cache_dir
 
@@ -106,42 +106,20 @@ mapping = {
     "unfamiliar_second_early": 1,
     "unfamiliar_second_late": 1,
 }
-# Quantize the requested onset to the recording grid and reuse it in the plot.
-start_offset_samples = int(-0.2 * SFREQ)
 windows = create_windows_from_events(
     ds,
-    trial_start_offset_samples=start_offset_samples,
+    trial_start_offset_samples=int(-0.2 * SFREQ),
     trial_stop_offset_samples=int(0.8 * SFREQ),
     mapping=mapping,
 )
 X = (np.stack([x for x, _, _ in windows]) * 1e6).astype(np.float32)
 y = windows.get_metadata()["target"].to_numpy(dtype=np.int64)
-if not np.isfinite(X).all() or set(y) != {0, 1}:
-    raise ValueError(
-        "Need finite epochs in both face conditions; inspect event mapping and epoch rejection."
-    )
 X_train, X_test, y_train, y_test = train_test_split(
     X, y, test_size=0.2, stratify=y, random_state=0
 )
 print(
     f"X {X.shape} | train {len(y_train)} | test {len(y_test)} | classes {np.bincount(y)}"
 )
-
-# %%
-# Inspect the actual condition-averaged waveform before fitting.
-# --------------------------------------------------------------
-channel = ds.datasets[0].raw.ch_names[0]
-fig, ax = plt.subplots(figsize=(6, 3), layout="constrained")
-for code, label in enumerate(["Famous", "Unfamiliar"]):
-    ax.plot(
-        (np.arange(X.shape[-1]) + start_offset_samples) / SFREQ,
-        X[y == code, 0].mean(axis=0),
-        label=f"{label}, n={sum(y == code)}",
-    )
-ax.axvline(0, color="black", linestyle="--")
-ax.set(xlabel="Time from face onset (s)", ylabel="Amplitude (µV)", title=channel)
-ax.legend()
-plt.show()
 
 # %%
 # 4. Train ShallowFBCSPNet
@@ -166,10 +144,6 @@ clf.fit(X_train, y_train, epochs=30)
 predicted = clf.predict(X_test)
 print("Exploratory balanced accuracy:", balanced_accuracy_score(y_test, predicted))
 print("Constant-class balanced-accuracy reference: 0.5")
-ConfusionMatrixDisplay.from_predictions(
-    y_test, predicted, display_labels=["Famous", "Unfamiliar"]
-)
-plt.show()
 history = clf.history
 fig, axes = plt.subplots(1, 2, figsize=(9, 3.5), layout="constrained")
 axes[0].plot(history[:, "epoch"], history[:, "train_loss"], marker="o")

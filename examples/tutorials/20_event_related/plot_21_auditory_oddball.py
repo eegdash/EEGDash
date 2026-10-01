@@ -30,7 +30,6 @@ counts and array shape, a Cz waveform plot and a mean difference in microvolts.
 
 import matplotlib.pyplot as plt
 import mne
-import numpy as np
 import pandas as pd
 from braindecode.preprocessing import RemoveCommonAverageReference, RemoveDCOffset
 
@@ -47,12 +46,8 @@ dataset = EEGDashDataset(
     run="2",
     n_jobs=1,
 )
-if not (len(dataset.datasets) == 1):
-    raise ValueError(
-        "Expected one recording; inspect query descriptions before proceeding"
-    )
 raw = dataset.datasets[0].raw.copy().load_data().pick("eeg")
-print(pd.Series(raw.annotations.description).value_counts())
+pd.Series(raw.annotations.description).value_counts()
 # Source event files and vocabulary: `ds003061 source tree
 # <https://github.com/OpenNeuroDatasets/ds003061>`_.
 # Preserve the source marker spelling below, including its typo.
@@ -60,14 +55,6 @@ print(pd.Series(raw.annotations.description).value_counts())
 # on the oddball class. Consequently the comparison concerns the selected
 # response-associated oddballs, not every possible rare-stimulus outcome.
 mapping = {"stimulus/standard": 1, "stimulus/oddball_with_reponse": 2}
-if not (set(mapping) <= set(raw.annotations.description)):
-    raise ValueError(
-        "Required event classes are missing; inspect annotation/retained-condition counts"
-    )
-if "Cz" not in raw.ch_names:
-    raise ValueError(
-        "Required EEG channels or their order differ; inspect channel metadata"
-    )
 
 # %%
 # 2. Filter and epoch relative to the actual stimulus onset
@@ -86,10 +73,8 @@ if "Cz" not in raw.ch_names:
 # correction subtracts the pre-stimulus channel mean within each trial.
 # ``get_data()`` returns (trials, channels, time samples), with voltages in
 # volts. Resampling to 128 Hz changes the last dimension, not trial identity.
-# The printed condition counts refer to retained epochs, whereas the earlier
-# counts describe all annotations. Epochs can be lost at recording boundaries
-# or existing bad spans; missing conditions stop the example rather than
-# silently producing an empty average.
+# Inspect the Epochs summary for retained counts. Trials can be lost at
+# recording boundaries or existing bad spans; inspect the drop log if needed.
 source_annotations = raw.annotations.copy()
 source_date = raw.info["meas_date"]
 source_grid = (raw.info["sfreq"], raw.n_times, raw.first_samp)
@@ -117,45 +102,7 @@ epochs = mne.Epochs(
     reject_by_annotation=True,
 )
 epochs.resample(128)
-epoch_data = epochs.get_data()
-if not np.isfinite(epoch_data).all() or any(
-    len(epochs[name]) < 2 for name in epochs.event_id
-):
-    raise ValueError("Need finite data and at least two retained epochs per condition")
-print(
-    pd.DataFrame(
-        {
-            "before": {
-                name: int(np.sum(events[:, 2] == code))
-                for name, code in epochs.event_id.items()
-            },
-            "retained": {name: len(epochs[name]) for name in epochs.event_id},
-        }
-    )
-)
-print(
-    "Drop reasons:",
-    pd.Series(
-        [reason for reasons in epochs.drop_log for reason in reasons]
-    ).value_counts(),
-)
-print("Epoch shape:", epoch_data.shape)
-fig, ax = plt.subplots(figsize=(8, 4), layout="constrained")
-image = ax.imshow(
-    epoch_data[:, epochs.ch_names.index("Cz")] * 1e6,
-    aspect="auto",
-    origin="lower",
-    extent=[epochs.times[0], epochs.times[-1], 0, len(epochs)],
-    cmap="RdBu_r",
-)
-ax.axvline(0, color="black", linestyle=":")
-ax.set(
-    xlabel="Time from stimulus (s)",
-    ylabel="Retained trial",
-    title="Subject 001, run 2: Cz trial variability",
-)
-fig.colorbar(image, ax=ax, label="µV")
-plt.show()
+epochs
 
 # %%
 # 3. Plot the measured response at Cz
@@ -180,17 +127,6 @@ cz = difference.ch_names.index("Cz")
 print(
     "Mean oddball-minus-standard at Cz, 250–400 ms (µV):",
     signal_mean(difference.data[cz, interval]) * 1e6,
-)
-fig, ax = plt.subplots(figsize=(8, 3), layout="constrained")
-mean_difference = float(signal_mean(difference.data[cz, interval]) * 1e6)
-ax.plot(difference.times, difference.data[cz] * 1e6)
-ax.axvspan(0.25, 0.4, color="gray", alpha=0.2)
-ax.axvline(0, color="black", linestyle=":")
-ax.axhline(0, color="gray", linewidth=0.5)
-ax.set(
-    xlabel="Time from stimulus (s)",
-    ylabel="Cz difference (µV)",
-    title=f"Response-associated oddball − standard: interval mean {mean_difference:.2f} µV",
 )
 plt.show()
 

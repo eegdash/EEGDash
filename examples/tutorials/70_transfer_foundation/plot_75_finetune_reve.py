@@ -133,15 +133,6 @@ windows = create_windows_from_events(
     window_stride_samples=WINDOW_S * SFREQ,
     preload=True,
 )
-print(
-    len(windows),
-    "windows of",
-    WINDOW_S * SFREQ,
-    "samples;",
-    "labels per run:",
-    windows.get_metadata().groupby("run")["target"].value_counts().unstack().to_dict(),
-)
-
 # %%
 # Reserve runs, not windows
 # -------------------------
@@ -160,13 +151,6 @@ by_run = windows.split("run")
 train_set = BaseConcatDataset([by_run["1"], by_run["2"]])
 valid_set, test_set = by_run["3"], by_run["4"]
 print(f"train {len(train_set)} windows | valid {len(valid_set)} | test {len(test_set)}")
-counts = windows.get_metadata().groupby(["run", "target"]).size().unstack(fill_value=0)
-counts.plot.bar(stacked=True, figsize=(7, 3))
-plt.ylabel("Retained trials")
-plt.title("Runs 1–2 train; run 3 validation; run 4 test (0 imagery, 1 rest)")
-plt.tight_layout()
-plt.show()
-
 # %%
 # Load the checkpoint and understand the head
 # -------------------------------------------
@@ -199,7 +183,6 @@ print(
 )
 # The head flattens every token: 15 channels x 4 patches (200-sample patches with
 # 20 overlap across 800 samples) x 512 dims = 30,720 features -> 2 classes.
-print("head:", model.final_layer)
 
 # %%
 # Two ways to adapt the encoder
@@ -222,10 +205,6 @@ def set_trainable(model, head_only):
     # batch-norm, so the frozen encoder returns the same features in train and eval mode.
     for name, p in model.named_parameters():
         p.requires_grad = (not head_only) or name.startswith("final_layer")
-    n_train = sum(p.numel() for p in model.parameters() if p.requires_grad)
-    print(
-        f"trainable parameters: {n_train:,} of {n_total:,} ({'head only' if head_only else 'all'})"
-    )
 
 
 def make_classifier(model, lr, patience=5):

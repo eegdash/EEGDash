@@ -33,8 +33,8 @@ For node-local storage, pre-stage the existing cache to `SLURM_TMPDIR` in the
 batch script and point `EEGDASH_CACHE_DIR` there. Copy outputs back before the
 allocation ends. The script creates a unique `eoec-*` directory beneath
 `EEGDASH_OUTPUT_DIR` (default: cache/hpc-runs), preserving older results and
-partial failures. It saves labelled figures, `training.csv`, `metrics.json`
-and `configuration.json`; only completed runs receive `_SUCCESS`. No reusable
+partial failures. It saves a labelled voltage figure, `training.csv` and `metrics.json`;
+only completed runs receive `_SUCCESS`. No reusable
 model checkpoint is saved. Keep the output root on persistent storage.
 
 Inspect `logs/*.out` for the exact participant IDs, recording metadata,

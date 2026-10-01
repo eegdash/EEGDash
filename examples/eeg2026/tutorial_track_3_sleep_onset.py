@@ -5,8 +5,8 @@ Use three recorded Sleep-EDF participants from EEGDash ``nm000185``
 (cassette63, cassette64, cassette65; night1), about 150 MB in total. Predict
 once per five-second EEG window and evaluate on an unseen participant.
 The `official tracks page <https://neural-interfaces26.github.io/tracks.html>`_
-describes the wearable task; consult it for current release availability. This
-page uses the PSG seed corpus, not an assumed Muse configuration.
+describes the wearable task; consult it for current release availability.
+This page uses the PSG seed corpus, not an assumed Muse configuration.
 
 The `NeuralBench Track 3 guide
 <https://facebookresearch.github.io/neuroai/neuralbench/auto_examples/biosignal_challenge_2026/plot_track3_sleep_onset.html>`_
@@ -63,14 +63,6 @@ dataset = EEGDashDataset(
     n_jobs=1,
 )
 print(dataset.description.to_string(index=False))
-if not (len(dataset.datasets) == len(subjects)):
-    raise ValueError(
-        "Unexpected cohort: check the query, missing recordings and duplicate participant rows."
-    )
-if not (set(dataset.description.subject) == set(subjects)):
-    raise ValueError(
-        "Unexpected cohort: check the query, missing recordings and duplicate participant rows."
-    )
 
 # %%
 # 2. Tile the last twenty pre-onset minutes into five-second windows
@@ -79,11 +71,10 @@ if not (set(dataset.description.subject) == set(subjects)):
 # <https://github.com/facebookresearch/neuroai/blob/a68b7be4c137b41aa493758ca5d365a5d579b39d/neuralbench-repo/neuralbench/transforms.py>`_
 # selects the earliest scored N2 start. It does not require a 60-second N2
 # run: the guide's informal "stable" wording must not add a persistence rule.
-# Here we explicitly set a 1200-second pre-N2 region (the transform supports
-# other horizons and optional randomized starts). Our fixed region starts at
-# max(recording_start, N2_onset - 1200 s)
+# Here we fix a 1200-second horizon; the upstream transform is configurable.
+# The region starts at max(recording_start, N2_onset - 1200 s)
 # and ends at N2 onset. No-N2 records produce no official task windows;
-# this explicit subset instead fails visibly if a required onset is absent.
+# this subset requires an observed N2 onset in each recording.
 #
 # Use the source 100 Hz sampling grid. A window is (2 bipolar derivations,
 # 500 samples) in volts, covering [start, stop). Stop is the next sample
@@ -94,28 +85,14 @@ windowed_recordings = []
 metadata_tables = []
 for recording in dataset.datasets:
     raw = recording.raw
-    print(
-        recording.description.subject,
-        raw.ch_names,
-        raw.info["sfreq"],
-        np.unique(raw.annotations.description),
-    )
-    if not (raw.info["sfreq"] == 100 and set(channels).issubset(raw.ch_names)):
-        raise ValueError(
-            "Unexpected channel layout: inspect the recording and select/reorder the documented channels."
-        )
     n2_onsets = (
         raw.annotations.onset[raw.annotations.description == "N2"] - raw.first_time
     )
-    if not len(n2_onsets):
-        raise ValueError(f"No observed N2 onset for {recording.description.subject}")
     onset = float(n2_onsets.min())
     region_start = max(0.0, onset - 1200.0)
     region_stop = min(onset, raw.n_times / raw.info["sfreq"])
     start_sample = int(np.ceil(region_start * raw.info["sfreq"]))
     stop_sample = int(np.floor(region_stop * raw.info["sfreq"]))
-    if not (stop_sample - start_sample >= 500):
-        raise ValueError("No full pre-onset window")
     raw.pick(channels).reorder_channels(channels)
     windows = create_fixed_length_windows(
         BaseConcatDataset([recording]),
@@ -131,37 +108,6 @@ for recording in dataset.datasets:
     metadata["n2_onset_s"] = onset
     # This observed-annotation transformation matches SleepOnsetTargetExtractor.
     metadata["target"] = np.clip(onset - metadata.window_stop_s, 0.0, 600.0)
-    if not ((metadata.window_stop_s <= onset + 1e-9).all()):
-        raise ValueError(
-            "Data do not satisfy the documented task contract; inspect the query, labels and retained windows before continuing."
-        )
-    if not windowed_recordings:
-        fig, axes = plt.subplots(
-            2, 1, figsize=(9, 5), layout="constrained", sharex=True
-        )
-        stage_names = list(dict.fromkeys(raw.annotations.description))
-        for annotation in raw.annotations:
-            start = annotation["onset"] - raw.first_time
-            axes[0].plot(
-                [start, start + annotation["duration"]],
-                [stage_names.index(annotation["description"])] * 2,
-                color="tab:blue",
-            )
-        axes[0].set(
-            yticks=range(len(stage_names)),
-            yticklabels=stage_names,
-            ylabel="Scored stage",
-        )
-        axes[1].step(metadata.window_stop_s, metadata.target, where="post")
-        axes[1].scatter(
-            metadata.window_stop_s, metadata.target, s=5, label="Five-second windows"
-        )
-        for ax in axes:
-            ax.axvline(onset, color="black", linestyle="--", label="First N2")
-            ax.set_xlim(region_start, onset + 60)
-        axes[1].set(xlabel="Time from recording start (s)", ylabel="Capped target (s)")
-        axes[1].legend()
-        plt.show()
     windowed_recordings.append(windows)
     metadata_tables.append(metadata)
 
@@ -206,18 +152,6 @@ feature_table = extract_features(
 X = np.log10(np.maximum(feature_table.to_numpy() * 0.2, 1e-30))
 y = metadata.target.to_numpy(dtype=float)
 groups = metadata.subject.astype(str).to_numpy()
-if not (X.shape == (len(metadata), 8) and np.isfinite(X).all()):
-    raise ValueError(
-        "Nonfinite signals, targets or predictions: inspect missing metadata and unusable channels before fitting."
-    )
-if not (np.isfinite(y).all() and ((0 <= y) & (y <= 600)).all()):
-    raise ValueError(
-        "Nonfinite signals, targets or predictions: inspect missing metadata and unusable channels before fitting."
-    )
-if metadata.duplicated(["subject", "session", "i_start_in_trial"]).any():
-    raise ValueError(
-        "Unexpected cohort: check the query, missing recordings and duplicate participant rows."
-    )
 print("Feature matrix:", X.shape)
 print(
     metadata[["subject", "window_stop_s", "n2_onset_s", "target"]]
@@ -239,17 +173,11 @@ print(
 # independent people. Hyperparameter selection needs additional validation
 # participants within training, not feedback from these outer test predictions.
 predicted, baseline = np.empty_like(y), np.empty_like(y)
-test_counts = np.zeros(len(y), dtype=int)
 for train, test in LeaveOneGroupOut().split(X, y, groups):
     model = make_pipeline(StandardScaler(), Ridge(alpha=10))
     predicted[test] = np.clip(model.fit(X[train], y[train]).predict(X[test]), 0, 600)
     baseline[test] = np.clip(
         DummyRegressor().fit(X[train], y[train]).predict(X[test]), 0, 600
-    )
-    test_counts[test] += 1
-if not ((test_counts == 1).all() and np.isfinite(predicted).all()):
-    raise ValueError(
-        "Nonfinite signals, targets or predictions: inspect missing metadata and unusable channels before fitting."
     )
 
 # %%
@@ -297,9 +225,7 @@ axes[0].set(
     xlabel="Observed time-to-onset bin (s)",
     ylabel="Held-out MAE (s)",
 )
-axes[1].scatter(y, predicted, s=8, alpha=0.4, label="Ridge")
-axes[1].scatter(y, baseline, s=8, alpha=0.3, marker="x", label="Training mean")
-axes[1].legend()
+axes[1].scatter(y, predicted, s=8, alpha=0.4)
 axes[1].plot([0, 600], [0, 600], "k--")
 axes[1].set(xlabel="Observed time remaining (s)", ylabel="Predicted time remaining (s)")
 plt.show()

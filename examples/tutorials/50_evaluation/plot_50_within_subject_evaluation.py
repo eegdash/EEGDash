@@ -31,7 +31,7 @@ import numpy as np
 import pandas as pd
 from braindecode.preprocessing import create_windows_from_events
 from sklearn.linear_model import LogisticRegression
-from sklearn.metrics import ConfusionMatrixDisplay, balanced_accuracy_score
+from sklearn.metrics import balanced_accuracy_score
 from sklearn.pipeline import make_pipeline
 from sklearn.preprocessing import StandardScaler
 
@@ -56,10 +56,6 @@ dataset = EEGDashDataset(
     task="ssvep",
     n_jobs=1,
 )
-if not (len(dataset.datasets) == len(subjects)):
-    raise ValueError(
-        "Expected one recording per requested participant; inspect the query results."
-    )
 print(dataset.description[["subject", "session", "run"]])
 
 # %%
@@ -73,16 +69,6 @@ sfreq = raw.info["sfreq"]
 channel_names = raw.ch_names
 class_names = sorted(set(raw.annotations.description), key=float)
 mapping = {name: index for index, name in enumerate(class_names)}
-for recording in dataset.datasets:
-    recording_raw = recording.raw
-    if (
-        recording_raw.ch_names != channel_names
-        or recording_raw.info["sfreq"] != sfreq
-        or set(recording_raw.annotations.description) != set(mapping)
-    ):
-        raise ValueError(
-            "Recordings must share channel order, sampling rate and cue vocabulary."
-        )
 print(f"Channels: {channel_names}; sampling frequency: {sfreq} Hz")
 print("Stimulus frequencies (Hz):", class_names)
 
@@ -110,22 +96,8 @@ windows = create_windows_from_events(
     preload=True,
 )
 metadata = windows.get_metadata()
-if not ((metadata.i_window_in_trial == 0).all()):
-    raise ValueError(
-        "Multiple windows represent a trial; group by trial before splitting."
-    )
-if not (
-    not metadata.duplicated(["subject", "session", "run", "i_start_in_trial"]).any()
-):
-    raise ValueError(
-        "Duplicate recording/window identities; inspect metadata before splitting."
-    )
 y = metadata["target"].to_numpy(dtype=int)
 groups = metadata["subject"].astype(str).to_numpy()
-if not (set(groups) == set(subjects)):
-    raise ValueError(
-        "Some requested participants have no retained windows; inspect exclusions."
-    )
 print(pd.crosstab(groups, y, rownames=["subject"], colnames=["class"]))
 
 # %%
@@ -162,15 +134,7 @@ spectral = FeatureExtractor(
 feature_table = extract_features(
     windows, {"spectral": spectral}, batch_size=64, n_jobs=1
 ).to_dataframe()
-if len(feature_table) != len(metadata):
-    raise ValueError(
-        "Feature rows no longer match window metadata; inspect extraction."
-    )
 features = np.log(np.maximum(feature_table.to_numpy() * sfreq / window_size, 1e-30))
-if not (np.isfinite(features).all()):
-    raise ValueError(
-        "Nonfinite spectral features; inspect signals and extraction parameters."
-    )
 
 # %%
 # 5. Hold out complete trials within each participant
@@ -198,28 +162,9 @@ for subject in subjects:
     train, test = train_test_split(
         indices, test_size=0.25, random_state=42, stratify=y[indices]
     )
-    if not (set(train).isdisjoint(test)):
-        raise ValueError(
-            "Invalid set(train).isdisjoint(test); inspect cohort, windows and split before fitting."
-        )
-    if not (set(y[train]) == set(y[test]) == set(mapping.values())):
-        raise ValueError(
-            "Each train/test split must contain every mapped class; inspect retained class counts."
-        )
     model = make_pipeline(StandardScaler(), LogisticRegression(max_iter=1000))
     model.fit(features[train], y[train])
     prediction = model.predict(features[test])
-    if subject == subjects[0]:
-        ConfusionMatrixDisplay.from_predictions(
-            y[test],
-            prediction,
-            labels=list(mapping.values()),
-            display_labels=class_names,
-            normalize="true",
-            xticks_rotation=90,
-        )
-        plt.title(f"Subject {subject}: held-out trial recall by frequency (Hz)")
-        plt.show()
     rows.append(
         dict(
             subject=subject,

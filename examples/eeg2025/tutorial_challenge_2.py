@@ -32,7 +32,6 @@ analyses but are not this challenge's target.
 
 import matplotlib.pyplot as plt
 import numpy as np
-import pandas as pd
 from sklearn.dummy import DummyRegressor
 from sklearn.linear_model import Ridge
 from sklearn.metrics import mean_absolute_error, root_mean_squared_error
@@ -56,7 +55,7 @@ from eegdash.const import SUBJECT_MINI_RELEASE_MAP
 # available alongside each recording. The printed metadata lets you verify the
 # join between signal and participant.
 #
-# A missing recording fails the coverage check. Missing or nonnumeric targets
+# Inspect participant coverage before downloading the signals. Missing targets
 # must be investigated at the source instead of filled with a group mean or a
 # random number. For a larger cohort, specify missing-target exclusions before
 # fitting a model and report the resulting number of people.
@@ -72,28 +71,6 @@ dataset = EEGChallengeDataset(
     target_name="externalizing",
 )
 print(dataset.description.to_string(index=False))
-phenotypes = dataset.description.set_index("subject")["externalizing"]
-phenotypes = pd.to_numeric(phenotypes, errors="raise")
-if (
-    phenotypes.index.has_duplicates
-    or set(phenotypes.index) != set(subjects)
-    or not np.isfinite(phenotypes).all()
-):
-    raise ValueError(
-        "Expected one finite externalizing score per named participant; inspect metadata before signal acquisition."
-    )
-fig, ax = plt.subplots(figsize=(7, 3), layout="constrained")
-ax.scatter(phenotypes, np.arange(len(phenotypes)))
-ax.set(
-    xlabel="Externalizing (released score scale)",
-    yticks=np.arange(len(phenotypes)),
-    yticklabels=phenotypes.index,
-)
-plt.show()
-if not (len(dataset.datasets) == len(subjects)):
-    raise ValueError(
-        "Unexpected cohort: check the query, missing recordings and duplicate participant rows."
-    )
 # %%
 # Summarize a fixed resting interval
 # ----------------------------------------------
@@ -115,17 +92,14 @@ if not (len(dataset.datasets) == len(subjects)):
 # it does not turn a flat electrode into an informative feature.
 #
 # Concatenation is band-major, retaining channel order inside each band. The
-# channel-order check keeps feature columns comparable across recordings.
+# common channel order keeps feature columns comparable across recordings.
 
 features, targets, identities = [], [], []
 channels = None
 for recording in dataset.datasets:
     raw = recording.raw.copy().pick("eeg").crop(tmax=59).load_data()
     channels = raw.ch_names if channels is None else channels
-    if not (raw.ch_names == channels):
-        raise ValueError(
-            "Unexpected channel layout: inspect the recording and select/reorder the documented channels."
-        )
+    raw.reorder_channels(channels)
     frequencies, psd = spectral_preprocessor(
         raw.get_data(),
         _metadata={"info": raw.info},
@@ -135,15 +109,6 @@ for recording in dataset.datasets:
         noverlap=0,
         window="hamming",
     )
-    if not features:
-        fig, ax = plt.subplots(figsize=(6, 3), layout="constrained")
-        ax.semilogy(frequencies, psd.mean(axis=0) * 1e12)
-        ax.set(
-            xlabel="Frequency (Hz)",
-            ylabel="Mean-channel PSD (µV²/Hz)",
-            title=str(recording.description["subject"]),
-        )
-        plt.show()
     powers = spectral_bands_power(
         frequencies,
         psd,
@@ -153,23 +118,15 @@ for recording in dataset.datasets:
         frequencies[1] - frequencies[0]
     )
     features.append(np.log10(np.maximum(band_power, 1e-30)))
-    targets.append(float(phenotypes.loc[str(recording.description["subject"])]))
+    targets.append(float(recording.description["externalizing"]))
     identities.append(str(recording.description["subject"]))
-    print(
-        identities[-1],
-        len(raw.ch_names),
-        raw.info["sfreq"],
-        raw.annotations.description[:8],
-    )
 # %%
 # Check the participant-level design matrix
 # -----------------------------------------------------
 #
 # ``X`` has shape ``(participants, four bands × channels)`` and ``y`` has
 # one observed externalizing score per row. With the current 129-channel recordings, this
-# means 516 predictors for only six participants. The identity and finiteness
-# checks detect duplicated people, missing phenotypes and invalid features.
-# They do not test whether the EEG contains predictive information.
+# means 516 predictors for only six participants.
 #
 # This high-dimensional, tiny-sample setting motivates regularization, but no
 # penalty can make six participants sufficient for clinical inference. The page
@@ -177,12 +134,6 @@ for recording in dataset.datasets:
 # that the resulting features are invariant to subject identity.
 
 X, y = np.asarray(features), np.asarray(targets)
-if not (
-    len(set(identities)) == len(y) and np.isfinite(X).all() and np.isfinite(y).all()
-):
-    raise ValueError(
-        "Nonfinite signals, targets or predictions: inspect missing metadata and unusable channels before fitting."
-    )
 print("Participant features:", X.shape, "observed targets:", y)
 
 # %%
@@ -216,13 +167,10 @@ print("Training-mean MAE:", mean_absolute_error(y, baseline))
 # dimensionless; the small tutorial split is not the competition test cohort.
 # See https://github.com/eeg2025/startkit/blob/f5c2f3fbccf5889bad904ecf145c12ca9c6c58c9/local_scoring.py.
 target_spread = y.std(ddof=0)
-if not (target_spread > 0):
-    raise ValueError("NRMSE needs variation in the observed test targets")
 print("Subset NRMSE:", root_mean_squared_error(y, predicted) / target_spread)
 print("Training-mean NRMSE:", root_mean_squared_error(y, baseline) / target_spread)
 fig, ax = plt.subplots(figsize=(5, 4))
 ax.scatter(y, predicted, label="held-out participant")
-ax.scatter(y, baseline, marker="x", label="Training mean")
 ax.plot([y.min(), y.max()], [y.min(), y.max()], "k--")
 ax.set(xlabel="Observed externalizing score", ylabel="Predicted externalizing score")
 ax.legend()

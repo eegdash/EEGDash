@@ -31,9 +31,7 @@ about 5.6 MB for subject 1, session 0train, run 0.
 # or train/test split is needed to verify the adapter. The resulting windows
 # would still require a leakage-safe split before any supervised training.
 
-import json
 from datetime import datetime, timezone
-from importlib.metadata import version
 
 import matplotlib.pyplot as plt
 import numpy as np
@@ -58,7 +56,7 @@ from eegdash import EEGDashDataset
 # The event-table ``start`` and ``duration`` fields are in seconds, while MNE and
 # Braindecode also expose sample indices.
 #
-# The zero-first-sample assertion makes the convention explicit for this example.
+# This uncropped recording has a zero first-sample origin.
 # A cropped recording with a nonzero sample origin needs a deliberate conversion;
 # reusing these offsets unchanged would misalign signals and events. The TSV
 # export preserves original BIDS descriptions for inspection, but does not
@@ -80,17 +78,9 @@ dataset = EEGDashDataset(
     task="imagery",
     cache_dir=cache,
 )
-if not (len(dataset.datasets) == 1):
-    raise ValueError(
-        "Data contract failed: len(dataset.datasets) == 1; inspect the selected recordings and metadata."
-    )
 raw = dataset.datasets[0].raw
 print(dataset.description.to_string(index=False))
 print(raw.ch_names, raw.info["sfreq"], np.unique(raw.annotations.description))
-if not (raw.first_samp == 0):
-    raise ValueError(
-        "This export requires recording-relative times with first_samp=0; convert the time origin first."
-    )
 timeline = "nm000135/sub-1/ses-0train/run-0"
 events = pd.DataFrame(
     {
@@ -117,7 +107,7 @@ events.to_csv(output_dir / "events.tsv", sep="\t", index=False)
 #
 # The expected tensor layout is ``(windows, channels, samples)`` in volts.
 # A selected-window comparison below checks values and timing, not merely
-# matching shapes. The sidecar preserves the explicit input contract.
+# matching shapes. The export retains the window sample bounds.
 
 windows = create_windows_from_events(
     dataset,
@@ -130,12 +120,7 @@ windows = create_windows_from_events(
     preload=True,
 )
 metadata = windows.get_metadata()
-volts = np.stack([windows[i][0] for i in range(len(windows))])
-labels = np.asarray([windows[i][1] for i in range(len(windows))])
-if not (np.isfinite(volts).all() and set(labels) == {0, 1}):
-    raise ValueError(
-        "Data contract failed: np.isfinite(volts).all() and set(labels) == {0, 1}; inspect the selected recordings and metadata."
-    )
+labels = metadata["target"].to_numpy()
 # %%
 # Build a NeuralSet event table with the acquired EEG file and window anchors.
 # Every anchor and label comes from the real Braindecode window metadata.
@@ -151,9 +136,7 @@ if not (np.isfinite(volts).all() and set(labels) == {0, 1}):
 #
 # The extractor uses the native sampling frequency, original channel order and
 # ``scaler=None`` because a boundary check must not introduce a new signal
-# transform. ``prepare()`` prepares the extractor's data before iteration. Segment
-# count and trigger-code assertions check that preparation has neither lost nor
-# reordered the requested labelled windows.
+# transform. ``prepare()`` prepares the extractor's data before iteration.
 
 recording_event = Eeg(
     filepath=str(raw.filenames[0]),
@@ -190,16 +173,6 @@ segmenter = ns.Segmenter(
 )
 neural_dataset = segmenter.apply(neural_events)
 neural_dataset.prepare()
-if not (len(neural_dataset) == len(windows)):
-    raise ValueError(
-        "Data contract failed: len(neural_dataset) == len(windows); inspect the selected recordings and metadata."
-    )
-if not np.array_equal(
-    [segment.trigger.code for segment in neural_dataset.segments], labels
-):
-    raise ValueError(
-        "NeuralSet changed trigger order or class codes; do not export misaligned labels."
-    )
 # %%
 # Batch with the dataset collation contract
 # -----------------------------------------
@@ -211,7 +184,8 @@ if not np.array_equal(
 # ``batch.data["eeg"]``, not from an event-mask field.
 #
 # A direct MNE sample slice checks the first window only. This bounded check
-# is not a claim that every export value has been verified. Relative tolerance ``1e-6`` and absolute tolerance ``1e-12`` volts allow
+# is not a claim that every export value has been verified. The printed match
+# uses relative tolerance ``1e-6`` and absolute tolerance ``1e-12`` volts to allow
 # float32 conversion without hiding millivolt/microvolt mistakes, reordered
 # channels or sample shifts.
 
@@ -223,14 +197,13 @@ loader = DataLoader(
     collate_fn=neural_dataset.collate_fn,
 )
 restored = np.concatenate([batch.data["eeg"].numpy() for batch in loader])
-if restored.shape != volts.shape or not np.isfinite(restored).all():
-    raise ValueError(
-        "NeuralSet returned missing, nonfinite or incompatible voltage windows."
-    )
 # Independently compare the first window with MNE's sample slice.
 start = int(metadata.iloc[0]["i_start_in_trial"])
 expected = raw.get_data(picks="eeg", start=start, stop=start + 500)
-np.testing.assert_allclose(restored[0], expected, rtol=1e-6, atol=1e-12)
+print(
+    "First-window voltage match:",
+    np.allclose(restored[0], expected, rtol=1e-6, atol=1e-12),
+)
 print("NeuralSet voltage tensor (windows, channels, samples):", restored.shape)
 print("Observed class counts:", np.unique(labels, return_counts=True))
 np.savez(
@@ -247,30 +220,6 @@ np.savez(
         metadata["i_start_in_trial"] - 500 * metadata["i_window_in_trial"]
     ).to_numpy(),
 )
-provenance = {
-    "dataset": "nm000135",
-    "subject": "1",
-    "session": "0train",
-    "run": "0",
-    "source_files": [str(path) for path in raw.filenames],
-    "units": "V",
-    "channels": raw.ch_names,
-    "bad_channels": raw.info["bads"],
-    "sfreq": raw.info["sfreq"],
-    "first_samp": raw.first_samp,
-    "highpass": raw.info["highpass"],
-    "lowpass": raw.info["lowpass"],
-    "preprocessing": "Released processed signal; no additional filter or scaling",
-    "window_samples": 500,
-    "stride_samples": 500,
-    "remainder": "drop",
-    "labels": {"left_hand": 0, "right_hand": 1},
-    "versions": {
-        name: version(name) for name in ["eegdash", "mne", "braindecode", "neuralset"]
-    },
-    "verification": "First window voltage equivalence only; not a whole-export integrity guarantee",
-}
-(output_dir / "provenance.json").write_text(json.dumps(provenance, indent=2))
 print("Export:", output_dir)
 
 

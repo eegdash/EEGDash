@@ -35,9 +35,6 @@ for subject in ("NDARAE710YWG", "NDARAH239PGG", "NDARAL897CYV"):
         cache_dir=get_default_cache_dir(), dataset="ds005514",
         subject=subject, task="RestingState", n_jobs=1,
     )
-    if len(dataset.datasets) != 1:
-        raise ValueError(f"Expected one RestingState recording for {subject}.")
-    print(dataset.description)
     dataset.download_all(n_jobs=1)
 PY
 
@@ -56,9 +53,8 @@ For CUDA use the GPU template after checking the site's PyTorch/CUDA environment
 ## Output ownership and failure behavior
 
 Each invocation exclusively creates `eoec-*` beneath `EEGDASH_OUTPUT_DIR`.
-It never deletes or replaces an older run. `configuration.json` records the
-requested experiment; successful runs add `training.csv`, `metrics.json`, two
-labelled figures and finally `_SUCCESS`. A failed run can leave diagnostic
+It never deletes or replaces an older run. Successful runs save `training.csv`, `metrics.json` (including the actual
+subject split and seed), a labelled voltage figure and finally `_SUCCESS`. A failed run can leave diagnostic
 partial output **without** `_SUCCESS`; downstream jobs must not treat that
 folder as complete. Scheduler logs/`sacct -j JOB_ID --format=JobID,State,ExitCode`
 remain the failure record, including kills before Python can report an error.

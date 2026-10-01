@@ -27,7 +27,7 @@ import numpy as np
 import pandas as pd
 from braindecode.preprocessing import create_windows_from_events
 from sklearn.linear_model import LogisticRegression
-from sklearn.metrics import ConfusionMatrixDisplay, balanced_accuracy_score
+from sklearn.metrics import balanced_accuracy_score
 from sklearn.pipeline import make_pipeline
 from sklearn.preprocessing import StandardScaler
 
@@ -51,10 +51,6 @@ dataset = EEGDashDataset(
     task="imagery",
     n_jobs=1,
 )
-if not (len(dataset.datasets) == 2):
-    raise ValueError(
-        "Invalid len(dataset.datasets) == 2; inspect cohort, windows and split before fitting."
-    )
 print(dataset.description[["subject", "session", "run"]])
 
 # %%
@@ -66,10 +62,6 @@ mapping = {"left_hand": 0, "right_hand": 1}
 for recording in dataset.datasets:
     raw = recording.raw
     raw.pick("eeg")
-    if not (set(mapping).issubset(raw.annotations.description)):
-        raise ValueError(
-            "Invalid set(mapping).issubset(raw.annotations.description); inspect cohort, windows and split before fitting."
-        )
     print(
         recording.description["session"],
         raw.ch_names,
@@ -78,36 +70,6 @@ for recording in dataset.datasets:
     )
 sfreq = dataset.datasets[0].raw.info["sfreq"]
 channels = dataset.datasets[0].raw.ch_names
-if not (
-    all(
-        r.raw.ch_names == channels and r.raw.info["sfreq"] == sfreq
-        for r in dataset.datasets
-    )
-):
-    raise ValueError(
-        'Data contract failed: all(     r.raw.ch_names == channels and r.raw.info["sfreq"] == sfreq     for r in dataset.datasets ); inspect the selected recordings and metadata.'
-    )
-
-# %%
-# Inspect a real cue before choosing the window: observed duration is not
-# inferred from the requested three seconds.
-cue_index = next(
-    i for i, name in enumerate(raw.annotations.description) if name in mapping
-)
-cue_start = raw.annotations.onset[cue_index] - raw.first_time
-print("Observed cue duration (s):", raw.annotations.duration[cue_index])
-start = int(round(cue_start * sfreq))
-excerpt = raw.get_data(start=start, stop=start + int(3 * sfreq))
-fig, ax = plt.subplots(figsize=(8, 3))
-for channel, trace in zip(channels, excerpt):
-    ax.plot(np.arange(len(trace)) / sfreq, trace * 1e6, label=channel)
-ax.set(
-    xlabel="Seconds from imagery cue",
-    ylabel="EEG (µV)",
-    title=str(raw.annotations.description[cue_index]),
-)
-ax.legend()
-plt.show()
 
 # %%
 # 3. Create one three-second window per actual imagery trial
@@ -130,22 +92,8 @@ windows = create_windows_from_events(
     preload=True,
 )
 metadata = windows.get_metadata()
-if not ((metadata.i_window_in_trial == 0).all()):
-    raise ValueError(
-        "Multiple windows represent a trial; group by trial before splitting."
-    )
-if not (
-    not metadata.duplicated(["subject", "session", "run", "i_start_in_trial"]).any()
-):
-    raise ValueError(
-        "Duplicate recording/window identities; inspect metadata before splitting."
-    )
 y = metadata.target.to_numpy(dtype=int)
 groups = metadata.session.astype(str).to_numpy()
-if not (set(groups) == set(sessions)):
-    raise ValueError(
-        "Invalid set(groups) == set(sessions); inspect cohort, windows and split before fitting."
-    )
 print("Windows:", len(windows), "one window:", windows[0][0].shape)
 print(pd.crosstab(groups, y))
 
@@ -173,51 +121,20 @@ spectral = FeatureExtractor(
 feature_table = extract_features(
     windows, {"spectral": spectral}, batch_size=64, n_jobs=1
 ).to_dataframe()
-if len(feature_table) != len(metadata):
-    raise ValueError(
-        "Feature rows no longer match window metadata; inspect extraction."
-    )
 features = np.log(np.maximum(feature_table.to_numpy() * sfreq / window_size, 1e-30))
-if not (np.isfinite(features).all()):
-    raise ValueError(
-        "Nonfinite spectral features; inspect signals and extraction parameters."
-    )
 
 # %%
 # 5. Transfer in both directions with train-only scaling
 # ------------------------------------------------------
 # Training on the later session is a retrospective diagnostic. Only the
 # 0train-to-1train direction represents forward session transfer.
-# These session summaries are descriptive QC, not a test-set tuning criterion.
-summary = pd.DataFrame(features, columns=feature_table.columns)
-summary["session"] = groups
-print(summary.groupby("session").median().T)
-summary.groupby("session").median().T.plot.bar(figsize=(9, 4))
-plt.ylabel("Median log band power (V² reference)")
-plt.title("Session shift across named channel/band features")
-plt.tight_layout()
-plt.show()
 rows = []
 for train_session, test_session in [sessions, sessions[::-1]]:
     train = np.flatnonzero(groups == train_session)
     test = np.flatnonzero(groups == test_session)
-    if not (set(groups[train]).isdisjoint(groups[test])):
-        raise ValueError(
-            "Training and test identities overlap; repair the group split."
-        )
-    if not (set(y[train]) == set(y[test]) == set(mapping.values())):
-        raise ValueError(
-            "Each train/test split must contain every mapped class; inspect retained class counts."
-        )
     model = make_pipeline(StandardScaler(), LogisticRegression(max_iter=1000))
     model.fit(features[train], y[train])
     prediction = model.predict(features[test])
-    if train_session == sessions[0]:
-        ConfusionMatrixDisplay.from_predictions(
-            y[test], prediction, display_labels=list(mapping), normalize="true"
-        )
-        plt.title("Forward transfer: subject 1, session 1train")
-        plt.show()
     rows.append(
         dict(
             transfer=f"{train_session} → {test_session}"

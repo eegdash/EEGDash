@@ -1,7 +1,7 @@
 """Preprocess and window recorded EEG
 ==================================
 
-Select EEG channels, apply an explicit reference, and save reusable windows.
+Select EEG channels, apply an explicit reference, and create labelled windows.
 
 These real Nakanishi2015 SSVEP recordings are distributed as the processed
 `nm000118 release <https://nemar.org/dataset/nm000118>`_
@@ -15,15 +15,11 @@ The explicit subset uses 1 participant(s), about 7.0 MB of signal files.
 Before you start
 ----------------
 Install EEGDash with its EEGPrep tutorial dependencies; tutorials 01 and 02 introduce Raw and
-window indexing. This file independently loads the recording and writes an
-average-referenced prepared dataset. Allow additional disk space for that
-output as well as the original download.
+window indexing. This file independently loads the recording and creates
+average-referenced windows. Tutorial 13 covers persistent storage.
 """
 
 # %%
-
-import json
-from importlib.metadata import version
 
 import matplotlib.pyplot as plt
 import numpy as np
@@ -67,8 +63,6 @@ sfreq = raw.info["sfreq"]
 channel_names = raw.ch_names
 class_names = sorted(set(raw.annotations.description), key=float)
 mapping = {name: index for index, name in enumerate(class_names)}
-print(f"Channels: {channel_names}; sampling rate: {sfreq} Hz")
-print("Observed stimulus frequencies (Hz):", class_names)
 
 # %%
 # Apply EEGPrep offset and reference components
@@ -96,9 +90,6 @@ annotations_before = raw.annotations.copy()
 measurement_date = raw.info["meas_date"]
 source_grid = (raw.info["sfreq"], raw.n_times, raw.first_samp)
 excerpt = raw.get_data(start=0, stop=int(4 * sfreq))
-median = np.median(raw.get_data(), axis=1, keepdims=True)
-centered_excerpt = excerpt - median
-common_average = centered_excerpt.mean(axis=0)
 preprocess(
     dataset,
     [
@@ -123,21 +114,13 @@ if annotations_before.orig_time is None:
     annotations_before.onset -= raw.first_time
 raw.set_annotations(annotations_before)
 after = raw.get_data(start=0, stop=excerpt.shape[1])
-np.testing.assert_allclose(after.mean(axis=0), 0, atol=1e-10)
-fig, axes = plt.subplots(3, 1, figsize=(9, 7), sharex=True, layout="constrained")
+fig, ax = plt.subplots(figsize=(8, 3), layout="constrained")
 times = np.arange(excerpt.shape[1]) / sfreq
-for values, label in [
-    (excerpt[0], "Source"),
-    (centered_excerpt[0], "Median removed"),
-    (after[0], "Average referenced"),
-]:
-    axes[0].plot(times, values * 1e6, label=label, alpha=0.8)
-axes[0].set_ylabel(f"{channel_names[0]} (µV)")
-axes[0].legend()
-axes[1].plot(times, common_average * 1e6)
-axes[1].set_ylabel("Subtracted mean (µV)")
-axes[2].plot(times, after.mean(axis=0) * 1e6)
-axes[2].set(xlabel="Recording time (s)", ylabel="Residual mean (µV)")
+ax.plot(times, excerpt[0] * 1e6, label="Source")
+ax.plot(times, after[0] * 1e6, label="Median removed + average referenced")
+ax.set(xlabel="Recording time (s)", ylabel=f"{channel_names[0]} (µV)")
+ax.legend()
+plt.show()
 
 # %%
 # 2. Window the observed trials
@@ -147,9 +130,7 @@ axes[2].set(xlabel="Recording time (s)", ylabel="Residual mean (µV)")
 # creating overlapping examples. Each row in ``metadata`` must correspond to
 # one item in ``windows``; labels remain the observed frequency classes.
 #
-# After stacking, ``X`` has axes ``(trials, channels, samples)`` and still uses
-# volts. The channel-mean check verifies the reference operation at each time
-# sample. It says nothing about classifier performance or artifact removal.
+# Each window has axes ``(channels, samples)`` and remains in volts.
 # The source event lasts 4.15 seconds; its final 0.15 seconds are unused.
 window_size = int(4 * sfreq)
 windows = create_windows_from_events(
@@ -162,63 +143,6 @@ windows = create_windows_from_events(
 )
 metadata = windows.get_metadata().reset_index(drop=True)
 y = metadata["target"].to_numpy(dtype=int)
-if (
-    len(windows) != len(metadata)
-    or metadata.duplicated(["subject", "session", "run", "i_start_in_trial"]).any()
-):
-    raise ValueError("Window rows must have aligned, unique recording/start identities")
-print(pd.crosstab(metadata["subject"], y))
+pd.crosstab(metadata["subject"], y)
 
-X = np.stack([window[0] for window in windows])
-if not (np.isfinite(X).all()):
-    raise ValueError(
-        "Unexpected shape or nonfinite values; inspect input signals and extraction settings"
-    )
-print("Windows:", X.shape)
-
-
-# %%
-# 3. Save the prepared data in the persistent cache
-# -------------------------------------------------
-# Braindecode saves signal data together with the information needed to index
-# windows and recover their descriptions. Keep the whole output directory,
-# not just a FIF file. The directory name distinguishes this average-referenced
-# version from the source-reference windows in tutorial 13.
-#
-# The plotted channels should be read in the context of that reference: their
-# instantaneous average is zero, but each waveform need not have zero temporal
-# mean. Tutorial 13 demonstrates reloading and checking prepared datasets;
-# pass this page's printed directory to ``load_concat_dataset`` to inspect this
-# specific reference choice in a later session.
-# This tutorial owns this named output. Re-running refreshes that output.
-prepared_path = cache_dir / "tutorial_10_nm000118_average_reference"
-prepared_path.mkdir(parents=True, exist_ok=True)
-windows.save(str(prepared_path), overwrite=True)
-prepared_path.with_suffix(".manifest.json").write_text(
-    json.dumps(
-        {
-            "dataset": "nm000118",
-            "subjects": subjects,
-            "session": "0",
-            "run": "0",
-            "transforms": [
-                "pick EEG",
-                "temporal median removal",
-                "posterior common average",
-            ],
-            "channels": channel_names,
-            "sfreq": sfreq,
-            "mapping": mapping,
-            "window_samples": window_size,
-            "stride_samples": window_size,
-            "on_last_window": "drop",
-            "versions": {
-                name: version(name)
-                for name in ["eegdash", "braindecode", "mne", "eegprep"]
-            },
-        },
-        indent=2,
-    )
-)
-print("Saved reusable windows:", prepared_path.resolve())
-plt.show()
+# For saving and reloading prepared windows, continue with tutorial 13.

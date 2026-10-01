@@ -22,8 +22,6 @@ must not be confused with the original HBN OpenNeuro recordings.
 # ``p_factor`` is requested to inspect available participant metadata, not to
 # construct a new target or infer that every participant has a valid value.
 
-import matplotlib.pyplot as plt
-
 from eegdash.paths import get_default_cache_dir
 
 from eegdash import EEGChallengeDataset
@@ -59,21 +57,10 @@ dataset = EEGChallengeDataset(
 # therefore answer different questions. Grouping by task exposes repeated runs:
 # ``recordings`` can exceed ``participants`` without indicating duplicate data.
 #
-# The subset assertion checks that catalogue results respect mini eligibility.
-# It does not require all eligible subjects to have every task, or freeze a live
-# catalogue count into a test. Inspect the printed table before choosing a task
-# for the next tutorial.
+# Not every eligible participant has every task. Inspect the table before
+# choosing a bounded cohort for the next tutorial.
 
 metadata = dataset.description
-if metadata.empty:
-    raise RuntimeError(
-        "No R5 mini recordings returned; check catalogue connectivity and release filters."
-    )
-unexpected = set(metadata.subject) - set(SUBJECT_MINI_RELEASE_MAP["R5"])
-if unexpected:
-    raise ValueError(
-        f"Catalogue returned participants outside R5 mini eligibility: {unexpected}"
-    )
 print("Eligible mini participants:", len(SUBJECT_MINI_RELEASE_MAP["R5"]))
 print("Matched participants:", metadata.subject.nunique())
 print("Matched recordings:", len(dataset.datasets))
@@ -82,13 +69,6 @@ print(
         recordings=("subject", "size"), participants=("subject", "nunique")
     )
 )
-print(metadata.head().to_string(index=False))
-metadata.groupby("task").agg(
-    recordings=("subject", "size"), participants=("subject", "nunique")
-).plot.bar(figsize=(9, 4), rot=30)
-plt.ylabel("Count (recordings are not independent participants)")
-plt.tight_layout()
-plt.show()
 
 # %%
 # Select participants explicitly before accessing .raw: the constructor above

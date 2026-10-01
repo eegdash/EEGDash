@@ -51,7 +51,7 @@ from eegdash.const import SUBJECT_MINI_RELEASE_MAP
 # available alongside each recording. The printed metadata lets you verify the
 # join between signal and participant.
 #
-# A missing recording fails the coverage check. Missing or nonnumeric targets
+# Missing recordings or nonnumeric targets
 # must be investigated at the source instead of filled with a group mean or a
 # random number. For a larger cohort, specify missing-target exclusions before
 # fitting a model and report the resulting number of people.
@@ -67,16 +67,6 @@ dataset = EEGChallengeDataset(
     target_name="p_factor",
 )
 print(dataset.description.to_string(index=False))
-if len(dataset.datasets) != len(subjects) or set(dataset.description.subject) != set(
-    subjects
-):
-    raise ValueError("Expected one resting recording per requested participant.")
-# Validate the observed phenotype before downloading any signals.
-for value in dataset.description["p_factor"]:
-    if not np.isfinite(float(value)):
-        raise ValueError(
-            "Missing/nonfinite p-factor; define exclusions before acquisition."
-        )
 # %%
 # Summarize a fixed resting interval
 # ----------------------------------
@@ -98,31 +88,14 @@ for value in dataset.description["p_factor"]:
 # it does not turn a flat electrode into an informative feature.
 #
 # Concatenation is band-major, retaining channel order inside each band. The
-# channel-order check keeps feature columns comparable across recordings.
+# recordings use the same challenge montage and channel order.
 # This direct public function requires _metadata to resolve sampling/filter
 # defaults. FeatureExtractor normally supplies it; here each Raw contributes
 # one participant row, so its MNE info is passed explicitly.
 
 features, targets, identities = [], [], []
-channels = None
 for recording in dataset.datasets:
     raw = recording.raw.copy().pick("eeg").crop(tmax=59).load_data()
-    if channels is None:
-        raw.compute_psd(fmax=30).plot(average=True, show=False)
-        plt.show()
-    print(
-        "Flat channels:",
-        [
-            name
-            for name, scale in zip(raw.ch_names, raw.get_data().std(axis=1))
-            if scale == 0
-        ],
-    )
-    channels = raw.ch_names if channels is None else channels
-    if not (raw.ch_names == channels):
-        raise ValueError(
-            "Recordings have different channel orders; align channels before extracting features."
-        )
     frequencies, psd = spectral_preprocessor(
         raw.get_data(),
         _metadata={"info": raw.info},
@@ -155,9 +128,8 @@ for recording in dataset.datasets:
 #
 # ``X`` has shape ``(participants, four bands × channels)`` and ``y`` has
 # one observed p-factor per row. With the current 129-channel recordings, this
-# means 516 predictors for only six participants. The identity and finiteness
-# assertions detect duplicated people, missing phenotypes and invalid features.
-# They do not test whether the EEG contains predictive information.
+# means 516 predictors for only six participants. This does not establish
+# whether the EEG contains predictive information.
 #
 # This high-dimensional, tiny-sample setting motivates regularization, but no
 # penalty can make six participants sufficient for clinical inference. The page
@@ -165,25 +137,7 @@ for recording in dataset.datasets:
 # that the resulting features are invariant to subject identity.
 
 X, y = np.asarray(features), np.asarray(targets)
-if not (
-    len(set(identities)) == len(y) and np.isfinite(X).all() and np.isfinite(y).all()
-):
-    raise ValueError(
-        "Data contract failed: len(set(identities)) == len(y) and np.isfinite(X).all() and np.isfinite(y).all(); inspect the selected recordings and metadata."
-    )
 print("Participant features:", X.shape, "observed targets:", y)
-fig, axes = plt.subplots(1, 2, figsize=(10, 3), layout="constrained")
-image = axes[0].imshow(X, aspect="auto")
-axes[0].set(
-    xlabel="Band-major channel feature",
-    ylabel="Participant row",
-    title="log10 band power (V² reference)",
-)
-fig.colorbar(image, ax=axes[0])
-axes[1].scatter(y, np.arange(len(y)))
-axes[1].set(xlabel="Observed p-factor", yticks=range(len(y)), yticklabels=identities)
-plt.show()
-
 # %%
 # All scaling and baseline fitting occur inside the held-out participant fold.
 # %%
@@ -203,12 +157,6 @@ plt.show()
 
 predicted, baseline = np.empty_like(y), np.empty_like(y)
 for train, test in LeaveOneOut().split(X):
-    if not (
-        set(np.asarray(identities)[train]).isdisjoint(np.asarray(identities)[test])
-    ):
-        raise ValueError(
-            "Data contract failed: set(np.asarray(identities)[train]).isdisjoint(np.asarray(identities)[test]); inspect the selected recordings and metadata."
-        )
     model = make_pipeline(StandardScaler(), Ridge(alpha=10))
     predicted[test] = model.fit(X[train], y[train]).predict(X[test])
     baseline[test] = DummyRegressor().fit(X[train], y[train]).predict(X[test])

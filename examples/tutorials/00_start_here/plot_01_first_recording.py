@@ -23,7 +23,6 @@ labels you have inspected before making training windows.
 # %%
 
 import matplotlib.pyplot as plt
-import numpy as np
 
 from eegdash.paths import get_default_cache_dir
 from eegdash import EEGDashDataset
@@ -37,10 +36,7 @@ from eegdash import EEGDashDataset
 # has a different meaning and should not be used as the recording count.
 #
 # SSVEP means a response to repeated visual stimulation. Here annotation
-# strings name the attended flicker frequency in Hz. Sorting with ``key=float``
-# keeps numerical frequency order; sorting strings or relying on automatic
-# integer event codes need not do that. The channel and rate checks establish
-# the array contract that the next tutorials reuse.
+# strings name the attended flicker frequency in Hz.
 cache_dir = get_default_cache_dir()
 subjects = ["1"]
 dataset = EEGDashDataset(
@@ -55,51 +51,28 @@ dataset = EEGDashDataset(
 dataset.description[["subject", "session", "run"]]
 
 # %%
-(recording,) = dataset.datasets  # This lesson opens exactly one recording.
-raw = recording.raw
-sfreq = raw.info["sfreq"]
-channel_names = raw.ch_names
-class_names = sorted(set(raw.annotations.description), key=float)
-mapping = {name: index for index, name in enumerate(class_names)}
-print(f"Channels: {channel_names}; sampling rate: {sfreq} Hz")
-print("Observed stimulus frequencies (Hz):", class_names)
-
-# %%
-# 2. Inspect voltage and annotations
-# ----------------------------------
-# ``get_data`` returns ``(channels, samples)``. At 256 Hz, four seconds contain
-# 1,024 samples, and ``stop`` is exclusive. Separate labelled panels share
-# the time-from-event axis. Multiplying by
-# ``1e6`` changes display units from volts to microvolts, not the cached signal.
-#
-# Inspect the annotations table alongside the trace: an event description tells
-# you the stimulus condition, whereas a waveform shows the recorded response.
-# A finite-array check catches invalid numerical values; it does not rule
-# out artifacts, clipping or a poorly connected electrode.
-print(raw)
+raw = dataset.datasets[0].raw
 raw.annotations.to_data_frame().head()
 
 # %%
-trial = 0  # Change the annotation index, not an assumed concatenation offset.
-onset = raw.annotations.onset[trial] - raw.first_time
-start = raw.time_as_index(onset, use_rounding=True)[0]
-signal = raw.get_data(picks="eeg", start=start, stop=start + int(4 * sfreq))
-if signal.size == 0 or not np.isfinite(signal).all():
-    raise ValueError("Selected trial is empty or nonfinite; inspect source samples")
-fig, axes = plt.subplots(
-    len(channel_names), 1, figsize=(9, 8), sharex=True, layout="constrained"
-)
-for ax, name, voltage in zip(axes, channel_names, signal):
-    ax.plot(np.arange(signal.shape[1]) / sfreq, voltage * 1e6, linewidth=0.6)
-    ax.axvline(0, color="black", linestyle=":")
-    ax.set_ylabel(f"{name}\nµV")
-axes[0].set_title(
-    f"Annotation {trial}: {raw.annotations.description[trial]} Hz; onset {onset:.3f} s"
-)
-axes[-1].set_xlabel("Time from annotated onset (s)")
+# 2. Browse voltage and annotations with Braindecode
+# --------------------------------------------------
+# EEGDashDataset inherits Braindecode's public ``BaseConcatDataset.plot``
+# (available since Braindecode 1.8.0, already required by EEGDash). It opens
+# the file-backed recording in the interactive EEGDash viewer: scroll through
+# channels and time, and inspect the stimulus annotations beside the traces.
+# This replaces manual per-channel plotting; no local server is needed.
+#
+# Run this cell in the downloadable notebook (trust saved notebook output).
+# It returns HTML, loads the deployed viewer, and embeds the recording bytes
+# in the output. The roughly 7 MB source fits its default 64 MiB base64 limit.
+# The viewer reads the original file, not later in-memory preprocessing;
+# use MNE for inspecting transformed data. Static pages may not execute the
+# embedded script; the spectrum below remains a static scientific view.
+dataset.plot(index=0)
 
 # %%
-# 3. Inspect the supplied channel geometry and spectrum
+# 3. Inspect the whole-recording spectrum
 # -----------------------------------------------------
 # The averaged power spectral density summarizes how signal power is distributed
 # across frequency over the recording. The 40 Hz display limit focuses on the
@@ -110,29 +83,11 @@ axes[-1].set_xlabel("Time from annotated onset (s)")
 # Channel coordinates describe where sensors were placed; channel names and
 # order determine which signal is which. Neither an attractive montage nor a
 # smooth spectrum replaces inspection of the individual trial voltages.
-montage = raw.get_montage()
-if montage is not None:
-    positions = np.array(list(montage.get_positions()["ch_pos"].values()))
-    if positions.size and np.isfinite(positions).all() and np.any(positions):
-        raw.plot_sensors(show_names=True, show=False)
 raw.compute_psd(fmax=40, picks="eeg").plot(average=True, show=False)
-# A separate selected-trial spectrum does not mix conditions.
-trial_raw = raw.copy().crop(tmin=onset, tmax=onset + (signal.shape[1] - 1) / sfreq)
-spectrum = trial_raw.compute_psd(fmax=40, picks="eeg")
-fig, ax = plt.subplots(figsize=(8, 3), layout="constrained")
-ax.semilogy(spectrum.freqs, spectrum.get_data().mean(axis=0) * 1e12)
-frequency = float(raw.annotations.description[trial])
-for harmonic in np.arange(frequency, 40, frequency):
-    ax.axvline(harmonic, color="tab:orange", linestyle="--")
-ax.set(
-    xlabel="Frequency (Hz)",
-    ylabel="PSD (µV²/Hz)",
-    title=f"Selected {frequency:g} Hz trial: stimulus and harmonics",
-)
 plt.show()
 
 # %%
-# Try another observed trial by changing the start and stop sample indices.
+# Browse another annotated trial in the viewer.
 # The release concatenates trials; their order is not acquisition chronology.
 
 # %%

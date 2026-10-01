@@ -56,7 +56,7 @@ from sklearn.preprocessing import StandardScaler
 # must not be inferred from participant names, appearance or EEG. The cohort
 # selection fixes this demonstration's class balance, not population prevalence.
 #
-# The cohort check requires one selected recording per named participant.
+# Select one resting-state recording per participant for this example.
 # ``description_fields`` makes the source attributes available alongside BIDS
 # identifiers; the EEG still comes from ``EEGDashDataset``. These are the original
 # OpenNeuro recordings, not the separately filtered/downsampled challenge
@@ -78,37 +78,6 @@ dataset = EEGDashDataset(
     description_fields=["subject", "task", "age", "sex", "p_factor"],
     n_jobs=1,
 )
-cohort = dataset.description.set_index("subject")
-if cohort.index.has_duplicates or set(cohort.index) != set(subjects):
-    raise ValueError(
-        "Expected one RestingState recording per named participant; inspect the query."
-    )
-print("Missing participant fields:\n", cohort[["age", "sex", "p_factor"]].isna().sum())
-observed = pd.to_numeric(cohort["age"], errors="raise")
-if not np.isfinite(observed).all():
-    raise ValueError(
-        "Missing age: inspect participant metadata before downloading EEG."
-    )
-if set(cohort["sex"]) != {"F", "M"} or cohort["sex"].value_counts().min() < 3:
-    raise ValueError(
-        "Three-fold stratification needs at least three participants in each released F/M category."
-    )
-print(cohort[["age", "sex", "p_factor"]])
-fig, ax = plt.subplots(figsize=(8, 3), layout="constrained")
-for sex, rows in cohort.groupby("sex"):
-    ax.scatter(
-        pd.to_numeric(rows["age"]),
-        [cohort.index.get_loc(i) for i in rows.index],
-        label=sex,
-    )
-ax.legend(title="Released sex field")
-ax.set(
-    yticks=np.arange(len(cohort)),
-    yticklabels=cohort.index,
-    xlabel="Age (years)",
-    ylabel="Participant",
-)
-plt.show()
 
 # %%
 # 2. Prepare the first minute of recorded EEG
@@ -139,58 +108,22 @@ plt.show()
 channels = ["E11", "E62", "E75", "E22"]
 for recording in dataset.datasets:
     raw = recording.raw
-    print(
-        recording.description["subject"],
-        raw.info["sfreq"],
-        raw.ch_names,
-        "observed annotations:",
-        sorted(set(raw.annotations.description)),
-    )
-    if not (set(channels).issubset(raw.ch_names)):
-        raise ValueError(
-            "Unexpected channel layout: inspect the recording and select/reorder the documented channels."
-        )
     raw.crop(tmax=59.99).load_data().pick(channels).reorder_channels(channels)
-# A matched-channel spectrum makes the transform visible before feature fitting.
-preview = dataset.datasets[0].raw.copy()
 # Preserve annotation times in seconds across EEGPrep format conversions.
 # Retain the measurement date too: it anchors annotations with absolute times.
 annotations_before = [
     recording.raw.annotations.copy() for recording in dataset.datasets
 ]
 measurement_dates = [recording.raw.info["meas_date"] for recording in dataset.datasets]
-durations_before = [
-    recording.raw.n_times / recording.raw.info["sfreq"]
-    for recording in dataset.datasets
-]
 preprocess(
     dataset, [Resampling(sfreq=100), RemoveDrifts(transition=(0.5, 1.0))], n_jobs=1
 )
-for recording, annotations, duration, measurement_date in zip(
-    dataset.datasets, annotations_before, durations_before, measurement_dates
+for recording, annotations, measurement_date in zip(
+    dataset.datasets, annotations_before, measurement_dates
 ):
     raw = recording.raw
-    if not (raw.ch_names == channels and raw.info["sfreq"] == 100):
-        raise ValueError(
-            "Unexpected channel layout: inspect the recording and select/reorder the documented channels."
-        )
-    if not (abs(raw.n_times / 100 - duration) <= 1 / 100):
-        raise ValueError(
-            "Unexpected sampling grid: inspect source timing and preprocessing before constructing windows."
-        )
     raw.set_meas_date(measurement_date)
     raw.set_annotations(annotations)
-fig, ax = plt.subplots(figsize=(6, 3), layout="constrained")
-for label, signal in [("Before", preview), ("After", dataset.datasets[0].raw)]:
-    spectrum = signal.compute_psd(fmin=1, fmax=40, picks=[channels[0]], verbose=False)
-    ax.semilogy(spectrum.freqs, spectrum.get_data()[0] * 1e12, label=label)
-ax.set(
-    xlabel="Frequency (Hz)",
-    ylabel="PSD (µV²/Hz)",
-    title=f"{dataset.datasets[0].description['subject']}: {channels[0]} — first minute",
-)
-ax.legend()
-plt.show()
 windows = create_fixed_length_windows(
     dataset,
     window_size_samples=200,
@@ -200,14 +133,6 @@ windows = create_fixed_length_windows(
 )
 metadata = windows.get_metadata().reset_index(drop=True)
 groups = metadata["subject"].astype(str).to_numpy()
-if not (len(windows) == len(metadata)):
-    raise ValueError(
-        "Data do not satisfy the documented task contract; inspect the query, labels and retained windows before continuing."
-    )
-if metadata.duplicated(["subject", "i_start_in_trial"]).any():
-    raise ValueError(
-        "Unexpected cohort: check the query, missing recordings and duplicate participant rows."
-    )
 print("Real two-second windows:", len(windows), "with", len(channels), "channels")
 
 # %%
@@ -232,14 +157,11 @@ spectral = FeatureExtractor(
         spectral_preprocessor, fs=100, nperseg=200, noverlap=0, f_min=1, f_max=30
     ),
 )
-feature_table = extract_features(
-    windows, spectral, batch_size=64, n_jobs=1
-).to_dataframe()
-if len(feature_table) != len(metadata):
-    raise ValueError(
-        "Feature rows do not align with window metadata; inspect extraction before joining targets."
-    )
-feature_table = feature_table.reset_index(drop=True)
+feature_table = (
+    extract_features(windows, spectral, batch_size=64, n_jobs=1)
+    .to_dataframe()
+    .reset_index(drop=True)
+)
 participant_features = (
     np.log10(feature_table.clip(lower=1e-30))
     .assign(subject=groups)
@@ -249,33 +171,22 @@ participant_features = (
 identities = participant_features.index.to_numpy()
 X = participant_features.to_numpy()
 participants = dataset.description.set_index("subject").loc[identities]
-if not (np.isfinite(X).all() and len(X) == len(subjects)):
-    raise ValueError(
-        "Nonfinite signals, targets or predictions: inspect missing metadata and unusable channels before fitting."
-    )
 
 y = participants["sex"].to_numpy()
-if not (set(y) == {"F", "M"}):
-    raise ValueError(
-        "Data do not satisfy the documented task contract; inspect the query, labels and retained windows before continuing."
-    )
-if not (pd.Series(y).value_counts().min() >= 3):
-    raise ValueError(
-        "Data do not satisfy the documented task contract; inspect the query, labels and retained windows before continuing."
-    )
 
 # %%
 # 4. Evaluate each participant exactly once
 # -----------------------------------------
 # Because there is now exactly one row per person, ``StratifiedKFold`` operates
 # at the participant level. Three folds with this 3F/3M cohort place one person
-# from each class in each test fold. One feature row per participant keeps
-# participant identities separate. If you instead fit window rows, ordinary
+# from each class in each test fold. One row per person keeps identities
+# separate. If you instead fit window rows, ordinary
 # stratified folds would not provide that protection.
 #
 # Scaling and logistic-regression fitting restart in every fold. Balanced
 # accuracy averages the recall for F and M, and the pooled confusion matrix
-# counts held-out participants, not windows. Each person appears once. With only six people, one changed prediction has a
+# counts held-out participants, not windows. Each person appears once.
+# With only six people, one changed prediction has a
 # large effect; the result should not be interpreted as a stable population
 # estimate or as a statement about any individual's gender identity.
 predicted = np.empty(len(y), dtype=object)
@@ -286,9 +197,6 @@ for train, test in StratifiedKFold(n_splits=3, shuffle=True, random_state=42).sp
     predicted[test] = model.fit(X[train], y[train]).predict(X[test])
 print(pd.DataFrame({"subject": identities, "observed": y, "predicted": predicted}))
 print("Participant balanced accuracy:", balanced_accuracy_score(y, predicted))
-print(
-    "Constant-class balanced-accuracy reference: 0.5; one error changes this six-person score by 1/6."
-)
 ConfusionMatrixDisplay.from_predictions(y, predicted)
 plt.title("Held-out participants: recorded sex field")
 plt.show()

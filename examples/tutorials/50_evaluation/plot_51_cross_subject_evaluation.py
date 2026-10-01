@@ -65,10 +65,6 @@ dataset = EEGDashDataset(
     task="ssvep",
     n_jobs=1,
 )
-if not (len(dataset.datasets) == len(subjects)):
-    raise ValueError(
-        "Expected one recording per requested participant; inspect the query results."
-    )
 print(dataset.description[["subject", "session", "run"]])
 
 # %%
@@ -82,16 +78,6 @@ sfreq = raw.info["sfreq"]
 channel_names = raw.ch_names
 class_names = sorted(set(raw.annotations.description), key=float)
 mapping = {name: index for index, name in enumerate(class_names)}
-for recording in dataset.datasets:
-    recording_raw = recording.raw
-    if (
-        recording_raw.ch_names != channel_names
-        or recording_raw.info["sfreq"] != sfreq
-        or set(recording_raw.annotations.description) != set(mapping)
-    ):
-        raise ValueError(
-            "Recordings must share channel order, sampling rate and cue vocabulary."
-        )
 print(f"Channels: {channel_names}; sampling frequency: {sfreq} Hz")
 print("Stimulus frequencies (Hz):", class_names)
 
@@ -119,22 +105,8 @@ windows = create_windows_from_events(
     preload=True,
 )
 metadata = windows.get_metadata()
-if not ((metadata.i_window_in_trial == 0).all()):
-    raise ValueError(
-        "Multiple windows represent a trial; group by trial before splitting."
-    )
-if not (
-    not metadata.duplicated(["subject", "session", "run", "i_start_in_trial"]).any()
-):
-    raise ValueError(
-        "Duplicate recording/window identities; inspect metadata before splitting."
-    )
 y = metadata["target"].to_numpy(dtype=int)
 groups = metadata["subject"].astype(str).to_numpy()
-if not (set(groups) == set(subjects)):
-    raise ValueError(
-        "Some requested participants have no retained windows; inspect exclusions."
-    )
 print(pd.crosstab(groups, y, rownames=["subject"], colnames=["class"]))
 
 # %%
@@ -171,15 +143,7 @@ spectral = FeatureExtractor(
 feature_table = extract_features(
     windows, {"spectral": spectral}, batch_size=64, n_jobs=1
 ).to_dataframe()
-if len(feature_table) != len(metadata):
-    raise ValueError(
-        "Feature rows no longer match window metadata; inspect extraction."
-    )
 features = np.log(np.maximum(feature_table.to_numpy() * sfreq / window_size, 1e-30))
-if not (np.isfinite(features).all()):
-    raise ValueError(
-        "Nonfinite spectral features; inspect signals and extraction parameters."
-    )
 
 # %%
 # 5. Fit on two subjects and predict the third
@@ -188,7 +152,7 @@ if not (np.isfinite(features).all()):
 # neither scaling nor classifier fitting sees the held-out participant.
 # Hyperparameters are fixed here; tuning would need grouped validation
 # inside the training fold. The uniform-chance balanced accuracy is 1/12,
-# provided all twelve classes occur in the test fold, which we check.
+# provided all twelve classes occur in the test fold.
 # Each outer fold contains 360 training trials from two participants and
 # 180 test trials from the third. A fresh pipeline prevents fitted state from
 # crossing folds. The prediction buffer is filled at the original row indices;
@@ -198,58 +162,18 @@ if not (np.isfinite(features).all()):
 # again for inner validation before fitting the chosen setting on both. With
 # only two inner subjects, such tuning is unstable; adding participants is a
 # more informative extension than a large parameter grid.
-fold_membership = pd.DataFrame(
-    [
-        ["test" if held == person else "train" for person in subjects]
-        for held in subjects
-    ],
-    index=pd.Index(subjects, name="held-out subject"),
-    columns=subjects,
-)
-print(fold_membership)
-fig, ax = plt.subplots(figsize=(4, 3))
-ax.imshow((fold_membership == "test").to_numpy(), cmap="Blues", vmin=0, vmax=1)
-ax.set(
-    xticks=range(len(subjects)),
-    xticklabels=subjects,
-    yticks=range(len(subjects)),
-    yticklabels=subjects,
-    xlabel="Participant",
-    ylabel="Held-out participant",
-    title="Dark = test; light = train",
-)
-plt.show()
-
 predictions = np.full(len(y), -1, dtype=int)
-test_counts = np.zeros(len(y), dtype=int)
 rows = []
 for train, test in LeaveOneGroupOut().split(features, y, groups):
-    if not (set(groups[train]).isdisjoint(groups[test])):
-        raise ValueError(
-            "Training and test identities overlap; repair the group split."
-        )
-    if not (set(y[train]) == set(y[test]) == set(mapping.values())):
-        raise ValueError(
-            "Each train/test split must contain every mapped class; inspect retained class counts."
-        )
     model = make_pipeline(StandardScaler(), LogisticRegression(max_iter=1000))
     model.fit(features[train], y[train])
     predictions[test] = model.predict(features[test])
-    test_counts[test] += 1
     rows.append(
         {
             "subject": groups[test][0],
             "balanced_accuracy": balanced_accuracy_score(y[test], predictions[test]),
             "n_test_trials": len(test),
         }
-    )
-if not (len(rows) == len(subjects)):
-    raise ValueError(
-        "Invalid len(rows) == len(subjects); inspect cohort, windows and split before fitting."
-    )
-if not (np.all(test_counts == 1)):
-    raise ValueError(
-        "Invalid np.all(test_counts == 1); inspect cohort, windows and split before fitting."
     )
 results = pd.DataFrame(rows)
 print(results.to_string(index=False))

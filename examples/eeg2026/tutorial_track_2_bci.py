@@ -90,13 +90,8 @@ dataset = EEGDashDataset(
     cache_dir=get_default_cache_dir(),
 )
 print(dataset.description.to_string(index=False))
-if not (len(dataset.datasets) == 2):
-    raise ValueError(
-        "Unexpected cohort: check the query, missing recordings and duplicate participant rows."
-    )
 for recording in dataset.datasets:
     raw = recording.raw.pick("eeg")
-    print(raw.ch_names, raw.info["sfreq"], np.unique(raw.annotations.description))
     # Limit RAM to three motor channels before filtering and resampling.
     raw.pick(["C3", "Cz", "C4"]).load_data().filter(8, 30)
     raw.reorder_channels(["C3", "Cz", "C4"]).resample(100)
@@ -131,26 +126,14 @@ metadata = windows.get_metadata()
 X = np.stack([windows[i][0] for i in range(len(windows))])
 y = metadata.target.to_numpy(dtype=int)
 X = np.log(np.maximum(signal_variance(X), 1e-30))
-fig, axes = plt.subplots(1, 2, figsize=(9, 3), layout="constrained", sharey=True)
-for ax, session in zip(axes, ["0train", "1train"]):
-    for label, code in classes.items():
-        selected = metadata.session.eq(session).to_numpy() & (y == code)
-        if not selected.any():
-            raise ValueError(f"No {label} windows in {session}; inspect event labels.")
-        ax.plot(["C3", "Cz", "C4"], X[selected].mean(axis=0), marker="o", label=label)
-    ax.set(
-        title=session, ylabel="Mean log variance (V² reference)", xlabel="Motor channel"
-    )
-    ax.legend()
-plt.show()
 # %%
 # Hold out a genuine session without recalibration
 # ------------------------------------------------------------
 #
 # Only ``0train`` fits the model; ``1train`` is the held-out session. Those
 # strings are source identifiers, not instructions to include both in training.
-# The two sessions share a participant intentionally. The masks and class-set
-# checks verify that both sessions contain the same observed two-class task.
+# The two sessions share a participant intentionally and contain the same
+# observed two-class task.
 #
 # Feature standardization belongs inside the pipeline so the test-session mean
 # and variance remain unseen during fitting. Logistic regression uses its default
@@ -160,14 +143,6 @@ plt.show()
 
 train = metadata.session.eq("0train").to_numpy()
 test = metadata.session.eq("1train").to_numpy()
-if not (train.any() and test.any() and np.isfinite(X).all()):
-    raise ValueError(
-        "Nonfinite signals, targets or predictions: inspect missing metadata and unusable channels before fitting."
-    )
-if not (set(y[train]) == set(y[test]) == set(classes.values())):
-    raise ValueError(
-        "Data do not satisfy the documented task contract; inspect the query, labels and retained windows before continuing."
-    )
 print("Features:", X.shape, "classes:", np.unique(y, return_counts=True))
 
 # %%

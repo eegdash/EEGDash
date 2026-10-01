@@ -382,8 +382,7 @@ sphinx_gallery_conf = {
     # 0.20 raises when a parent gallery dir contains only subdirectories.
     "nested_sections": False,
     "backreferences_dir": "gen_modules/backreferences",
-    # Link imported APIs, not arbitrary local instances such as cache_dir.
-    "inspect_global_variables": False,
+    "inspect_global_variables": True,
     "show_memory": False,
     "show_api_usage": True,
     "doc_module": ("eegdash", "numpy", "scipy", "matplotlib"),

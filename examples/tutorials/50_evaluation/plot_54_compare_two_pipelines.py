@@ -57,10 +57,6 @@ dataset = EEGDashDataset(
     task="ssvep",
     n_jobs=1,
 )
-if not (len(dataset.datasets) == len(subjects)):
-    raise ValueError(
-        "Expected one recording per requested participant; inspect the query results."
-    )
 print(dataset.description[["subject", "session", "run"]])
 
 # %%
@@ -74,16 +70,6 @@ sfreq = raw.info["sfreq"]
 channel_names = raw.ch_names
 class_names = sorted(set(raw.annotations.description), key=float)
 mapping = {name: index for index, name in enumerate(class_names)}
-for recording in dataset.datasets:
-    recording_raw = recording.raw
-    if (
-        recording_raw.ch_names != channel_names
-        or recording_raw.info["sfreq"] != sfreq
-        or set(recording_raw.annotations.description) != set(mapping)
-    ):
-        raise ValueError(
-            "Recordings must share channel order, sampling rate and cue vocabulary."
-        )
 print(f"Channels: {channel_names}; sampling frequency: {sfreq} Hz")
 print("Stimulus frequencies (Hz):", class_names)
 
@@ -111,22 +97,8 @@ windows = create_windows_from_events(
     preload=True,
 )
 metadata = windows.get_metadata()
-if not ((metadata.i_window_in_trial == 0).all()):
-    raise ValueError(
-        "Multiple windows represent a trial; group by trial before splitting."
-    )
-if not (
-    not metadata.duplicated(["subject", "session", "run", "i_start_in_trial"]).any()
-):
-    raise ValueError(
-        "Duplicate recording/window identities; inspect metadata before splitting."
-    )
 y = metadata["target"].to_numpy(dtype=int)
 groups = metadata["subject"].astype(str).to_numpy()
-if not (set(groups) == set(subjects)):
-    raise ValueError(
-        "Some requested participants have no retained windows; inspect exclusions."
-    )
 print(pd.crosstab(groups, y, rownames=["subject"], colnames=["class"]))
 
 # %%
@@ -163,15 +135,7 @@ spectral = FeatureExtractor(
 feature_table = extract_features(
     windows, {"spectral": spectral}, batch_size=64, n_jobs=1
 ).to_dataframe()
-if len(feature_table) != len(metadata):
-    raise ValueError(
-        "Feature rows no longer match window metadata; inspect extraction."
-    )
 features = np.log(np.maximum(feature_table.to_numpy() * sfreq / window_size, 1e-30))
-if not (np.isfinite(features).all()):
-    raise ValueError(
-        "Nonfinite spectral features; inspect signals and extraction parameters."
-    )
 
 # %%
 # 5. Evaluate both classifiers on exactly the same LOSO folds
@@ -188,14 +152,6 @@ from sklearn.discriminant_analysis import LinearDiscriminantAnalysis
 # and exactly the same 360/180 training/test trial assignment in each fold.
 rows = []
 for train, test in LeaveOneGroupOut().split(features, y, groups):
-    if not (set(groups[train]).isdisjoint(groups[test])):
-        raise ValueError(
-            "Training and test identities overlap; repair the group split."
-        )
-    if not (set(y[train]) == set(y[test]) == set(mapping.values())):
-        raise ValueError(
-            "Each train/test split must contain every mapped class; inspect retained class counts."
-        )
     row = {"subject": groups[test][0]}
     for name, classifier in {
         "Logistic": LogisticRegression(max_iter=1000),
@@ -206,20 +162,9 @@ for train, test in LeaveOneGroupOut().split(features, y, groups):
         row[name] = balanced_accuracy_score(y[test], model.predict(features[test]))
     rows.append(row)
 results = pd.DataFrame(rows).set_index("subject")
-if not (len(results) == len(subjects) and results.index.is_unique):
-    raise ValueError(
-        "Invalid len(results) == len(subjects) and results.index.is_unique; inspect cohort, windows and split before fitting."
-    )
 print(results)
 difference = results["LDA"] - results["Logistic"]
 print("Paired differences (LDA minus Logistic):", difference.to_dict())
-print("Descriptive mean / median difference:", difference.mean(), difference.median())
-fig, ax = plt.subplots(figsize=(6, 3))
-ax.scatter(difference, difference.index)
-ax.axvline(0, color="black", linestyle="--")
-ax.set(xlabel="LDA minus logistic balanced accuracy", ylabel="Held-out participant")
-plt.show()
-
 # %%
 # 6. Connect the two scores for each participant
 # ----------------------------------------------

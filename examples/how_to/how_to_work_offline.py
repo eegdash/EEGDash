@@ -34,48 +34,18 @@ online.description[["subject", "session", "run", "task"]]
 # has no in-memory dependency on stage 1 and no network fallback. If discovery
 # or opening fails, repair the complete staged BIDS tree on a connected host;
 # do not create stand-in files or switch downloads on inside the compute job.
-import pandas as pd
-
 from eegdash import EEGDashDataset
 from eegdash.paths import get_default_cache_dir
 
 cache_dir = get_default_cache_dir()
 query = dict(dataset="nm000135", subject="1", session="0train", run="0", task="imagery")
 offline = EEGDashDataset(cache_dir=cache_dir, **query, download=False, n_jobs=1)
-if len(offline.datasets) != 1:
-    raise RuntimeError(
-        "Expected one cached recording. Check cache root and BIDS sidecars."
-    )
-identity = offline.description.iloc[0]
-for entity in ("subject", "session", "run", "task"):
-    if str(identity[entity]) != query[entity]:
-        raise ValueError(
-            f"Cached {entity} differs from the requested {query[entity]!r}."
-        )
 raw = offline.datasets[0].raw
-if not {"left_hand", "right_hand"} <= set(raw.annotations.description):
-    raise ValueError(
-        "Expected hand labels are missing; check the staged events sidecar."
-    )
-pd.DataFrame(
-    [
-        {
-            **{
-                entity: identity[entity]
-                for entity in ("subject", "session", "run", "task")
-            },
-            "status": "opened locally",
-            "channels": len(raw.ch_names),
-            "sampling Hz": raw.info["sfreq"],
-            "duration seconds": raw.n_times / raw.info["sfreq"],
-        }
-    ]
-)
+raw
 
 # %%
 # Test network independence by disconnecting and running only stage 2.
 # This demonstrates local loading, not offline installation or checkpoint
 # acquisition: stage those dependencies separately. Cross-host checksums or
 # a saved reference excerpt are optional transfer checks, not requirements
-# for this independently runnable recipe. See the download how-to for the
-# limited first-second reader-equivalence check.
+# for this independently runnable recipe.

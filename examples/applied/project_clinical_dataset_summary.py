@@ -42,22 +42,8 @@ dataset = EEGDashDataset(
     description_fields=["subject", "age", "group", "sex"],
 )
 metadata = dataset.description.copy()
-if metadata.empty:
-    raise ValueError(
-        "Data do not satisfy the documented task contract; inspect the query, labels and retained windows before continuing."
-    )
-# Do not silently resolve conflicting participant metadata by keeping the first run.
-conflicts = metadata.groupby("subject")[["age", "group", "sex"]].nunique(dropna=False)
-if (conflicts > 1).any().any():
-    raise ValueError(
-        f"Conflicting participant fields across recordings:\n{conflicts[conflicts.gt(1).any(axis=1)]}"
-    )
 # Count participants once even when they have several recordings.
 participants = metadata.drop_duplicates("subject")
-if not (participants["subject"].notna().all()):
-    raise ValueError(
-        "Unexpected cohort: check the query, missing recordings and duplicate participant rows."
-    )
 print("Recordings:", len(dataset.datasets), "participants:", len(participants))
 print(participants[["subject", "age", "group"]].head())
 
@@ -71,21 +57,13 @@ print(participants[["subject", "age", "group"]].head())
 #
 # The bars count people. The table's age ``count`` is the number with a numeric
 # age, while mean, standard deviation and range describe that observed sample.
-# Histograms share eight age-bin edges across groups for direct comparison. Group differences here may reflect recruitment and age structure,
+# Histograms share eight age bins. Differences may reflect recruitment and age,
 # not a specific EEG biomarker.
 labels = {
     "A": "Alzheimer's disease",
     "F": "Frontotemporal dementia",
     "C": "Healthy control",
 }
-if not (participants["group"].notna().all()):
-    raise ValueError(
-        "Data do not satisfy the documented task contract; inspect the query, labels and retained windows before continuing."
-    )
-if not (set(participants["group"]).issubset(labels)):
-    raise ValueError(
-        "Data do not satisfy the documented task contract; inspect the query, labels and retained windows before continuing."
-    )
 participants = participants.assign(
     condition=participants["group"].map(labels),
     age=pd.to_numeric(participants["age"], errors="raise"),
@@ -115,19 +93,8 @@ records = pd.DataFrame(dataset.records)
 duration = pd.to_numeric(records["ntimes"]) / pd.to_numeric(
     records["sampling_frequency"]
 )
-if not (duration.notna().all() and (duration > 0).all()):
-    raise ValueError(
-        "Unexpected sampling grid: inspect source timing and preprocessing before constructing windows."
-    )
 print("Recording duration (seconds):", duration.describe())
 print("Channel counts:", records["nchans"].value_counts())
-fig, ax = plt.subplots(figsize=(6, 3), layout="constrained")
-ax.hist(duration / 60, bins=12)
-ax.set(xlabel="Catalogue recording duration (min)", ylabel="Recordings")
-plt.show()
-print(
-    "Missing participant fields:\n", participants[["age", "sex", "group"]].isna().sum()
-)
 
 # %%
 # Turn the summary into an analysis plan

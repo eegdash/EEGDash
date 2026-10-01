@@ -23,7 +23,7 @@ EEGLAB reader (``pip install 'eegprep[eeglabio]>=0.2.23,<0.3'``). A CPU can run 
 cohort; the GPU Slurm template requests a GPU but training selects CUDA only
 when PyTorch can access one. Cluster accounts and partitions are site-specific.
 
-The deliverables are labelled voltage/loss plots, metrics and configuration
+The deliverables are a labelled voltage plot, training history and metrics
 in a unique run directory under EEGDASH_OUTPUT_DIR (default: cache/hpc-runs).
 The script does not save a reusable trained model;
 write model state and the preprocessing/subject configuration explicitly
@@ -36,7 +36,6 @@ import os
 import json
 import tempfile
 from time import perf_counter
-from importlib.metadata import version
 
 import pandas as pd
 
@@ -77,14 +76,8 @@ window_size_samples = 256
 epochs = int(os.environ.get("EPOCHS", "6"))
 batch_size = int(os.environ.get("BATCH_SIZE", "32"))
 allocated_cpus = int(os.environ.get("SLURM_CPUS_PER_TASK", "1"))
-if epochs < 1 or batch_size < 1 or allocated_cpus < 1 or random_state < 0:
-    raise ValueError(
-        "EPOCHS, BATCH_SIZE and CPU count must be positive; SEED nonnegative."
-    )
 torch.set_num_threads(allocated_cpus)
 offline_value = os.environ.get("EEGDASH_OFFLINE", "0")
-if offline_value not in {"0", "1"}:
-    raise ValueError("EEGDASH_OFFLINE must be 0 (acquire) or 1 (local-only).")
 download = offline_value == "0"
 output_root = Path(os.environ.get("EEGDASH_OUTPUT_DIR", str(cache_folder / "hpc-runs")))
 output_root = output_root.expanduser().resolve()
@@ -110,8 +103,8 @@ run_start = perf_counter()
 # 0.5 to 1 Hz. EEGPrep Resampling reduces the rate to 128 Hz with anti-aliasing.
 # A final 55 Hz low-pass avoids frequencies near the new 64 Hz Nyquist limit.
 # These deterministic per-recording operations use no population-fitted state.
-# Original instruction times in seconds are restored after verifying that
-# resampling preserved the time origin and duration within one output sample.
+# These resampling components preserve duration; restore the original
+# instruction times after conversion through EEGPrep.
 # Reannotation then creates state markers on the resampled grid. This is
 # component-level EEGPrep preprocessing, not automatic ASR/artifact rejection.
 channels = (
@@ -141,8 +134,6 @@ subjects_all = os.environ.get(
     "SUBJECTS", "NDARAE710YWG,NDARAH239PGG,NDARAL897CYV"
 ).split(",")
 subjects_all = [subject.strip() for subject in subjects_all]
-if not all(subjects_all) or len(set(subjects_all)) != len(subjects_all):
-    raise ValueError("SUBJECTS must contain unique, nonempty comma-separated IDs.")
 
 all_windows = []
 all_subject_ids = []
@@ -154,35 +145,6 @@ if not 1 <= num_test_subjects < num_subjects:
     raise ValueError("Reserve at least one training and one test participant.")
 selected_subjects = subjects_all[:num_subjects]
 print("Selected subjects:", selected_subjects)
-configuration = {
-    "dataset": dataset_id,
-    "task": task,
-    "subjects": selected_subjects,
-    "num_test_subjects": num_test_subjects,
-    "seed": random_state,
-    "epochs": epochs,
-    "batch_size": batch_size,
-    "download": download,
-    "channels": channels,
-    "sfreq": 128,
-    "window_samples": window_size_samples,
-    "labels": {"eyes_closed": 0, "eyes_open": 1},
-    "source_units": "V",
-    "preprocessing": [
-        "channel median removal",
-        "drift transition 0.5–1 Hz",
-        "resample 128 Hz",
-        "low-pass 55 Hz",
-        "HBN instructed-state windows",
-    ],
-    "optimizer": {"name": "Adamax", "lr": 0.002, "weight_decay": 0.001},
-    "versions": {
-        name: version(name)
-        for name in ("eegdash", "braindecode", "mne", "eegprep", "torch", "numpy")
-    },
-}
-(run_dir / "configuration.json").write_text(json.dumps(configuration, indent=2))
-recording_rows = []
 for subj in selected_subjects:
     ds_eoec = EEGDashDataset(
         dataset=dataset_id,
@@ -192,14 +154,7 @@ for subj in selected_subjects:
         download=download,
         n_jobs=1,
     )
-    if len(ds_eoec.datasets) != 1:
-        raise ValueError(
-            f"Expected one RestingState recording for {subj}; refine selection."
-        )
-    recording_rows.extend(ds_eoec.description.to_dict(orient="records"))
-    print(ds_eoec.description)
     original_annotations = []
-    original_timing = []
     for recording in ds_eoec.datasets:
         raw = recording.raw
         # The current HBN reannotation helper assumes a zero sample origin.
@@ -208,42 +163,14 @@ for subj in selected_subjects:
                 "HBN reannotation requires first_samp=0; inspect source timing."
             )
         original_annotations.append(raw.annotations.copy())
-        original_timing.append(
-            (raw.first_time, raw.n_times / raw.info["sfreq"], raw.info["meas_date"])
-        )
-        print(raw.ch_names, raw.info["sfreq"], np.unique(raw.annotations.description))
-        if not {"instructed_toCloseEyes", "instructed_toOpenEyes"}.issubset(
-            raw.annotations.description
-        ):
-            raise ValueError(f"Missing open/close instruction labels for {subj}.")
-        if not set(channels) <= set(raw.ch_names):
-            raise ValueError(f"Missing requested montage channels for {subj}.")
     preprocess(ds_eoec, preprocessors)
     # These EEGPrep components never remove time. Preserve source cue times
     # across EEGLAB/MNE conversion rather than accepting sample-origin shifts.
-    for recording, annotations, (origin, duration, measurement_date) in zip(
-        ds_eoec.datasets, original_annotations, original_timing, strict=True
+    for recording, annotations in zip(
+        ds_eoec.datasets, original_annotations, strict=True
     ):
         raw = recording.raw
-        if raw.info["sfreq"] != 128 or raw.ch_names != channels:
-            raise ValueError(
-                "Preprocessing changed the requested rate/channel contract."
-            )
-        if (
-            abs(raw.first_time - origin) > 1 / 128
-            or abs(raw.n_times / 128 - duration) > 1 / 128
-        ):
-            raise ValueError(
-                "Preprocessing changed the timeline; cannot restore cues safely."
-            )
-        raw.set_meas_date(measurement_date)
         raw.set_annotations(annotations)
-        np.testing.assert_allclose(
-            raw.annotations.onset, annotations.onset, atol=1 / raw.info["sfreq"], rtol=0
-        )
-        np.testing.assert_array_equal(
-            raw.annotations.description, annotations.description
-        )
     # The helper replaces annotations. Preserve BAD spans for epoch rejection.
     bad_spans = [
         recording.raw.annotations[
@@ -274,20 +201,11 @@ for subj in selected_subjects:
         drop_bad_windows=True,
     )
     n_win = len(windows_ds)
-    if n_win == 0 or set(windows_ds.get_metadata().target) != {0, 1}:
-        raise ValueError(f"Need retained windows for both instructed states in {subj}.")
     print("Windows for subject:", n_win)
     all_windows.append(windows_ds)
     all_subject_ids.extend([subj] * n_win)
     valid_subjects.append(subj)
 
-if len(valid_subjects) < 2:
-    raise RuntimeError(
-        f"Only {len(valid_subjects)} valid subject(s) collected; need >=2."
-    )
-
-if num_test_subjects >= len(valid_subjects):
-    raise ValueError("NUM_TEST_SUBJECTS must be < number of valid subjects found.")
 
 print("\nUsing valid subjects:", valid_subjects)
 print("Total subjects requested:", num_subjects, " | collected:", len(valid_subjects))
@@ -329,15 +247,6 @@ rng.shuffle(subjects_shuffled)
 
 test_subjects = set(subjects_shuffled[:num_test_subjects])
 train_subjects = set(subjects_shuffled[num_test_subjects:])
-configuration.update(
-    train_subjects=sorted(train_subjects),
-    test_subjects=sorted(test_subjects),
-    recordings=recording_rows,
-)
-(run_dir / "configuration.json").write_text(
-    json.dumps(configuration, indent=2, default=str)
-)
-
 print("\nTrain subjects:", sorted(train_subjects))
 print("Test subjects :", sorted(test_subjects))
 
@@ -369,12 +278,6 @@ y_test = torch.LongTensor(np.array([concat_ds[i][1] for i in test_indices]))
 
 from torch.utils.data import DataLoader, TensorDataset
 
-if not (torch.isfinite(X_train).all() and torch.isfinite(X_test).all()):
-    raise ValueError("Nonfinite voltages: inspect preprocessing before training.")
-if set(y_train.tolist()) != {0, 1} or set(y_test.tolist()) != {0, 1}:
-    raise ValueError(
-        "Both train and held-out cohorts must contain both instructed states."
-    )
 dataset_train = TensorDataset(X_train, y_train)
 dataset_test = TensorDataset(X_test, y_test)
 
@@ -479,6 +382,10 @@ with torch.no_grad():
 test_accuracy = correct_test / len(dataset_test)
 metrics = {
     "held-out window accuracy": test_accuracy,
+    "train subjects": sorted(train_subjects),
+    "test subjects": sorted(test_subjects),
+    "seed": random_state,
+    "epochs": epochs,
     "train windows": len(dataset_train),
     "test windows": len(dataset_test),
     "train participants": len(train_subjects),
@@ -489,30 +396,8 @@ metrics = {
 }
 pd.DataFrame(history).to_csv(run_dir / "training.csv", index=False)
 (run_dir / "metrics.json").write_text(json.dumps(metrics, indent=2))
-fig, axes = plt.subplots(1, 2, figsize=(9, 3), layout="constrained")
-axes[0].plot(
-    [row["epoch"] for row in history],
-    [row["training loss"] for row in history],
-    marker="o",
-)
-axes[0].set(xlabel="Training epoch", ylabel="Cross-entropy", title="Training only")
-axes[1].bar(["Held-out windows"], [test_accuracy])
-axes[1].set(
-    ylim=(0, 1),
-    ylabel="Accuracy",
-    title=f"{len(test_subjects)} held-out participant(s)",
-)
-axes[1].axhline(
-    max(torch.bincount(y_test)).item() / len(y_test),
-    color="0.4",
-    linestyle="--",
-    label="Held-out majority fraction",
-)
-axes[1].legend()
-fig.savefig(run_dir / "training_and_test.png", dpi=150)
 # A completion marker is written only after all requested artifacts succeed.
 (run_dir / "_SUCCESS").write_text("Completed fixed-budget EO/EC workload\n")
-print(pd.DataFrame([metrics]).to_string(index=False))
 pd.DataFrame([metrics])
 
 # %%
@@ -528,6 +413,6 @@ pd.DataFrame([metrics])
 # If the training score rises while the held-out score stays low, investigate
 # a validation split of additional training people before increasing epochs.
 # For a research result, repeat subject-disjoint outer folds and report each
-# participant's score. Save configuration, logs and sample_epoch.png to persistent
+# participant's score. Save metrics, logs and sample_epoch.png to persistent
 # storage before job scratch is removed; a successful Slurm exit alone is not
 # evidence that the classifier generalizes.

@@ -31,8 +31,8 @@ apidoc:
 	@python prune_apidoc.py
 
 # Regenerate $(SOURCEDIR)/_extra/llms.txt from the current source tree.
-# Runs after `apidoc` so the per-dataset pages that drive the sitemap
-# coverage metric are already materialised.
+# Offline source inspection only: dataset shells are created inside Sphinx.
+# HTML builds regenerate their index at build-finished, not before Sphinx.
 llms-txt: apidoc
 	@python generate_llms_txt.py --source "$(SOURCEDIR)" --output "$(SOURCEDIR)/_extra/llms.txt"
 
@@ -43,13 +43,13 @@ llms-txt: apidoc
 # section reads them through snapshot.montage(dataset_id) directly.
 
 # Standard build runs examples
-html: apidoc llms-txt
+html: apidoc
 	EEGDASH_CACHE_DIR=$(EEGDASH_CACHE_DIR) python prepare_summary_tables.py --target $(BUILDDIR)
 	EEGDASH_DATASET_REGISTRY_FROM_API=1 EEGDASH_CACHE_DIR=$(EEGDASH_CACHE_DIR) $(SPHINXBUILD) -M $@ "$(SOURCEDIR)" "$(BUILDDIR)" $(SPHINXOPTS) $(O)
 	@python fingerprint_assets.py --html-dir "$(BUILDDIR)/html"
 
 # Fast build: do NOT execute examples (sphinx-gallery)
-html-noplot: apidoc llms-txt
+html-noplot: apidoc
 	@EEGDASH_CACHE_DIR=$(EEGDASH_CACHE_DIR) python prepare_summary_tables.py --target $(BUILDDIR)
 	@EEGDASH_DATASET_REGISTRY_FROM_API=1 EEGDASH_CACHE_DIR=$(EEGDASH_CACHE_DIR) $(SPHINXBUILD) -M html "$(SOURCEDIR)" "$(BUILDDIR)" \
 		$(SPHINXOPTS) -D sphinx_gallery_conf.plot_gallery=0 $(O)
@@ -57,7 +57,7 @@ html-noplot: apidoc llms-txt
 
 # Very fast build: limit datasets to 5 (montages arrive bundled with
 # chart-data automatically; no separate electrode-layouts step).
-html-fast: apidoc llms-txt
+html-fast: apidoc
 	@EEGDASH_DOC_LIMIT=5 EEGDASH_CACHE_DIR=$(EEGDASH_CACHE_DIR) python prepare_summary_tables.py --target $(BUILDDIR)
 	@EEGDASH_DOC_LIMIT=5 EEGDASH_DATASET_REGISTRY_FROM_API=1 EEGDASH_CACHE_DIR=$(EEGDASH_CACHE_DIR) $(SPHINXBUILD) -M html "$(SOURCEDIR)" "$(BUILDDIR)" \
 		$(SPHINXOPTS) -D sphinx_gallery_conf.plot_gallery=0 $(O)
@@ -73,6 +73,7 @@ markdown:
 	@EEGDASH_DATASET_REGISTRY_FROM_API=1 EEGDASH_CACHE_DIR=$(EEGDASH_CACHE_DIR) $(SPHINXBUILD) -M markdown "$(SOURCEDIR)" "$(BUILDDIR)" \
 		$(SPHINXOPTS) -D sphinx_gallery_conf.plot_gallery=0 $(O) || true
 	@python build_markdown_assets.py --source "$(BUILDDIR)/markdown" --target "$(BUILDDIR)/html"
+	@python generate_llms_txt.py --output "$(BUILDDIR)/html/llms.txt" --check-html "$(BUILDDIR)/html"
 
 # Custom clean target to remove generated API docs and build files
 clean:

@@ -57,6 +57,7 @@ extensions = [
     "dataset_explorer",
     "dataset_figure",
     "dataset_page",
+    "generate_llms_txt",
     "assert_dataset_table",
     "sitemap_canonical",
     "auto_examples_index",

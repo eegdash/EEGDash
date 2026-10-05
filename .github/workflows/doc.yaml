@@ -140,6 +140,9 @@ jobs:
         with:
           name: documentation-html
           path: ./docs/_build/html
+          # Public discovery endpoints live under .well-known. Without this,
+          # upload-artifact drops them even though the built-tree link check passes.
+          include-hidden-files: true
           retention-days: 14
 
       # Comment on PR with preview link

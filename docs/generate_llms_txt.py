@@ -195,13 +195,23 @@ def build(source: Path, output: Path, site_url: str = SITE_URL) -> int:
     return output.stat().st_size
 
 
-def validate_links(index: Path, html_root: Path, site_url: str = SITE_URL) -> None:
-    """Fail publication if any local index link lacks a built target."""
+def validate_links(index: Path, html_root: Path, site_url: str | None = None) -> None:
+    """Fail publication if any local index link lacks a built target.
+
+    Unless explicitly supplied, recover the effective Sphinx origin/path from
+    the generated homepage entry so preview builds cannot pass with zero checks.
+    """
+    text = index.read_text(encoding="utf-8")
+    if site_url is None:
+        homepage = re.search(
+            r"\[Project homepage\]\((https?://[^)]+/index\.html)\)", text
+        )
+        if homepage is None:
+            raise ValueError("Missing canonical homepage in llms.txt")
+        site_url = homepage.group(1).removesuffix("/index.html")
     prefix = site_url.rstrip("/") + "/"
     missing = []
-    for url in re.findall(
-        r"\]\(([^)]+)\)|<([^>]+)>", index.read_text(encoding="utf-8")
-    ):
+    for url in re.findall(r"\]\(([^)]+)\)|<([^>]+)>", text):
         target = url[0] or url[1]
         if not target.startswith(prefix):
             continue
@@ -245,8 +255,11 @@ def main() -> int:
     )
     parser.add_argument(
         "--site-url",
-        default=SITE_URL,
-        help=f"Canonical site URL used for absolute links (default: {SITE_URL}).",
+        default=None,
+        help=(
+            f"Canonical site URL for generation (default: {SITE_URL}); "
+            "validation defaults to the generated homepage origin/path."
+        ),
     )
     parser.add_argument(
         "--check-html",
@@ -259,7 +272,7 @@ def main() -> int:
         print("[generate_llms_txt] all local index targets exist")
         return 0
 
-    size = build(args.source, args.output, args.site_url)
+    size = build(args.source, args.output, args.site_url or SITE_URL)
     print(
         f"[generate_llms_txt] wrote {args.output} ({size:,} bytes, "
         f"budget {SIZE_BUDGET:,})"

@@ -141,5 +141,21 @@ def test_sphinx_build_generates_index_after_shells_and_checks_links(tmp_path):
     )
     llms.validate_links(output / "llms.txt", output, "https://preview.example/v2/")
     (output / "install/install_pip.html").unlink()
+    # The Makefile invokes this CLI without --site-url after the markdown build.
+    # It must validate the generated preview origin/path, not silently skip it.
+    result = subprocess.run(
+        [
+            sys.executable,
+            str(ROOT / "docs/generate_llms_txt.py"),
+            "--output",
+            str(output / "llms.txt"),
+            "--check-html",
+            str(output),
+        ],
+        capture_output=True,
+        text=True,
+    )
+    assert result.returncode != 0
+    assert "install/install_pip.html" in result.stderr
     with pytest.raises(ValueError, match="install/install_pip.html"):
         llms.validate_links(output / "llms.txt", output, "https://preview.example/v2/")

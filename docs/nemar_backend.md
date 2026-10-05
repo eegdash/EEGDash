@@ -30,11 +30,15 @@ summary = catalog.search_datasets(limit=20)  # no filters in this initial adapte
   mutable: `metadata_scope="current"` does **not** mean historical version-pinned
   metadata. Catalog rows have `metadata_scope="catalog"` and preserve the raw
   upstream row under `nemar_catalog`. Catalog and rich metadata have different
-  detail levels; unknown fields are `None`, not inferred facts.
+  detail levels; unknown fields are `None`, not inferred facts. Both include
+  `metadata_url` and a UTC `metadata_retrieved_at` acquisition timestamp (not an
+  upstream modification time or an atomic snapshot identifier).
 - `source` remains the upstream-reported source; `provider="nemar"` identifies
   the service. A missing citation stays unknown rather than being fabricated;
-  supplied citations, authors and DOI identifiers are preserved. Age bounds are
-  not manufactured participant observations. Missing modality is not default EEG.
+  supplied citations, authors and DOI identifiers are preserved. For example,
+  `on000117` reports NEMAR `version="v1.0.0"` while its `IsDerivedFrom` DOI
+  identifies OpenNeuro `ds000117.v1.1.0`; these are not interchangeable versions.
+  Age bounds are not manufactured participant observations. Missing modality is not default EEG.
 
 ## Explicitly unsupported
 
@@ -42,8 +46,16 @@ All Mongo/friendly filters (including license, modality, task and source), `$in`
 source-ID aliases (`ds*`), counts, recordings, participants, signal loading,
 aggregations and writes. Unsupported client operations raise
 `NemarUnsupportedOperation`, not empty results or dataset totals masquerading as
-record totals. `api_url`, non-default `database` and explicit `auth_token` cannot
-be combined with this backend. No EEGDash environment credentials, proxies or
+record totals. Participant/aggregation-specific methods are not part of this
+client API; trying such an absent method raises `AttributeError`, while record
+queries for participant fields raise `NemarUnsupportedOperation`. Dataset-list
+`skip`, text-search `q`, and historical `version` keyword arguments are not
+supported and raise `TypeError`; internal offset paging is not a public skip API.
+`EEGDashDataset` does not accept this metadata backend, and its existing recording
+loader behavior is unchanged. Do not pass these metadata documents as loadable
+records. The summary DataFrame omits provenance columns; use `find_datasets` or
+`get_dataset` when provenance matters. `api_url`, non-default `database` and
+explicit `auth_token` cannot be combined with this backend. No EEGDash environment credentials, proxies or
 netrc authentication are forwarded to NEMAR.
 
 The existing ingestion mapper was inspected and its source-field mappings are
@@ -62,8 +74,8 @@ Each request: 5s connect/15s socket-read timeout, checked 30s streaming deadline
 is checked between chunks, not a hard wall-clock interruption of a blocked socket;
 a socket read may add up to its timeout. HTTP errors (including 429/Retry-After)
 propagate without retrying, so callers must honor Retry-After before trying again.
-Malformed/degraded metadata, pagination inconsistencies, changing totals and
-duplicate IDs raise `NemarContractError`; no partial list escapes on error.
+Malformed/degraded/explicitly partial metadata, pagination inconsistencies,
+changing totals and duplicate IDs raise `NemarContractError`; no partial list escapes on error.
 Live offset pagination is not an atomic catalog snapshot and cannot detect every
 concurrent replacement. Use neither this list nor its page counts as a migration
 inventory. There is no implicit caching, fallback to EEGDash, or catalog parity

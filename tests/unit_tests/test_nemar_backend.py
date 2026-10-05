@@ -242,3 +242,259 @@ def test_high_level_summary_and_rejections():
         api.search_datasets(modality="eeg")
     with pytest.raises(NemarUnsupportedOperation):
         api.count()
+
+
+@pytest.mark.parametrize("flag", ["truncated", "partial"])
+def test_partial_response_is_not_success(flag):
+    client, _ = response_client(json.dumps({flag: True}).encode())
+    with pytest.raises(NemarContractError):
+        client._get("url")
+
+
+@pytest.mark.parametrize(
+    "field", ["provenance", "external_links", "demographics", "extensions"]
+)
+@pytest.mark.parametrize("value", [[], "", False, 0])
+def test_malformed_optional_objects_are_not_unknown(field, value):
+    client = NemarMetadataClient()
+    client._get = MagicMock(return_value={**rich(), field: value})
+    with pytest.raises(NemarContractError):
+        client.get_dataset("nm000132")
+
+
+@pytest.mark.parametrize("version", ["0.4.", "0.4.bad", "0.4.1unexpected"])
+def test_schema_version_is_validated(version):
+    client = NemarMetadataClient()
+    client._get = MagicMock(return_value={**rich(), "schema_version": version})
+    with pytest.raises(NemarContractError):
+        client.get_dataset("nm000132")
+
+
+@pytest.mark.parametrize(
+    "field,value", [("offset", False), ("limit", True), ("count", True)]
+)
+def test_page_integer_fields_reject_booleans(field, value):
+    client = NemarMetadataClient()
+    client._get = MagicMock(return_value={**page(0, 1, 1), field: value})
+    with pytest.raises(NemarContractError):
+        client.find_datasets(limit=1)
+
+
+def test_missing_snapshot_does_not_match_unversioned_doi():
+    doc = rich()
+    doc["provenance"] = {}
+    doc["extensions"]["nemar"]["versions"] = [{"doi": "unversioned"}]
+    client = NemarMetadataClient()
+    client._get = MagicMock(return_value=doc)
+    with pytest.raises(NemarContractError):
+        client.get_dataset("nm000132")
+
+
+def test_metadata_includes_acquisition_provenance():
+    client = NemarMetadataClient()
+    client._get = MagicMock(return_value=rich())
+    doc = client.get_dataset("nm000132")
+    assert doc["metadata_retrieved_at"].endswith("+00:00")
+    client._get.return_value = page(0, 1, 1)
+    row = client.find_datasets(limit=1)[0]
+    assert row["metadata_retrieved_at"].endswith("+00:00")
+    assert row["metadata_url"] == "https://api.nemar.org/datasets"
+
+
+@pytest.mark.parametrize(
+    "query",
+    [
+        {"license": "CC-BY-4.0"},
+        {"demographics.sex_distribution.female": {"$gte": 1}},
+        {"has_doi": False},
+        {"dataset_id": {"$regex": "nm.*"}},
+        {"dataset_id": {"$in": ["nm000001", "ds000002"]}},
+        *[{"dataset_id": alias} for alias in ("ds000001", "ds000002", "ds000004")],
+    ],
+)
+def test_independent_query_hazards_reject(query):
+    api = EEGDash(backend="nemar")
+    api._client._get = MagicMock()
+    with pytest.raises(NemarUnsupportedOperation):
+        api.find_datasets(query)
+    api._client._get.assert_not_called()
+
+
+@pytest.mark.parametrize(
+    "method,args,kwargs",
+    [
+        ("find", ({},), {}),
+        ("find_one", ({},), {}),
+        ("exists", ({},), {}),
+        ("count", (), {}),
+        ("insert", ({},), {}),
+        ("insert", ([],), {}),
+        ("update_field", ({},), {"update": {}}),
+        ("update_dataset", ("nm000001", {}), {}),
+        ("find", ({"dataset": "nm000001", "version": "v999.0.0"},), {}),
+        ("find", ({"participants": {}},), {}),
+    ],
+)
+def test_all_public_record_and_write_entrypoints(method, args, kwargs):
+    api = EEGDash(backend="nemar")
+    api._client._get = MagicMock()
+    with pytest.raises(NemarUnsupportedOperation):
+        getattr(api, method)(*args, **kwargs)
+    api._client._get.assert_not_called()
+
+
+@pytest.mark.parametrize(
+    "kwargs",
+    [
+        {"license": "CC-BY-4.0"},
+        {"modality": "eeg"},
+        {"task": "rest"},
+        {"source": "openneuro"},
+        {"clinical_group": "healthy"},
+        {"n_subjects_min": 0},
+    ],
+)
+def test_friendly_filters_do_not_broaden(kwargs):
+    api = EEGDash(backend="nemar")
+    api._client._get = MagicMock()
+    with pytest.raises(NemarUnsupportedOperation):
+        api.search_datasets(**kwargs)
+    api._client._get.assert_not_called()
+
+
+def test_imported_version_provenance_is_not_source_version():
+    doc = rich()
+    doc.update(dataset_id="on000117", recording_modality=["MEG"], source="nemar")
+    doc["provenance"]["latest_snapshot"] = "v1.0.0"
+    doc["external_links"]["dataset_doi"] = "10.82901/nemar.on000117"
+    doc["extensions"]["nemar"]["versions"] = [
+        {"version": "v1.0.0", "doi": "10.82901/nemar.on000117.v1.0.0"}
+    ]
+    doc["related_identifiers"] = [
+        {
+            "identifier": "10.18112/openneuro.ds000117.v1.1.0",
+            "relation_type": "IsDerivedFrom",
+            "identifier_type": "DOI",
+        }
+    ]
+    client = NemarMetadataClient()
+    client._get = MagicMock(return_value=doc)
+    actual = client.get_dataset("on000117")
+    assert actual["version"] == "v1.0.0"
+    assert actual["version_doi"].endswith("on000117.v1.0.0")
+    assert actual["related_identifiers"] == doc["related_identifiers"]
+    assert actual["dataset_doi"] != actual["version_doi"]
+    assert actual["modality"] == ["MEG"]
+    assert "storage" not in actual
+
+
+@pytest.mark.parametrize("limit", [1, 200, 205, 1000])
+def test_paging_bounds_and_order(limit):
+    client = NemarMetadataClient()
+    client._get = MagicMock(
+        side_effect=lambda url, params: page(params["offset"], params["limit"], 1200)
+    )
+    docs = client.find_datasets(limit=limit)
+    assert [doc["dataset_id"] for doc in docs] == [f"nm{i:06d}" for i in range(limit)]
+    assert client._get.call_count == (limit + 199) // 200
+    assert all(
+        call.kwargs["params"]["limit"] <= 200 for call in client._get.call_args_list
+    )
+
+
+def test_empty_catalog_and_zero_not_unknown():
+    client = NemarMetadataClient()
+    client._get = MagicMock(return_value=page(0, 1, 0))
+    assert client.find_datasets(limit=1) == []
+    result = page(0, 2, 2)
+    result["datasets"][0].update(subject_count=None, participants=0)
+    result["datasets"][1].update(subject_count=0)
+    client._get.return_value = result
+    docs = client.find_datasets(limit=2)
+    assert docs[0]["n_subjects"] is None
+    assert docs[1]["n_subjects"] == 0
+
+
+@pytest.mark.parametrize(
+    "error",
+    [
+        requests.Timeout,
+        requests.ConnectionError,
+        requests.exceptions.ChunkedEncodingError,
+    ],
+)
+def test_transport_failures_propagate(error):
+    client, response = response_client()
+    response.iter_content.side_effect = error("upstream failed")
+    with pytest.raises(error):
+        client.find_datasets(limit=1)
+    assert client._session.get.call_count == 1
+
+
+@pytest.mark.parametrize("status", [400, 401, 404, 429, 503])
+def test_http_failure_is_not_empty_or_retried(status):
+    client, response = response_client(status=status)
+    response.headers = {"Retry-After": "2"}
+    response.raise_for_status.side_effect = requests.HTTPError(response=response)
+    with pytest.raises(requests.HTTPError) as caught:
+        client.find_datasets(limit=1)
+    assert caught.value.response.headers["Retry-After"] == "2"
+    assert client._session.get.call_count == 1
+
+
+def test_exact_404_only_is_missing():
+    client, response = response_client(status=404)
+    assert client.get_dataset("nm088888") is None
+    assert client.find_datasets({"dataset_id": "nm088888"}) == []
+    response.status_code = 503
+    response.raise_for_status.side_effect = requests.HTTPError("503")
+    with pytest.raises(requests.HTTPError):
+        client.get_dataset("nm088888")
+
+
+@pytest.mark.parametrize(
+    "value",
+    [
+        None,
+        {},
+        False,
+        [{"version": "latest"}],
+        [{"version": "v1.0.0"}, {"version": "v1.0.0"}],
+    ],
+)
+def test_malformed_version_inventory(value):
+    doc = rich()
+    doc["extensions"]["nemar"]["versions"] = value
+    client = NemarMetadataClient()
+    client._get = MagicMock(return_value=doc)
+    with pytest.raises(NemarContractError):
+        client.get_dataset("nm000132")
+
+
+def test_documented_usage(monkeypatch):
+    from pathlib import Path
+
+    text = (Path(__file__).parents[2] / "docs" / "nemar_backend.md").read_text()
+    snippet = text.split("```python\n", 1)[1].split("```", 1)[0]
+    get = MagicMock(side_effect=[page(0, 20, 20), rich(), page(0, 20, 20)])
+    monkeypatch.setattr(NemarMetadataClient, "_get", get)
+    scope = {}
+    exec(snippet, scope)
+    assert len(scope["first_page"]) == len(scope["summary"]) == 20
+    assert scope["metadata"]["dataset_id"] == "nm000132"
+    assert get.call_count == 3
+
+
+def test_unsupported_keyword_surfaces_do_not_query():
+    api = EEGDash(backend="nemar")
+    api._client._get = MagicMock()
+    with pytest.raises(TypeError):
+        api.find_datasets(skip=-1)
+    with pytest.raises(TypeError):
+        api.get_dataset("nm000132", version="v999.0.0")
+    with pytest.raises(TypeError):
+        api.search_datasets(q="rest", skip=1)
+    for method in ("participants", "aggregate"):
+        with pytest.raises(AttributeError):
+            getattr(api, method)()
+    api._client._get.assert_not_called()

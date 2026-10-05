@@ -11,6 +11,7 @@ retrieval; neither implies parity with EEGDash's primary-file record contract.
 import json
 import re
 import time
+from datetime import datetime, timezone
 
 import requests
 
@@ -62,7 +63,10 @@ class NemarMetadataClient:
                 raise NemarContractError("Invalid NEMAR JSON") from exc
             if not isinstance(value, dict):
                 raise NemarContractError("Expected NEMAR JSON object")
-            if value.get("fallback") or value.get("degraded") or value.get("error"):
+            if any(
+                value.get(flag)
+                for flag in ("fallback", "degraded", "error", "truncated", "partial")
+            ):
                 raise NemarContractError("NEMAR returned degraded/error metadata")
             return value
 
@@ -82,6 +86,15 @@ class NemarMetadataClient:
             raise NemarContractError("Invalid NEMAR version")
         return value
 
+    @staticmethod
+    def _object(doc, key):
+        value = doc.get(key)
+        if value is None:
+            return {}
+        if not isinstance(value, dict):
+            raise NemarContractError(f"Malformed NEMAR {key} object")
+        return value
+
     def get_dataset(self, dataset_id):
         """Read current rich metadata, preserving its reported source snapshot.
 
@@ -95,19 +108,28 @@ class NemarMetadataClient:
             return None
         if doc.get("dataset_id") != dataset_id or doc.get("doc_type") != "dataset":
             raise NemarContractError("Unexpected NEMAR dataset identity/type")
-        if not str(doc.get("schema_version", "")).startswith("0.4."):
+        if not isinstance(doc.get("schema_version"), str) or not re.fullmatch(
+            r"0\.4\.\d+", doc["schema_version"]
+        ):
             raise NemarContractError("Unsupported NEMAR neuroschema version")
         try:
-            prov = doc.get("provenance") or {}
-            ext = doc.get("external_links") or {}
-            demo = doc.get("demographics") or {}
+            prov = self._object(doc, "provenance")
+            ext = self._object(doc, "external_links")
+            demo = self._object(doc, "demographics")
             version = self._version(prov.get("latest_snapshot"))
-            versions = (
-                (doc.get("extensions") or {}).get("nemar", {}).get("versions", [])
-            )
-            matching = [v for v in versions if v.get("version") == version]
-            if len(matching) > 1:
-                raise NemarContractError("Duplicate NEMAR version identity")
+            nemar = self._object(self._object(doc, "extensions"), "nemar")
+            versions = nemar.get("versions", [])
+            if not isinstance(versions, list):
+                raise NemarContractError("Malformed NEMAR version inventory")
+            seen_versions = set()
+            for entry in versions:
+                if not isinstance(entry, dict) or entry.get("version") is None:
+                    raise NemarContractError("Missing NEMAR version identity")
+                tag = self._version(entry["version"])
+                if tag in seen_versions:
+                    raise NemarContractError("Duplicate NEMAR version identity")
+                seen_versions.add(tag)
+            matching = [v for v in versions if v["version"] == version]
             version_doi = matching[0].get("doi") if matching else None
             # Same source fields as scripts/ingestions/1_fetch_sources/nemar.py.
             # Keep the original structured authors, citations and provenance too.
@@ -124,6 +146,7 @@ class NemarMetadataClient:
                 "version_doi": version_doi,
                 "citation": doc.get("citation"),
                 "metadata_url": url,
+                "metadata_retrieved_at": datetime.now(timezone.utc).isoformat(),
                 "metadata_scope": "current",
             }
         except (AttributeError, TypeError) as exc:
@@ -158,6 +181,10 @@ class NemarMetadataClient:
                 not isinstance(rows, list)
                 or type(count) is not int
                 or count < 0
+                or any(
+                    type(page.get(key)) is not int
+                    for key in ("offset", "limit", "count")
+                )
                 or page.get("offset") != len(result)
                 or page.get("limit") != size
                 or page.get("count") != len(rows)
@@ -166,6 +193,7 @@ class NemarMetadataClient:
             ):
                 raise NemarContractError("Inconsistent NEMAR catalog pagination")
             total = count
+            retrieved_at = datetime.now(timezone.utc).isoformat()
             for row in rows:
                 if not isinstance(row, dict):
                     raise NemarContractError("Malformed NEMAR catalog row")
@@ -192,6 +220,8 @@ class NemarMetadataClient:
                         "task": row.get("tasks"),
                         "citation": row.get("citation"),
                         "metadata_scope": "catalog",
+                        "metadata_url": f"{self.API_URL}/datasets",
+                        "metadata_retrieved_at": retrieved_at,
                         "nemar_catalog": row,
                     }
                 )

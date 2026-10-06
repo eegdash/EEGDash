@@ -157,11 +157,11 @@ jobs:
           # Count datasets and records
           DATASETS=$(find . -name "*_dataset.json" | wc -l | tr -d ' ')
           RECORDS=$(python -c "
-          import json, glob
+          import gzip, json, glob
           total = 0
-          for f in glob.glob('*/*_records.json'):
+          for f in glob.glob('*/*_records.json') + glob.glob('*/*_records.json.gz'):
               try:
-                  data = json.load(open(f))
+                  data = json.load(gzip.open(f, 'rt') if f.endswith('.gz') else open(f))
                   total += data.get('record_count', len(data.get('records', [])))
               except: pass
           print(total)
@@ -194,12 +194,19 @@ jobs:
           
           # GitHub rejects files over 100 MB: store records files over 50 MB
           # gzipped (-n keeps output byte-stable across runs), drop stale .gz
-          # copies of files that are small again. Readers gunzip after checkout.
+          # copies of files that are small again.
           find digested -name '*_records.json' -size +50M -exec gzip -nf {} +
           find digested -name '*_records.json' -exec sh -c 'rm -f "$1.gz"' _ {} \;
 
-          # Add digested files
-          git add digested/ || true
+          # Safety net: never let one file block the push of the others.
+          find digested -type f -size +99M -print0 |
+            while IFS= read -r -d '' f; do
+              echo "::warning::$f is still over 99 MB after gzip; not committed"
+              rm -f "$f"
+            done
+
+          # Add digested files (-A also stages the replaced plain files)
+          git add -A digested/ || true
           
           if ! git diff --cached --quiet; then
             git commit -m "chore: digest ${{ inputs.source_name }} datasets [$(date -u +%Y-%m-%d)]"

@@ -23,6 +23,7 @@ py-modules = [
     "_metadata_cascade",
     "_montage",
     "_parser_utils",
+    "_records_io",
     "_serialize",
     "_set_parser",
     "_snirf_parser",

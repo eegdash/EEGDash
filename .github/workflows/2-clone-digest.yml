@@ -64,6 +64,11 @@ jobs:
           fetch-depth: 2
           path: eegdash-dataset-listings
 
+      # Records files over GitHub's 100 MB limit are stored gzipped; restore
+      # plain JSON so the scripts below read every dataset the same way.
+      - name: Decompress large records files
+        run: find eegdash-dataset-listings/digested -name '*_records.json.gz' -exec gunzip -kf {} + 2>/dev/null || true
+
       - name: Set up Python
         uses: actions/setup-python@v6
         with:
@@ -187,18 +192,12 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           
-          # GitHub rejects files over 100 MB, which made the whole push fail
-          # (and so dropped every dataset of the run) when one records file
-          # grew past it. Gzip oversize records files; the readers in
-          # _records_io.py accept <id>_records.json.gz. Drop a stale .gz
-          # when the plain file is small again.
-          find digested -name '*_records.json' -size +90M -print0 |
-            while IFS= read -r -d '' f; do
-              echo "::notice::gzipping oversize $f ($(du -h "$f" | cut -f1))"
-              gzip -9 -f "$f"
-            done
-          find digested -name '*_records.json' -print0 |
-            while IFS= read -r -d '' f; do rm -f "$f.gz"; done
+          # GitHub rejects files over 100 MB: store records files over 50 MB
+          # gzipped (-n keeps output byte-stable across runs), drop stale .gz
+          # copies of files that are small again.
+          find digested -name '*_records.json' -size +50M -exec gzip -nf {} +
+          find digested -name '*_records.json' -exec sh -c 'rm -f "$1.gz"' _ {} \;
+
           # Safety net: never let one file block the push of the others.
           find digested -type f -size +99M -print0 |
             while IFS= read -r -d '' f; do

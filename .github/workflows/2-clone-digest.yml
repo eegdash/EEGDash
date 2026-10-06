@@ -152,11 +152,11 @@ jobs:
           # Count datasets and records
           DATASETS=$(find . -name "*_dataset.json" | wc -l | tr -d ' ')
           RECORDS=$(python -c "
-          import json, glob
+          import gzip, json, glob
           total = 0
-          for f in glob.glob('*/*_records.json'):
+          for f in glob.glob('*/*_records.json') + glob.glob('*/*_records.json.gz'):
               try:
-                  data = json.load(open(f))
+                  data = json.load(gzip.open(f, 'rt') if f.endswith('.gz') else open(f))
                   total += data.get('record_count', len(data.get('records', [])))
               except: pass
           print(total)
@@ -187,8 +187,27 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           
-          # Add digested files
-          git add digested/ || true
+          # GitHub rejects files over 100 MB, which made the whole push fail
+          # (and so dropped every dataset of the run) when one records file
+          # grew past it. Gzip oversize records files; the readers in
+          # _records_io.py accept <id>_records.json.gz. Drop a stale .gz
+          # when the plain file is small again.
+          find digested -name '*_records.json' -size +90M -print0 |
+            while IFS= read -r -d '' f; do
+              echo "::notice::gzipping oversize $f ($(du -h "$f" | cut -f1))"
+              gzip -9 -f "$f"
+            done
+          find digested -name '*_records.json' -print0 |
+            while IFS= read -r -d '' f; do rm -f "$f.gz"; done
+          # Safety net: never let one file block the push of the others.
+          find digested -type f -size +99M -print0 |
+            while IFS= read -r -d '' f; do
+              echo "::warning::$f is still over 99 MB after gzip; not committed"
+              rm -f "$f"
+            done
+
+          # Add digested files (-A also stages the replaced plain files)
+          git add -A digested/ || true
           
           if ! git diff --cached --quiet; then
             git commit -m "chore: digest ${{ inputs.source_name }} datasets [$(date -u +%Y-%m-%d)]"

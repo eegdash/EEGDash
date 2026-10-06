@@ -17,7 +17,8 @@ VALID_STORAGE_PATTERNS = {
     "openneuro": r"^s3://openneuro\.org/ds\d+",
     "nemar": r"^s3://(nemar|nmdatasets)/",
     "osf": r"^https://files\.osf\.io/",
-    "figshare": r"^https://(figshare\.com|ndownloader|.*\.figshare\.com)",
+    # Figshare-for-Institutions portals (e.g. rdr.ucl.ac.uk) share the /articles/ path.
+    "figshare": r"^https://(figshare\.com|ndownloader|.*\.figshare\.com|[^/]+/articles/)",
     "zenodo": r"^https://zenodo\.org/",
     "scidb": r"^https://(www\.)?scidb\.cn/",
     "datarn": r"^https://webdav\.data\.ru\.nl/",

@@ -352,6 +352,8 @@ def test_validate_record_rejects_cross_source_storage_urls(source: str, wrong_ur
         ("figshare", "https://figshare.com/ndownloader/files/12345"),
         ("figshare", "https://ndownloader.figshare.com/files/12345"),
         ("figshare", "https://mydomain.figshare.com/articles/12345"),
+        ("figshare", "https://rdr.ucl.ac.uk/articles/dataset/Finger_MI/33332307"),
+        ("figshare", "https://data.dtu.dk/articles/dataset/Vowel_responses/30868751"),
         ("zenodo", "https://zenodo.org/record/12345"),
         ("zenodo", "https://zenodo.org/records/12345"),
         ("scidb", "https://scidb.cn/dataset/abc"),

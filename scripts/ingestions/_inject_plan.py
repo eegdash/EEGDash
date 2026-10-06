@@ -12,6 +12,7 @@ from pathlib import Path
 from _constants import EXCLUDED_DATASETS
 from _fingerprint import fingerprint_from_records
 from _http import get_client, request_json
+from _records_io import load_json, records_path
 from _source_id import _source_from_dataset_id
 
 
@@ -81,9 +82,9 @@ def find_digested_datasets(
             continue
 
         dataset_file = dataset_dir / f"{dataset_id}_dataset.json"
-        records_file = dataset_dir / f"{dataset_id}_records.json"
+        records_file = records_path(dataset_dir, dataset_id)
 
-        if dataset_file.exists() or records_file.exists():
+        if dataset_file.exists() or records_file is not None:
             dataset_dirs.append(dataset_dir)
 
     return dataset_dirs
@@ -226,10 +227,9 @@ def load_records(dataset_dir: Path) -> list[dict]:
             out.append(r)
         return out
 
-    records_file = dataset_dir / f"{dataset_id}_records.json"
-    if records_file.exists():
-        with open(records_file) as f:
-            data = json.load(f)
+    records_file = records_path(dataset_dir, dataset_id)
+    if records_file is not None:
+        data = load_json(records_file)
         if isinstance(data, dict) and "records" in data:
             records = data["records"]
         elif isinstance(data, list):

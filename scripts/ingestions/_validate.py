@@ -10,6 +10,7 @@ from pathlib import Path
 
 from pydantic import ValidationError
 
+from _records_io import load_json, records_path
 from eegdash.schemas import DatasetModel, ManifestFileModel, ManifestModel, RecordModel
 
 # Valid storage URL patterns per source
@@ -17,7 +18,13 @@ VALID_STORAGE_PATTERNS = {
     "openneuro": r"^s3://openneuro\.org/ds\d+",
     "nemar": r"^s3://(nemar|nmdatasets)/",
     "osf": r"^https://files\.osf\.io/",
-    "figshare": r"^https://(figshare\.com|ndownloader|.*\.figshare\.com)",
+    # figshare.com, its download hosts, and institutional figshare portals
+    # (e.g. rdr.ucl.ac.uk, data.dtu.dk), which share the
+    # /articles/<type>/<slug>/<id> layout.
+    "figshare": (
+        r"^https://(figshare\.com|ndownloader|.*\.figshare\.com"
+        r"|[^/]+/articles/[^/]+/[^/]+/\d+)"
+    ),
     "zenodo": r"^https://zenodo\.org/",
     "scidb": r"^https://(www\.)?scidb\.cn/",
     "datarn": r"^https://webdav\.data\.ru\.nl/",
@@ -303,7 +310,7 @@ def validate_digestion_output(
 
     for dataset_dir in dataset_dirs:
         dataset_id = dataset_dir.name
-        records_file = dataset_dir / f"{dataset_id}_records.json"
+        records_file = records_path(dataset_dir, dataset_id)
         dataset_file = dataset_dir / f"{dataset_id}_dataset.json"
 
         source = "unknown"
@@ -328,10 +335,9 @@ def validate_digestion_output(
                 # accumulate into result.errors rather than crashing.
                 result.add_error(dataset_id, f"Error reading dataset: {e}")
 
-        if records_file.exists():
+        if records_file is not None:
             try:
-                with open(records_file) as f:
-                    data = json.load(f)
+                data = load_json(records_file)
 
                 records = data.get("records", [])
                 record_count = len(records)

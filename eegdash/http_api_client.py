@@ -325,9 +325,21 @@ class EEGDashAPIClient:
 
 
 def get_client(
-    api_url: str | None = None, database: str = "eegdash", auth_token: str | None = None
-) -> EEGDashAPIClient:
-    """Get an API client instance."""
+    api_url: str | None = None,
+    database: str = "eegdash",
+    auth_token: str | None = None,
+    *,
+    backend: str = "eegdash",
+):
+    """Get a client; NEMAR is explicit, experimental and metadata-only."""
+    if backend == "nemar":
+        if api_url is not None or database != "eegdash" or auth_token is not None:
+            raise ValueError("NEMAR does not support EEGDash URL/database/auth options")
+        from .nemar_backend import NemarMetadataClient
+
+        return NemarMetadataClient()
+    if backend != "eegdash":
+        raise ValueError(f"Unknown EEGDash backend: {backend!r}")
     return EEGDashAPIClient(api_url=api_url, database=database, auth_token=auth_token)
 
 

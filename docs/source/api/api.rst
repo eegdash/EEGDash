@@ -235,11 +235,13 @@ Related Guides
 - :doc:`Tutorial gallery <../generated/auto_examples/index>`
 - :doc:`Dataset summary <../dataset_summary>`
 - :doc:`Installation guide <../install/install>`
+- :doc:`Experimental NEMAR dataset discovery <nemar_backend>`
 
 .. toctree::
    :hidden:
 
    api_core
    api_features
+   nemar_backend
    dataset/api_dataset
    ../developer_notes

@@ -42,6 +42,7 @@ class EEGDash:
         database: str = "eegdash",
         api_url: str | None = None,
         auth_token: str | None = None,
+        backend: str = "eegdash",
     ) -> None:
         """Create a new EEGDash client.
 
@@ -58,6 +59,11 @@ class EEGDash:
             Authentication token for admin write operations. Not required for
             public read operations.
 
+        backend : {"eegdash", "nemar"}, default "eegdash"
+            Experimental ``nemar`` supports dataset listing and exact canonical
+            dataset lookup only. It rejects record queries/counts, writes and
+            other filters. It never falls back automatically or downloads signals.
+
         Examples
         --------
         >>> eegdash = EEGDash()  # production
@@ -65,7 +71,10 @@ class EEGDash:
         >>> records = eegdash.find({"dataset": "ds002718"})
 
         """
-        self._client = get_client(api_url, database, auth_token)
+        if backend == "eegdash":
+            self._client = get_client(api_url, database, auth_token)
+        else:
+            self._client = get_client(api_url, database, auth_token, backend=backend)
 
     def find_datasets(
         self, query: dict[str, Any] | None = None, limit: int = 1000

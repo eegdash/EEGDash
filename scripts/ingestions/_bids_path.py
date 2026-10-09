@@ -178,6 +178,10 @@ def is_neuro_data_file(filepath: str) -> bool:
     if "/derivatives/" in filepath_lower or filepath_lower.startswith("derivatives/"):
         return False
 
+    # sourcedata/ holds pre-conversion originals; the BIDS files are the records.
+    if "/sourcedata/" in filepath_lower or filepath_lower.startswith("sourcedata/"):
+        return False
+
     sidecar_extensions = {
         ".json",
         ".tsv",

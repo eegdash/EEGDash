@@ -70,4 +70,10 @@ EXCLUDED_DATASETS: set[str] = {
     # Sosulski et al. 2019; all its 800 recordings are in nm000266, and its
     # recording-soaNNN filenames fail BIDS validation.
     "nm000203",
+    # Derivative-only NEMAR deposit (Siebenhuehner et al. 2020 SEEG/MEG
+    # connectomes): no raw recordings, only connectome zips and contact
+    # tables. The manifest digest invents 84 placeholder sub-NN_ieeg.set
+    # records x 425 (35,700, all without nchans/sfreq), which alone pushes
+    # the inject nchans gate from 4.9% to 16.4% and blocks every injection.
+    "nm000389",
 }

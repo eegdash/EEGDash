@@ -73,7 +73,8 @@ jobs:
       consolidated_file: "nemar_datasets.json"
       max_datasets: ${{ fromJSON(github.event.inputs.max_datasets || '0') }}
       # Large NEMAR re-hosts (nm000281 >100k files) exceed the 120 s default.
-      dataset_timeout: 900
+      # nm000359 (Bern-Barcelona, 7,500 short signal pairs) needs >900 s.
+      dataset_timeout: 2400
     secrets:
       DATASET_LISTINGS_TOKEN: ${{ secrets.DATASET_LISTINGS_TOKEN }}
 

@@ -66,4 +66,8 @@ EXCLUDED_DATASETS: set[str] = {
     "ds004929",
     "ds005407",
     "ds005930",
+    # Superseded NEMAR deposit: nm000203 is an early MOABB export of
+    # Sosulski et al. 2019; all its 800 recordings are in nm000266, and its
+    # recording-soaNNN filenames fail BIDS validation.
+    "nm000203",
 }

@@ -102,6 +102,10 @@ def test_parse_entities_recovers_modality_from_path(
         # BIDS folder-structure files are NOT
         ("README.md", False),
         ("CHANGES", False),
+        # sourcedata/ originals are not records (nm000130, nm000348 layouts)
+        ("sourcedata/sub-098/ses-04/eeg/sub-098_ses-04_task-ssvep_eeg.edf", False),
+        ("sourcedata/2C dataset/sub-037/ses-03/eeg/data.bdf", False),
+        ("MIND_BIDS/sourcedata/sub-01/eeg/sub-01_task-mi2d_run-01.vhdr", False),
     ],
 )
 def test_is_neuro_data_file_classifies_correctly(

@@ -149,6 +149,7 @@ class EEGBIDSDataset:
         self.dataset = dataset
         self.data_dir = data_dir
         self.allow_symlinks = allow_symlinks
+        self._meta_files_cache: dict[tuple[str, str], list[Path]] = {}
 
         # Set modalities to search for (default: all electrophysiology modalities from MNE-BIDS)
         if modalities is None:
@@ -439,10 +440,20 @@ class EEGBIDSDataset:
 
         path, filename = os.path.split(filepath)
         basename = filename[: filename.rfind("_")]
-        meta_files = self._get_bids_file_inheritance(
-            path, basename, metadata_file_extension
-        )
-        return meta_files
+        # The inheritance walk depends only on (directory, extension): scan each
+        # directory once instead of once per recording (O(N^2) on flat datasets).
+        # Misses are not cached, so a file added later is still found.
+        # ponytail: hits are never invalidated, and a dataset with no such file
+        # still walks per recording; cache misses too if that ever shows up.
+        key = (path, metadata_file_extension)
+        if key not in self._meta_files_cache:
+            found = self._get_bids_file_inheritance(
+                path, basename, metadata_file_extension
+            )
+            if not found:
+                return found
+            self._meta_files_cache[key] = found
+        return list(self._meta_files_cache[key])
 
     def get_files(self) -> list[str]:
         """Get all EEG recording file paths in the BIDS dataset.

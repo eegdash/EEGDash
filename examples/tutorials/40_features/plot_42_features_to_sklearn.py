@@ -11,8 +11,8 @@ Before you start
 ----------------
 Install EEGDash's dependencies and run ``plot_40_first_features.py`` first.
 Use exactly the same ``EEGDASH_CACHE_DIR`` for both scripts; the default
-``.eegdash_cache`` is relative to the working directory. You need the CSV and
-its adjacent JSON schema, but no live signal download for this page.
+location depends on the environment (``$SCRATCH``, ``$TMPDIR``, ...). You need
+the CSV and its adjacent JSON schema, but no live signal download for this page.
 Tutorial 11 explains the participant split used below.
 """
 

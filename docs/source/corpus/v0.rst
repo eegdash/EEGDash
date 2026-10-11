@@ -1,0 +1,86 @@
+:og:description: EEGDash Corpus v0, the converted Zarr store: electrode coverage, hours, channels and distributions of every dataset.
+
+.. meta::
+   :description: EEGDash Corpus v0, the converted Zarr store: electrode coverage, hours, channels and distributions of every dataset.
+
+.. include:: /_static/corpus_generated/numbers.inc
+
+.. _corpus-v0:
+
+#################
+EEGDash Corpus v0
+#################
+
+Version 0 is REVE's public release rebuilt from the archives and converted: every
+number on this page is measured in the converted Zarr store, as of |synced|.
+
+In numbers
+==========
+
+.. corpus-figure:: v0-kpis
+
+Electrode coverage
+==================
+
+One mark per electrode position of the Zarr store (|v0_positions| positions in
+|v0_buckets| channel sets), coloured and sized by the hours recorded there or by the
+number of datasets that include it.
+
+.. tab-set::
+
+   .. tab-item:: Top view
+
+      .. corpus-figure:: electrodes
+
+   .. tab-item:: 3-D view
+
+      .. corpus-figure:: electrodes-3d
+
+Hours per dataset
+=================
+
+.. corpus-figure:: hours
+
+Channel count per dataset
+=========================
+
+Both bar lists follow the same order; switch it on either.
+
+.. corpus-figure:: channels
+
+Distributions
+=============
+
+Channel-count bands
+-------------------
+
+.. corpus-figure:: channel-bands
+
+Subjects
+--------
+
+.. corpus-figure:: subjects
+
+Native sampling rates
+---------------------
+
+.. corpus-figure:: rates
+
+Paradigms
+---------
+
+.. corpus-figure:: paradigms
+
+Subjects against hours
+----------------------
+
+.. corpus-figure:: scatter
+
+The |v0_datasets| datasets
+==========================
+
+.. corpus-figure:: table-v0
+
+.. only:: not html
+
+   The table is published as ``_static/corpus_generated/atlas-v0.csv``.

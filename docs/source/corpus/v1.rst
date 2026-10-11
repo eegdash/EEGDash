@@ -1,0 +1,101 @@
+:og:description: EEGDash Corpus v1: the datasets it adds to v0, and the same views as v0 with the added datasets by status.
+
+.. meta::
+   :description: EEGDash Corpus v1: the datasets it adds to v0, and the same views as v0 with the added datasets by status.
+
+.. include:: /_static/corpus_generated/numbers.inc
+
+.. _corpus-v1:
+
+#################
+EEGDash Corpus v1
+#################
+
+Version 1 extends version 0 to every publicly usable dataset named by REVE's paper:
+|v1_datasets| datasets, of which |v1_to_convert| are ingested by EEGDash and wait for
+conversion and |to_ingest| is still to be ingested. The numbers of the added datasets
+come from EEGDash's records until they are converted; the views below are those of v0,
+with the added datasets stacked by status.
+
+What v1 adds
+============
+
+.. corpus-figure:: v1-adds-table
+
+SparrKULee carries CC BY-NC 4.0 in NEMAR's dataset description (EEGDash's record lists
+none), so a v1 Zarr store that includes it carries non-commercial terms; its EEGDash
+records carry no signal metadata, so its hours are measured at conversion. Siena Scalp
+EEG is held and waits for its deposit on NEMAR; its numbers follow.
+
+In numbers
+==========
+
+.. corpus-figure:: v1-kpis
+
+Electrode coverage
+==================
+
+One mark per electrode position (|v1_positions| positions in |v1_buckets| channel
+sets): v0's positions measured in the Zarr store, plus the channel sets of
+|v1_mapped| of the datasets v1 adds, read from EEGDash's records with the hours those
+records state; hover a mark for the v0 and added shares. Not on the map yet:
+|v1_unmapped| (no channel metadata in EEGDash's records, or not yet ingested).
+
+.. tab-set::
+
+   .. tab-item:: Top view
+
+      .. corpus-figure:: electrodes-v1
+
+   .. tab-item:: 3-D view
+
+      .. corpus-figure:: electrodes-3d-v1
+
+Hours per dataset
+=================
+
+.. corpus-figure:: hours-v1
+
+Channel count per dataset
+=========================
+
+Both bar lists follow the same order; switch it on either.
+
+.. corpus-figure:: channels-v1
+
+Distributions
+=============
+
+Channel-count bands
+-------------------
+
+.. corpus-figure:: channel-bands-v1
+
+Subjects
+--------
+
+.. corpus-figure:: subjects-v1
+
+Native sampling rates
+---------------------
+
+.. corpus-figure:: rates-v1
+
+Paradigms
+---------
+
+.. corpus-figure:: paradigms-v1
+
+Subjects against hours
+----------------------
+
+.. corpus-figure:: scatter-v1
+
+The |v1_datasets| datasets
+==========================
+
+.. corpus-figure:: table-v1
+
+.. only:: not html
+
+   The table is published as ``_static/corpus_generated/atlas-v1.csv``.

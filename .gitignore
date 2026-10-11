@@ -45,6 +45,7 @@ docs/source/_static/dataset_generated/
 docs/source/_static/corpus_generated/
 # the Corpus pages' data copy (the data/ rule above would hide it)
 !docs/plot_corpus/data/
+!docs/plot_corpus/data/*.json
 docs/source/api/api_dataset.rst
 docs/source/api/dataset/*.rst
 docs/source/api/datasets/*.rst

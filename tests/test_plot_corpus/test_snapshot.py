@@ -5,6 +5,7 @@ from __future__ import annotations
 import json
 import re
 import subprocess
+from pathlib import Path
 
 import pytest
 from plot_corpus import sync_data
@@ -129,3 +130,20 @@ def test_sync_copies_scans_and_refuses_dirty(source, tmp_path):
         sync_data.sync(
             source, out, allow_dirty=True, synced="2026-01-02", extra_deny=[]
         )
+
+
+def test_every_data_file_is_tracked_by_git():
+    """The pages are built from docs/plot_corpus/data in CI: a file on disk that git ignores (the repository has
+    blanket data/ and *.json rules) passes every other test locally and fails the build on GitHub.
+    """
+    try:
+        tracked = subprocess.run(
+            ["git", "-C", str(DATA), "ls-files", "--", "."],
+            check=True,
+            capture_output=True,
+            text=True,
+        ).stdout.split()
+    except (subprocess.CalledProcessError, FileNotFoundError):
+        pytest.skip("not a git checkout")
+    on_disk = sorted(p.name for p in DATA.iterdir() if p.is_file())
+    assert sorted(Path(t).name for t in tracked) == on_disk

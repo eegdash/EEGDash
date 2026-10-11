@@ -41,26 +41,36 @@ def tick_text(v: float, unit: str = "") -> str:
 
 def scroll_frame(axis_svg: str, body_svg: str, max_px: int = 560) -> str:
     """A scrolling chart whose axis stays pinned: the axis SVG sits in a sticky strip above the body SVG (both share
-    the viewBox width, so they scale together)."""
+    the viewBox width, so they scale together).
+    """
     return (f'<div class="corpus-scroll" style="max-height:{max_px}px" tabindex="0">'
             f'<div class="corpus-scroll-axis">{axis_svg}</div>{body_svg}</div>')  # fmt: skip
 
 
 def legend_html(statuses: list[str]) -> str:
     present = set(statuses)
-    return '<div class="corpus-legend">' + "".join(
-        f'<span><i class="corpus-bg-{SLUGS[s]}"></i>{e(SHORT[s])}</span>' for s in STATUSES if s in present
-    ) + "</div>"
+    return (
+        '<div class="corpus-legend">'
+        + "".join(
+            f'<span><i class="corpus-bg-{SLUGS[s]}"></i>{e(SHORT[s])}</span>'
+            for s in STATUSES
+            if s in present
+        )
+        + "</div>"
+    )
 
 
 LEFT, WIDTH, RIGHT, PITCH = 150, 300, 110, 16
 
 
-def dataset_bars(items: list[dict], *, log: bool, unit: str, label: str, step: float = 32) -> tuple[str, int]:
+def dataset_bars(
+    items: list[dict], *, log: bool, unit: str, label: str, step: float = 32
+) -> tuple[str, int]:
     """One bar per dataset, a sortable list: item = {id, label, value, status, keys {order: sort key}, tip}.
 
     Each row is a ``<g>`` carrying its sort keys, so corpus.js can reorder rows (``order`` toggle) by moving them;
-    the axis is a separate SVG pinned above. Returns the HTML and the body height in pixels."""
+    the axis is a separate SVG pinned above. Returns the HTML and the body height in pixels.
+    """
     vals = [it["value"] for it in items]
     if log:
         ticks = log_ticks(min(vals), max(vals))
@@ -72,8 +82,12 @@ def dataset_bars(items: list[dict], *, log: bool, unit: str, label: str, step: f
     W = LEFT + WIDTH + RIGHT
     axis = [svg_open(W, 22, f"{label}, axis")]
     for t in ticks:
-        axis.append(f'<text x="{X(t):.1f}" y="15" text-anchor="middle" opacity="0.7">{tick_text(t, unit)}</text>')
-    axis.append(f'<line x1="{LEFT}" x2="{LEFT + WIDTH}" y1="21" y2="21" stroke="currentColor" stroke-opacity="0.3"/>')
+        axis.append(
+            f'<text x="{X(t):.1f}" y="15" text-anchor="middle" opacity="0.7">{tick_text(t, unit)}</text>'
+        )
+    axis.append(
+        f'<line x1="{LEFT}" x2="{LEFT + WIDTH}" y1="21" y2="21" stroke="currentColor" stroke-opacity="0.3"/>'
+    )
     axis.append("</svg>")
     h = PITCH * len(items) + 4
     body = [svg_open(W, h, label, cls="corpus-bars")]
@@ -108,11 +122,16 @@ def hbars_svg(items: list[dict], label: str) -> str:
     """Horizontal stacked bars: item = {label, segs {status: value}, tips {status: text}, text}; one linear scale."""
     left, width, right, pitch, top = 150, 250, 180, 26, 6
     peak = max([sum(it["segs"].values()) for it in items] + [1e-9])
-    parts = [svg_open(left + width + right, top + pitch * max(len(items), 1) + 4, label, "640px")
-             .replace('font-size="11"', 'font-size="12.5"')]
+    parts = [
+        svg_open(
+            left + width + right, top + pitch * max(len(items), 1) + 4, label, "640px"
+        ).replace('font-size="11"', 'font-size="12.5"')
+    ]
     for j, it in enumerate(items):
         y, x = top + j * pitch, float(left)
-        parts.append(f'<text x="{left - 8}" y="{y + 15}" text-anchor="end">{e(it["label"])}</text>')
+        parts.append(
+            f'<text x="{left - 8}" y="{y + 15}" text-anchor="end">{e(it["label"])}</text>'
+        )
         for st in STATUSES:
             v = it["segs"].get(st, 0)
             if not v:
@@ -121,6 +140,8 @@ def hbars_svg(items: list[dict], label: str) -> str:
             parts.append(f'<rect x="{x:.1f}" y="{y + 3}" width="{max(w - 1, 1.5):.1f}" height="{pitch - 8}" rx="2" '
                          f'class="{fill(st)}" data-tip="{e(it["label"])} · {e(SHORT[st])}: {e(it["tips"][st])}"/>')  # fmt: skip
             x += w
-        parts.append(f'<text x="{x + 8:.1f}" y="{y + 15}" opacity="0.8">{e(it["text"])}</text>')
+        parts.append(
+            f'<text x="{x + 8:.1f}" y="{y + 15}" opacity="0.8">{e(it["text"])}</text>'
+        )
     parts.append("</svg>")
     return "".join(parts)

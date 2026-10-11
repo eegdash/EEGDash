@@ -27,8 +27,16 @@ DOCS = _DOCS
 
 def make_row(i: str, status: str, **kw) -> dict[str, str]:
     row = dict.fromkeys(ATLAS_COLUMNS, "")
-    row.update(dataset_id=i, name=f"Dataset {i}", short_name=i.upper(), status=status, paradigm="resting state",
-               licence="CC0-1.0", in_reve_paper="yes", provenance="hours:zarr; subjects:zarr")
+    row.update(
+        dataset_id=i,
+        name=f"Dataset {i}",
+        short_name=i.upper(),
+        status=status,
+        paradigm="resting state",
+        licence="CC0-1.0",
+        in_reve_paper="yes",
+        provenance="hours:zarr; subjects:zarr",
+    )
     row["in_v0"] = "yes" if status == STATUSES[0] else "no"
     row["in_v1"] = "yes" if status in STATUSES[:3] else "no"
     row["in_release_card"] = row["in_v0"]
@@ -78,8 +86,17 @@ def buckets() -> list[dict[str, str]]:
 @pytest.fixture
 def added() -> list[dict[str, str]]:
     """One channel set of the dataset v1 adds, from EEGDash's records: Pz is new to the map, Cz shared with v0."""
-    return [{"bucket": "nm000003-0", "dataset": "nm000003", "n_chans": "2", "n_sessions": "9", "hours": "12.0",
-             "channels": "Cz|Pz", "queried_on": "2026-01-01"}]
+    return [
+        {
+            "bucket": "nm000003-0",
+            "dataset": "nm000003",
+            "n_chans": "2",
+            "n_sessions": "9",
+            "hours": "12.0",
+            "channels": "Cz|Pz",
+            "queried_on": "2026-01-01",
+        }
+    ]
 
 
 @pytest.fixture
@@ -102,6 +119,10 @@ def data_dir(tmp_path, rows, buckets, electrodes, added) -> Path:
     write_csv(d / "atlas.csv", rows, ATLAS_COLUMNS)
     write_csv(d / "reve-public-nc-channels.csv", buckets, list(buckets[0]))
     write_csv(d / "eegdash-channel-sets.csv", added, list(added[0]))
-    (d / "electrodes.json").write_text(json.dumps({"about": "test", "electrodes": electrodes}))
-    (d / "MANIFEST.json").write_text(json.dumps({"synced": "2026-01-02", "source_commit": "abc", "files": {}}))
+    (d / "electrodes.json").write_text(
+        json.dumps({"about": "test", "electrodes": electrodes})
+    )
+    (d / "MANIFEST.json").write_text(
+        json.dumps({"synced": "2026-01-02", "source_commit": "abc", "files": {}})
+    )
     return d

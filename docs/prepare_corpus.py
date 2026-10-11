@@ -28,17 +28,27 @@ OUT = HERE / "source" / "_static" / "corpus_generated"
 
 
 def main(argv: list[str] | None = None) -> int:
-    ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
+    ap = argparse.ArgumentParser(
+        description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter
+    )
     ap.add_argument("--data", type=Path, default=DATA, help="synced data folder")
-    ap.add_argument("--out", type=Path, default=OUT, help="output folder for the fragments")
-    ap.add_argument("--if-stale", action="store_true", help="only build when the outputs are out of date")
+    ap.add_argument(
+        "--out", type=Path, default=OUT, help="output folder for the fragments"
+    )
+    ap.add_argument(
+        "--if-stale",
+        action="store_true",
+        help="only build when the outputs are out of date",
+    )
     a = ap.parse_args(argv)
     if a.if_stale and not is_stale(a.data, a.out):
         print(f"{a.out}: up to date")
         return 0
     m = build(a.data, a.out)
     total = sum(f["bytes"] for f in m["fragments"].values())
-    print(f"{a.out}: {len(m['fragments'])} fragments, {total:,} bytes, data as of {m['synced']}")
+    print(
+        f"{a.out}: {len(m['fragments'])} fragments, {total:,} bytes, data as of {m['synced']}"
+    )
     return 0
 
 

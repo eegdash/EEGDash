@@ -67,7 +67,9 @@ class CorpusFigureDirective(Directive):
         fragments = _manifest().get("fragments", {})
         if key not in fragments:
             known = ", ".join(sorted(fragments)) or "none (run docs/prepare_corpus.py)"
-            raise self.error(f"corpus-figure: unknown key {key!r}. Known keys: {known}.")
+            raise self.error(
+                f"corpus-figure: unknown key {key!r}. Known keys: {known}."
+            )
         path = _source_root() / _OUT_REL / fragments[key]["file"]
         env = self.state.document.settings.env
         env.note_dependency(str(path))
@@ -91,7 +93,9 @@ def _regenerate(app) -> None:
     data, out = docs / "plot_corpus" / "data", _source_root() / _OUT_REL
     if is_stale(data, out):
         m = build(data, out)
-        logger.info(f"corpus_figure: wrote {len(m['fragments'])} fragments (data as of {m['synced']})")
+        logger.info(
+            f"corpus_figure: wrote {len(m['fragments'])} fragments (data as of {m['synced']})"
+        )
 
 
 def _assets(app, pagename: str, templatename: str, context: dict, doctree) -> None:

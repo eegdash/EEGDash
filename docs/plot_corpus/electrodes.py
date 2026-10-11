@@ -17,21 +17,27 @@ LANDMARKS = [("Fz",), ("Cz",), ("Pz",), ("Oz",), ("C3",), ("C4",), ("T7", "T3"),
 BUCKET_NOTE = "channel set (bucket): one exact set of channel names of one dataset in the Zarr store"
 
 
-def aggregate_positions(buckets: list[dict[str, str]], bank: dict[str, list[float]],
-                        added: list[dict[str, str]] | None = None) -> list[dict]:
+def aggregate_positions(
+    buckets: list[dict[str, str]],
+    bank: dict[str, list[float]],
+    added: list[dict[str, str]] | None = None,
+) -> list[dict]:
     """One entry per electrode *position* used by the buckets: hours, datasets and buckets summed over every bucket
     carrying it, most hours first. ``added`` are the channel sets of the datasets v1 adds (measured from EEGDash's
     records, not converted yet): their sums go into ``added_hours`` / ``added_datasets`` / ``added_buckets``, so one
     file serves the v0 map and the v1 map. The bank holds case-fold duplicates sharing one coordinate (``CZ`` and
     ``Cz``), so channels are grouped by coordinates rounded to 1e-4 m and named by their spellings, most common
-    first."""
+    first.
+    """
     agg: dict[tuple, dict] = {}
     for prefix, rows in (("", buckets), ("added_", added or [])):
         for b in rows:
             hours = float(b["hours"])
             for name in b["channels"].split("|"):
                 if name not in bank:
-                    raise ValueError(f"bucket {b['bucket']} ({b['dataset']}): channel {name!r} is not in the position bank")
+                    raise ValueError(
+                        f"bucket {b['bucket']} ({b['dataset']}): channel {name!r} is not in the position bank"
+                    )
                 key = tuple(round(float(c), 4) for c in bank[name])
                 e = agg.setdefault(key, {"hours": 0.0, "datasets": set(), "buckets": 0, "added_hours": 0.0,
                                          "added_datasets": set(), "added_buckets": 0, "spell": {}})  # fmt: skip
@@ -74,12 +80,15 @@ def check_coverage(electrodes: list[dict], buckets: list[dict[str, str]]) -> Non
     for b in buckets:
         for name in b["channels"].split("|"):
             if name not in known:
-                raise ValueError(f"bucket {b['bucket']} ({b['dataset']}): channel {name!r} has no electrode position")
+                raise ValueError(
+                    f"bucket {b['bucket']} ({b['dataset']}): channel {name!r} has no electrode position"
+                )
 
 
 def project(x: float, y: float, z: float, clip: float = CLIP) -> tuple[float, float]:
     """Azimuthal-equidistant top view from the head centre, in head radii: vertex 0, equator 1, nose up (+y), right ear
-    right (+x); points further than ``clip`` (mastoids, face) are pulled in to ``clip``."""
+    right (+x); points further than ``clip`` (mastoids, face) are pulled in to ``clip``.
+    """
     rho = min(math.atan2(math.hypot(x, y), z) / (math.pi / 2), clip)
     phi = math.atan2(y, x)
     return rho * math.cos(phi), rho * math.sin(phi)
@@ -95,7 +104,11 @@ def scales(electrodes: list[dict], added: bool = False) -> dict:
 
 
 def t_hours(h: float, s: dict) -> float:
-    return (math.log10(h) - s["hlo"]) / (s["hhi"] - s["hlo"]) if s["hhi"] > s["hlo"] else 1.0
+    return (
+        (math.log10(h) - s["hlo"]) / (s["hhi"] - s["hlo"])
+        if s["hhi"] > s["hlo"]
+        else 1.0
+    )
 
 
 def t_datasets(d: int, s: dict) -> float:
@@ -137,10 +150,14 @@ def note_html(hint: str = "") -> str:
     return f'<p class="corpus-note">{hint}{html.escape(BUCKET_NOTE[0].upper() + BUCKET_NOTE[1:])}.</p>'
 
 
-def legend_svg(electrodes: list[dict], n_datasets: int, W: float, y: float, added: bool = False) -> str:
+def legend_svg(
+    electrodes: list[dict], n_datasets: int, W: float, y: float, added: bool = False
+) -> str:
     """Both legends (hours, datasets); CSS shows the one of the current encoding."""
     s = scales(electrodes, added)
-    hticks = [10.0**k for k in range(math.ceil(s["hlo"]), math.floor(s["hhi"]) + 1)] or [10 ** s["hhi"]]
+    hticks = [
+        10.0**k for k in range(math.ceil(s["hlo"]), math.floor(s["hhi"]) + 1)
+    ] or [10 ** s["hhi"]]
     dticks = sorted({1, s["dmax"], *(v for v in (10, 25) if v < s["dmax"] - 4)})
     parts = []
     for mode, title, ticks, tf, fmt in (
@@ -170,10 +187,13 @@ def landmark_of(e: dict) -> str | None:
     return None
 
 
-def electrode_svg(electrodes: list[dict], n_datasets: int, n_buckets: int, *, added: bool = False) -> tuple[str, str]:
+def electrode_svg(
+    electrodes: list[dict], n_datasets: int, n_buckets: int, *, added: bool = False
+) -> tuple[str, str]:
     """The scalp map: one circle per position, ramp step and radius by hours (log) or datasets (linear), both
     precomputed so the toggle only swaps attributes; ``added`` draws v0 plus the datasets v1 adds. Returns the
-    HTML and its caption."""
+    HTML and its caption.
+    """
     s = scales(electrodes, added)
     R, cx, cy, W, H = 200, 250, 252, 500, 580
     e_ = html.escape
@@ -190,7 +210,9 @@ def electrode_svg(electrodes: list[dict], n_datasets: int, n_buckets: int, *, ad
         f'<circle cx="{cx}" cy="{cy}" r="{R / 2}" stroke-opacity="0.12" stroke-dasharray="3 4"/></g>',
     ]
     xy = {}
-    for e in sorted(shown(electrodes, added), key=lambda e: -view(e, added)[0]):  # big circles first, small on top
+    for e in sorted(
+        shown(electrodes, added), key=lambda e: -view(e, added)[0]
+    ):  # big circles first, small on top
         u, v = project(*e["xyz"])
         x, y = cx + u * R, cy - v * R
         xy[e["names"][0]] = (x, y, e)
@@ -224,9 +246,12 @@ def caption(electrodes: list[dict], added: bool = False) -> str:
             f"over {td} datasets); {rare}.")  # fmt: skip
 
 
-def electrodes_3d(electrodes: list[dict], n_datasets: int, n_buckets: int, *, added: bool = False) -> tuple[str, str]:
+def electrodes_3d(
+    electrodes: list[dict], n_datasets: int, n_buckets: int, *, added: bool = False
+) -> tuple[str, str]:
     """The 3-D view: a canvas drawn by corpus-3d.js from inline JSON (positions in head radii, both encodings,
-    the landmark label where the 2-D map carries one), with the same legend and note as the 2-D view."""
+    the landmark label where the 2-D map carries one), with the same legend and note as the 2-D view.
+    """
     s = scales(electrodes, added)
     els = shown(electrodes, added)
     rmax = max(math.sqrt(sum(c * c for c in e["xyz"])) for e in els)

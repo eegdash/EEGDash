@@ -65,7 +65,14 @@ PROV_KEY = {
     "native_sfreq": "sfreq",
     "raw_GB": "size",
 }
-DIGITS = {"n_subjects": 0, "n_sessions": 0, "hours": 1, "mean_channels": 1, "native_sfreq": 0, "raw_GB": 1}
+DIGITS = {
+    "n_subjects": 0,
+    "n_sessions": 0,
+    "hours": 1,
+    "mean_channels": 1,
+    "native_sfreq": 0,
+    "raw_GB": 1,
+}
 PROVENANCE = {
     "zarr": "measured in the converted Zarr store",
     "eegdash": "EEGDash's catalogue records",
@@ -77,7 +84,11 @@ PROVENANCE = {
 RECIPE = {"recipe_sfreq": "200", "recipe_band": "0.5–99.5", "recipe_window": "10"}
 # The integrity check of the retraining. Stated from the retraining results,
 # not derivable from the shipped tables: keep in step with the benchmark CSVs.
-CHECKS = {"check_loader_datasets": "two", "check_bench_tasks": "eight", "check_bench_gap": "0.011 (linear probe) and 0.024 (fine-tuning)"}
+CHECKS = {
+    "check_loader_datasets": "two",
+    "check_bench_tasks": "eight",
+    "check_bench_gap": "0.011 (linear probe) and 0.024 (fine-tuning)",
+}
 # What comes next, in order; {keys} are filled from the rows at build time.
 ROADMAP = [
     "Host the converted Zarr store eegdash-corpus-v0 ({v0_datasets} datasets, {v0_hours} h) through EEGDash",
@@ -109,7 +120,9 @@ def read_rows(path: Path) -> list[dict[str, str]]:
 def check_statuses(rows: list[dict[str, str]]) -> None:
     for r in rows:
         if r["status"] not in STATUSES:
-            raise ValueError(f"{r['dataset_id']}: status {r['status']!r} is not one of {STATUSES}")
+            raise ValueError(
+                f"{r['dataset_id']}: status {r['status']!r} is not one of {STATUSES}"
+            )
 
 
 def read_buckets(path: Path) -> list[dict[str, str]]:
@@ -138,7 +151,9 @@ def label_of(r: dict[str, str], width: int = 26) -> str:
 
 def short_title(r: dict[str, str]) -> str:
     """A dataset's short label without a trailing version (``Siena … v1.0.0`` -> its title)."""
-    return re.sub(r"(?i)\s+v\d[\w.]*$", "", r["short_name"] or r["name"] or r["dataset_id"]).strip()
+    return re.sub(
+        r"(?i)\s+v\d[\w.]*$", "", r["short_name"] or r["name"] or r["dataset_id"]
+    ).strip()
 
 
 def of_status(rows: list[dict[str, str]], *statuses: str) -> list[dict[str, str]]:
@@ -151,7 +166,8 @@ def v0_rows(rows: list[dict[str, str]]) -> list[dict[str, str]]:
 
 def v1_rows(rows: list[dict[str, str]]) -> list[dict[str, str]]:
     """v1 = v0 converted, the datasets ingested and waiting for conversion, and those still to ingest: the
-    three statuses whose name says (v1)."""
+    three statuses whose name says (v1).
+    """
     return of_status(rows, CONVERTED, TO_CONVERT, TO_INGEST)
 
 
@@ -188,14 +204,18 @@ def kpis(rows: list[dict[str, str]]) -> dict:
         "pending": by[TO_INGEST] + by[BLOCKED],
         "paper": sum(r["in_reve_paper"] == "yes" for r in rows),
         "card": sum(r["in_release_card"] == "yes" for r in rows),
-        "card_only": sum(r["in_release_card"] == "yes" and r["in_reve_paper"] != "yes" for r in rows),
+        "card_only": sum(
+            r["in_release_card"] == "yes" and r["in_reve_paper"] != "yes" for r in rows
+        ),
     }
 
 
 def progress(rows: list[dict[str, str]]) -> list[dict]:
     """The steps from what is converted to what is out of reach, with counts, hours and names."""
     names = lambda rs: ", ".join(short_title(r) for r in rs)  # noqa: E731
-    v0, v1, ing, blk, gat = (of_status(rows, s) for s in (CONVERTED, TO_CONVERT, TO_INGEST, BLOCKED, GATED))
+    v0, v1, ing, blk, gat = (
+        of_status(rows, s) for s in (CONVERTED, TO_CONVERT, TO_INGEST, BLOCKED, GATED)
+    )
     unmeasured = [r for r in v1 if not fnum(r["hours"])]
     return [
         dict(status=CONVERTED, title="v0 converted", count=len(v0), hours=hours_of(v0), sub=f"{hours_of(v0):,.0f} h"),
@@ -223,8 +243,13 @@ def roadmap_items(rows: list[dict[str, str]]) -> list[str]:
     ]
 
 
-def numbers(rows: list[dict[str, str]], buckets: list[dict[str, str]], electrodes: list[dict], synced: str,
-            added: list[dict[str, str]] | None = None) -> dict:
+def numbers(
+    rows: list[dict[str, str]],
+    buckets: list[dict[str, str]],
+    electrodes: list[dict],
+    synced: str,
+    added: list[dict[str, str]] | None = None,
+) -> dict:
     """The substitutions of ``numbers.inc``: every figure the RST prose quotes."""
     k = kpis(rows)
     v0 = v0_rows(rows)
@@ -243,7 +268,9 @@ def numbers(rows: list[dict[str, str]], buckets: list[dict[str, str]], electrode
         "v0_sessions": f"{k['v0_sessions']:,}",
         "v0_buckets": f"{len(buckets):,}",
         "v0_positions": str(sum(e["hours"] > 0 for e in electrodes)),
-        "v1_positions": str(sum(e["hours"] + e.get("added_hours", 0) > 0 for e in electrodes)),
+        "v1_positions": str(
+            sum(e["hours"] + e.get("added_hours", 0) > 0 for e in electrodes)
+        ),
         "v1_buckets": f"{len(buckets) + len(added):,}",
         "v1_mapped": str(len(mapped)),
         "v1_unmapped": ", ".join(unmapped) or "none",

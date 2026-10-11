@@ -56,6 +56,7 @@ extensions = [
     "sphinxcontrib.bibtex",
     "dataset_explorer",
     "dataset_figure",
+    "corpus_figure",
     "dataset_page",
     "generate_llms_txt",
     "assert_dataset_table",

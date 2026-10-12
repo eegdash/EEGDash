@@ -18,13 +18,18 @@ from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 from unittest.mock import patch
 
+import pytest
+
+pytest.importorskip(
+    "zarr", minversion="3.4", reason="needs eegdash[zarr] (zarr>=3.4, Python>=3.12)"
+)
+
 import aiohttp
 import mne
 import numpy as np
 import pandas as pd
 import pyarrow as pa
 import pyarrow.parquet as pq
-import pytest
 import requests
 import zarr
 from torch.utils.data import DataLoader
@@ -798,6 +803,18 @@ def test_missing_shards_still_raise_unless_every_channel_is_constant(store):
         raw.get_data(start=0, stop=10)
 
 
+def test_unit_scales_alone_do_not_make_missing_shards_fill(store):
+    """Varying channels spanning exactly 65535 units also have scale 1."""
+    url = store[0]
+    arr = zarr.open_array(f"{url}/{GROUP}/0", mode="r+")
+    arr.attrs["scale"] = [1.0] * arr.shape[0]  # data still varies; shards exist
+    shard_path(url, 1).unlink()
+    raw = open_quiet(url, events=None, bids_status=False)
+    raw.get_data(start=0, stop=10)
+    with pytest.raises(MissingChunkError):
+        raw.get_data(start=5000, stop=5005)
+
+
 def test_only_event_chunks_may_be_unwritten():
     assert nz._may_be_unwritten("s", "events/duration/c/0")
     assert not nz._may_be_unwritten("s", "eeg_250hz/0/c/0/1")
@@ -1019,7 +1036,7 @@ def test_braindecode_windows_and_multiprocess_dataloader(store, http, tmp_path):
             dataset,
             window_size_samples=500,
             window_stride_samples=500,
-            drop_last_window=True,
+            on_last_window="drop",
             picks=["Fz", "Cz"],
         )
     assert len(windows) == N_SAMPLES // 500
@@ -1058,7 +1075,7 @@ def test_dataloader_forked_workers_over_http(store, http, http_server, tmp_path)
             dataset,
             window_size_samples=1000,
             window_stride_samples=1000,
-            drop_last_window=True,
+            on_last_window="drop",
         )
         nz._CHUNK_CACHE.clear()  # make the workers fetch over HTTP themselves
         loader = DataLoader(

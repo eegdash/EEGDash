@@ -67,6 +67,8 @@ from mne.io import BaseRaw
 from requests.adapters import HTTPAdapter
 from urllib3.util.retry import Retry
 from zarr.abc.store import RangeByteRequest, SuffixByteRequest
+from zarr.core.buffer import default_buffer_prototype
+from zarr.core.sync import sync
 from zarr.storage import FsspecStore, WrapperStore
 
 from braindecode.datasets.base import _ReprBuilder
@@ -105,7 +107,9 @@ GITHUB_RAW = "https://raw.githubusercontent.com/nemarDatasets/{ds}/{commit}/{pat
 EVENTS_MAX_BYTES = 16 * 1024 * 1024
 _DEFAULT_CHUNK_CACHE_BYTES = 64 * 1024 * 1024
 _MIN_ZARR = (3, 4)
-_INSTALL_HINT = 'install the extra with: pip install "eegdash[zarr]"'
+_INSTALL_HINT = (
+    'install the extra with: pip install "eegdash[zarr]" (zarr>=3.4 needs Python>=3.12)'
+)
 
 _RETRY_STATUS = frozenset({429, 500, 502, 503, 504})
 _ATTEMPTS = 4
@@ -206,13 +210,17 @@ class EventsTooLargeError(RuntimeError):
 # ---------------------------------------------------------------------------
 
 
-def _check_dependencies(url: str) -> None:
+def _check_zarr_version() -> None:
     found = tuple(int(x) for x in re.findall(r"\d+", zarr.__version__)[:2])
     if found < _MIN_ZARR:
         raise ImportError(
             f"reading NEMAR Zarr stores needs zarr>={'.'.join(map(str, _MIN_ZARR))}, "
             f"found {zarr.__version__}; {_INSTALL_HINT}"
         )
+
+
+def _check_dependencies(url: str) -> None:
+    _check_zarr_version()
     if url.startswith(("http://", "https://")) and aiohttp is None:
         raise ImportError(
             f"reading NEMAR Zarr stores over HTTPS needs aiohttp; {_INSTALL_HINT}"
@@ -356,8 +364,9 @@ def _may_be_unwritten(store_id: str, key: str) -> bool:
     * the small ``events/*`` arrays (e.g. an all-zero duration array);
     * a level-0 array whose channels are all constant: biosigio stores a
       constant channel as digital 0 with ``scale = 1`` and the value in
-      ``offset``, so every shard is fill and none is written (registered by
-      :class:`RawNEMARZarr`).
+      ``offset``, so every shard is fill and none is written. Registered by
+      :class:`RawNEMARZarr` when every scale is 1 and the first shard is
+      absent too (see _first_shard_written).
 
     Any other missing signal chunk is an error whatever the status (403, 404,
     or a missing local file, which zarr itself reports as absent): a
@@ -675,6 +684,9 @@ def _reset_after_fork() -> None:
     _CHUNK_CACHE._lock = threading.Lock()
 
 
+# Fail at import, so signal_source="zarr" reports an old zarr up front.
+_check_zarr_version()
+
 if hasattr(os, "register_at_fork"):
     os.register_at_fork(after_in_child=_reset_after_fork)
 
@@ -956,6 +968,22 @@ def _load_annotations(events, url, group, root, max_bytes):
 # ---------------------------------------------------------------------------
 # Channel metadata
 # ---------------------------------------------------------------------------
+
+
+def _first_shard_written(root, group: str) -> bool:
+    """Whether level 0's first shard exists (one 1-byte range read).
+
+    ``scale == 1`` on every channel usually means every channel is constant,
+    but a varying channel spanning exactly 65535 units (raw 16-bit counts)
+    has it too. An all-constant array has no shards at all, so an existing
+    first shard rules it out.
+    """
+    key = f"{group}/0/c/0/0"
+    try:
+        sync(root.store.get(key, default_buffer_prototype(), RangeByteRequest(0, 1)))
+    except MissingChunkError:
+        return False
+    return True
 
 
 def _checked_channel_metadata(gattrs: dict, aattrs: dict, n_rows: int):
@@ -1320,7 +1348,7 @@ class RawNEMARZarr(BaseRaw):
         # same way: calibrate with a unit step and zero the digital term.
         constant = scale == 0
         cal_scale = np.where(constant, 1.0, scale)
-        if np.all(cal_scale == 1.0):
+        if np.all(cal_scale == 1.0) and not _first_shard_written(root, group):
             # Every channel constant: all shards are fill and none were written.
             _ALL_FILL_ARRAYS.add((url, f"{group}/0/"))
 

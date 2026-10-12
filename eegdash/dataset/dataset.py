@@ -301,9 +301,14 @@ class EEGDashDataset(BaseConcatDataset, metaclass=NumpyDocstringInheritanceInitM
             try:
                 from .nemar_zarr import EEGDashZarrRaw
             except ImportError as e:
+                reason = str(e)
+                if "eegdash[zarr]" not in reason:  # a missing module, not a version
+                    reason += (
+                        '; install the extra with: pip install "eegdash[zarr]" '
+                        "(zarr>=3.4 needs Python>=3.12)"
+                    )
                 raise ImportError(
-                    f"signal_source='zarr' needs optional dependencies ({e}); "
-                    'install the extra with: pip install "eegdash[zarr]"'
+                    f"signal_source='zarr' is unavailable: {reason}"
                 ) from e
 
             self._zarr_cls = EEGDashZarrRaw

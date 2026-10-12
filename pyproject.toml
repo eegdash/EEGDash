@@ -111,7 +111,9 @@ zarr = [
   # zarr>=3.4 for Store.get_ranges, which the chunk cache and retries wrap;
   # S3 is read over HTTPS via fsspec+aiohttp, never s3fs (see #397);
   # pyarrow reads only the needed row groups of events.parquet.
-  "zarr>=3.4",
+  # zarr>=3.4 needs Python>=3.12; on 3.11 the extra installs without it and
+  # signal_source="zarr" says so (its tests skip).
+  "zarr>=3.4; python_version >= '3.12'",
   "fsspec",
   "aiohttp",
   "pyarrow",

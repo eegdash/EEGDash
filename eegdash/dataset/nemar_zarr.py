@@ -89,6 +89,7 @@ except ImportError:  # pragma: no cover - exercised only without the extra
 __all__ = [
     "EEGDashZarrRaw",
     "EventsTooLargeError",
+    "MissingChunkError",
     "NEMARDataWarning",
     "RawNEMARZarr",
     "chunk_cache_info",
@@ -192,6 +193,10 @@ class NEMARDataWarning(UserWarning):
     """Something about a NEMAR store the caller should know before analysing it."""
 
 
+class StoreMetadataError(ValueError):
+    """The store's metadata is missing or inconsistent (not a biosigio-zarr store?)."""
+
+
 class EventsTooLargeError(RuntimeError):
     """The events for a recording exceed the configured download limit."""
 
@@ -292,8 +297,23 @@ def _check_reader_options(options: dict) -> None:
 # ---------------------------------------------------------------------------
 
 
+def _leaves(exc: BaseException) -> list[BaseException]:
+    """The exceptions inside (nested) exception groups, ignoring cancellations.
+
+    zarr's ``Store.get_ranges`` reports failures as a ``BaseExceptionGroup``
+    whose siblings of the real error are ``CancelledError``s.
+    """
+    if not isinstance(exc, BaseExceptionGroup):
+        return [exc]
+    out = [leaf for sub in exc.exceptions for leaf in _leaves(sub)]
+    real = [e for e in out if not isinstance(e, asyncio.CancelledError)]
+    return real or out
+
+
 def _is_transient(exc: BaseException) -> bool:
-    """Whether a store-level exception is worth retrying."""
+    """Whether a store-level exception (or every error in a group) is worth retrying."""
+    if isinstance(exc, BaseExceptionGroup):
+        return all(_is_transient(e) for e in _leaves(exc))
     status = getattr(exc, "status", None) or getattr(exc, "status_code", None)
     if status in _RETRY_STATUS:
         return True
@@ -305,7 +325,12 @@ def _is_transient(exc: BaseException) -> bool:
 
 
 def _is_not_found(exc: BaseException) -> bool:
-    """A missing key: FileNotFoundError, or HTTP 403/404 (S3 answers 403)."""
+    """A missing key: FileNotFoundError, or HTTP 403/404 (S3 answers 403).
+
+    For an exception group, every error in it must be one.
+    """
+    if isinstance(exc, BaseExceptionGroup):
+        return all(_is_not_found(e) for e in _leaves(exc))
     status = getattr(exc, "status", None) or getattr(exc, "status_code", None)
     return isinstance(exc, (FileNotFoundError, KeyError)) or status in (403, 404)
 
@@ -314,22 +339,48 @@ def _is_chunk_key(key: str) -> bool:
     return "/c/" in key  # zarr v3 default chunk key encoding: <array>/c/<i>/<j>
 
 
-def _may_be_unwritten(key: str) -> bool:
-    """A chunk of the store's ``events`` arrays, which may never have been written.
+# (store id, "<group>/0/") of level-0 arrays known to be all fill value; see
+# RawNEMARZarr and _may_be_unwritten.
+_ALL_FILL_ARRAYS: set[tuple[str, str]] = set()
 
-    Zarr does not store chunks equal to the fill value (e.g. an all-zero
-    duration array), and S3 without list permission answers 403, not 404, for
-    absent keys, so the two cannot be told apart by status. That is accepted
-    only for the small ``events/*`` arrays, where all-fill chunks really occur.
-    A missing signal chunk is an error whatever the status (403, 404, or a
-    missing local file, which zarr itself reports as absent): substituting the
-    fill value would silently turn it into flat data.
+
+def _may_be_unwritten(store_id: str, key: str) -> bool:
+    """Whether chunk ``key`` may legitimately be absent (read as the fill value).
+
+    biosigio writes with zarr's default ``write_empty_chunks=False``, so a
+    chunk or shard equal to the fill value (digital 0) is never stored, and S3
+    without list permission answers 403, not 404, for absent keys: absence and
+    access errors look the same. Absence is accepted only where all-fill
+    chunks really occur:
+
+    * the small ``events/*`` arrays (e.g. an all-zero duration array);
+    * a level-0 array whose channels are all constant: biosigio stores a
+      constant channel as digital 0 with ``scale = 1`` and the value in
+      ``offset``, so every shard is fill and none is written (registered by
+      :class:`RawNEMARZarr`).
+
+    Any other missing signal chunk is an error whatever the status (403, 404,
+    or a missing local file, which zarr itself reports as absent): a
+    non-constant channel is digital 0 only at the exact middle of its range,
+    so a whole shard of 0 across all channels does not occur in real data, and
+    substituting the fill value would silently turn a lost shard into flat
+    data. A live scan of 30,428 shards in 3,660 NEMAR groups found none absent.
     """
-    return key.startswith("events/") and _is_chunk_key(key)
+    if not _is_chunk_key(key):
+        return False
+    if key.startswith("events/"):
+        return True
+    array = key.split("/c/", 1)[0] + "/"
+    return (store_id, array) in _ALL_FILL_ARRAYS
 
 
 class MissingChunkError(OSError):
-    """A signal chunk is missing from the store (never filled with the fill value)."""
+    """A signal chunk is missing from the store (never filled with the fill value).
+
+    Raised while reading samples, so after ``on_error`` has been applied to
+    opening the recording; :class:`EEGDashZarrRaw` probes the first and last
+    sample when it opens a store to catch the common cases there.
+    """
 
 
 def _missing_chunk(store_id: str, key: str, cause: BaseException | None = None):
@@ -467,14 +518,21 @@ class CachingStore(WrapperStore):
         except Exception as e:
             if not (_is_chunk_key(key) and _is_not_found(e)):
                 raise
-            if _may_be_unwritten(key):
+            if _may_be_unwritten(self._cache_id, key):
                 return None
             raise _missing_chunk(self._cache_id, key, e) from e
-        if buf is None and _is_chunk_key(key) and not _may_be_unwritten(key):
+        if (
+            buf is None
+            and _is_chunk_key(key)
+            and not _may_be_unwritten(self._cache_id, key)
+        ):
             raise _missing_chunk(self._cache_id, key)
         return buf
 
     async def _get_ranges(self, key, byte_ranges, prototype, kwargs):
+        # zarr's default get_ranges (FsspecStore's) coalesces nearby ranges and
+        # reports failures, including a missing key, as an exception group:
+        # _is_transient and _is_not_found look inside it.
         try:
             groups = await _retrying(
                 lambda: _collect(
@@ -485,11 +543,16 @@ class CachingStore(WrapperStore):
             )
         except Exception as e:
             if not (_is_chunk_key(key) and _is_not_found(e)):
+                leaves = _leaves(e)
+                if isinstance(e, BaseExceptionGroup) and len(leaves) == 1:
+                    # Surface the one real error (e.g. an HTTP 503 after
+                    # retries) with its own type, not wrapped in a group.
+                    raise leaves[0] from e
                 raise
-            if _may_be_unwritten(key):
+            if _may_be_unwritten(self._cache_id, key):
                 return [[(i, None) for i in range(len(byte_ranges))]]
-            raise _missing_chunk(self._cache_id, key, e) from e
-        if _is_chunk_key(key) and not _may_be_unwritten(key):
+            raise _missing_chunk(self._cache_id, key, _leaves(e)[0]) from e
+        if _is_chunk_key(key) and not _may_be_unwritten(self._cache_id, key):
             if any(buf is None for group in groups for _, buf in group):
                 raise _missing_chunk(self._cache_id, key)
         return groups
@@ -549,23 +612,51 @@ def _make_base_store(url: str, storage_options: dict | None):
     return FsspecStore.from_url(url, storage_options=storage_options, read_only=True)
 
 
-@lru_cache(maxsize=64)
-def _open_root(url: str, storage_options_json: str):
-    """Open (and cache per process) a store's root group through CachingStore."""
+class _PerProcessCache:
+    """Unbounded memo of open stores, for the life of the process.
+
+    Not an LRU: each open store carries its shard indexes, so evicting it in
+    a shuffled pass over more recordings than the bound made every read cost
+    ~5 requests (metadata and shard index again) instead of 1. One entry is a
+    few kB plus ~1.2 kB per shard read. Cleared after fork, since the stores'
+    HTTP sessions belong to the parent.
+    """
+
+    def __init__(self, fn):
+        self._fn = fn
+        self._items: dict = {}
+        self.__doc__ = fn.__doc__
+
+    def __call__(self, *args):
+        try:
+            return self._items[args]
+        except KeyError:
+            # Not locked: two threads may both open a store; one result is kept.
+            return self._items.setdefault(args, self._fn(*args))
+
+    def cache_clear(self) -> None:
+        self._items = {}
+
+
+def _open_root_uncached(url: str, storage_options_json: str):
+    """Open a store's root group through CachingStore."""
     storage_options = json.loads(storage_options_json) or None
     store = CachingStore(_make_base_store(url, storage_options), cache_id=url)
     # zarr_format=3 skips the v2 metadata probes, which NEMAR's S3 answers with 403.
     return zarr.open_group(store, mode="r", zarr_format=3)
 
 
-@lru_cache(maxsize=64)
-def _open_level0(url: str, group: str, storage_options_json: str):
-    """Level-0 array of one channel group, opened once per process.
+def _open_level0_uncached(url: str, group: str, storage_options_json: str):
+    """Level-0 array of one channel group.
 
     Cached apart from the root: ``root[group]["0"]`` re-reads two ``zarr.json``
     documents each time, which would cost two round trips per read.
     """
     return _open_root(url, storage_options_json)[group]["0"]
+
+
+_open_root = _PerProcessCache(_open_root_uncached)
+_open_level0 = _PerProcessCache(_open_level0_uncached)
 
 
 def _reset_after_fork() -> None:
@@ -596,11 +687,28 @@ def _split_store_url(url: str) -> tuple[str, str]:
     return head + "/zarr/", tail
 
 
-@lru_cache(maxsize=16)
 def _fetch_index(dataset: str) -> dict:
+    """NEMAR's Zarr index of a dataset; LookupError if it has not been converted."""
+    index = _load_index(dataset)
+    if index is None:
+        raise LookupError(f"NEMAR has no Zarr copy of dataset {dataset}")
+    return index
+
+
+@lru_cache(maxsize=16)
+def _load_index(dataset: str) -> dict | None:
+    """The index, or None for an unconverted dataset (cached, so asked once)."""
     r = _http_get(INDEX_URL.format(ds=dataset), timeout=60)
+    if r.status_code in (403, 404):  # unconverted datasets have no index.json
+        return None
     r.raise_for_status()
-    return r.json()
+    try:
+        index = r.json()
+    except ValueError as e:
+        raise StoreMetadataError(f"malformed NEMAR Zarr index of {dataset}: {e}") from e
+    if not isinstance(index, dict) or not isinstance(index.get("stores"), list):
+        raise StoreMetadataError(f"NEMAR Zarr index of {dataset} has no store list")
+    return index
 
 
 def _data_base(index: dict, dataset: str) -> str:
@@ -850,6 +958,30 @@ def _load_annotations(events, url, group, root, max_bytes):
 # ---------------------------------------------------------------------------
 
 
+def _checked_channel_metadata(gattrs: dict, aattrs: dict, n_rows: int):
+    """Channels, scale and offset, checked against the array's rows."""
+    chans = gattrs.get("channels")
+    if not isinstance(chans, list) or "rate" not in gattrs:
+        raise StoreMetadataError("channel group lacks 'channels' or 'rate'")
+    if any(not isinstance(c, dict) or "label" not in c for c in chans):
+        raise StoreMetadataError("channel entries lack a 'label'")
+    if [c.get("row_index") for c in chans] != list(range(n_rows)):
+        raise StoreMetadataError("channel metadata does not line up with array rows")
+    try:
+        scale = np.asarray(aattrs["scale"], dtype=np.float64)
+        offset = np.asarray(aattrs["offset"], dtype=np.float64)
+    except (KeyError, TypeError, ValueError) as e:
+        raise StoreMetadataError(f"level-0 array lacks scale/offset ({e})") from e
+    if scale.shape != (n_rows,) or offset.shape != (n_rows,):
+        raise StoreMetadataError(
+            f"scale/offset have shapes {scale.shape}/{offset.shape}, "
+            f"expected ({n_rows},)"
+        )
+    if not (np.all(np.isfinite(scale)) and np.all(np.isfinite(offset))):
+        raise StoreMetadataError("non-finite scale or offset")
+    return chans, scale, offset
+
+
 def _channel_types(chans) -> tuple[list[str], list[str]]:
     """MNE types for the store's channels, plus notes about lossy mappings."""
     types, meg, unknown = [], [], set()
@@ -978,9 +1110,11 @@ def _montage_from_attrs(attrs, ch_names):
         # Only EEGLAB's convention (x = nose, y = left) is known to map onto
         # MNE's head frame (x = right, y = nose); don't guess for others.
         return None
-    to_m = {"m": 1.0, "cm": 1e-2, "mm": 1e-3}[
+    to_m = {"m": 1.0, "cm": 1e-2, "mm": 1e-3}.get(
         attrs.get("electrode_coordinate_units", "mm")
-    ]
+    )
+    if to_m is None:
+        return None  # unknown units: no positions rather than wrong ones
     ch_pos = {
         name: np.array([-y, x, z]) * to_m
         for name, (x, y, z) in pos.items()
@@ -1162,7 +1296,7 @@ class RawNEMARZarr(BaseRaw):
         groups = attrs.get("channel_groups")
         if not groups:
             # Listing the store to discover groups isn't possible on NEMAR's S3.
-            raise ValueError(
+            raise StoreMetadataError(
                 "store root has no 'channel_groups' attribute; is this a biosigio-zarr store?"
             )
         if group is None:
@@ -1172,20 +1306,23 @@ class RawNEMARZarr(BaseRaw):
                 )
             group = groups[0]
         elif group not in groups:
-            raise ValueError(f"group {group!r} not in store; available: {groups}")
+            raise StoreMetadataError(
+                f"group {group!r} not in store; available: {groups}"
+            )
 
         arr = _open_level0(url, group, so_json)
         gattrs = dict(root[group].attrs)
-        chans = gattrs["channels"]
-        if [c["row_index"] for c in chans] != list(range(arr.shape[0])):
-            raise RuntimeError("channel metadata does not line up with array rows")
-        scale = np.asarray(arr.attrs["scale"], dtype=np.float64)
-        offset = np.asarray(arr.attrs["offset"], dtype=np.float64)
-        # A constant channel (max == min) gets scale 0: its value is the offset
-        # and the digital samples carry nothing. Calibrate it with a unit step
-        # and zero its digital term in _read_segment_file.
+        chans, scale, offset = _checked_channel_metadata(
+            gattrs, dict(arr.attrs), arr.shape[0]
+        )
+        # biosigio stores a constant channel as digital 0 with scale 1 and the
+        # value in offset; scale 0 (another writer's convention) is read the
+        # same way: calibrate with a unit step and zero the digital term.
         constant = scale == 0
         cal_scale = np.where(constant, 1.0, scale)
+        if np.all(cal_scale == 1.0):
+            # Every channel constant: all shards are fill and none were written.
+            _ALL_FILL_ARRAYS.add((url, f"{group}/0/"))
 
         ch_names = [c["label"] for c in chans]
         ch_types, type_notes = _channel_types(chans)
@@ -1443,11 +1580,26 @@ def _annex_key_at_commit(dataset: str, commit: str, path: str) -> str | None:
 
 
 # Failures to open a store that are about the data or the service, not the
-# code: wrapped into DataIntegrityError so on_error applies. ValueError covers
-# zarr's metadata and not-found errors; KeyError missing attributes.
-_STORE_ERRORS = (OSError, requests.RequestException, KeyError, ValueError) + (
-    (aiohttp.ClientError,) if aiohttp is not None else ()
-)
+# code: wrapped into DataIntegrityError so on_error applies. Programming errors
+# (KeyError, TypeError, a bare ValueError, ...) are deliberately not caught.
+_STORE_ERRORS = (
+    OSError,  # includes MissingChunkError and local FileNotFoundError
+    requests.RequestException,
+    zarr.errors.BaseZarrError,  # missing group/array, invalid metadata
+    StoreMetadataError,
+) + ((aiohttp.ClientError,) if aiohttp is not None else ())
+
+
+def _is_transport_error(exc: BaseException | None) -> bool:
+    """A network failure that persisted through retries (not a data problem)."""
+    while exc is not None:
+        if isinstance(exc, (requests.ConnectionError, requests.Timeout)):
+            return True
+        status = getattr(getattr(exc, "response", None), "status_code", None)
+        if isinstance(exc, requests.HTTPError) and status in _RETRY_STATUS:
+            return True
+        exc = exc.__cause__
+    return False
 
 
 class EEGDashZarrRaw(EEGDashRaw):
@@ -1488,10 +1640,11 @@ class EEGDashZarrRaw(EEGDashRaw):
     :class:`NEMARDataWarning` rather than blocking loading. Only the raw
     file named by the record is checked, not companion files (e.g. ``.fdt``).
 
-    Failures to locate or open the store (missing Zarr copy, HTTP errors,
-    malformed metadata, missing chunks while opening) are raised as
-    ``DataIntegrityError`` too, so ``on_error`` decides whether one bad
-    recording stops the run.
+    Failures to locate or open the store (no Zarr copy of the dataset or
+    recording, HTTP errors, malformed metadata, a missing first or last
+    shard) are raised as ``DataIntegrityError`` too, so ``on_error`` decides
+    whether one bad recording stops the run. A shard that goes missing
+    elsewhere raises :class:`MissingChunkError` when it is read.
 
     """
 
@@ -1527,7 +1680,7 @@ class EEGDashZarrRaw(EEGDashRaw):
                 record=self.record,
                 issues=["NEMAR has no Zarr copy of this recording"],
             ) from e
-        except (requests.RequestException, ValueError) as e:  # ValueError: bad JSON
+        except (requests.RequestException, StoreMetadataError) as e:
             raise self._wrap_store_error(
                 f"could not read the NEMAR Zarr index of {self.record['dataset']}", e
             ) from e
@@ -1538,7 +1691,15 @@ class EEGDashZarrRaw(EEGDashRaw):
         The ``group`` option if given; else the only group; else the one
         whose modality is the record's datatype. Anything else is ambiguous.
         """
-        groups = self._zarr_location()[1]["groups"]
+        groups = self._zarr_location()[1].get("groups")
+        if not isinstance(groups, list) or not all(
+            isinstance(g, dict) and "name" in g for g in groups
+        ):
+            raise DataIntegrityError(
+                message=f"NEMAR index entry of {self.record['bids_relpath']} lists no groups",
+                record=self.record,
+                issues=[f"malformed 'groups': {groups!r}"],
+            )
         names = [g["name"] for g in groups]
         if self._group_name is not None:
             chosen = [g for g in groups if g["name"] == self._group_name]
@@ -1641,6 +1802,12 @@ class EEGDashZarrRaw(EEGDashRaw):
                 else {"status": "not checked (verify_snapshot=False)"}
             )
             raw = RawNEMARZarr(url, group, **self._reader_options)
+            if raw.n_times:
+                # Like EEGDashRaw's check of a download: read the first and last
+                # sample, so a missing or denied shard there fails under
+                # on_error now rather than mid-epoch.
+                raw.get_data(start=0, stop=1)
+                raw.get_data(start=raw.n_times - 1, stop=raw.n_times)
         except _STORE_ERRORS as e:
             raise self._wrap_store_error(
                 f"could not open NEMAR Zarr store {url}", e
@@ -1656,10 +1823,10 @@ class EEGDashZarrRaw(EEGDashRaw):
         try:
             return int(self._zarr_group()["n_samples"])
         except (DataIntegrityError, KeyError, ValueError) as e:
-            # Transport failures (after retries) propagate instead: a length of
-            # 0 is fixed into ConcatDataset's cumulative sizes, which would
-            # silently drop the recording for this dataset object's lifetime.
-            if isinstance(e.__cause__, requests.RequestException):
+            # A network failure (after retries) is raised instead: a length of
+            # 0 would silently drop the recording and shift every later index,
+            # for a problem that is not about the data.
+            if _is_transport_error(e):
                 raise
             logger.warning(
                 "Could not read NEMAR Zarr metadata for %s, marking as invalid "

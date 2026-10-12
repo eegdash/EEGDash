@@ -18,6 +18,7 @@ from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 from unittest.mock import patch
 
+import aiohttp
 import mne
 import numpy as np
 import pandas as pd
@@ -27,7 +28,7 @@ import pytest
 import requests
 import zarr
 from torch.utils.data import DataLoader
-from zarr.abc.store import SuffixByteRequest
+from zarr.abc.store import RangeByteRequest, SuffixByteRequest
 from zarr.storage import FsspecStore, WrapperStore
 
 import eegdash.dataset.dataset as dataset_mod
@@ -253,7 +254,8 @@ def _cold_caches():
     nz._open_level0.cache_clear()
     nz._CHUNK_CACHE.clear()
     nz._events_from_parquet.cache_clear()
-    nz._fetch_index.cache_clear()
+    nz._load_index.cache_clear()
+    nz._ALL_FILL_ARRAYS.clear()
     yield
     nz._open_root.cache_clear()
     nz._open_level0.cache_clear()
@@ -382,45 +384,37 @@ def shard_path(url, i):
     return Path(url) / GROUP / "0" / "c" / "0" / str(i)
 
 
-class Flaky(WrapperStore):
-    """Raises ``exc`` on the first ``n`` chunk reads."""
+class Flaky:
+    """Fails the base store's own ``get`` for chunk keys, ``n`` times.
 
-    def __init__(self, store, n=0, exc=None):
-        super().__init__(store)
-        self.n, self.exc, self.calls = n, exc, 0
+    Patched onto the leaf store, below zarr's ``get_ranges`` coalescer, so
+    failures reach the reader the way real ones do: from ``get`` directly for
+    shard indexes, wrapped in an exception group for chunk byte ranges.
+    ``only`` restricts failures to one ``ByteRequest`` type.
+    """
 
-    def _with_store(self, store):
-        return type(self)(store, self.n, self.exc)
+    def __init__(self, store, n=0, exc=None, only=None):
+        self.n, self.exc, self.only, self.calls = n, exc, only, 0
+        self._get = store.get
+        store.get = self.get
 
-    @property
-    def _supports_sync_io(self):
-        return False
-
-    def _maybe_fail(self, key):
-        if "/c/" in key:
+    async def get(self, key, prototype, byte_range=None):
+        if "/c/" in key and (self.only is None or isinstance(byte_range, self.only)):
             self.calls += 1
             if self.calls <= self.n:
                 raise self.exc
-
-    async def get(self, key, prototype, byte_range=None):
-        self._maybe_fail(key)
-        return await self._store.get(key, prototype, byte_range)
-
-    async def get_ranges(self, key, byte_ranges, *, prototype, **kw):
-        self._maybe_fail(key)
-        async for g in self._store.get_ranges(
-            key, byte_ranges, prototype=prototype, **kw
-        ):
-            yield g
+        return await self._get(key, prototype, byte_range)
 
 
 def wrap_base(monkeypatch, cls, **kw):
     holder = {}
 
     def make(url, so):
-        holder["st"] = cls(
-            FsspecStore.from_url(url, storage_options=so, read_only=True), **kw
-        )
+        base = FsspecStore.from_url(url, storage_options=so, read_only=True)
+        if cls is Flaky:
+            holder["st"] = Flaky(base, **kw)
+            return base
+        holder["st"] = cls(base, **kw)
         return holder["st"]
 
     monkeypatch.setattr(nz, "_make_base_store", make)
@@ -712,10 +706,102 @@ def test_persistent_or_denied_chunk_errors_are_raised(
     assert holder["st"].calls == calls
 
 
+def test_many_open_stores_keep_their_metadata_and_shard_indexes(
+    store, monkeypatch, tmp_path
+):
+    """A shuffled pass over more stores than any small bound costs one read each."""
+    stores = []
+
+    def make(url, so):
+        stores.append(
+            Instrumented(FsspecStore.from_url(url, storage_options=so, read_only=True))
+        )
+        return stores[-1]
+
+    monkeypatch.setattr(nz, "_make_base_store", make)
+    raws = []
+    for i in range(70):
+        link = tmp_path / f"copy{i}.zarr"
+        link.symlink_to(store[0])
+        raws.append(open_quiet(str(link), events=None, bids_status=False))
+    for raw in raws:
+        raw.get_data(start=0, stop=10)
+    nz._CHUNK_CACHE.clear()
+    for st in stores:
+        st.reset()
+    for raw in raws:
+        raw.get_data(start=0, stop=10)
+    assert sum(st.meta + st.index for st in stores) == 0
+    assert sum(st.chunks for st in stores) == 70
+
+
+def test_chunk_range_errors_are_retried(store, monkeypatch):
+    """Chunk byte ranges go through zarr's coalescer, which wraps errors in a group."""
+    exc = aiohttp.ClientPayloadError("connection reset mid-body")
+    holder = wrap_base(monkeypatch, Flaky, n=1, exc=exc, only=RangeByteRequest)
+    raw = open_quiet(store[0], events=None, bids_status=False)
+    np.testing.assert_allclose(
+        raw.get_data(start=0, stop=10, picks="Fz")[0] * 1e6, store[1][0, :10]
+    )
+    assert holder["st"].calls == 2  # failed once, then retried
+
+
+@pytest.mark.parametrize("status,exc", [(503, FakeHTTPError), (403, MissingChunkError)])
+def test_chunk_range_persistent_errors_are_raised_unwrapped(
+    store, monkeypatch, status, exc
+):
+    holder = wrap_base(
+        monkeypatch, Flaky, n=99, exc=FakeHTTPError(status), only=RangeByteRequest
+    )
+    raw = open_quiet(store[0], events=None, bids_status=False)
+    with pytest.raises(exc, match=str(status)):
+        raw.get_data(start=0, stop=10)
+    assert holder["st"].calls == (nz._ATTEMPTS if status == 503 else 1)
+
+
+def test_shard_lost_after_its_index_was_cached(store):
+    url = store[0]
+    raw = open_quiet(url, events=None, bids_status=False)
+    raw.get_data(start=0, stop=10)  # caches shard 0's index in the open store
+    nz._CHUNK_CACHE.clear()
+    shard_path(url, 0).unlink()
+    with pytest.raises(MissingChunkError, match="flat data"):
+        raw.get_data(start=0, stop=10)
+
+
+def make_all_constant(url, offsets, scale=1.0):
+    """Rewrite level 0 as biosigio stores constant channels: digital 0, scale 1."""
+    arr = zarr.open_array(f"{url}/{GROUP}/0", mode="r+")
+    arr[:] = 0  # all fill: zarr deletes every shard (write_empty_chunks=False)
+    scales = [1.0] * arr.shape[0]
+    scales[-1] = scale
+    arr.attrs.update({"scale": scales, "offset": list(offsets)})
+    return arr.shape[0]
+
+
+def test_all_constant_group_reads_its_unwritten_shards_as_constants(store):
+    url = store[0]
+    n = make_all_constant(url, [float(i) for i in range(7)])
+    assert not any(p.is_file() for p in (Path(url) / GROUP / "0" / "c").rglob("*"))
+    raw = open_quiet(url, events=None, bids_status=False)
+    data = raw.get_data(start=4990, stop=5010)
+    assert data.shape == (n, 20)
+    np.testing.assert_allclose(data[1], 1e-6)  # Cz: 1 uV
+    np.testing.assert_array_equal(data[5], 5.0)  # Marker: code 5
+
+
+def test_missing_shards_still_raise_unless_every_channel_is_constant(store):
+    url = store[0]
+    make_all_constant(url, [0.0] * 7, scale=0.5)  # Aux varies: not all constant
+    raw = open_quiet(url, events=None, bids_status=False)
+    with pytest.raises(MissingChunkError):
+        raw.get_data(start=0, stop=10)
+
+
 def test_only_event_chunks_may_be_unwritten():
-    assert nz._may_be_unwritten("events/duration/c/0")
-    assert not nz._may_be_unwritten("eeg_250hz/0/c/0/1")
-    assert not nz._may_be_unwritten("events/zarr.json")
+    assert nz._may_be_unwritten("s", "events/duration/c/0")
+    assert not nz._may_be_unwritten("s", "eeg_250hz/0/c/0/1")
+    assert not nz._may_be_unwritten("s", "events/zarr.json")
 
 
 def test_missing_local_shard_is_an_error_not_flat_data(store):
@@ -949,6 +1035,7 @@ def test_braindecode_windows_and_multiprocess_dataloader(store, http, tmp_path):
     np.testing.assert_array_equal(multi, single)
 
 
+@pytest.mark.filterwarnings("ignore:.*multi-threaded.*fork:DeprecationWarning")
 def test_dataloader_forked_workers_over_http(store, http, http_server, tmp_path):
     """Linux's default ``fork`` start method must not reuse the parent's sessions."""
     if "fork" not in multiprocessing.get_all_start_methods():
@@ -1087,6 +1174,47 @@ def test_len_raises_on_transport_errors_but_not_missing_copies(
     assert len(zarr_raw(tmp_path)) == 0
 
 
+def test_unconverted_dataset_has_no_copy(store, monkeypatch, tmp_path):
+    fake = FakeHTTP()  # index.json answers 404
+    monkeypatch.setattr(nz, "_http_get", fake)
+    with pytest.raises(LookupError, match="no Zarr copy of dataset"):
+        nz._fetch_index(DS)
+    dataset = EEGDashDataset(
+        cache_dir=tmp_path / "cache",
+        records=[nemar_record(), nemar_record()],
+        signal_source="zarr",
+        on_error="skip",
+        _suppress_comp_warning=True,
+    )
+    assert len(dataset) == 0
+    assert sum("index.json" in url for _, url, _ in fake.calls) == 1  # cached
+
+
+def test_reader_bugs_are_not_hidden_as_data_errors(store, http, monkeypatch, tmp_path):
+    def bug(*args):
+        raise KeyError("a bug in the reader")
+
+    monkeypatch.setattr(nz, "_calibrations", bug)
+    ds = EEGDashZarrRaw(nemar_record(), str(tmp_path), on_error="skip")
+    with pytest.raises(KeyError, match="a bug in the reader"):
+        _ = ds.raw
+
+
+def test_malformed_store_metadata_is_a_data_error(store, http, tmp_path):
+    g = zarr.open_group(f"{store[0]}/{GROUP}", mode="r+")
+    g.attrs["channels"] = g.attrs["channels"][:-1]  # one row without metadata
+    with pytest.raises(DataIntegrityError, match="does not line up"):
+        _ = zarr_raw(tmp_path).raw
+
+
+def test_missing_last_shard_fails_when_opening(store, http, tmp_path):
+    shard_path(store[0], 2).unlink()  # samples 10000-11999
+    with pytest.raises(DataIntegrityError, match="flat data"):
+        _ = zarr_raw(tmp_path).raw
+    lenient = EEGDashZarrRaw(nemar_record(), str(tmp_path), on_error="skip")
+    assert lenient.raw is None and lenient._skipped
+
+
 @pytest.mark.parametrize(
     "options",
     [
@@ -1123,11 +1251,10 @@ def test_live_reader_and_bids_events():
     raw = nz.read_raw_nemar_zarr(LIVE_DS, LIVE_PATH)
     assert raw.info["sfreq"] == 250.0 and raw.n_times == 152_000
     tsv_url = f"https://data.nemar.org/{LIVE_DS}/latest/sub-001/eeg/sub-001_task-MMN_events.tsv"
-    rows = list(
-        csv.DictReader(
-            io.StringIO(requests.get(tsv_url, timeout=60).text), delimiter="\t"
-        )
-    )
+    r = nz._http_get(tsv_url, timeout=60)  # retries NEMAR's intermittent 5xx
+    r.raise_for_status()
+    rows = list(csv.DictReader(io.StringIO(r.text), delimiter="\t"))
+    assert rows, f"empty events.tsv from {tsv_url}"
     assert list(raw.annotations.description) == [r["value"] for r in rows]
     assert (
         raw.nemar_provenance["events"]["bytes_fetched"]

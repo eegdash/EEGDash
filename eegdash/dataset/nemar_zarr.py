@@ -843,12 +843,25 @@ def _data_base(index: dict, dataset: str) -> str:
     return index.get("data_base") or CONTRACT_BASE.format(ds=dataset)
 
 
+def _stores_by_path(index: dict) -> dict:
+    """``{BIDS path: store entry}`` of an index, built once and kept in it.
+
+    A linear scan per lookup made ``len(dataset)`` quadratic: 10 s for
+    nm000289's 36,122 recordings.
+    """
+    by_path = index.get("_eegdash_stores_by_path")
+    if by_path is None:
+        by_path = {store["path"]: store for store in index["stores"]}
+        index["_eegdash_stores_by_path"] = by_path
+    return by_path
+
+
 def _index_entry(dataset: str, recording: str) -> tuple[str, dict, dict]:
     """Store URL, index entry and index for a BIDS recording path."""
     index = _fetch_index(dataset)
-    for store in index["stores"]:
-        if store["path"] == recording:
-            return _data_base(index, dataset) + store["zarr"], store, index
+    store = _stores_by_path(index).get(recording)
+    if store is not None:
+        return _data_base(index, dataset) + store["zarr"], store, index
     raise LookupError(
         f"{recording!r} has no Zarr copy in the {dataset} index "
         f"({len(index['stores'])} stores)"
@@ -1039,6 +1052,31 @@ def _events_from_store(root):
 _PARQUET_ERRORS = (requests.RequestException, OSError, KeyError, ValueError) + (
     (pa.ArrowException,) if pa is not None else ()
 )
+
+
+def _clamp_negative_durations(annotations, provenance: dict):
+    """Annotations with negative durations set to 0, as EEGDashRaw does for BIDS.
+
+    MNE refuses a negative duration inside the data with a bare
+    AssertionError, which would abort the recording; NEMAR's events carry
+    some (e.g. nm000279 has -4287888.5 s). Returns new Annotations, since
+    the parquet arrays are cached and shared.
+    """
+    negative = annotations.duration < 0
+    if not negative.any():
+        return annotations
+    n = int(negative.sum())
+    provenance["negative_durations_clamped"] = n
+    warnings.warn(
+        f"{n} event(s) have a negative duration; set to 0",
+        NEMARDataWarning,
+        stacklevel=4,
+    )
+    return mne.Annotations(
+        onset=annotations.onset,
+        duration=np.where(negative, 0.0, annotations.duration),
+        description=annotations.description,
+    )
 
 
 def _load_annotations(events, url, group, root, max_bytes):
@@ -1462,7 +1500,10 @@ class RawNEMARZarr(BaseRaw):
         # same way: calibrate with a unit step and zero the digital term.
         constant = scale == 0
         cal_scale = np.where(constant, 1.0, scale)
-        if np.all(cal_scale == 1.0) and not _first_shard_written(root, group):
+        all_fill = bool(
+            np.all(cal_scale == 1.0) and not _first_shard_written(root, group)
+        )
+        if all_fill:
             # Every channel constant: all shards are fill and none were written.
             _ALL_FILL_ARRAYS.add((url, f"{group}/0/"))
 
@@ -1579,6 +1620,9 @@ class RawNEMARZarr(BaseRaw):
             "storage_options_json": so_json,
             "offset_over_scale": offset / cal_scale,
             "constant_rows": constant,
+            # Kept with the raw: _ALL_FILL_ARRAYS is per process, and a pickled
+            # raw (spawn DataLoader workers, joblib) is read in a fresh one.
+            "all_fill": all_fill,
             "nonfinite_samples": filled,
             "round_rows": round_rows,
             "provenance": provenance,
@@ -1597,9 +1641,10 @@ class RawNEMARZarr(BaseRaw):
         annotations, events_prov = _load_annotations(
             events, url, group, root, events_max_bytes
         )
-        self._raw_extras[0]["provenance"]["events"] = events_prov
         if annotations is not None:
+            annotations = _clamp_negative_durations(annotations, events_prov)
             self.set_annotations(annotations)
+        self._raw_extras[0]["provenance"]["events"] = events_prov
 
     @property
     def nemar_provenance(self) -> dict | list[dict]:
@@ -1623,6 +1668,8 @@ class RawNEMARZarr(BaseRaw):
     def _read_segment_file(self, data, idx, fi, start, stop, cals, mult):
         """Fetch samples [start, stop) of every channel; calibrate the rows in idx."""
         extra = self._raw_extras[fi]
+        if extra.get("all_fill"):
+            _ALL_FILL_ARRAYS.add((extra["url"], f"{extra['group']}/0/"))
         arr = _open_level0(extra["url"], extra["group"], extra["storage_options_json"])
         # Each chunk spans all channels, so one request serves every row; repeated
         # per-channel calls (e.g. MNE's non-preloaded resample) hit the chunk cache.
@@ -1725,11 +1772,16 @@ def _annex_key_at_commit(dataset: str, commit: str, path: str) -> str | None:
 # code: wrapped into DataIntegrityError so on_error applies. Programming errors
 # (KeyError, TypeError, a bare ValueError, ...) are deliberately not caught.
 _STORE_ERRORS = (
-    OSError,  # includes MissingChunkError and local FileNotFoundError
-    requests.RequestException,
-    zarr.errors.BaseZarrError,  # missing group/array, invalid metadata
-    StoreMetadataError,
-) + ((aiohttp.ClientError,) if aiohttp is not None else ())
+    (
+        OSError,  # includes MissingChunkError and local FileNotFoundError
+        requests.RequestException,
+        zarr.errors.BaseZarrError,  # missing group/array, invalid metadata
+        StoreMetadataError,
+        EventsTooLargeError,  # events="parquet" on a recording's huge events
+    )
+    + ((aiohttp.ClientError,) if aiohttp is not None else ())
+    + ((pa.ArrowException,) if pa is not None else ())  # corrupt events.parquet
+)
 
 
 def _is_transport_error(exc: BaseException | None) -> bool:
@@ -1862,21 +1914,24 @@ class EEGDashZarrRaw(EEGDashRaw):
         return chosen[0]
 
     def _check_snapshot(self, url: str, index: dict, store_commit: str | None) -> dict:
+        # Only the store's own commit says what it was converted from; the
+        # index's can differ (5 of 983 sampled live stores, all nm000276), so
+        # a store without one is unverified rather than checked against it.
         index_commit = index.get("source_commit")
-        commit = store_commit or index_commit
+        commit = store_commit
         raw_key = self.record["bids_relpath"]
         expected = ((self.record.get("storage") or {}).get("annex_keys") or {}).get(
             raw_key
         )
-        result = {
-            "record_annex_key": expected,
-            "source_commit": commit,
-            "commit_from": "store" if store_commit else "index",
-        }
-        if store_commit and index_commit and store_commit != index_commit:
+        result = {"record_annex_key": expected, "source_commit": commit}
+        if index_commit and index_commit != store_commit:
             result["index_source_commit"] = index_commit
         if not expected or not commit:
-            result["status"] = "unverified: record has no annex key or store no commit"
+            result["status"] = (
+                "unverified: the record has no annex key"
+                if commit
+                else "unverified: the store records no source_commit"
+            )
             warnings.warn(
                 f"cannot verify that {url} matches the record ({result['status']})",
                 NEMARDataWarning,

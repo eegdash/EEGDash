@@ -563,6 +563,23 @@ def test_unknown_voltage_unit_warns(tmp_path):
 # ---------------------------------------------------------------------------
 
 
+def test_bids_bads_from_the_sidecar_the_index_records(
+    store, http, monkeypatch, tmp_path
+):
+    """Split recordings share an unsplit sidecar: the index names it."""
+    del http.files[github("sub-01/eeg/sub-01_task-oddball_channels.tsv")]
+    shared = "sub-01/eeg/sub-01_task-oddball_run-1_channels.tsv"
+    http.files[github(shared)] = CHANNELS_TSV.replace(
+        "Pz\tEEG\tuV\tgood", "Pz\tEEG\tuV\tbad"
+    ).encode()
+    index = fake_index(str(tmp_path))
+    index["stores"][0]["units_report"]["sidecar"] = shared
+    monkeypatch.setattr(nz, "_fetch_index", lambda ds: index)
+    raw = open_quiet(store[0], events=None)
+    assert raw.info["bads"] == ["Cz", "Pz"]
+    assert raw.nemar_provenance["bids_status"]["sidecar"] == shared
+
+
 def test_bids_bad_status_and_montage(store, http):
     raw = open_quiet(store[0], events=None)
     assert raw.info["bads"] == ["Cz"]
@@ -981,6 +998,42 @@ def test_unit_scales_alone_do_not_make_missing_shards_fill(store):
         raw.get_data(start=5000, stop=5005)
 
 
+class RawReads(Dataset):
+    """Windows of one already-opened raw (pickled into each spawned worker)."""
+
+    def __init__(self, raw):
+        self.raw = raw
+
+    def __len__(self):
+        return 6
+
+    def __getitem__(self, i):
+        return self.raw.get_data(start=i * 2000, stop=i * 2000 + 100)
+
+
+def test_all_constant_group_survives_pickling(store):
+    url = store[0]
+    make_all_constant(url, [float(i) for i in range(7)])
+    raw = open_quiet(url, events=None, bids_status=False)
+    blob = pickle.dumps(raw)
+    reset_caches()  # what a fresh process starts with
+    clone = pickle.loads(blob)
+    np.testing.assert_array_equal(clone.get_data(picks="Marker")[0], 5.0)
+
+
+@pytest.mark.skipif(
+    "spawn" not in multiprocessing.get_all_start_methods(), reason="no spawn"
+)
+def test_all_constant_group_reads_in_spawned_workers(store):
+    make_all_constant(store[0], [float(i) for i in range(7)])
+    raw = open_quiet(store[0], events=None, bids_status=False)
+    loader = DataLoader(
+        RawReads(raw), batch_size=None, num_workers=2, multiprocessing_context="spawn"
+    )
+    for x in loader:
+        np.testing.assert_array_equal(x.numpy()[5], 5.0)
+
+
 def test_only_event_chunks_may_be_unwritten():
     assert nz._may_be_unwritten("s", "events/duration/c/0")
     assert not nz._may_be_unwritten("s", "eeg_250hz/0/c/0/1")
@@ -1321,8 +1374,21 @@ def test_snapshot_uses_the_store_commit(store, http, monkeypatch, tmp_path):
         warnings.simplefilter("ignore", NEMARDataWarning)
         check = zarr_raw(tmp_path).raw.nemar_provenance["eegdash_snapshot_check"]
     assert check["status"] == "verified"
-    assert check["source_commit"] == COMMIT and check["commit_from"] == "store"
+    assert check["source_commit"] == COMMIT
     assert check["index_source_commit"] == "f" * 40
+
+
+def test_store_without_its_own_commit_is_unverified(store, http, tmp_path):
+    """The index's commit may be newer than the store, so it is never borrowed."""
+    root = zarr.open_group(store[0], mode="r+")
+    nemar = dict(root.attrs["nemar"])
+    del nemar["source_commit"]
+    root.attrs["nemar"] = nemar
+    with pytest.warns(NEMARDataWarning, match="records no source_commit"):
+        check = zarr_raw(tmp_path).raw.nemar_provenance["eegdash_snapshot_check"]
+    assert check["status"] == "unverified: the store records no source_commit"
+    assert check["source_commit"] is None and check["index_source_commit"] == COMMIT
+    assert not any(BIDS_PATH in url for _, url, _ in http.calls)  # nothing checked
 
 
 def test_raw_file_absent_at_commit_is_a_mismatch(store, http, tmp_path):
@@ -1396,6 +1462,71 @@ def test_missing_last_shard_fails_when_opening(store, http, tmp_path):
         _ = zarr_raw(tmp_path).raw
     lenient = EEGDashZarrRaw(nemar_record(), str(tmp_path), on_error="skip")
     assert lenient.raw is None and lenient._skipped
+
+
+def test_negative_event_durations_are_clamped(store, http, tmp_path):
+    ev = zarr.open_group(f"{store[0]}/events", mode="r+")
+    duration = ev["duration"][:]
+    duration[[2, 5]] = [-1.5, -4287888.5]  # in-range onsets: MNE would assert
+    del ev["duration"]
+    ev.create_array("duration", data=duration)
+    with pytest.warns(NEMARDataWarning, match="2 event.*negative duration"):
+        raw = RawNEMARZarr(store[0], bids_status=False)
+    assert raw.annotations.duration.min() == 0.0 and len(raw.annotations) == len(
+        duration
+    )
+    assert raw.nemar_provenance["events"]["negative_durations_clamped"] == 2
+    with warnings.catch_warnings():
+        warnings.simplefilter("ignore", NEMARDataWarning)
+        ds = EEGDashZarrRaw(
+            nemar_record(), str(tmp_path), zarr_options={"events": "store"}
+        )
+        assert len(ds.raw.annotations) == len(duration)
+
+
+def test_oversized_events_go_through_on_error(
+    store, http, http_server, monkeypatch, tmp_path
+):
+    index = fake_index(str(tmp_path))
+    index["data_base"] = f"{http_server}/{DS}/zarr/"
+    monkeypatch.setattr(nz, "_fetch_index", lambda ds: index)
+
+    def too_large(*args):
+        raise EventsTooLargeError("this recording's events need 99 MB")
+
+    monkeypatch.setattr(nz, "_events_from_parquet", too_large)
+    options = {"events": "parquet", "bids_status": False}
+    with pytest.raises(DataIntegrityError, match="99 MB"):
+        _ = EEGDashZarrRaw(nemar_record(), str(tmp_path), zarr_options=options).raw
+    lenient = EEGDashZarrRaw(
+        nemar_record(), str(tmp_path), zarr_options=options, on_error="skip"
+    )
+    assert lenient.raw is None and lenient._skipped
+
+
+class CountingList(list):
+    iterations = 0
+
+    def __iter__(self):
+        CountingList.iterations += 1
+        return super().__iter__()
+
+
+def test_index_lookup_is_not_a_scan_per_recording(monkeypatch, tmp_path):
+    index = fake_index(str(tmp_path))
+    template = index["stores"][0]
+    index["stores"] = CountingList(
+        dict(template, path=f"sub-{i}/eeg/x_eeg.set", zarr=f"s{i}.zarr")
+        for i in range(2000)
+    )
+    monkeypatch.setattr(nz, "_fetch_index", lambda ds: index)
+    CountingList.iterations = 0
+    for i in range(2000):
+        url, entry, _ = nz._index_entry(DS, f"sub-{i}/eeg/x_eeg.set")
+        assert url.endswith(f"s{i}.zarr")
+    assert CountingList.iterations == 1  # the path map is built once
+    with pytest.raises(LookupError):
+        nz._index_entry(DS, "sub-x/eeg/missing_eeg.set")
 
 
 @pytest.mark.parametrize(

@@ -106,6 +106,16 @@ features = [
   "numba>=0.61;       sys_platform != 'darwin' or platform_machine != 'x86_64'",
   "safetensors",
 ]
+zarr = [
+  # Streaming NEMAR's Zarr serving copies (eegdash.dataset.nemar_zarr):
+  # zarr>=3.4 for Store.get_ranges, which the chunk cache and retries wrap;
+  # S3 is read over HTTPS via fsspec+aiohttp, never s3fs (see #397);
+  # pyarrow reads only the needed row groups of events.parquet.
+  "zarr>=3.4",
+  "fsspec",
+  "aiohttp",
+  "pyarrow",
+]
 tests = [
     'ipython',
     'pytest',
@@ -124,6 +134,8 @@ tests = [
     # (tests/unit_tests/test_croissant_export.py). Optional: the gate skips
     # when absent, runs the MLCommons validator when present.
     'mlcroissant',
+    # tests/unit_tests/dataset/test_nemar_zarr.py
+    'eegdash[zarr]',
 ]
 dev = [
   "pre-commit",

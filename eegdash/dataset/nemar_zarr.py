@@ -94,9 +94,9 @@ __all__ = [
     "MissingChunkError",
     "NEMARDataWarning",
     "RawNEMARZarr",
-    "chunk_cache_info",
+    "cache_info",
     "read_raw_nemar_zarr",
-    "set_chunk_cache_size",
+    "set_cache_limits",
 ]
 
 INDEX_URL = "https://zarr.nemar.org/{ds}/zarr/index.json"
@@ -105,7 +105,16 @@ GITHUB_RAW = "https://raw.githubusercontent.com/nemarDatasets/{ds}/{commit}/{pat
 
 #: Most bytes of ``events.parquet`` downloaded automatically for one recording.
 EVENTS_MAX_BYTES = 16 * 1024 * 1024
-_DEFAULT_CHUNK_CACHE_BYTES = 64 * 1024 * 1024
+# Per-process cache limits; see set_cache_limits for how they were chosen.
+# Each can be preset with an environment variable, which spawned DataLoader
+# workers inherit.
+_CACHE_LIMITS = {  # name: (environment variable, default)
+    "chunk_bytes": ("EEGDASH_ZARR_CHUNK_CACHE_BYTES", 64 * 1024 * 1024),
+    "index_bytes": ("EEGDASH_ZARR_INDEX_CACHE_BYTES", 16 * 1024 * 1024),
+    "metadata_bytes": ("EEGDASH_ZARR_METADATA_CACHE_BYTES", 32 * 1024 * 1024),
+    "open_stores": ("EEGDASH_ZARR_OPEN_STORES", 128),
+}
+_DEFAULT_CHUNK_CACHE_BYTES = _CACHE_LIMITS["chunk_bytes"][1]
 _MIN_ZARR = (3, 4)
 _INSTALL_HINT = (
     'install the extra with: pip install "eegdash[zarr]" (zarr>=3.4 needs Python>=3.12)'
@@ -469,42 +478,168 @@ class _ByteLRU:
         return self._size
 
 
-_CHUNK_CACHE = _ByteLRU(_DEFAULT_CHUNK_CACHE_BYTES)
+def _limit_from_env(name: str) -> int:
+    var, default = _CACHE_LIMITS[name]
+    try:
+        value = int(os.environ.get(var, default))
+    except ValueError:
+        warnings.warn(f"ignoring non-integer {var}", NEMARDataWarning, stacklevel=2)
+        return default
+    return max(value, 0)
 
 
-def set_chunk_cache_size(nbytes: int) -> None:
-    """Set the per-process limit of the NEMAR chunk cache in bytes (0 disables it).
+class _LRU:
+    """Thread-safe LRU of open store objects, bounded by entry count.
 
-    The cache is shared by every :class:`RawNEMARZarr` in the process; each
-    DataLoader worker process has its own.
+    Unlike _ByteLRU its values are zarr groups and arrays, whose memory is
+    their parsed metadata (measured 27-67 KiB each on NEMAR stores).
     """
-    _CHUNK_CACHE.resize(int(nbytes))
+
+    def __init__(self, fn, max_items: int):
+        self._fn = fn
+        self.max_items = max_items
+        self._items: OrderedDict = OrderedDict()
+        self._lock = threading.Lock()
+        self.hits = self.misses = 0
+        self.__doc__ = fn.__doc__
+
+    def __call__(self, *args):
+        with self._lock:
+            value = self._items.get(args)
+            if value is not None:
+                self._items.move_to_end(args)
+                self.hits += 1
+                return value
+            self.misses += 1
+        # Opened outside the lock (it may do I/O); two threads may both open
+        # the same store, and one result is kept.
+        value = self._fn(*args)
+        with self._lock:
+            value = self._items.setdefault(args, value)
+            self._items.move_to_end(args)
+            self._evict()
+        return value
+
+    def _evict(self) -> None:
+        while len(self._items) > self.max_items:
+            self._items.popitem(last=False)
+
+    def resize(self, max_items: int) -> None:
+        with self._lock:
+            self.max_items = max_items
+            self._evict()
+
+    def cache_clear(self) -> None:
+        with self._lock:
+            self._items.clear()
+            self.hits = self.misses = 0
+
+    def __len__(self) -> int:
+        return len(self._items)
 
 
-def chunk_cache_info() -> dict:
-    """Size, limit and hit/miss counts of the per-process chunk cache."""
-    return {
-        "nbytes": _CHUNK_CACHE.nbytes,
-        "max_bytes": _CHUNK_CACHE.max_bytes,
-        "hits": _CHUNK_CACHE.hits,
-        "misses": _CHUNK_CACHE.misses,
+# Chunk byte ranges: the signal itself.
+_CHUNK_CACHE = _ByteLRU(_limit_from_env("chunk_bytes"))
+# Shard indexes (16 B per inner chunk + 4: ~1.2 kB per 5-minute shard) and
+# zarr.json documents (median 27 kB, up to ~120 kB per recording). Kept apart
+# from the open store objects so that evicting a store costs only re-parsing
+# its metadata, not the ~400 ms of round trips to fetch it again.
+_INDEX_CACHE = _ByteLRU(_limit_from_env("index_bytes"))
+_METADATA_CACHE = _ByteLRU(_limit_from_env("metadata_bytes"))
+
+
+def set_cache_limits(
+    *,
+    chunk_bytes: int | None = None,
+    index_bytes: int | None = None,
+    metadata_bytes: int | None = None,
+    open_stores: int | None = None,
+) -> None:
+    """Set this process's limits for the NEMAR Zarr caches; ``None`` keeps one.
+
+    Every cache is per process and bounded, so a pass over many recordings
+    holds at most about ``chunk_bytes + index_bytes + metadata_bytes`` plus
+    ``open_stores`` x 30-70 KiB (~130 MB with the defaults). Each DataLoader
+    worker has its own caches with the same limits: forked workers inherit
+    the values, and spawned ones read them from the ``EEGDASH_ZARR_*``
+    environment variables, which this function also sets.
+
+    Parameters
+    ----------
+    chunk_bytes : int | None
+        Signal chunk bytes (default 64 MiB; 0 disables the cache).
+    index_bytes : int | None
+        Shard indexes (default 16 MiB, ~13,000 five-minute shards: every
+        shard of 90% of NEMAR datasets).
+    metadata_bytes : int | None
+        ``zarr.json`` documents (default 32 MiB, ~1,200 recordings at the
+        median 27 kB).
+    open_stores : int | None
+        Open zarr groups and arrays (default 128, ~4-9 MB). Reopening an
+        evicted store from cached metadata takes milliseconds and no request.
+
+    """
+    values = {
+        "chunk_bytes": chunk_bytes,
+        "index_bytes": index_bytes,
+        "metadata_bytes": metadata_bytes,
+        "open_stores": open_stores,
     }
+    for name, value in values.items():
+        if value is None:
+            continue
+        if isinstance(value, bool) or not isinstance(value, int) or value < 0:
+            raise ValueError(f"{name} must be a non-negative int, not {value!r}")
+        os.environ[_CACHE_LIMITS[name][0]] = str(value)
+    if chunk_bytes is not None:
+        _CHUNK_CACHE.resize(chunk_bytes)
+    if index_bytes is not None:
+        _INDEX_CACHE.resize(index_bytes)
+    if metadata_bytes is not None:
+        _METADATA_CACHE.resize(metadata_bytes)
+    if open_stores is not None:
+        _open_root.resize(open_stores)
+        _open_level0.resize(open_stores)
+
+
+def cache_info() -> dict:
+    """Size, limit and hit/miss counts of this process's NEMAR Zarr caches."""
+    info = {
+        name: {
+            "nbytes": c.nbytes,
+            "max_bytes": c.max_bytes,
+            "hits": c.hits,
+            "misses": c.misses,
+        }
+        for name, c in (
+            ("chunks", _CHUNK_CACHE),
+            ("shard_indexes", _INDEX_CACHE),
+            ("metadata", _METADATA_CACHE),
+        )
+    }
+    info["open_stores"] = {
+        "n": len(_open_root),
+        "max_items": _open_root.max_items,
+        "hits": _open_root.hits,
+        "misses": _open_root.misses,
+    }
+    return info
 
 
 class CachingStore(WrapperStore):
-    """Read-only store wrapper: shard-index and chunk caching, retries.
+    """Read-only store wrapper: metadata, shard-index and chunk caching, retries.
 
-    Shard indexes (~1.2 kB per shard) are kept per store for its lifetime.
-    Chunk byte ranges go into the shared, size-bounded LRU keyed by store URL,
-    object key and range. Transient failures are retried with backoff and then
-    raised. Entries are never invalidated, so only read-only stores may be
-    wrapped.
+    ``zarr.json`` documents, shard indexes and chunk byte ranges go into
+    shared, per-process, size-bounded LRUs keyed by store URL, object key
+    and range, so they outlive this wrapper: a store evicted from the
+    open-store cache and reopened needs no request for anything still
+    cached. Transient failures are retried with backoff and then raised.
+    Entries are never invalidated, so only read-only stores may be wrapped.
     """
 
     def __init__(self, store, cache_id: str):
         super().__init__(store)
         self._cache_id = cache_id
-        self._index: dict = {}
 
     def _with_store(self, store):
         return type(self)(store, self._cache_id)
@@ -566,24 +701,25 @@ class CachingStore(WrapperStore):
                 raise _missing_chunk(self._cache_id, key)
         return groups
 
-    async def get(self, key, prototype, byte_range=None):
-        if isinstance(byte_range, SuffixByteRequest):
-            ik = (key, byte_range.suffix)
-            buf = self._index.get(ik)
-            if buf is None:
-                buf = await self._get(key, prototype, byte_range)
-                if buf is not None:
-                    self._index[ik] = buf
-            return buf
+    def _cache_for(self, key, byte_range):
+        """The byte cache and cache key for a read, or (None, None)."""
+        if isinstance(byte_range, SuffixByteRequest):  # a shard index
+            return _INDEX_CACHE, (self._cache_id, key, -byte_range.suffix)
+        if byte_range is None and key.rsplit("/", 1)[-1] == "zarr.json":
+            return _METADATA_CACHE, (self._cache_id, key)
         ck = self._range_key(key, byte_range)
-        if ck is not None and _CHUNK_CACHE.max_bytes:
-            buf = _CHUNK_CACHE.get(ck)
-            if buf is None:
-                buf = await self._get(key, prototype, byte_range)
-                if buf is not None:
-                    _CHUNK_CACHE.put(ck, buf)
-            return buf
-        return await self._get(key, prototype, byte_range)
+        return (_CHUNK_CACHE, ck) if ck is not None else (None, None)
+
+    async def get(self, key, prototype, byte_range=None):
+        cache, ck = self._cache_for(key, byte_range)
+        if cache is None or not cache.max_bytes:
+            return await self._get(key, prototype, byte_range)
+        buf = cache.get(ck)
+        if buf is None:
+            buf = await self._get(key, prototype, byte_range)
+            if buf is not None:  # absent keys are not cached
+                cache.put(ck, buf)
+        return buf
 
     async def get_ranges(self, key, byte_ranges, *, prototype, **kwargs):
         byte_ranges = list(byte_ranges)
@@ -621,32 +757,6 @@ def _make_base_store(url: str, storage_options: dict | None):
     return FsspecStore.from_url(url, storage_options=storage_options, read_only=True)
 
 
-class _PerProcessCache:
-    """Unbounded memo of open stores, for the life of the process.
-
-    Not an LRU: each open store carries its shard indexes, so evicting it in
-    a shuffled pass over more recordings than the bound made every read cost
-    ~5 requests (metadata and shard index again) instead of 1. One entry is a
-    few kB plus ~1.2 kB per shard read. Cleared after fork, since the stores'
-    HTTP sessions belong to the parent.
-    """
-
-    def __init__(self, fn):
-        self._fn = fn
-        self._items: dict = {}
-        self.__doc__ = fn.__doc__
-
-    def __call__(self, *args):
-        try:
-            return self._items[args]
-        except KeyError:
-            # Not locked: two threads may both open a store; one result is kept.
-            return self._items.setdefault(args, self._fn(*args))
-
-    def cache_clear(self) -> None:
-        self._items = {}
-
-
 def _open_root_uncached(url: str, storage_options_json: str):
     """Open a store's root group through CachingStore."""
     storage_options = json.loads(storage_options_json) or None
@@ -664,8 +774,10 @@ def _open_level0_uncached(url: str, group: str, storage_options_json: str):
     return _open_root(url, storage_options_json)[group]["0"]
 
 
-_open_root = _PerProcessCache(_open_root_uncached)
-_open_level0 = _PerProcessCache(_open_level0_uncached)
+# Open stores: an LRU per process, bounded by count (set_cache_limits). Their
+# metadata and shard indexes stay in the byte caches above when evicted.
+_open_root = _LRU(_open_root_uncached, _limit_from_env("open_stores"))
+_open_level0 = _LRU(_open_level0_uncached, _limit_from_env("open_stores"))
 
 
 def _reset_after_fork() -> None:
@@ -674,14 +786,16 @@ def _reset_after_fork() -> None:
     Cached groups and arrays hold an fsspec filesystem whose aiohttp session is
     bound to the parent's event loop; reusing it in a child fails with
     "Timeout context manager should be used inside a task". Locks may also
-    have been held by another parent thread at fork time. Cached chunk bytes
-    stay valid and are kept.
+    have been held by another parent thread at fork time. Cached bytes
+    (chunks, shard indexes, metadata) stay valid and are kept.
     """
     global _SESSION, _SESSION_LOCK
-    _open_root.cache_clear()
-    _open_level0.cache_clear()
+    for cache in (_open_root, _open_level0):
+        cache._lock = threading.Lock()
+        cache.cache_clear()
     _SESSION, _SESSION_LOCK = None, threading.Lock()
-    _CHUNK_CACHE._lock = threading.Lock()
+    for cache in (_CHUNK_CACHE, _INDEX_CACHE, _METADATA_CACHE):
+        cache._lock = threading.Lock()
 
 
 # Fail at import, so signal_source="zarr" reports an old zarr up front.

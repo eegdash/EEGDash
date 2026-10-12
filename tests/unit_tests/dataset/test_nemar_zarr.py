@@ -7,9 +7,11 @@ events.parquet) from memory. Tests marked ``network`` check the live service.
 """
 
 import csv
+import gc
 import io
 import json
 import multiprocessing
+import os
 import pickle
 import sys
 import threading
@@ -32,7 +34,7 @@ import pyarrow as pa
 import pyarrow.parquet as pq
 import requests
 import zarr
-from torch.utils.data import DataLoader
+from torch.utils.data import DataLoader, Dataset
 from zarr.abc.store import RangeByteRequest, SuffixByteRequest
 from zarr.storage import FsspecStore, WrapperStore
 
@@ -105,9 +107,9 @@ def physical_signals(rng):
     return np.vstack([*eeg, oz, veog, marker, aux]), onsets, codes
 
 
-def build_store(base, *, channels=CHANNELS, nonfinite=None, meg=False):
+def build_store(base, *, channels=CHANNELS, nonfinite=None, meg=False, seed=7):
     """Write a store under ``base/<DS>/zarr/<STORE_PATH>``; return (url, physical, events)."""
-    rng = np.random.default_rng(7)
+    rng = np.random.default_rng(seed)
     x, onsets, codes = physical_signals(rng)
     if meg:
         channels = [*channels[:-1], ("MEG0111", "MEGMAG", "T")]
@@ -255,15 +257,32 @@ def github(path):
 
 @pytest.fixture(autouse=True)
 def _cold_caches():
-    nz._open_root.cache_clear()
-    nz._open_level0.cache_clear()
-    nz._CHUNK_CACHE.clear()
+    # Not monkeypatch: its teardown runs after this one, so a test's patch of
+    # a cached function would still be in place when the caches are cleared.
+    saved = {var: os.environ.pop(var, None) for var, _ in nz._CACHE_LIMITS.values()}
+    reset_caches()
+    yield
+    for var, value in saved.items():
+        os.environ.pop(var, None)
+        if value is not None:
+            os.environ[var] = value
+    reset_caches()
+
+
+def reset_caches():
+    """Empty every reader cache and restore the default limits."""
+    defaults = {name: default for name, (_, default) in nz._CACHE_LIMITS.items()}
+    nz._CHUNK_CACHE.resize(defaults["chunk_bytes"])
+    nz._INDEX_CACHE.resize(defaults["index_bytes"])
+    nz._METADATA_CACHE.resize(defaults["metadata_bytes"])
+    for cache in (nz._open_root, nz._open_level0):
+        cache.resize(defaults["open_stores"])
+        cache.cache_clear()
+    for cache in (nz._CHUNK_CACHE, nz._INDEX_CACHE, nz._METADATA_CACHE):
+        cache.clear()
     nz._events_from_parquet.cache_clear()
     nz._load_index.cache_clear()
     nz._ALL_FILL_ARRAYS.clear()
-    yield
-    nz._open_root.cache_clear()
-    nz._open_level0.cache_clear()
 
 
 @pytest.fixture
@@ -458,7 +477,7 @@ def test_short_read_fetches_one_chunk_and_caches_it(store, monkeypatch):
 @pytest.mark.parametrize("cache_bytes", [nz._DEFAULT_CHUNK_CACHE_BYTES, 0, 30_000])
 def test_intervals_and_channels_match_the_array(store, cache_bytes):
     url, physical, _ = store
-    nz.set_chunk_cache_size(cache_bytes)
+    nz.set_cache_limits(chunk_bytes=cache_bytes)
     try:
         raw = open_quiet(url, events=None, bids_status=False)
         si = np.array(
@@ -486,7 +505,7 @@ def test_intervals_and_channels_match_the_array(store, cache_bytes):
             exp = physical[idx, a:b] * si[idx, None]
             np.testing.assert_allclose(got, exp, rtol=1e-12, atol=1e-18)
     finally:
-        nz.set_chunk_cache_size(nz._DEFAULT_CHUNK_CACHE_BYTES)
+        nz.set_cache_limits(chunk_bytes=nz._DEFAULT_CHUNK_CACHE_BYTES)
 
 
 def test_crop_concatenate_pickle_and_projection(store):
@@ -738,6 +757,153 @@ def test_many_open_stores_keep_their_metadata_and_shard_indexes(
         raw.get_data(start=0, stop=10)
     assert sum(st.meta + st.index for st in stores) == 0
     assert sum(st.chunks for st in stores) == 70
+
+
+# -- bounded caches: limits, reuse across eviction, correctness, workers --
+
+
+def linked_stores(store, tmp_path, n):
+    """``n`` store URLs sharing one store's data (cheap stand-ins for recordings)."""
+    urls = []
+    for i in range(n):
+        link = tmp_path / f"link{i}.zarr"
+        link.symlink_to(store[0])
+        urls.append(str(link))
+    return urls
+
+
+def test_open_store_cache_is_bounded(store, tmp_path):
+    nz.set_cache_limits(open_stores=8, metadata_bytes=200_000, index_bytes=20_000)
+    raws = []
+    for url in linked_stores(store, tmp_path, 60):
+        raws.append(open_quiet(url, events=None, bids_status=False))
+        raws[-1].get_data(start=0, stop=10)
+        assert len(nz._open_root) <= 8 and len(nz._open_level0) <= 8
+    gc.collect()
+    live = [o for o in gc.get_objects() if isinstance(o, (zarr.Group, zarr.Array))]
+    assert len(live) <= 2 * 8 + 4  # cached roots and arrays, plus a few in flight
+    info = nz.cache_info()
+    for name in ("metadata", "shard_indexes", "chunks"):
+        assert 0 < info[name]["nbytes"] <= info[name]["max_bytes"]
+    assert info["open_stores"] == {**info["open_stores"], "n": 8, "max_items": 8}
+
+
+def test_evicted_stores_reopen_without_requests(store, monkeypatch, tmp_path):
+    """Metadata and shard indexes outlive the open-store cache."""
+    stores = []
+
+    def make(url, so):
+        stores.append(
+            Instrumented(FsspecStore.from_url(url, storage_options=so, read_only=True))
+        )
+        return stores[-1]
+
+    monkeypatch.setattr(nz, "_make_base_store", make)
+    nz.set_cache_limits(open_stores=4)
+    raws = [
+        open_quiet(url, events=None, bids_status=False)
+        for url in linked_stores(store, tmp_path, 20)
+    ]
+    for raw in raws:
+        raw.get_data(start=6100, stop=6600)
+    nz._CHUNK_CACHE.clear()
+    for st in stores:
+        st.reset()
+    reopened = len(stores)
+    for raw in raws:
+        raw.get_data(start=6100, stop=6600)
+    assert len(stores) - reopened == 20  # every store was evicted and reopened
+    assert sum(st.meta for st in stores) == 0  # zarr.json documents: cached
+    assert sum(st.index for st in stores) == 0  # shard indexes: cached
+    assert sum(st.chunks for st in stores) == 20  # only the signal itself
+
+
+def test_reads_identical_before_and_after_eviction(tmp_path):
+    built = [build_store(str(tmp_path / f"s{i}"), seed=i) for i in range(3)]
+    si = np.array([1e-6, 1e-6, 1e-6, 1.0, 1e-6, 1.0, 1.0])[:, None]
+    spans = [  # across chunk (1000) and shard (5000) boundaries, and the edges
+        (0, 1),
+        (995, 1005),
+        (4990, 5010),
+        (4999, 10001),
+        (9995, 10005),
+        (N_SAMPLES - 7, N_SAMPLES),
+        (0, N_SAMPLES),
+    ]
+    before = {}
+    for i, (url, _, _) in enumerate(built):
+        raw = open_quiet(url, events=None, bids_status=False)
+        for a, b in spans:
+            before[i, a, b] = raw.get_data(start=a, stop=b)
+    reset_caches()
+    nz.set_cache_limits(open_stores=1, chunk_bytes=0)  # evict on every switch
+    raws = [open_quiet(u, events=None, bids_status=False) for u, _, _ in built]
+    for a, b in spans:
+        for i, raw in enumerate(raws):  # interleaved: each read reopens a store
+            after = raw.get_data(start=a, stop=b)
+            np.testing.assert_array_equal(after, before[i, a, b])
+            exact = built[i][1][:, a:b] * si
+            np.testing.assert_allclose(
+                after[[0, 1, 2, 3, 4, 6]], exact[[0, 1, 2, 3, 4, 6]]
+            )
+    assert nz._open_level0.misses > len(spans) * len(raws)  # evictions happened
+
+
+class StoreReads(Dataset):
+    """Reads one window per item from many stores, reporting the worker's caches."""
+
+    def __init__(self, urls, n_items):
+        self.urls, self.n_items = urls, n_items
+
+    def __len__(self):
+        return self.n_items
+
+    def __getitem__(self, i):
+        with warnings.catch_warnings():
+            warnings.simplefilter("ignore", NEMARDataWarning)
+            raw = RawNEMARZarr(
+                self.urls[i % len(self.urls)], events=None, bids_status=False
+            )
+        start = (i * 997) % (N_SAMPLES - 1500)
+        info = nz.cache_info()
+        return (
+            raw.get_data(start=start, stop=start + 1500),
+            os.getpid(),
+            info["open_stores"]["n"],
+            info["open_stores"]["max_items"],
+            info["chunks"]["nbytes"],
+            info["chunks"]["max_bytes"],
+        )
+
+
+@pytest.mark.filterwarnings("ignore:.*multi-threaded.*fork:DeprecationWarning")
+@pytest.mark.parametrize("context", ["fork", "spawn"])
+def test_dataloader_workers_have_bounded_independent_caches(store, tmp_path, context):
+    if context not in multiprocessing.get_all_start_methods():
+        pytest.skip(f"{context} start method unavailable")
+    urls = linked_stores(store, tmp_path, 10)
+    nz.set_cache_limits(open_stores=3, chunk_bytes=200_000)
+    data = StoreReads(urls, 40)
+    single = [data[i][0] for i in range(len(data))]
+    parent = (len(nz._open_root), nz._open_root.hits, nz._open_root.misses)
+    loader = DataLoader(
+        data, batch_size=None, num_workers=2, multiprocessing_context=context
+    )
+    seen = list(loader)
+    assert (len(nz._open_root), nz._open_root.hits, nz._open_root.misses) == parent
+    pids = {pid for _, pid, *_ in seen}
+    assert len(pids) == 2 and os.getpid() not in pids  # one cache per worker
+    for x, (got, _, n_open, max_open, chunk_bytes, max_chunk) in zip(single, seen):
+        np.testing.assert_array_equal(got.numpy(), x)
+        assert (max_open, max_chunk) == (3, 200_000)  # the parent's limits
+        assert n_open <= 3 and chunk_bytes <= 200_000
+
+
+def test_cache_limits_are_validated():
+    with pytest.raises(ValueError, match="non-negative int"):
+        nz.set_cache_limits(open_stores=-1)
+    with pytest.raises(ValueError, match="non-negative int"):
+        nz.set_cache_limits(chunk_bytes=1.5)
 
 
 def test_chunk_range_errors_are_retried(store, monkeypatch):

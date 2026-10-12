@@ -127,6 +127,9 @@ html[data-theme="dark"] .corpus {
 .corpus [data-corpus-state="hours"] [data-corpus-show="datasets"],
 .corpus [data-corpus-state="datasets"] [data-corpus-show="hours"] { display: none; }
 .corpus .corpus-3d { position: relative; max-width: 560px; }
+/* The electrode views are capped at 560px: centre them, and their toggle, in a figure that grows with the page. */
+.corpus .corpus-emap, .corpus .corpus-3d { margin-left: auto; margin-right: auto; }
+.corpus .corpus-figure[data-corpus-key^="electrodes"] > .corpus-toggle { display: flex; width: max-content; margin-left: auto; margin-right: auto; }
 .corpus .corpus-3d-canvas {
   display: block; width: 100%; aspect-ratio: 1 / 1; cursor: grab; touch-action: none; border-radius: 8px;
 }

@@ -51,6 +51,7 @@ import asyncio
 import csv
 import io
 import json
+import os
 import re
 import threading
 import warnings
@@ -80,9 +81,10 @@ except ImportError:  # pragma: no cover - exercised only without the extra
     aiohttp = None
 
 try:  # needed for events.parquet
+    import pyarrow as pa
     import pyarrow.parquet as pq
 except ImportError:  # pragma: no cover - exercised only without the extra
-    pq = None
+    pa = pq = None
 
 __all__ = [
     "EEGDashZarrRaw",
@@ -173,8 +175,17 @@ _EVENT_COLUMNS = [
     "trial_type",
 ]
 _READER_OPTIONS = frozenset(
-    {"events", "events_max_bytes", "nonfinite", "bids_status", "verify_snapshot"}
+    {
+        "group",
+        "events",
+        "events_max_bytes",
+        "nonfinite",
+        "bids_status",
+        "verify_snapshot",
+    }
 )
+_EVENTS_POLICIES = ("auto", "parquet", "store", None)
+_NONFINITE_POLICIES = ("warn", "bad", "ignore")
 
 
 class NEMARDataWarning(UserWarning):
@@ -244,6 +255,38 @@ def _http_get(
     )
 
 
+def _check_policy(name: str, value, allowed) -> None:
+    if value not in allowed:
+        raise ValueError(
+            f"{name} must be one of {', '.join(map(repr, allowed))}, not {value!r}"
+        )
+
+
+def _check_reader_options(options: dict) -> None:
+    """Validate reader options up front, so a typo fails before any data access."""
+    unknown = set(options) - _READER_OPTIONS
+    if unknown:
+        raise ValueError(
+            f"unknown zarr_options {sorted(unknown)}; allowed: {sorted(_READER_OPTIONS)}"
+        )
+    if "events" in options:
+        _check_policy("events", options["events"], _EVENTS_POLICIES)
+    if "nonfinite" in options:
+        _check_policy("nonfinite", options["nonfinite"], _NONFINITE_POLICIES)
+    limit = options.get("events_max_bytes", EVENTS_MAX_BYTES)
+    if limit is not None and (
+        isinstance(limit, bool) or not isinstance(limit, int) or limit <= 0
+    ):
+        raise ValueError(
+            f"events_max_bytes must be a positive int or None, not {limit!r}"
+        )
+    for flag in ("bids_status", "verify_snapshot"):
+        if not isinstance(options.get(flag, True), bool):
+            raise ValueError(f"{flag} must be True or False, not {options[flag]!r}")
+    if not isinstance(options.get("group", ""), (str, type(None))):
+        raise ValueError(f"group must be a str or None, not {options['group']!r}")
+
+
 # ---------------------------------------------------------------------------
 # Store access and caching
 # ---------------------------------------------------------------------------
@@ -261,20 +304,40 @@ def _is_transient(exc: BaseException) -> bool:
     )
 
 
-def _is_absent_chunk(exc: BaseException, key: str) -> bool:
-    """A chunk of the store's ``events`` arrays that was never written.
+def _is_not_found(exc: BaseException) -> bool:
+    """A missing key: FileNotFoundError, or HTTP 403/404 (S3 answers 403)."""
+    status = getattr(exc, "status", None) or getattr(exc, "status_code", None)
+    return isinstance(exc, (FileNotFoundError, KeyError)) or status in (403, 404)
+
+
+def _is_chunk_key(key: str) -> bool:
+    return "/c/" in key  # zarr v3 default chunk key encoding: <array>/c/<i>/<j>
+
+
+def _may_be_unwritten(key: str) -> bool:
+    """A chunk of the store's ``events`` arrays, which may never have been written.
 
     Zarr does not store chunks equal to the fill value (e.g. an all-zero
     duration array), and S3 without list permission answers 403, not 404, for
     absent keys, so the two cannot be told apart by status. That is accepted
     only for the small ``events/*`` arrays, where all-fill chunks really occur.
-    For signal chunks a 403/404 is raised: substituting the fill value could
-    silently turn an access error into flat data. Missing metadata always fails.
+    A missing signal chunk is an error whatever the status (403, 404, or a
+    missing local file, which zarr itself reports as absent): substituting the
+    fill value would silently turn it into flat data.
     """
-    if not (key.startswith("events/") and "/c/" in key):
-        return False
-    status = getattr(exc, "status", None) or getattr(exc, "status_code", None)
-    return isinstance(exc, FileNotFoundError) or status in (403, 404)
+    return key.startswith("events/") and _is_chunk_key(key)
+
+
+class MissingChunkError(OSError):
+    """A signal chunk is missing from the store (never filled with the fill value)."""
+
+
+def _missing_chunk(store_id: str, key: str, cause: BaseException | None = None):
+    detail = f" ({type(cause).__name__}: {cause})" if cause is not None else ""
+    return MissingChunkError(
+        f"signal chunk {key!r} is missing from {store_id}{detail}; refusing to "
+        "substitute the fill value, which would read as flat data"
+    )
 
 
 async def _retrying(fn, attempts: int = _ATTEMPTS):
@@ -397,16 +460,23 @@ class CachingStore(WrapperStore):
         return None
 
     async def _get(self, key, prototype, byte_range):
+        # A None result is zarr's "absent, use the fill value": accepted only
+        # where chunks may legitimately be unwritten (see _may_be_unwritten).
         try:
-            return await _retrying(lambda: self._store.get(key, prototype, byte_range))
+            buf = await _retrying(lambda: self._store.get(key, prototype, byte_range))
         except Exception as e:
-            if _is_absent_chunk(e, key):
-                return None  # zarr substitutes the fill value
-            raise
+            if not (_is_chunk_key(key) and _is_not_found(e)):
+                raise
+            if _may_be_unwritten(key):
+                return None
+            raise _missing_chunk(self._cache_id, key, e) from e
+        if buf is None and _is_chunk_key(key) and not _may_be_unwritten(key):
+            raise _missing_chunk(self._cache_id, key)
+        return buf
 
     async def _get_ranges(self, key, byte_ranges, prototype, kwargs):
         try:
-            return await _retrying(
+            groups = await _retrying(
                 lambda: _collect(
                     self._store.get_ranges(
                         key, byte_ranges, prototype=prototype, **kwargs
@@ -414,9 +484,15 @@ class CachingStore(WrapperStore):
                 )
             )
         except Exception as e:
-            if _is_absent_chunk(e, key):
+            if not (_is_chunk_key(key) and _is_not_found(e)):
+                raise
+            if _may_be_unwritten(key):
                 return [[(i, None) for i in range(len(byte_ranges))]]
-            raise
+            raise _missing_chunk(self._cache_id, key, e) from e
+        if _is_chunk_key(key) and not _may_be_unwritten(key):
+            if any(buf is None for group in groups for _, buf in group):
+                raise _missing_chunk(self._cache_id, key)
+        return groups
 
     async def get(self, key, prototype, byte_range=None):
         if isinstance(byte_range, SuffixByteRequest):
@@ -490,6 +566,26 @@ def _open_level0(url: str, group: str, storage_options_json: str):
     documents each time, which would cost two round trips per read.
     """
     return _open_root(url, storage_options_json)[group]["0"]
+
+
+def _reset_after_fork() -> None:
+    """Drop per-process state in a forked child (e.g. DataLoader workers on Linux).
+
+    Cached groups and arrays hold an fsspec filesystem whose aiohttp session is
+    bound to the parent's event loop; reusing it in a child fails with
+    "Timeout context manager should be used inside a task". Locks may also
+    have been held by another parent thread at fork time. Cached chunk bytes
+    stay valid and are kept.
+    """
+    global _SESSION, _SESSION_LOCK
+    _open_root.cache_clear()
+    _open_level0.cache_clear()
+    _SESSION, _SESSION_LOCK = None, threading.Lock()
+    _CHUNK_CACHE._lock = threading.Lock()
+
+
+if hasattr(os, "register_at_fork"):
+    os.register_at_fork(after_in_child=_reset_after_fork)
 
 
 def _split_store_url(url: str) -> tuple[str, str]:
@@ -670,10 +766,13 @@ def _events_from_store(root):
         {"source": "store events group", "n_events": 0},
     )
     # Opened by name: NEMAR's S3 refuses listing. A missing events group shows
-    # up as KeyError locally and as HTTP 403 remotely.
+    # up as KeyError locally and as HTTP 403 remotely; other failures (5xx
+    # after retries, connection errors) are raised, not read as "no events".
     try:
         eg = root["events"]
     except Exception as e:
+        if not _is_not_found(e):
+            raise
         warnings.warn(
             f"store has no readable events group ({type(e).__name__}); "
             "no annotations added",
@@ -699,14 +798,20 @@ def _events_from_store(root):
     }
 
 
+# Failures that make events.parquet unusable, so events="auto" falls back to
+# the store's events: transport errors, a HEAD without Content-Length
+# (KeyError), a schema without an expected column or a corrupt file
+# (ValueError, which includes pyarrow.ArrowInvalid), and other Arrow errors.
+_PARQUET_ERRORS = (requests.RequestException, OSError, KeyError, ValueError) + (
+    (pa.ArrowException,) if pa is not None else ()
+)
+
+
 def _load_annotations(events, url, group, root, max_bytes):
     """Annotations and their provenance under the chosen events policy."""
     if events is None:
         return None, {"source": None}
-    if events not in ("auto", "parquet", "store"):
-        raise ValueError(
-            f"events must be 'auto', 'parquet', 'store' or None, not {events!r}"
-        )
+    _check_policy("events", events, _EVENTS_POLICIES)
     if events in ("auto", "parquet"):
         reason = None
         if not url.startswith(("http://", "https://")):
@@ -725,7 +830,7 @@ def _load_annotations(events, url, group, root, max_bytes):
                         f"{e}; pass events_max_bytes=None to download it anyway"
                     ) from None
                 reason = str(e)
-            except (requests.RequestException, OSError) as e:
+            except _PARQUET_ERRORS as e:
                 if events == "parquet":
                     raise
                 reason = f"events.parquet could not be read ({type(e).__name__}: {e})"
@@ -1047,10 +1152,8 @@ class RawNEMARZarr(BaseRaw):
         preload=False,
         verbose=None,
     ):
-        if nonfinite not in ("warn", "bad", "ignore"):
-            raise ValueError(
-                f"nonfinite must be 'warn', 'bad' or 'ignore', not {nonfinite!r}"
-            )
+        _check_policy("nonfinite", nonfinite, _NONFINITE_POLICIES)
+        _check_policy("events", events, _EVENTS_POLICIES)
         url = url.rstrip("/")
         _check_dependencies(url)
         so_json = json.dumps(storage_options or {}, sort_keys=True)
@@ -1078,6 +1181,11 @@ class RawNEMARZarr(BaseRaw):
             raise RuntimeError("channel metadata does not line up with array rows")
         scale = np.asarray(arr.attrs["scale"], dtype=np.float64)
         offset = np.asarray(arr.attrs["offset"], dtype=np.float64)
+        # A constant channel (max == min) gets scale 0: its value is the offset
+        # and the digital samples carry nothing. Calibrate it with a unit step
+        # and zero its digital term in _read_segment_file.
+        constant = scale == 0
+        cal_scale = np.where(constant, 1.0, scale)
 
         ch_names = [c["label"] for c in chans]
         ch_types, type_notes = _channel_types(chans)
@@ -1088,7 +1196,7 @@ class RawNEMARZarr(BaseRaw):
         # Calibration turns (digital + offset/scale) into SI units:
         #   (d + o/s) * cal == (d * s + o) * unit_factor  with  cal = s * unit_factor
         units = [str(c.get("unit", "n/a")) for c in chans]
-        cals, unclear = _calibrations(chans, scale, ch_types)
+        cals, unclear = _calibrations(chans, cal_scale, ch_types)
         if unclear:
             warnings.warn(
                 f"{len(unclear)} voltage channels have units with no known SI factor "
@@ -1190,7 +1298,8 @@ class RawNEMARZarr(BaseRaw):
             "url": url,
             "group": group,
             "storage_options_json": so_json,
-            "offset_over_scale": offset / scale,
+            "offset_over_scale": offset / cal_scale,
+            "constant_rows": constant,
             "nonfinite_samples": filled,
             "round_rows": round_rows,
             "provenance": provenance,
@@ -1239,6 +1348,9 @@ class RawNEMARZarr(BaseRaw):
         # Each chunk spans all channels, so one request serves every row; repeated
         # per-channel calls (e.g. MNE's non-preloaded resample) hit the chunk cache.
         block = arr[:, start:stop].astype(np.float64)
+        constant = extra.get("constant_rows")
+        if constant is not None and constant.any():
+            block[constant] = 0.0
         block += extra["offset_over_scale"][:, np.newaxis]
         _apply_calibration(data, block, idx, cals, mult)
         round_rows = extra["round_rows"]
@@ -1296,9 +1408,30 @@ def read_raw_nemar_zarr(
 # ---------------------------------------------------------------------------
 
 
+class _NotAtCommit(LookupError):
+    """The file does not exist at the commit, although the commit does."""
+
+
+@lru_cache(maxsize=64)
+def _commit_exists(dataset: str, commit: str) -> bool:
+    """Whether the dataset's GitHub mirror serves ``commit`` (it has a description)."""
+    url = GITHUB_RAW.format(ds=dataset, commit=commit, path="dataset_description.json")
+    r = _http_get(url, timeout=30, method="HEAD")
+    if r.status_code == 404:
+        return False
+    r.raise_for_status()
+    return True
+
+
 def _annex_key_at_commit(dataset: str, commit: str, path: str) -> str | None:
-    """git-annex key of ``path`` at ``commit``, or None if it is not annexed."""
+    """git-annex key of ``path`` at ``commit``, or None if it is not annexed.
+
+    Raises :class:`_NotAtCommit` when the commit exists but ``path`` does not
+    (the store was converted from a tree without this file).
+    """
     r = _http_get(GITHUB_RAW.format(ds=dataset, commit=commit, path=path), timeout=30)
+    if r.status_code == 404 and _commit_exists(dataset, commit):
+        raise _NotAtCommit(f"{path} does not exist at commit {commit}")
     r.raise_for_status()
     try:
         target = r.content.decode("utf-8").strip()
@@ -1307,6 +1440,14 @@ def _annex_key_at_commit(dataset: str, commit: str, path: str) -> str | None:
     if "/annex/objects/" not in target:
         return None
     return target.rsplit("/", 1)[-1]
+
+
+# Failures to open a store that are about the data or the service, not the
+# code: wrapped into DataIntegrityError so on_error applies. ValueError covers
+# zarr's metadata and not-found errors; KeyError missing attributes.
+_STORE_ERRORS = (OSError, requests.RequestException, KeyError, ValueError) + (
+    (aiohttp.ClientError,) if aiohttp is not None else ()
+)
 
 
 class EEGDashZarrRaw(EEGDashRaw):
@@ -1325,9 +1466,11 @@ class EEGDashZarrRaw(EEGDashRaw):
     cache_dir : str
         Kept for interface compatibility; nothing is written there.
     zarr_options : dict | None
-        Options for the reader: ``events``, ``events_max_bytes``,
+        Options for the reader: ``group``, ``events``, ``events_max_bytes``,
         ``nonfinite`` and ``bids_status`` (see :class:`RawNEMARZarr`), and
-        ``verify_snapshot`` (default True).
+        ``verify_snapshot`` (default True). Values are validated here.
+        Without ``group``, a store with several channel groups uses the one
+        whose modality matches the record's datatype.
     **kwargs
         Passed to :class:`~eegdash.dataset.base.EEGDashRaw`.
 
@@ -1336,21 +1479,25 @@ class EEGDashZarrRaw(EEGDashRaw):
     With ``verify_snapshot`` the reader checks, before streaming, that the
     store was converted from the same raw file the record describes: the
     record's git-annex key for its raw file must equal that file's key at the
-    store's ``source_commit``. A mismatch raises
+    ``source_commit`` stored in the store itself (not the index's, which can
+    be newer than a store left from an earlier export). A mismatch, or the
+    raw file being absent at that commit, raises
     :class:`~eegdash.dataset.exceptions.DataIntegrityError` (handled by
     ``on_error``), since the signal would not match the record's metadata.
     When either key is unavailable the check is skipped with a
-    :class:`NEMARDataWarning` rather than blocking loading.
+    :class:`NEMARDataWarning` rather than blocking loading. Only the raw
+    file named by the record is checked, not companion files (e.g. ``.fdt``).
+
+    Failures to locate or open the store (missing Zarr copy, HTTP errors,
+    malformed metadata, missing chunks while opening) are raised as
+    ``DataIntegrityError`` too, so ``on_error`` decides whether one bad
+    recording stops the run.
 
     """
 
     def __init__(self, record: dict[str, Any], cache_dir: str, **kwargs):
         options = dict(kwargs.pop("zarr_options", None) or {})
-        unknown = set(options) - _READER_OPTIONS
-        if unknown:
-            raise ValueError(
-                f"unknown zarr_options {sorted(unknown)}; allowed: {sorted(_READER_OPTIONS)}"
-            )
+        _check_reader_options(options)
         super().__init__(record, cache_dir, **kwargs)
         backend = (self.record.get("storage") or {}).get("backend")
         if backend != "nemar":
@@ -1359,9 +1506,17 @@ class EEGDashZarrRaw(EEGDashRaw):
                 f"uses storage backend {backend!r}"
             )
         self._verify_snapshot = options.pop("verify_snapshot", True)
+        self._group_name = options.pop("group", None)
         self._reader_options = options
 
     # -- location and metadata from the NEMAR index (one fetch per dataset) --
+
+    def _wrap_store_error(self, message: str, exc: BaseException) -> DataIntegrityError:
+        return DataIntegrityError(
+            message=f"{message}: {type(exc).__name__}: {exc}",
+            record=self.record,
+            issues=[f"{type(exc).__name__}: {exc}"],
+        )
 
     def _zarr_location(self) -> tuple[str, dict, dict]:
         try:
@@ -1372,19 +1527,53 @@ class EEGDashZarrRaw(EEGDashRaw):
                 record=self.record,
                 issues=["NEMAR has no Zarr copy of this recording"],
             ) from e
+        except (requests.RequestException, ValueError) as e:  # ValueError: bad JSON
+            raise self._wrap_store_error(
+                f"could not read the NEMAR Zarr index of {self.record['dataset']}", e
+            ) from e
 
     def _zarr_group(self) -> dict:
-        return self._zarr_location()[1]["groups"][0]
+        """Index entry of the channel group to read.
 
-    def _check_snapshot(self, url: str, index: dict) -> dict:
-        commit = index.get("source_commit")
+        The ``group`` option if given; else the only group; else the one
+        whose modality is the record's datatype. Anything else is ambiguous.
+        """
+        groups = self._zarr_location()[1]["groups"]
+        names = [g["name"] for g in groups]
+        if self._group_name is not None:
+            chosen = [g for g in groups if g["name"] == self._group_name]
+        elif len(groups) == 1:
+            chosen = groups
+        else:
+            datatype = str(self.record.get("datatype") or "").lower()
+            chosen = [g for g in groups if str(g.get("modality")).lower() == datatype]
+        if len(chosen) != 1:
+            raise DataIntegrityError(
+                message=(
+                    f"cannot choose a channel group of {self.record['bids_relpath']} "
+                    f"(groups {names}); pass zarr_options={{'group': ...}}"
+                ),
+                record=self.record,
+                issues=[f"channel groups {names}, requested {self._group_name!r}"],
+            )
+        return chosen[0]
+
+    def _check_snapshot(self, url: str, index: dict, store_commit: str | None) -> dict:
+        index_commit = index.get("source_commit")
+        commit = store_commit or index_commit
         raw_key = self.record["bids_relpath"]
         expected = ((self.record.get("storage") or {}).get("annex_keys") or {}).get(
             raw_key
         )
-        result = {"record_annex_key": expected, "source_commit": commit}
+        result = {
+            "record_annex_key": expected,
+            "source_commit": commit,
+            "commit_from": "store" if store_commit else "index",
+        }
+        if store_commit and index_commit and store_commit != index_commit:
+            result["index_source_commit"] = index_commit
         if not expected or not commit:
-            result["status"] = "unverified: record has no annex key or index no commit"
+            result["status"] = "unverified: record has no annex key or store no commit"
             warnings.warn(
                 f"cannot verify that {url} matches the record ({result['status']})",
                 NEMARDataWarning,
@@ -1393,6 +1582,15 @@ class EEGDashZarrRaw(EEGDashRaw):
             return result
         try:
             found = _annex_key_at_commit(self.record["dataset"], commit, raw_key)
+        except _NotAtCommit as e:
+            raise DataIntegrityError(
+                message=(
+                    f"NEMAR Zarr store {url} was converted from commit {commit}, "
+                    f"which has no {raw_key}"
+                ),
+                record=self.record,
+                issues=[str(e)],
+            ) from e
         except requests.RequestException as e:
             result["status"] = f"unverified: {type(e).__name__}: {e}"
             warnings.warn(
@@ -1429,18 +1627,23 @@ class EEGDashZarrRaw(EEGDashRaw):
         if self._raw is not None:
             return
         url, _, index = self._zarr_location()
-        snapshot = (
-            self._check_snapshot(url, index)
-            if self._verify_snapshot
-            else {"status": "not checked (verify_snapshot=False)"}
-        )
+        url = url.rstrip("/")
+        group = self._zarr_group()["name"]
         try:
-            raw = RawNEMARZarr(url, **self._reader_options)
-        except (OSError, requests.RequestException) as e:
-            raise DataIntegrityError(
-                message=f"could not open NEMAR Zarr store {url}: {e}",
-                record=self.record,
-                issues=[str(e)],
+            # Opening is cached, so the snapshot check's read of the store's
+            # commit costs the reader nothing.
+            _check_dependencies(url)
+            attrs = dict(_open_root(url, json.dumps({})).attrs)
+            store_commit = (attrs.get("nemar") or {}).get("source_commit")
+            snapshot = (
+                self._check_snapshot(url, index, store_commit)
+                if self._verify_snapshot
+                else {"status": "not checked (verify_snapshot=False)"}
+            )
+            raw = RawNEMARZarr(url, group, **self._reader_options)
+        except _STORE_ERRORS as e:
+            raise self._wrap_store_error(
+                f"could not open NEMAR Zarr store {url}", e
             ) from e
         raw._raw_extras[0]["provenance"]["eegdash_snapshot_check"] = snapshot
         self._raw = raw
@@ -1452,7 +1655,12 @@ class EEGDashZarrRaw(EEGDashRaw):
             return len(self._raw)
         try:
             return int(self._zarr_group()["n_samples"])
-        except Exception as e:
+        except (DataIntegrityError, KeyError, ValueError) as e:
+            # Transport failures (after retries) propagate instead: a length of
+            # 0 is fixed into ConcatDataset's cumulative sizes, which would
+            # silently drop the recording for this dataset object's lifetime.
+            if isinstance(e.__cause__, requests.RequestException):
+                raise
             logger.warning(
                 "Could not read NEMAR Zarr metadata for %s, marking as invalid "
                 "(length=0). Error: %s",

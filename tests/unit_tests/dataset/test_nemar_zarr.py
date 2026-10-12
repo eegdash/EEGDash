@@ -9,8 +9,14 @@ events.parquet) from memory. Tests marked ``network`` check the live service.
 import csv
 import io
 import json
+import multiprocessing
 import pickle
+import sys
+import threading
 import warnings
+from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
+from pathlib import Path
+from unittest.mock import patch
 
 import mne
 import numpy as np
@@ -24,6 +30,7 @@ from torch.utils.data import DataLoader
 from zarr.abc.store import SuffixByteRequest
 from zarr.storage import FsspecStore, WrapperStore
 
+import eegdash.dataset.dataset as dataset_mod
 import eegdash.dataset.nemar_zarr as nz
 from braindecode.preprocessing import create_fixed_length_windows
 from eegdash.dataset.dataset import EEGDashDataset
@@ -31,6 +38,7 @@ from eegdash.dataset.exceptions import DataIntegrityError
 from eegdash.dataset.nemar_zarr import (
     EEGDashZarrRaw,
     EventsTooLargeError,
+    MissingChunkError,
     NEMARDataWarning,
     RawNEMARZarr,
 )
@@ -318,6 +326,60 @@ class FakeHTTPError(Exception):
     def __init__(self, status):
         super().__init__(f"HTTP {status}")
         self.status = status
+
+
+class RangeHandler(BaseHTTPRequestHandler):
+    """Serves ``server.root`` with HEAD and single Range requests; 404 if absent."""
+
+    def _body(self):
+        path = Path(self.server.root) / self.path.lstrip("/").split("?")[0]
+        if not path.is_file():
+            self.send_error(404)
+            return None
+        data = path.read_bytes()
+        rng = self.headers.get("Range")
+        if not rng:
+            self.send_response(200)
+            return data
+        start, end = rng.removeprefix("bytes=").split("-")
+        if not start:
+            start, end = len(data) - int(end), len(data) - 1
+        start, end = int(start), int(end) if end else len(data) - 1
+        self.send_response(206)
+        self.send_header("Content-Range", f"bytes {start}-{end}/{len(data)}")
+        return data[start : end + 1]
+
+    def do_HEAD(self):
+        data = self._body()
+        if data is not None:
+            self.send_header("Content-Length", str(len(data)))
+            self.end_headers()
+
+    def do_GET(self):
+        data = self._body()
+        if data is not None:
+            self.send_header("Content-Length", str(len(data)))
+            self.end_headers()
+            self.wfile.write(data)
+
+    def log_message(self, *args):
+        pass
+
+
+@pytest.fixture
+def http_server(tmp_path):
+    """A real HTTP server for ``tmp_path``, for behaviour that fakes would hide."""
+    server = ThreadingHTTPServer(("127.0.0.1", 0), RangeHandler)
+    server.root = str(tmp_path)
+    thread = threading.Thread(target=server.serve_forever, daemon=True)
+    thread.start()
+    yield f"http://127.0.0.1:{server.server_address[1]}"
+    server.shutdown()
+    server.server_close()
+
+
+def shard_path(url, i):
+    return Path(url) / GROUP / "0" / "c" / "0" / str(i)
 
 
 class Flaky(WrapperStore):
@@ -636,21 +698,90 @@ def test_transient_chunk_errors_are_retried(store, monkeypatch):
     assert holder["st"].calls == 4  # 2 failed index reads, then index + chunk
 
 
-@pytest.mark.parametrize("status,calls", [(503, nz._ATTEMPTS), (403, 1)])
+@pytest.mark.parametrize(
+    "status,calls,exc",
+    [(503, nz._ATTEMPTS, FakeHTTPError), (403, 1, MissingChunkError)],
+)
 def test_persistent_or_denied_chunk_errors_are_raised(
-    store, monkeypatch, status, calls
+    store, monkeypatch, status, calls, exc
 ):
     holder = wrap_base(monkeypatch, Flaky, n=99, exc=FakeHTTPError(status))
     raw = open_quiet(store[0], events=None, bids_status=False)
-    with pytest.raises(FakeHTTPError, match=str(status)):
+    with pytest.raises(exc, match=str(status)):
         raw.get_data(start=0, stop=10)  # a 403 on signal is never read as fill
     assert holder["st"].calls == calls
 
 
-def test_absent_event_chunks_read_as_fill():
-    assert nz._is_absent_chunk(FakeHTTPError(403), "events/duration/c/0")
-    assert not nz._is_absent_chunk(FakeHTTPError(403), "eeg_250hz/0/c/0/1")
-    assert not nz._is_absent_chunk(FakeHTTPError(403), "events/zarr.json")
+def test_only_event_chunks_may_be_unwritten():
+    assert nz._may_be_unwritten("events/duration/c/0")
+    assert not nz._may_be_unwritten("eeg_250hz/0/c/0/1")
+    assert not nz._may_be_unwritten("events/zarr.json")
+
+
+def test_missing_local_shard_is_an_error_not_flat_data(store):
+    url = store[0]
+    shard_path(url, 1).unlink()  # samples 5000-9999
+    raw = open_quiet(url, events=None, bids_status=False)
+    assert raw.get_data(start=0, stop=10).shape == (7, 10)
+    with pytest.raises(MissingChunkError, match="flat data"):
+        raw.get_data(start=5000, stop=5005)
+
+
+def test_missing_shard_over_http_404_is_an_error(store, http_server):
+    shard_path(store[0], 1).unlink()
+    url = f"{http_server}/{DS}/zarr/{STORE_PATH}"
+    raw = open_quiet(url, events=None, bids_status=False)
+    np.testing.assert_allclose(
+        raw.get_data(start=0, stop=10, picks="Fz")[0] * 1e6, store[1][0, :10]
+    )
+    with pytest.raises(MissingChunkError, match="flat data"):
+        raw.get_data(start=5000, stop=5005)
+
+
+def test_constant_channel_with_zero_scale(store):
+    url = store[0]
+    arr = zarr.open_array(f"{url}/{GROUP}/0", mode="r+")
+    scale, offset = list(arr.attrs["scale"]), list(arr.attrs["offset"])
+    scale[0], offset[0] = 0.0, 12.5  # Fz flat at 12.5 uV
+    scale[5], offset[5] = 0.0, 3.0  # Marker stuck at code 3
+    arr.attrs.update({"scale": scale, "offset": offset})
+    raw = open_quiet(url, events=None, bids_status=False)
+    data = raw.get_data(start=0, stop=600)
+    np.testing.assert_allclose(data[0], 12.5e-6)
+    np.testing.assert_array_equal(data[5], 3.0)
+    np.testing.assert_allclose(data[1] * 1e6, store[1][1, :600], rtol=1e-6)
+
+
+def test_events_fallback_on_malformed_parquet(store, monkeypatch):
+    url = f"https://example.org/{DS}/zarr/{STORE_PATH}"
+    root = nz._open_root(store[0], "{}")
+    for exc in (KeyError("Content-Length"), pa.ArrowInvalid("bad footer")):
+
+        def broken(*args, exc=exc):
+            raise exc
+
+        monkeypatch.setattr(nz, "_events_from_parquet", broken)
+        with pytest.warns(NEMARDataWarning, match="could not be read"):
+            _, prov = nz._load_annotations("auto", url, GROUP, root, None)
+        assert prov["source"] == "store events group"
+        with pytest.raises(type(exc)):
+            nz._load_annotations("parquet", url, GROUP, root, None)
+
+
+class _Root:
+    def __init__(self, exc):
+        self.exc = exc
+
+    def __getitem__(self, key):
+        raise self.exc
+
+
+def test_store_events_absent_vs_failing():
+    with pytest.warns(NEMARDataWarning, match="no readable events group"):
+        ann, _ = nz._events_from_store(_Root(FakeHTTPError(403)))
+    assert len(ann) == 0
+    with pytest.raises(FakeHTTPError, match="503"):
+        nz._events_from_store(_Root(FakeHTTPError(503)))
 
 
 # ---------------------------------------------------------------------------
@@ -816,6 +947,168 @@ def test_braindecode_windows_and_multiprocess_dataloader(store, http, tmp_path):
     )
     multi = np.concatenate([batch[0].numpy() for batch in loader])
     np.testing.assert_array_equal(multi, single)
+
+
+def test_dataloader_forked_workers_over_http(store, http, http_server, tmp_path):
+    """Linux's default ``fork`` start method must not reuse the parent's sessions."""
+    if "fork" not in multiprocessing.get_all_start_methods():
+        pytest.skip("fork start method unavailable")
+    index = fake_index(str(tmp_path))
+    index["data_base"] = f"{http_server}/{DS}/zarr/"
+    with (
+        patch.object(nz, "_fetch_index", lambda ds: index),
+        warnings.catch_warnings(),
+    ):
+        warnings.simplefilter("ignore", NEMARDataWarning)
+        dataset = EEGDashDataset(
+            cache_dir=tmp_path / "cache",
+            records=[nemar_record()],
+            signal_source="zarr",
+            zarr_options={"events": None, "bids_status": False},
+            _suppress_comp_warning=True,
+        )
+        windows = create_fixed_length_windows(
+            dataset,
+            window_size_samples=1000,
+            window_stride_samples=1000,
+            drop_last_window=True,
+        )
+        nz._CHUNK_CACHE.clear()  # make the workers fetch over HTTP themselves
+        loader = DataLoader(
+            windows, batch_size=3, num_workers=2, multiprocessing_context="fork"
+        )
+        multi = np.concatenate([batch[0].numpy() for batch in loader])
+    single = np.stack([windows[i][0] for i in range(len(windows))])
+    np.testing.assert_array_equal(multi, single)
+
+
+def test_download_all_downloads_nothing(store, http, tmp_path):
+    dataset = EEGDashDataset(
+        cache_dir=tmp_path / "cache",
+        records=[nemar_record()],
+        signal_source="zarr",
+        _suppress_comp_warning=True,
+    )
+    with (
+        patch.object(
+            dataset_mod.EEGDashRaw, "_download_required_files", autospec=True
+        ) as per_file,
+        patch.object(dataset, "_download_dataset_files") as globals_mock,
+    ):
+        dataset.download_all(n_jobs=2)
+        dataset.download_all(n_jobs=1)
+    per_file.assert_not_called()
+    globals_mock.assert_not_called()
+
+
+def two_group_store(url):
+    root = zarr.open_group(url, mode="r+")
+    root.attrs["channel_groups"] = [GROUP, "emg_1000hz"]
+
+
+def two_group_index(base):
+    index = fake_index(base)
+    entry = index["stores"][0]
+    entry["groups"][0]["modality"] = "eeg"
+    entry["groups"].append(
+        {
+            "name": "emg_1000hz",
+            "modality": "emg",
+            "rate": 1000.0,
+            "n_channels": 2,
+            "n_samples": N_SAMPLES * 4,
+        }
+    )
+    return index
+
+
+def test_multi_group_store_uses_matching_or_requested_group(
+    store, http, monkeypatch, tmp_path
+):
+    two_group_store(store[0])
+    monkeypatch.setattr(nz, "_fetch_index", lambda ds: two_group_index(str(tmp_path)))
+    rec = nemar_record()
+    rec["datatype"] = "eeg"
+    with warnings.catch_warnings():
+        warnings.simplefilter("ignore", NEMARDataWarning)
+        ds = EEGDashZarrRaw(rec, str(tmp_path), zarr_options={"events": None})
+        assert len(ds) == N_SAMPLES and ds.raw.info["sfreq"] == 250.0
+        assert ds.raw.nemar_provenance["group"] == GROUP
+        rec_unknown = dict(rec, datatype="ieeg")
+        ambiguous = EEGDashZarrRaw(rec_unknown, str(tmp_path), on_error="skip")
+        assert len(ambiguous) == 0
+        assert ambiguous.raw is None and ambiguous._skipped
+        wrong = EEGDashZarrRaw(rec, str(tmp_path), zarr_options={"group": "nope"})
+        with pytest.raises(DataIntegrityError, match="zarr_options"):
+            _ = wrong.raw
+
+
+def test_snapshot_uses_the_store_commit(store, http, monkeypatch, tmp_path):
+    index = fake_index(str(tmp_path))
+    index["source_commit"] = "f" * 40  # re-exported index; this store is older
+    monkeypatch.setattr(nz, "_fetch_index", lambda ds: index)
+    with warnings.catch_warnings():
+        warnings.simplefilter("ignore", NEMARDataWarning)
+        check = zarr_raw(tmp_path).raw.nemar_provenance["eegdash_snapshot_check"]
+    assert check["status"] == "verified"
+    assert check["source_commit"] == COMMIT and check["commit_from"] == "store"
+    assert check["index_source_commit"] == "f" * 40
+
+
+def test_raw_file_absent_at_commit_is_a_mismatch(store, http, tmp_path):
+    del http.files[github(BIDS_PATH)]
+    http.files[github("dataset_description.json")] = b"{}"
+    with pytest.raises(DataIntegrityError, match="which has no"):
+        _ = zarr_raw(tmp_path).raw
+
+
+def test_open_failures_go_through_on_error(store, http, monkeypatch, tmp_path):
+    index = fake_index(str(tmp_path))
+    index["stores"][0]["zarr"] = "sub-01/eeg/missing.zarr"
+    monkeypatch.setattr(nz, "_fetch_index", lambda ds: index)
+    with pytest.raises(DataIntegrityError, match="could not open"):
+        _ = zarr_raw(tmp_path).raw
+    lenient = EEGDashZarrRaw(nemar_record(), str(tmp_path), on_error="skip")
+    assert lenient.raw is None and lenient._skipped
+
+
+def test_len_raises_on_transport_errors_but_not_missing_copies(
+    store, http, monkeypatch, tmp_path
+):
+    def down(ds):
+        raise requests.ConnectionError("index unreachable")
+
+    monkeypatch.setattr(nz, "_fetch_index", down)
+    with pytest.raises(DataIntegrityError, match="index unreachable"):
+        len(zarr_raw(tmp_path))
+    index = fake_index(str(tmp_path))
+    index["stores"] = []
+    monkeypatch.setattr(nz, "_fetch_index", lambda ds: index)
+    assert len(zarr_raw(tmp_path)) == 0
+
+
+@pytest.mark.parametrize(
+    "options",
+    [
+        {"events": "parqeut"},
+        {"nonfinite": "drop"},
+        {"events_max_bytes": -1},
+        {"events_max_bytes": True},
+        {"bids_status": "yes"},
+        {"group": 3},
+    ],
+)
+def test_option_values_are_validated_up_front(options, tmp_path):
+    with pytest.raises(ValueError, match="must be"):
+        EEGDashZarrRaw(nemar_record(), str(tmp_path), zarr_options=options)
+
+
+def test_missing_extra_names_the_install_command(monkeypatch, tmp_path):
+    monkeypatch.setitem(sys.modules, "eegdash.dataset.nemar_zarr", None)
+    with pytest.raises(ImportError, match=r"eegdash\[zarr\]"):
+        EEGDashDataset(
+            cache_dir=tmp_path, records=[nemar_record()], signal_source="zarr"
+        )
 
 
 # ---------------------------------------------------------------------------

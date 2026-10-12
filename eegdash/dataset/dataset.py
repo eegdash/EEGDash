@@ -228,7 +228,7 @@ class EEGDashDataset(BaseConcatDataset, metaclass=NumpyDocstringInheritanceInitM
           int16-quantised, so its rate and length differ from the BIDS record.
           Cannot be combined with ``download=False``.
     zarr_options : dict | None
-        Reader options for ``signal_source="zarr"``: ``events``,
+        Reader options for ``signal_source="zarr"``: ``group``, ``events``,
         ``events_max_bytes``, ``nonfinite``, ``bids_status`` and
         ``verify_snapshot`` (see :class:`~eegdash.dataset.nemar_zarr.EEGDashZarrRaw`).
     **kwargs : dict
@@ -298,7 +298,13 @@ class EEGDashDataset(BaseConcatDataset, metaclass=NumpyDocstringInheritanceInitM
         if signal_source == "zarr":
             # Optional dependencies (zarr>=3.4, aiohttp, pyarrow): imported only
             # when requested, so `import eegdash` does not load them.
-            from .nemar_zarr import EEGDashZarrRaw
+            try:
+                from .nemar_zarr import EEGDashZarrRaw
+            except ImportError as e:
+                raise ImportError(
+                    f"signal_source='zarr' needs optional dependencies ({e}); "
+                    'install the extra with: pip install "eegdash[zarr]"'
+                ) from e
 
             self._zarr_cls = EEGDashZarrRaw
         self.s3_bucket = s3_bucket
@@ -643,6 +649,8 @@ class EEGDashDataset(BaseConcatDataset, metaclass=NumpyDocstringInheritanceInitM
     def download_all(self, n_jobs: int | None = None) -> None:
         """Download missing remote files in parallel.
 
+        Does nothing for ``signal_source="zarr"``, which streams the signal.
+
         Parameters
         ----------
         n_jobs : int | None
@@ -651,6 +659,8 @@ class EEGDashDataset(BaseConcatDataset, metaclass=NumpyDocstringInheritanceInitM
         """
         if self.download is False:
             return
+        if getattr(self, "signal_source", "bids") == "zarr":
+            return  # the signal is streamed; there is nothing to download
 
         if n_jobs is None:
             n_jobs = self.n_jobs

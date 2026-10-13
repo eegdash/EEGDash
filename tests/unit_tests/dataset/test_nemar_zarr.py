@@ -713,6 +713,27 @@ def test_events_failure_falls_back_or_raises(store, monkeypatch):
         nz._load_annotations("parquet", url, GROUP, root, None)
 
 
+@pytest.mark.parametrize("code", [403, 404])
+def test_missing_parquet_is_silent_only_without_events(store, monkeypatch, code):
+    # NEMAR writes no events.parquet for a dataset with no BIDS events (S3
+    # answers 403 for the missing key); such a store's events group is empty.
+    url = f"https://example.org/{DS}/zarr/{STORE_PATH}"
+    monkeypatch.setattr(nz, "_http_get", FakeHTTP(status={"events.parquet": code}))
+    root = nz._open_root(store[0], "{}")
+    with pytest.warns(NEMARDataWarning, match="events.parquet does not exist"):
+        ann, prov = nz._load_annotations("auto", url, GROUP, root, None)
+    assert len(ann) == len(store[2][0]) and prov["parquet"] == "absent"
+
+    empty = zarr.open_group(zarr.storage.MemoryStore(), mode="w")
+    empty.create_group("events").attrs["n_events"] = 0
+    with warnings.catch_warnings():
+        warnings.simplefilter("error")
+        ann, prov = nz._load_annotations("auto", url, GROUP, empty, None)
+    assert len(ann) == 0 and prov["parquet"] == "absent"
+    with pytest.raises(requests.HTTPError, match=str(code)):
+        nz._load_annotations("parquet", url, GROUP, empty, None)
+
+
 def test_local_store_uses_its_events_group(store):
     _, _, (ev_onset, _) = store
     with pytest.warns(NEMARDataWarning, match="only fetched over HTTP"):

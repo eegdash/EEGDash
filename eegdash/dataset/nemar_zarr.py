@@ -941,8 +941,8 @@ def _events_from_parquet(url: str, group: str, max_bytes: int | None):
     :class:`EventsTooLargeError` above ``max_bytes``. Returns
     ``(onset, duration, description, provenance)``.
     """
-    data_base, store_path = _split_store_url(url)
-    events_url = data_base + "events.parquet"
+    _, store_path = _split_store_url(url)
+    events_url = _events_url(url)
     head = _http_get(events_url, timeout=30, method="HEAD")
     head.raise_for_status()
     size = int(head.headers["Content-Length"])
@@ -1105,16 +1105,40 @@ def _load_annotations(events, url, group, root, max_bytes):
             except _PARQUET_ERRORS as e:
                 if events == "parquet":
                     raise
+                if _parquet_absent(e):
+                    # NEMAR writes no events.parquet for a dataset without
+                    # BIDS events; that is only worth a warning if the store
+                    # does hold events the parquet should have labelled.
+                    annotations, provenance = _events_from_store(root)
+                    if provenance["n_events"]:
+                        _warn_store_events(f"{_events_url(url)} does not exist")
+                    return annotations, {**provenance, "parquet": "absent"}
                 reason = f"events.parquet could not be read ({type(e).__name__}: {e})"
         if events == "parquet":
             raise RuntimeError(f"cannot read events.parquet: {reason}")
-        warnings.warn(
-            f"{reason}; using the store's own events, which carry trial_type "
-            "labels only (no per-event BIDS value)",
-            NEMARDataWarning,
-            stacklevel=4,
-        )
+        _warn_store_events(reason)
     return _events_from_store(root)
+
+
+def _events_url(url: str) -> str:
+    return _split_store_url(url)[0] + "events.parquet"
+
+
+def _parquet_absent(exc: BaseException) -> bool:
+    """events.parquet is missing: HTTP 404, or 403 (S3 for a missing key)."""
+    response = getattr(exc, "response", None)
+    return isinstance(exc, requests.HTTPError) and getattr(
+        response, "status_code", None
+    ) in (403, 404)
+
+
+def _warn_store_events(reason: str) -> None:
+    warnings.warn(
+        f"{reason}; using the store's own events, which carry trial_type "
+        "labels only (no per-event BIDS value)",
+        NEMARDataWarning,
+        stacklevel=5,
+    )
 
 
 # ---------------------------------------------------------------------------
@@ -1425,7 +1449,8 @@ class RawNEMARZarr(BaseRaw):
         each event by its BIDS ``value``. ``"store"`` reads the store's
         ``events`` group, whose labels are ``trial_type`` only. ``"auto"``
         (default) uses the parquet when it can within ``events_max_bytes`` and
-        otherwise falls back to the store with a :class:`NEMARDataWarning`.
+        otherwise falls back to the store with a :class:`NEMARDataWarning`;
+        a dataset with no ``events.parquet`` and no events reads silently.
         ``None`` adds no annotations.
     events_max_bytes : int | None
         Most bytes of ``events.parquet`` to download for this recording

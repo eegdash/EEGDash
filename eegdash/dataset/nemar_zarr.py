@@ -1085,7 +1085,7 @@ def _load_annotations(events, url, group, root, max_bytes):
         return None, {"source": None}
     _check_policy("events", events, _EVENTS_POLICIES)
     if events in ("auto", "parquet"):
-        reason = None
+        reason, absent = None, False
         if not url.startswith(("http://", "https://")):
             reason = "events.parquet is only fetched over HTTP(S)"
         elif pq is None:
@@ -1105,17 +1105,22 @@ def _load_annotations(events, url, group, root, max_bytes):
             except _PARQUET_ERRORS as e:
                 if events == "parquet":
                     raise
-                if _parquet_absent(e):
-                    # NEMAR writes no events.parquet for a dataset without
-                    # BIDS events; that is only worth a warning if the store
-                    # does hold events the parquet should have labelled.
-                    annotations, provenance = _events_from_store(root)
-                    if provenance["n_events"]:
-                        _warn_store_events(f"{_events_url(url)} does not exist")
-                    return annotations, {**provenance, "parquet": "absent"}
-                reason = f"events.parquet could not be read ({type(e).__name__}: {e})"
+                absent = _parquet_absent(e)
+                reason = (
+                    f"{_events_url(url)} does not exist"
+                    if absent
+                    else f"events.parquet could not be read ({type(e).__name__}: {e})"
+                )
         if events == "parquet":
             raise RuntimeError(f"cannot read events.parquet: {reason}")
+        if absent:
+            # NEMAR writes no events.parquet for a dataset without BIDS events;
+            # that is only worth a warning if the store does hold events the
+            # parquet should have labelled.
+            annotations, provenance = _events_from_store(root)
+            if provenance["n_events"]:
+                _warn_store_events(reason)
+            return annotations, {**provenance, "parquet": "absent"}
         _warn_store_events(reason)
     return _events_from_store(root)
 
@@ -1125,7 +1130,11 @@ def _events_url(url: str) -> str:
 
 
 def _parquet_absent(exc: BaseException) -> bool:
-    """events.parquet is missing: HTTP 404, or 403 (S3 for a missing key)."""
+    """events.parquet is missing: HTTP 404, or 403 (S3 for a missing key).
+
+    Not _is_not_found, which also counts a KeyError: here that is a HEAD
+    response without Content-Length, a server problem rather than absence.
+    """
     response = getattr(exc, "response", None)
     return isinstance(exc, requests.HTTPError) and getattr(
         response, "status_code", None

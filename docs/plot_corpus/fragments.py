@@ -33,10 +33,10 @@ from .table import COMPACT, table_html
 
 FRAGMENT_LIMIT = 200_000  # bytes per fragment
 V0_NAME, V1_NAME = "eegdash-corpus-v0", "eegdash-corpus-v1"
-ADDED = "eegdash-channel-sets.csv"  # channel sets of the datasets v1 adds (EEGDash records); optional
+ADDED = "eegdash-corpus-v1-channels.csv"  # channel sets of the datasets v1 adds (EEGDash records); optional
 INPUTS = [
     "atlas.csv",
-    "reve-public-nc-channels.csv",
+    "eegdash-corpus-v0-channels.csv",
     ADDED,
     "electrodes.json",
     "MANIFEST.json",
@@ -157,7 +157,7 @@ def build(data: Path, out: Path) -> dict:
     meta = json.loads((data / "MANIFEST.json").read_text(encoding="utf-8"))
     synced = meta["synced"]
     rows = read_rows(data / "atlas.csv")
-    buckets = read_buckets(data / "reve-public-nc-channels.csv")
+    buckets = read_buckets(data / "eegdash-corpus-v0-channels.csv")
     electrodes = read_electrodes(data / "electrodes.json")
     added = read_buckets(data / ADDED) if (data / ADDED).is_file() else []
     frags = build_fragments(rows, buckets, electrodes, synced, added)

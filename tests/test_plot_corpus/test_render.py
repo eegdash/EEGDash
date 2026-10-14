@@ -187,3 +187,26 @@ def test_stale_check(data_dir, built):
     assert not is_stale(data_dir, out)
     (out / "manifest.json").unlink()
     assert is_stale(data_dir, out)
+
+
+def test_nothing_left_to_ingest_drops_the_deposit_step_and_the_zero(
+    rows, buckets, electrodes
+):
+    """Once every v1 dataset is on NEMAR (Siena found there, 2026-10-13) the pages must not say "0 still to be
+    ingested" nor list a deposit step with nobody to deposit.
+    """
+    from plot_corpus.data import numbers, roadmap_items
+
+    nums = numbers(rows, buckets, electrodes, "x")
+    assert (
+        nums["v1_added_prose"].endswith(", 1 still to be ingested")
+        and nums["v1_added_short"] == "1 to convert, 1 to ingest"
+    )
+    assert any("Deposit" in item for item in roadmap_items(rows))
+    rest = [r for r in rows if r["status"] != STATUSES[2]]
+    nums = numbers(rest, buckets, electrodes, "x")
+    assert (
+        nums["v1_added_prose"] == "1 ingested by EEGDash and waiting for conversion"
+        and nums["v1_added_short"] == "1 to convert"
+    )
+    assert not any("Deposit" in item for item in roadmap_items(rest))

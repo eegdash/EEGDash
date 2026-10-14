@@ -117,8 +117,8 @@ def data_dir(tmp_path, rows, buckets, electrodes, added) -> Path:
     d = tmp_path / "data"
     d.mkdir()
     write_csv(d / "atlas.csv", rows, ATLAS_COLUMNS)
-    write_csv(d / "reve-public-nc-channels.csv", buckets, list(buckets[0]))
-    write_csv(d / "eegdash-channel-sets.csv", added, list(added[0]))
+    write_csv(d / "eegdash-corpus-v0-channels.csv", buckets, list(buckets[0]))
+    write_csv(d / "eegdash-corpus-v1-channels.csv", added, list(added[0]))
     (d / "electrodes.json").write_text(
         json.dumps({"about": "test", "electrodes": electrodes})
     )

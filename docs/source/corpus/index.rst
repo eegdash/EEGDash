@@ -85,7 +85,7 @@ converted); version 1 extends it to |v1_datasets| datasets.
 
          Next version
 
-         - |v1_new| datasets added: |v1_to_convert| to convert, |to_ingest| to ingest
+         - |v1_new| datasets added: |v1_added_short|
          - |v1_datasets| datasets, |v1_hours| hours measured so far
          - The same views as v0, the added datasets by status
 

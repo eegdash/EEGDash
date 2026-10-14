@@ -240,6 +240,9 @@ def roadmap_items(rows: list[dict[str, str]]) -> list[str]:
             ingest_names=", ".join(ing) or "none",
         )
         for s in ROADMAP
+        if ing
+        or "{ingest_names}"
+        not in s  # nothing left to deposit: the step is done, not listed
     ]
 
 
@@ -280,6 +283,11 @@ def numbers(
         "v1_new": str(len(new)),
         "v1_new_hours": f"{hours_of(new):,.0f}",
         "v1_to_convert": str(k[TO_CONVERT]),
+        # the added datasets in words, without a "0 still to ingest" once every one is on NEMAR
+        "v1_added_prose": f"{k[TO_CONVERT]} ingested by EEGDash and waiting for conversion"
+        + (f", {k[TO_INGEST]} still to be ingested" if k[TO_INGEST] else ""),
+        "v1_added_short": f"{k[TO_CONVERT]} to convert"
+        + (f", {k[TO_INGEST]} to ingest" if k[TO_INGEST] else ""),
         "v1_unmeasured": str(sum(not fnum(r["hours"]) for r in new)),
         "to_ingest": str(k[TO_INGEST]),
         "blocked": str(k[BLOCKED]),

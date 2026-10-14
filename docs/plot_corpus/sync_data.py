@@ -7,7 +7,7 @@ Usage::
     python docs/plot_corpus/sync_data.py --check                              # re-hash against MANIFEST.json
 
 The source repository holds the corpus tables and the scripts that derive
-``corpus/eeg-atlas/atlas.csv`` (one row per dataset) and the converted
+``corpus/corpus-atlas/atlas.csv`` (one row per dataset) and the converted
 store's channel sets (one row per bucket). This script copies those two
 files and derives ``electrodes.json`` (one entry per electrode position used
 by the buckets) from REVE's public position bank. Every cell is scanned for
@@ -37,11 +37,11 @@ from plot_corpus.data import read_buckets, read_rows  # noqa: E402
 from plot_corpus.electrodes import aggregate_positions  # noqa: E402
 
 SOURCES = {  # data file -> path in the source repository
-    "atlas.csv": "corpus/eeg-atlas/atlas.csv",
-    "reve-public-nc-channels.csv": "results/conversion/zarr/reve-public-nc-channels.csv",
-    "eegdash-channel-sets.csv": "results/conversion/eegdash-channel-sets.csv",
+    "atlas.csv": "corpus/corpus-atlas/atlas.csv",
+    "eegdash-corpus-v0-channels.csv": "corpus/corpus-atlas/eegdash-corpus-v0-channels.csv",
+    "eegdash-corpus-v1-channels.csv": "corpus/corpus-atlas/eegdash-corpus-v1-channels.csv",
 }
-BANK = "corpus/reve-positions.json"  # REVE's public position bank, {name: [x, y, z]} in metres
+BANK = "corpus/corpus-atlas/electrode-positions.json"  # the position bank (a copy of REVE's public one), {name: [x, y, z]} in metres
 DERIVED = "electrodes.json"
 FILES = [*SOURCES, DERIVED]
 # Words and paths that must never reach the public site.
@@ -124,8 +124,8 @@ def sync(
         name: (src / rel).read_text(encoding="utf-8") for name, rel in SOURCES.items()
     }
     derived = derive_electrodes(
-        src / SOURCES["reve-public-nc-channels.csv"],
-        src / SOURCES["eegdash-channel-sets.csv"],
+        src / SOURCES["eegdash-corpus-v0-channels.csv"],
+        src / SOURCES["eegdash-corpus-v1-channels.csv"],
         src / BANK,
     )
     texts[DERIVED] = dump_electrodes(derived)

@@ -1,15 +1,15 @@
 # EEGDash Corpus data (generated copy, do not hand-edit)
 
 These files are a generated copy. The source of truth is the corpus tables of the
-REVE replication repository (`corpus/` there), checked by its own table checker;
+REVE replication repository (`corpus/` there, the atlas table and position bank under `corpus/corpus-atlas/`), checked by its own table checker;
 `sync_data.py` copies the derived files from it, scans every cell for internal names
 and paths, and records what it copied in `MANIFEST.json`.
 
 | file | what it is | rows |
 |---|---|---|
 | `atlas.csv` | one row per dataset of the universe (every dataset named by REVE's paper or release card, plus the open datasets considered for the next version): status, licence, counts, hours, provenance, note, link | one per dataset |
-| `reve-public-nc-channels.csv` | one row per bucket of the converted v0 store: one exact set of channel names of one dataset, its sessions, hours and channel names | one per bucket |
-| `eegdash-channel-sets.csv` | one row per channel set of the datasets v1 adds, read from EEGDash's records (channel names the position bank knows, records and hours carrying the set); the v1 electrode map's input until those datasets are converted | one per channel set |
+| `eegdash-corpus-v0-channels.csv` | one row per bucket of the converted v0 store (`reve-public-nc.zarr`; I-CARE under its EEGDash id `nm000289`): one exact set of channel names of one dataset, its sessions, hours and channel names | one per bucket |
+| `eegdash-corpus-v1-channels.csv` | one row per channel set of the datasets v1 adds, read from EEGDash's records (channel names the position bank knows, records and hours carrying the set); the v1 electrode map's input until those datasets are converted | one per channel set |
 | `electrodes.json` | one entry per electrode position used by those channel sets: spellings, `xyz` (metres, head-centred, rounded to 1e-4 m), hours, datasets, buckets of the v0 store, and `added_hours`, `added_datasets`, `added_buckets` from the datasets v1 adds. Positions derive from REVE's public position bank (`brain-bzh/reve-positions`); spellings that differ only in case share a coordinate and are merged | one per position |
 | `MANIFEST.json` | source commit, sync date, sha256 and row count per file | |
 

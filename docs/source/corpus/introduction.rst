@@ -40,9 +40,8 @@ model. REVE's paper names |paper_named| datasets; the release card of its public
 subset lists |card_entries| entries, |card_only| of which the paper does not name, so
 |universe| datasets are tracked in all. Version 0 is REVE's public release rebuilt
 from the archives (|v0_datasets| datasets, |v0_hours| hours). Version 1 extends it to
-every publicly usable dataset named by REVE's paper (|v1_datasets| datasets:
-|v1_to_convert| ingested by EEGDash and waiting for conversion, |to_ingest| still to
-be ingested); gated datasets are excluded, and datasets whose licences block a
+every publicly usable dataset named by REVE's paper (|v1_datasets| datasets, of the
+added ones |v1_added_prose|); gated datasets are excluded, and datasets whose licences block a
 converted copy are listed with the reason. Later versions add public datasets beyond
 REVE's, chosen by licence and usability.
 

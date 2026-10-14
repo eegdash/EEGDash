@@ -32,21 +32,26 @@ def test_committed_data_matches_manifest():
 def test_committed_row_counts():
     rows = read_rows(DATA / "atlas.csv")
     assert (len(rows), len(v0_rows(rows)), len(v1_rows(rows))) == (93, 66, 78)
-    assert len(read_buckets(DATA / "reve-public-nc-channels.csv")) == 968
+    assert len(read_buckets(DATA / "eegdash-corpus-v0-channels.csv")) == 968
     assert (
-        len({b["dataset"] for b in read_buckets(DATA / "eegdash-channel-sets.csv")})
-        == 10
-    )  # 11 to convert, SparrKULee has no channel metadata
+        len(
+            {
+                b["dataset"]
+                for b in read_buckets(DATA / "eegdash-corpus-v1-channels.csv")
+            }
+        )
+        == 11
+    )  # 12 to convert, SparrKULee has no channel metadata
 
 
 def test_every_rst_key_exists():
     rows = read_rows(DATA / "atlas.csv")
     frags = build_fragments(
         rows,
-        read_buckets(DATA / "reve-public-nc-channels.csv"),
+        read_buckets(DATA / "eegdash-corpus-v0-channels.csv"),
         read_electrodes(DATA / "electrodes.json"),
         "2026-01-01",
-        read_buckets(DATA / "eegdash-channel-sets.csv"),
+        read_buckets(DATA / "eegdash-corpus-v1-channels.csv"),
     )
     used = {
         k
@@ -61,10 +66,10 @@ def test_every_rst_key_exists():
     known = set(
         numbers(
             rows,
-            read_buckets(DATA / "reve-public-nc-channels.csv"),
+            read_buckets(DATA / "eegdash-corpus-v0-channels.csv"),
             read_electrodes(DATA / "electrodes.json"),
             "x",
-            read_buckets(DATA / "eegdash-channel-sets.csv"),
+            read_buckets(DATA / "eegdash-corpus-v1-channels.csv"),
         )
     )
     assert subs <= known, sorted(subs - known)
@@ -85,18 +90,19 @@ def _git(repo, *args):
 def source(tmp_path, rows, buckets, bank, added):
     """A throwaway source repository laid out as the real one."""
     src = tmp_path / "src"
-    (src / "corpus/eeg-atlas").mkdir(parents=True)
-    (src / "results/conversion/zarr").mkdir(parents=True)
-    write_csv(src / "corpus/eeg-atlas/atlas.csv", rows, list(rows[0]))
+    (src / "corpus/corpus-atlas").mkdir(parents=True)
+    write_csv(src / "corpus/corpus-atlas/atlas.csv", rows, list(rows[0]))
     write_csv(
-        src / "results/conversion/zarr/reve-public-nc-channels.csv",
+        src / "corpus/corpus-atlas/eegdash-corpus-v0-channels.csv",
         buckets,
         list(buckets[0]),
     )
     write_csv(
-        src / "results/conversion/eegdash-channel-sets.csv", added, list(added[0])
+        src / "corpus/corpus-atlas/eegdash-corpus-v1-channels.csv",
+        added,
+        list(added[0]),
     )
-    (src / "corpus/reve-positions.json").write_text(json.dumps(bank))
+    (src / "corpus/corpus-atlas/electrode-positions.json").write_text(json.dumps(bank))
     _git(src, "init", "-q")
     _git(src, "add", ".")
     _git(
@@ -115,8 +121,8 @@ def test_sync_copies_scans_and_refuses_dirty(source, tmp_path):
         and m["files"]["electrodes.json"]["rows"] == 6
     )
     assert sync_data.check(out) == []
-    (source / "corpus/eeg-atlas/atlas.csv").write_text(
-        (source / "corpus/eeg-atlas/atlas.csv")
+    (source / "corpus/corpus-atlas/atlas.csv").write_text(
+        (source / "corpus/corpus-atlas/atlas.csv")
         .read_text()
         .replace("Dataset ds000001", "Dataset by Tester")
     )

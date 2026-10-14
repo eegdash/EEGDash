@@ -283,7 +283,7 @@ def reset_caches():
         cache.clear()
     nz._events_from_parquet.cache_clear()
     nz._load_index.cache_clear()
-    nz._commit_exists.cache_clear()
+    nz._SERVED_COMMITS.clear()
     nz._corrections_log.cache_clear()
     nz._ALL_FILL_ARRAYS.clear()
 
@@ -1732,6 +1732,93 @@ def test_mismatch_failing_any_check_is_a_data_integrity_error(
     assert len(failures) == 1 and failures[0].startswith(f"failed {failed}:")
     assert any(OLD_KEY in i or "s101" in i or "MD5" in i for i in e.value.issues)
     assert any(ANNEX_KEY in i for i in e.value.issues)
+
+
+@pytest.mark.parametrize(
+    ("change", "detail"),
+    [
+        (_renamed_channel, "first at position 0: 'Fpz' vs 'Fz'"),
+        (_reordered_channels, "first at position 0: 'Aux' vs 'Fz'"),
+        (_no_ch_names, "the record has no channel names (None)"),
+        (_no_channels_tsv, "no channels.tsv at the store's commit"),
+    ],
+)
+def test_channel_name_failures_say_what_differs(
+    store, corrected, tmp_path, change, detail
+):
+    record = nemar_record(annex_key=OLD_KEY)
+    change(corrected, record)
+    with warnings.catch_warnings():
+        warnings.simplefilter("ignore", NEMARDataWarning)
+        with pytest.raises(DataIntegrityError) as e:
+            _ = corrected_raw(tmp_path, record).raw
+    [failure] = [i for i in e.value.issues if i.startswith("failed channel names")]
+    assert detail in failure and "match" not in failure
+
+
+def test_channel_count_mismatch_in_length_is_described(store, corrected, tmp_path):
+    record = nemar_record(annex_key=OLD_KEY)
+    record["ch_names"] = record["ch_names"][:-1]
+    with warnings.catch_warnings():
+        warnings.simplefilter("ignore", NEMARDataWarning)
+        with pytest.raises(DataIntegrityError) as e:
+            _ = corrected_raw(tmp_path, record).raw
+    assert any("record has 6 channel names, channels.tsv" in i for i in e.value.issues)
+
+
+def test_numpy_channel_count_is_accepted(store, corrected, tmp_path):
+    record = nemar_record(annex_key=OLD_KEY)
+    record["nchans"] = np.int64(len(CHANNELS))
+    check, _ = load_corrected(tmp_path, record)
+    assert check["checks"]["sampling rate and channel count"]["passed"]
+
+
+@pytest.mark.parametrize("code", [401, 403, 410, 451])
+@pytest.mark.parametrize("verify", [True, "strict"])
+def test_mirror_refusing_the_raw_file_is_refused(
+    store, corrected, tmp_path, code, verify
+):
+    """Only a mirror that cannot be reached skips the check; an answer is not that."""
+    corrected.status[f"/{COMMIT}/{BIDS_PATH}"] = code
+    with pytest.raises(DataIntegrityError, match="the mirror refused"):
+        _ = corrected_raw(tmp_path, verify_snapshot=verify).raw
+
+
+def test_unreachable_mirror_warns_or_strict_refuses(store, corrected, tmp_path):
+    corrected.status[f"/{COMMIT}/{BIDS_PATH}"] = 503
+    check = zarr_raw(tmp_path).raw.nemar_provenance["eegdash_snapshot_check"]
+    assert check["status"].startswith("unverified: HTTPError")
+    with pytest.raises(DataIntegrityError, match="verify_snapshot='strict'") as e:
+        _ = corrected_raw(tmp_path / "s", verify_snapshot="strict").raw
+    assert nz._is_transport_error(e.value.__cause__)
+
+
+@pytest.mark.parametrize("missing", ["record key", "store commit"])
+def test_strict_refuses_unverifiable_snapshots(store, corrected, tmp_path, missing):
+    record = nemar_record(annex_key=None if missing == "record key" else ANNEX_KEY)
+    if missing == "store commit":
+        root = zarr.open_group(store[0], mode="r+")
+        root.attrs["nemar"] = {
+            k: v for k, v in root.attrs["nemar"].items() if k != "source_commit"
+        }
+    with pytest.raises(DataIntegrityError, match="cannot verify"):
+        _ = corrected_raw(tmp_path, record, verify_snapshot="strict").raw
+    reset_caches()
+    with pytest.warns(NEMARDataWarning, match="cannot verify"):
+        status = corrected_raw(tmp_path / "d", record).raw.nemar_provenance[
+            "eegdash_snapshot_check"
+        ]["status"]
+    assert status.startswith("unverified")
+
+
+def test_a_commit_404_is_not_remembered(store, corrected, tmp_path):
+    """A transient 404 for the commit must not decide later recordings at it."""
+    del corrected.files[github(BIDS_PATH)]
+    with pytest.raises(DataIntegrityError, match="no longer served"):
+        _ = corrected_raw(tmp_path, nemar_record()).raw
+    corrected.files[github("dataset_description.json")] = b"{}"  # now served
+    with pytest.raises(DataIntegrityError, match="which has no"):
+        _ = corrected_raw(tmp_path / "later", nemar_record()).raw
 
 
 def test_failed_checks_go_through_on_error(store, corrected, tmp_path):

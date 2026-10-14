@@ -1789,6 +1789,28 @@ def read_raw_nemar_zarr(
 # ---------------------------------------------------------------------------
 
 
+def _compare_names(record_names, tsv_names) -> tuple[bool, str]:
+    """Whether the record's channel names are channels.tsv's (in order, any case)."""
+    if tsv_names is None:
+        return False, "no channels.tsv at the store's commit"
+    if not isinstance(record_names, list):
+        return False, f"the record has no channel names ({record_names!r})"
+    rec = [str(n).casefold() for n in record_names]
+    tsv = [n.casefold() for n in tsv_names]
+    if rec == tsv:
+        return True, "record names match channels.tsv at the store's commit"
+    if len(rec) != len(tsv):
+        return False, (
+            f"record has {len(rec)} channel names, channels.tsv at the store's "
+            f"commit has {len(tsv)}"
+        )
+    i = next(i for i, (a, b) in enumerate(zip(rec, tsv)) if a != b)
+    return False, (
+        f"record names differ from channels.tsv at the store's commit, first at "
+        f"position {i}: {record_names[i]!r} vs {tsv_names[i]!r}"
+    )
+
+
 class _NotAtCommit(LookupError):
     """The file does not exist at the commit, although the commit does."""
 
@@ -1797,14 +1819,22 @@ class _CommitNotServed(LookupError):
     """The dataset's GitHub mirror does not serve the commit (e.g. history rewritten)."""
 
 
-@lru_cache(maxsize=64)
+# (dataset, commit) pairs the mirror has served. Only positive answers are
+# kept: a 404 can be transient (CDN, a mirror behind a fresh conversion), and
+# a cached one would refuse every later recording at that commit.
+_SERVED_COMMITS: set[tuple[str, str]] = set()
+
+
 def _commit_exists(dataset: str, commit: str) -> bool:
     """Whether the dataset's GitHub mirror serves ``commit`` (it has a description)."""
+    if (dataset, commit) in _SERVED_COMMITS:
+        return True
     url = GITHUB_RAW.format(ds=dataset, commit=commit, path="dataset_description.json")
     r = _http_get(url, timeout=30, method="HEAD")
     if r.status_code == 404:
         return False
     r.raise_for_status()
+    _SERVED_COMMITS.add((dataset, commit))
     return True
 
 
@@ -1968,12 +1998,13 @@ class EEGDashZarrRaw(EEGDashRaw):
     byte for byte or sample for sample; the warning says so, names both keys
     and quotes any in-place correction in NEMAR's corrections log.
     When the record has no annex key, the store records no
-    ``source_commit``, or the mirror cannot be reached, the check is skipped
-    with a :class:`NEMARDataWarning` rather than blocking loading. A commit
-    the mirror no longer serves (e.g. after NEMAR rewrote the history), or a
-    raw file that is not annexed at it, raises ``DataIntegrityError``. Only
-    the raw file named by the record is checked, not companion files (e.g.
-    ``.fdt``).
+    ``source_commit``, or the mirror cannot be reached (a network failure
+    that persists through retries), the check cannot be made: it is skipped
+    with a :class:`NEMARDataWarning`, or refused under ``"strict"``. A commit
+    the mirror no longer serves (e.g. after NEMAR rewrote the history), any
+    other HTTP error from the mirror, or a raw file that is not annexed at
+    the commit raises ``DataIntegrityError``. Only the raw file named by the
+    record is checked, not companion files (e.g. ``.fdt``).
 
     Failures to locate or open the store (no Zarr copy of the dataset or
     recording, HTTP errors, malformed metadata, a missing first or last
@@ -2068,17 +2099,13 @@ class EEGDashZarrRaw(EEGDashRaw):
         if index_commit and index_commit != store_commit:
             result["index_source_commit"] = index_commit
         if not expected or not commit:
-            result["status"] = (
-                "unverified: the record has no annex key"
+            return self._unverified(
+                url,
+                result,
+                "the record has no annex key"
                 if commit
-                else "unverified: the store records no source_commit"
+                else "the store records no source_commit",
             )
-            warnings.warn(
-                f"cannot verify that {url} matches the record ({result['status']})",
-                NEMARDataWarning,
-                stacklevel=4,
-            )
-            return result
         try:
             found = _annex_key_at_commit(self.record["dataset"], commit, raw_key)
         except _NotAtCommit as e:
@@ -2101,13 +2128,17 @@ class EEGDashZarrRaw(EEGDashRaw):
                 issues=[str(e), f"record annex key {expected}"],
             ) from e
         except requests.RequestException as e:
-            result["status"] = f"unverified: {type(e).__name__}: {e}"
-            warnings.warn(
-                f"cannot verify that {url} matches the record ({e})",
-                NEMARDataWarning,
-                stacklevel=4,
-            )
-            return result
+            if not _is_transport_error(e):
+                # e.g. 403 or 451: the mirror answered, and not with the file
+                raise DataIntegrityError(
+                    message=(
+                        f"cannot check NEMAR Zarr store {url} against the record: "
+                        f"the mirror refused {raw_key} at commit {commit}"
+                    ),
+                    record=self.record,
+                    issues=[f"{type(e).__name__}: {e}", f"record annex key {expected}"],
+                ) from e
+            return self._unverified(url, result, f"{type(e).__name__}: {e}", e)
         result["store_annex_key"] = found
         if found is None:
             raise DataIntegrityError(
@@ -2135,6 +2166,25 @@ class EEGDashZarrRaw(EEGDashRaw):
             )
         else:
             result["status"] = "different version"  # settled by _accept_mismatch
+        return result
+
+    def _unverified(self, url: str, result: dict, reason: str, cause=None) -> dict:
+        """Load unverified with a warning, or refuse under ``verify_snapshot="strict"``."""
+        if self._verify_snapshot == "strict":
+            raise DataIntegrityError(
+                message=(
+                    f"cannot verify that NEMAR Zarr store {url} matches the record "
+                    f"({reason}; verify_snapshot='strict')"
+                ),
+                record=self.record,
+                issues=[reason],
+            ) from cause
+        result["status"] = f"unverified: {reason}"
+        warnings.warn(
+            f"cannot verify that {url} matches the record ({reason})",
+            NEMARDataWarning,
+            stacklevel=5,
+        )
         return result
 
     def _accept_mismatch(self, url: str, raw: RawNEMARZarr, attrs: dict, result: dict):
@@ -2188,7 +2238,8 @@ class EEGDashZarrRaw(EEGDashRaw):
             isinstance(rec_rate, (int, float))
             and isinstance(source_rate, (int, float))
             and abs(rec_rate - source_rate) < 1e-6
-            and isinstance(rec_nchans, int)
+            and isinstance(rec_nchans, (int, np.integer))
+            and not isinstance(rec_nchans, bool)
             and rec_nchans == n_store,
             f"record {rec_rate} Hz and {rec_nchans} channels, "
             f"store {source_rate} Hz and {n_store} channels"
@@ -2198,15 +2249,7 @@ class EEGDashZarrRaw(EEGDashRaw):
         tsv = _bids_channels_tsv(url, attrs)
         tsv_names = [row.get("name") or "" for row in tsv["rows"]] if tsv else None
         rec_names = self.record.get("ch_names")
-        checks["channel names"] = (
-            tsv_names is not None
-            and isinstance(rec_names, list)
-            and [str(n).casefold() for n in rec_names]
-            == [n.casefold() for n in tsv_names],
-            "record names match channels.tsv at the store's commit"
-            if tsv_names is not None
-            else "no channels.tsv at the store's commit",
-        )
+        checks["channel names"] = _compare_names(rec_names, tsv_names)
 
         result.update(
             current_annex_key=current,
@@ -2246,7 +2289,7 @@ class EEGDashZarrRaw(EEGDashRaw):
         elif not corrections:
             log = f"NEMAR's corrections log records no in-place correction of {ds}."
         else:
-            log = "NEMAR's corrections log for {}: {}.".format(
+            log = "NEMAR's corrections log for dataset {} (not specific to this file): {}.".format(
                 ds,
                 "; ".join(
                     f"{c['action']} at {c['at']} (versions {', '.join(c['versions'])}, "

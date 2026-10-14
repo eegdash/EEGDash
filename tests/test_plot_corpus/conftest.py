@@ -1,5 +1,7 @@
 """Fixtures for the EEGDash Corpus renderer tests: a tiny atlas covering every status, four buckets (one spelling
-``CZ``, three ``Cz``), a position bank, all built in memory or under ``tmp_path``. No network.
+``CZ``, three ``Cz``), a position bank, the per-dataset recording tables (v0 with tokens, v1 without) and the
+demographics (one dataset with ages and sex, one with sex only), all built in memory or under ``tmp_path``. No
+network.
 
 ``docs/`` is not a package, so it is put on ``sys.path`` for ``plot_corpus`` imports (as in ``test_plot_dataset``).
 """
@@ -18,7 +20,12 @@ _DOCS = _REPO_ROOT / "docs"
 if str(_DOCS) not in sys.path:
     sys.path.insert(0, str(_DOCS))
 
-from plot_corpus.data import ATLAS_COLUMNS, STATUSES  # noqa: E402
+from plot_corpus.data import (  # noqa: E402
+    CSV_COLUMNS,
+    DEMOGRAPHIC_COLUMNS,
+    RECORDING_COLUMNS,
+    STATUSES,
+)
 from plot_corpus.electrodes import aggregate_positions  # noqa: E402
 
 REPO_ROOT = _REPO_ROOT
@@ -26,7 +33,7 @@ DOCS = _DOCS
 
 
 def make_row(i: str, status: str, **kw) -> dict[str, str]:
-    row = dict.fromkeys(ATLAS_COLUMNS, "")
+    row = dict.fromkeys(CSV_COLUMNS, "")
     row.update(
         dataset_id=i,
         name=f"Dataset {i}",
@@ -99,6 +106,49 @@ def added() -> list[dict[str, str]]:
     ]
 
 
+def make_rec(i: str, **kw) -> dict[str, str]:
+    row = dict.fromkeys(RECORDING_COLUMNS, "")
+    row.update(dataset_id=i, **kw)
+    return row
+
+
+@pytest.fixture
+def recordings() -> list[dict[str, str]]:
+    """The v0 recording table: ds000001 long recordings, ds000002 short ones; tokens for both."""
+    return [
+        make_rec("ds000001", n_recordings="80", n_subjects="40", minutes_p10="30", minutes_p25="45",
+                 minutes_p50="90", minutes_p75="120", minutes_p90="150", minutes_max="600",
+                 rec_per_subject_p50="2", rec_per_subject_max="4", hours_per_subject_p50="3.0",
+                 hours_per_subject_max="10", tokens="6000000000"),
+        make_rec("ds000002", n_recordings="10", n_subjects="10", minutes_p10="5", minutes_p25="8",
+                 minutes_p50="12", minutes_p75="20", minutes_p90="40", minutes_max="60",
+                 rec_per_subject_p50="1", rec_per_subject_max="1", hours_per_subject_p50="0.5",
+                 hours_per_subject_max="1", tokens="2000000000"),
+    ]  # fmt: skip
+
+
+@pytest.fixture
+def recordings_v1() -> list[dict[str, str]]:
+    """The v1 recording table: the added dataset only, tokens empty (counted at conversion)."""
+    return [
+        make_rec("nm000003", n_recordings="9", n_subjects="5", minutes_p10="60", minutes_p25="70",
+                 minutes_p50="80", minutes_p75="90", minutes_p90="100", minutes_max="110",
+                 rec_per_subject_p50="2", rec_per_subject_max="3", hours_per_subject_p50="2.4",
+                 hours_per_subject_max="4"),
+    ]  # fmt: skip
+
+
+@pytest.fixture
+def demographics() -> list[dict[str, str]]:
+    """ds000001 with ages and sex, ds000002 with sex only, nm000003 absent (nothing known)."""
+    full = dict.fromkeys(DEMOGRAPHIC_COLUMNS, "")
+    full.update(dataset_id="ds000001", year="2020", n_ages="40", age_min="18", age_p25="22", age_p50="25",
+                age_p75="31", age_max="60", n_male="25", n_female="15", tasks="rest|motor")  # fmt: skip
+    sex_only = dict.fromkeys(DEMOGRAPHIC_COLUMNS, "")
+    sex_only.update(dataset_id="ds000002", n_male="4", n_female="6")
+    return [full, sex_only]
+
+
 @pytest.fixture
 def electrodes(buckets, bank, added) -> list[dict]:
     return aggregate_positions(buckets, bank, added)
@@ -112,11 +162,16 @@ def write_csv(path: Path, rows: list[dict[str, str]], fields: list[str]) -> None
 
 
 @pytest.fixture
-def data_dir(tmp_path, rows, buckets, electrodes, added) -> Path:
-    """A data folder as sync_data writes it (atlas, buckets, electrodes, manifest)."""
+def data_dir(
+    tmp_path, rows, buckets, electrodes, added, recordings, recordings_v1, demographics
+) -> Path:
+    """A data folder as sync_data writes it (atlas, buckets, recordings, demographics, electrodes, manifest)."""
     d = tmp_path / "data"
     d.mkdir()
-    write_csv(d / "atlas.csv", rows, ATLAS_COLUMNS)
+    write_csv(d / "atlas.csv", rows, CSV_COLUMNS)
+    write_csv(d / "eegdash-corpus-v0-recordings.csv", recordings, RECORDING_COLUMNS)
+    write_csv(d / "eegdash-corpus-v1-recordings.csv", recordings_v1, RECORDING_COLUMNS)
+    write_csv(d / "eegdash-corpus-demographics.csv", demographics, DEMOGRAPHIC_COLUMNS)
     write_csv(d / "eegdash-corpus-v0-channels.csv", buckets, list(buckets[0]))
     write_csv(d / "eegdash-corpus-v1-channels.csv", added, list(added[0]))
     (d / "electrodes.json").write_text(

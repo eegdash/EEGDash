@@ -15,9 +15,24 @@ from .data import SHORT, SLUGS, STATUSES
 e = html.escape
 
 
-def svg_open(w: float, h: float, label: str, max_w: str = "100%", cls: str = "") -> str:
+def svg_open(
+    w: float,
+    h: float,
+    label: str,
+    max_w: str = "100%",
+    cls: str = "",
+    fixed: bool = False,
+) -> str:
+    """The opening tag: scales to its container (``max_w`` caps it), or ``fixed`` at w x h pixels (a chart that
+    scrolls sideways instead of shrinking).
+    """
     c = f' class="{cls}"' if cls else ""
-    return (f'<svg{c} viewBox="0 0 {w:g} {h:g}" width="100%" style="max-width:{max_w}" role="img" '
+    size = (
+        f'width="{w:g}" height="{h:g}"'
+        if fixed
+        else f'width="100%" style="max-width:{max_w}"'
+    )
+    return (f'<svg{c} viewBox="0 0 {w:g} {h:g}" {size} role="img" '
             f'aria-label="{e(label)}" font-size="11" fill="currentColor">')  # fmt: skip
 
 
@@ -47,6 +62,14 @@ def scroll_frame(axis_svg: str, body_svg: str, max_px: int = 560) -> str:
             f'<div class="corpus-scroll-axis">{axis_svg}</div>{body_svg}</div>')  # fmt: skip
 
 
+def hscroll_frame(pin_svg: str, body_svg: str) -> str:
+    """A chart wider than the page: the body scrolls sideways under its row labels, pinned on the left (both SVGs
+    at fixed pixel sizes, the same height).
+    """
+    return (f'<div class="corpus-hscroll" tabindex="0"><div class="corpus-hscroll-pin">{pin_svg}</div>'
+            f'<div class="corpus-hscroll-body">{body_svg}</div></div>')  # fmt: skip
+
+
 def legend_html(statuses: list[str]) -> str:
     present = set(statuses)
     return (
@@ -60,7 +83,8 @@ def legend_html(statuses: list[str]) -> str:
     )
 
 
-LEFT, WIDTH, RIGHT, PITCH = 150, 300, 110, 16
+# LEFT holds a dataset's axis label, "name (id)": up to 22 characters of name and the id in full.
+LEFT, WIDTH, RIGHT, PITCH = 215, 300, 110, 16
 
 
 def dataset_bars(
@@ -145,3 +169,103 @@ def hbars_svg(items: list[dict], label: str) -> str:
         )
     parts.append("</svg>")
     return "".join(parts)
+
+
+def value_axis(
+    vals: list[float],
+    log: bool,
+    step: float = 10.0,
+    candidates: list[float] | None = None,
+) -> tuple[list[float], object]:
+    """Ticks spanning ``vals`` and the map value -> fraction of the axis. A log axis takes decades, or the
+    ``candidates`` (e.g. minutes at 1 min, 10 min, 1 h, 10 h) that bracket the values; a linear axis starts at 0.
+    """
+    if not log:
+        ticks = lin_ticks(max(vals), step)
+        return ticks, lambda v: v / ticks[-1]
+    lo, hi = min(vals), max(vals)
+    if candidates:
+        below = [c for c in candidates if c <= lo] or [candidates[0]]
+        above = [c for c in candidates if c >= hi] or [candidates[-1]]
+        ticks = [c for c in candidates if below[-1] <= c <= above[0]]
+    else:
+        ticks = log_ticks(lo, hi)
+    a, b = math.log10(ticks[0]), math.log10(ticks[-1])
+    return ticks, lambda v: (math.log10(max(v, ticks[0])) - a) / ((b - a) or 1)
+
+
+def axis_strip(W: float, panels: list[dict], label: str, h: int = 22) -> str:
+    """The pinned axis of a scrolling chart: per panel {x0, width, ticks, frac, fmt, title}; titles sit above the
+    tick labels when any panel has one.
+    """
+    titled = any(p.get("title") for p in panels)
+    h = h + 14 if titled else h
+    out = [svg_open(W, h, f"{label}, axis")]
+    for p in panels:
+        X = lambda v, p=p: p["x0"] + p["frac"](v) * p["width"]  # noqa: E731
+        if p.get("title"):
+            out.append(f'<text x="{p["x0"] + p["width"] / 2:.1f}" y="11" text-anchor="middle" '
+                       f'font-weight="600">{e(p["title"])}</text>')  # fmt: skip
+        for t in p["ticks"]:
+            out.append(
+                f'<text x="{X(t):.1f}" y="{h - 7}" text-anchor="middle" opacity="0.7">{e(p["fmt"](t))}</text>'
+            )
+        out.append(f'<line x1="{p["x0"]}" x2="{p["x0"] + p["width"]}" y1="{h - 1}" y2="{h - 1}" '
+                   f'stroke="currentColor" stroke-opacity="0.3"/>')  # fmt: skip
+    out.append("</svg>")
+    return "".join(out)
+
+
+def grid_lines(panels: list[dict], h: float) -> str:
+    """Faint vertical lines at every tick of every panel, the height of the body."""
+    return "".join(
+        f'<line x1="{p["x0"] + p["frac"](t) * p["width"]:.1f}" x2="{p["x0"] + p["frac"](t) * p["width"]:.1f}" '
+        f'y1="0" y2="{h}" stroke="currentColor" stroke-opacity="0.12"/>'
+        for p in panels
+        for t in p["ticks"]
+    )
+
+
+def range_marks(q: dict, X, cls: str) -> str:
+    """One quantile summary on a row of height PITCH: a thin bar lo..hi (p10..p90 or min..max), the quartile box,
+    the median tick and the maximum as a small mark; any missing quantile is left out.
+    """
+    out = []
+    lo, hi = q.get("lo"), q.get("hi")
+    if lo is not None and hi is not None:
+        out.append(f'<rect x="{X(lo):.1f}" y="7" width="{max(X(hi) - X(lo), 1):.1f}" height="2" class="{cls}" '
+                   f'fill-opacity="0.55"/>')  # fmt: skip
+    if q.get("q1") is not None and q.get("q3") is not None:
+        out.append(f'<rect x="{X(q["q1"]):.1f}" y="3" width="{max(X(q["q3"]) - X(q["q1"]), 2):.1f}" height="10" '
+                   f'rx="1.5" class="{cls}"/>')  # fmt: skip
+    if q.get("mid") is not None:
+        out.append(
+            f'<rect x="{X(q["mid"]) - 1:.1f}" y="1" width="2" height="14" fill="currentColor"/>'
+        )
+    if q.get("top") is not None:
+        out.append(
+            f'<circle cx="{X(q["top"]):.1f}" cy="8" r="2" fill="currentColor" fill-opacity="0.6"/>'
+        )
+    return "".join(out)
+
+
+def range_rows(
+    items: list[dict], panel: dict, label: str, W: float | None = None
+) -> tuple[str, int]:
+    """One quantile summary per dataset in a scrolling frame with a pinned axis: item = {label, status, q {lo, q1,
+    mid, q3, hi, top}, text, tip}; ``panel`` = {x0, width, ticks, frac, fmt}. Returns the HTML and body height.
+    """
+    W = W or LEFT + WIDTH + RIGHT
+    X = lambda v: panel["x0"] + panel["frac"](v) * panel["width"]  # noqa: E731
+    h = PITCH * len(items) + 4
+    body = [svg_open(W, h, label, cls="corpus-bars"), grid_lines([panel], h)]
+    for j, it in enumerate(items):
+        ends = [X(v) for v in it["q"].values() if v is not None] or [panel["x0"]]
+        body.append(
+            f'<g class="corpus-row" transform="translate(0,{j * PITCH})" data-tip="{e(it["tip"])}">'
+            f'<text x="{panel["x0"] - 6}" y="12" text-anchor="end">{e(it["label"])}</text>'
+            f"{range_marks(it['q'], X, fill(it['status']))}"
+            f'<text x="{max(ends) + 6:.1f}" y="12" opacity="0.75">{e(it["text"])}</text></g>'
+        )
+    body.append("</svg>")
+    return scroll_frame(axis_strip(W, [panel], label), "".join(body)), h

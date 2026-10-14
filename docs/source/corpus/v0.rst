@@ -76,6 +76,58 @@ Subjects against hours
 
 .. corpus-figure:: scatter
 
+Recordings
+==========
+
+Recording length
+----------------
+
+How long one recording lasts in each dataset, summarised by its quantiles (the
+per-recording lengths themselves are not shipped), on a log axis from minutes to days.
+
+.. corpus-figure:: lengths
+
+Recordings per subject
+----------------------
+
+How much each subject contributes: recordings and hours per subject, the median subject
+and the subject with the most.
+
+.. corpus-figure:: per-subject
+
+People
+======
+
+Ages and sex of the subjects, for the datasets whose records state them.
+
+.. corpus-figure:: people
+
+From archive to status
+======================
+
+Where the hours come from and under which licence: archive, then licence, then status;
+switch the flow width to datasets to see the datasets without hours.
+
+.. corpus-figure:: flow-licence
+
+Training budget
+===============
+
+What one training epoch reads: tokens per dataset, grouped by paradigm, each tile
+shaded by its share of the tokens.
+
+.. corpus-figure:: tokens
+
+Montages
+========
+
+A channel is one electrode. The columns are the datasets, by channel count, and the
+rows the |montage_rows| standard names used by at least |montage_min| datasets, so nets
+with their own naming, such as EGI or BioSemi, show only the electrodes whose names
+coincide.
+
+.. corpus-figure:: montages
+
 The |v0_datasets| datasets
 ==========================
 

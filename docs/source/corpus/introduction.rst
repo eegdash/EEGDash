@@ -32,24 +32,30 @@ converts its own copy, and that work is not released in a form another model can
 on. The corpus does it once: a group can start from the data rather than from the
 collation, with the licence of every dataset accounted for.
 
-Starting point: REVE
-====================
+Starting point: REVE's corpus
+=============================
 
 The first versions cover the corpus of REVE, the largest published EEG foundation
-model. REVE's paper names |paper_named| datasets; the release card of its public
-subset lists |card_entries| entries, |card_only| of which the paper does not name, so
-|universe| datasets are tracked in all. Version 0 is REVE's public release rebuilt
-from the archives (|v0_datasets| datasets, |v0_hours| hours). Version 1 extends it to
-every publicly usable dataset named by REVE's paper (|v1_datasets| datasets, of the
-added ones |v1_added_prose|); gated datasets are excluded, and datasets whose licences block a
-converted copy are listed with the reason. Later versions add public datasets beyond
-REVE's, chosen by licence and usability.
+model. REVE's paper names |paper_named| datasets in its reference list of what it
+pretrained on, and the release card of its public subset lists |card_entries| entries,
+|card_only| of which the paper does not name. These pages track the union,
+|universe| datasets, and every count, chart and the roadmap are over all of them. Of
+the |card_only| card-only entries, |card_only_prose| (the table's notes say why).
 
-What a version is
-=================
+Versions
+========
 
-A frozen table of datasets and the converted Zarr store built from it. Versions are
-additive; each carries its own table, provenance and conversion report.
+A version is a frozen table of datasets and the converted Zarr store built from it.
+Versions are additive; each carries its own table, provenance and conversion report.
+
+**v0** is REVE's public release rebuilt from the archives and converted:
+|v0_datasets| datasets (|v0_hours| hours). **v1** extends it to every publicly usable
+dataset named by REVE's paper: |v1_datasets| datasets, of the added ones
+|v1_added_prose|. The |gated| gated datasets are out of every version: their
+distribution is forbidden, so only weights trained on them can be released. The
+|blocked| datasets whose licences block a converted copy (NoDerivatives terms, or no
+licence) are listed with the reason. Later versions add public datasets beyond REVE's,
+chosen by licence and usability.
 
 How to get it today
 ===================
@@ -77,8 +83,8 @@ Every cell carries a provenance label: ``zarr`` (measured in the converted Zarr 
 ``eegdash`` (EEGDash's catalogue records), ``card`` (REVE's release card), ``stated``
 (REVE's paper), ``download`` (our copy). A bucket is one exact channel set of one
 dataset in the Zarr store. Status vocabulary: Ingested and Converted (v0) · Ingested, but
-not Converted (v1) · To Be Ingested (v1) · Blocked (License) · Gated (To Be Ingested)
-· Excluded.
+not Converted (v1) · To Be Ingested (v1) · Blocked (License) · Gated (Distribution
+Forbidden) · Excluded.
 
 The corpus in numbers
 =====================

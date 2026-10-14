@@ -6,10 +6,18 @@ from __future__ import annotations
 
 import html
 
-from .data import CONVERTED, DIGITS, PROV_KEY, PROVENANCE, SHORT, SLUGS, STATUSES
+from .data import (
+    DIGITS,
+    PROV_KEY,
+    PROVENANCE,
+    SHORT,
+    SLUGS,
+    STATUSES,
+)
 
 e = html.escape
-NOT_CONVERTED = "not-converted"
+
+
 # (header, column or None for a composed cell, numeric)
 DISPLAY = [("Dataset", "dataset_id", False), ("Name", "name", False), ("Status", "status", False),
            ("Source", "source", False), ("Archive", "archive", False), ("Paradigm", "paradigm", False),
@@ -68,10 +76,9 @@ def table_html(
     status_filter: bool = True,
     columns: list[tuple] | None = None,
     controls: bool = True,
-    pending_option: bool = True,
 ) -> str:
     """The table block; ``{static}`` in the CSV link is replaced by the directive with the page's path to _static.
-    ``pending_option`` adds the "Not yet converted" shortcut to the status filter.
+    The status filter offers "All statuses" and one option per status present.
     """
     cols = columns or DISPLAY
     present = [s for s in STATUSES if any(r["status"] == s for r in rows)]
@@ -92,16 +99,10 @@ def table_html(
         sel = ""
         if status_filter and len(present) > 1:
             counts = {s: sum(r["status"] == s for r in rows) for s in present}
-            opts = [("", f"All statuses ({len(rows)})")]
-            if pending_option and CONVERTED in present:
-                opts.append(
-                    (
-                        NOT_CONVERTED,
-                        f"Not yet converted ({len(rows) - counts[CONVERTED]})",
-                    )
-                )
-            opts += [(s, f"{s} ({counts[s]})") for s in present]
-            sel = (f'<select class="corpus-status" aria-label="Filter by status" data-converted="{e(CONVERTED)}">'
+            opts = [("", f"All statuses ({len(rows)})")] + [
+                (s, f"{s} ({counts[s]})") for s in present
+            ]
+            sel = ('<select class="corpus-status" aria-label="Filter by status">'
                    + "".join(f'<option value="{e(v)}"{" selected" if v == preset else ""}>{e(t)}</option>'
                              for v, t in opts) + "</select>")  # fmt: skip
         ctl = (f'<div class="corpus-controls"><input class="corpus-q" type="search" '

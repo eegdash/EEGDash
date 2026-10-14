@@ -58,6 +58,10 @@ html[data-theme="dark"] .corpus {
 .corpus .corpus-q4 { fill: var(--corpus-q4); } .corpus .corpus-q5 { fill: var(--corpus-q5); }
 .corpus .corpus-q6 { fill: var(--corpus-q6); } .corpus .corpus-q7 { fill: var(--corpus-q7); }
 .corpus .corpus-on-mark { fill: #fff; }
+/* text on a ramp tile: the page's ink on the light half (q0-q3), the page's background on the dark half (q4-q7);
+   the dark theme reverses the ramp and the two inks with it */
+.corpus .corpus-ink-lo { fill: var(--corpus-fg); }
+.corpus .corpus-ink-hi { fill: var(--corpus-card); }
 
 /* figures */
 .corpus .corpus-figure {
@@ -121,6 +125,19 @@ html[data-theme="dark"] .corpus {
 }
 .corpus .corpus-row { transition: transform 0.25s ease; }
 
+/* a wide chart scrolling sideways, its row labels pinned on the left (the montage heatmap) */
+.corpus .corpus-hscroll {
+  display: flex; align-items: flex-start; width: fit-content; max-width: 100%; overflow-x: auto;
+  border: 1px solid var(--corpus-line); border-radius: 8px;
+}
+.corpus .corpus-hscroll-pin {
+  position: sticky; left: 0; z-index: 1; flex: none; background: var(--corpus-card); border-right: 1px solid var(--corpus-line);
+}
+.corpus .corpus-hscroll-body { flex: none; }
+.corpus .corpus-hscroll svg { max-width: none; }
+.corpus .corpus-col:hover rect { opacity: 0.75; }
+.corpus .corpus-col:hover text { font-weight: 700; }
+
 /* electrode map, 2-D and 3-D */
 .corpus .corpus-el { stroke: var(--corpus-card); stroke-width: 1; transition: r 0.25s; }
 .corpus .corpus-el:hover { stroke: var(--corpus-fg); stroke-width: 2; }
@@ -164,6 +181,11 @@ html[data-theme="dark"] .corpus {
 .corpus .corpus-table tbody tr:hover td { background: var(--corpus-surface); }
 .corpus .corpus-sub { color: var(--corpus-mute); font-size: 0.8rem; }
 .corpus .corpus-badge { white-space: nowrap; }
+
+
+/* treemap tiles and Sankey bands */
+.corpus .corpus-tm rect[class] { stroke: var(--corpus-card); stroke-width: 1; }
+.corpus path[data-tip]:hover { fill-opacity: 0.7; }
 
 /* landing cards */
 .corpus .corpus-card .sd-card-body { display: flex; flex-direction: column; gap: 0.4rem; }

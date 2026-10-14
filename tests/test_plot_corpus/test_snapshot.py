@@ -10,6 +10,9 @@ from pathlib import Path
 import pytest
 from plot_corpus import sync_data
 from plot_corpus.data import (
+    GATED,
+    STATUSES,
+    kpis,
     numbers,
     read_buckets,
     read_electrodes,
@@ -32,6 +35,10 @@ def test_committed_data_matches_manifest():
 def test_committed_row_counts():
     rows = read_rows(DATA / "atlas.csv")
     assert (len(rows), len(v0_rows(rows)), len(v1_rows(rows))) == (93, 66, 78)
+    # every row counts (the union of REVE's paper, 89, and its release card, 70), whatever gated spelling the copy has
+    k = kpis(rows)
+    assert (k["datasets"], k["paper"], k["card"], k["card_only"]) == (93, 89, 70, 4)
+    assert [k[s] for s in STATUSES[:6]] == [66, 12, 0, 8, 3, 4] and k[GATED] == 3
     assert len(read_buckets(DATA / "eegdash-corpus-v0-channels.csv")) == 968
     assert (
         len(
@@ -60,6 +67,25 @@ def test_every_rst_key_exists():
     }
     assert used, "no corpus-figure directive found"
     assert used <= set(frags), sorted(used - set(frags))
+    views = ["lengths", "per-subject", "people", "flow-licence", "tokens"]
+    assert (
+        set(views + [v + "-v1" for v in views] + ["montages"]) <= used
+    )  # every new view is on a page
+    for page, suffix in (
+        ("v0", ""),
+        ("v1", "-v1"),
+    ):  # in the same order on both pages, before the table
+        keys = re.findall(
+            r"^\.\. corpus-figure:: (\S+)", (RST / f"{page}.rst").read_text(), re.M
+        )
+        assert [k for k in keys if k in [v + suffix for v in views]] == [
+            v + suffix for v in views
+        ], page
+        assert (
+            keys.index(f"scatter{suffix}")
+            < keys.index(f"lengths{suffix}")
+            < keys.index(f"table-{page}")
+        )
     subs = {
         s for p in RST.glob("*.rst") for s in re.findall(r"\|(\w+)\|", p.read_text())
     }
@@ -73,6 +99,7 @@ def test_every_rst_key_exists():
         )
     )
     assert subs <= known, sorted(subs - known)
+    assert {"universe", "card_only_prose", "montage_rows"} <= subs
 
 
 def test_scan_catches_internal_names():
@@ -136,6 +163,36 @@ def test_sync_copies_scans_and_refuses_dirty(source, tmp_path):
         sync_data.sync(
             source, out, allow_dirty=True, synced="2026-01-02", extra_deny=[]
         )
+
+
+def test_sync_copies_optional_tables_when_present(source, tmp_path, recordings):
+    from plot_corpus.data import RECORDING_COLUMNS
+
+    write_csv(
+        source / "corpus/corpus-atlas/eegdash-corpus-v0-recordings.csv",
+        recordings,
+        RECORDING_COLUMNS,
+    )
+    _git(source, "add", ".")
+    _git(
+        source,
+        "-c",
+        "user.name=Ada Tester",
+        "-c",
+        "user.email=t@t",
+        "commit",
+        "-qm",
+        "y",
+    )
+    out = tmp_path / "data"
+    m = sync_data.sync(
+        source, out, allow_dirty=False, synced="2026-01-02", extra_deny=[]
+    )
+    assert m["files"]["eegdash-corpus-v0-recordings.csv"]["rows"] == 2
+    assert (
+        "eegdash-corpus-demographics.csv" not in m["files"]
+    )  # absent in the source: skipped
+    assert sync_data.check(out) == []
 
 
 def test_every_data_file_is_tracked_by_git():

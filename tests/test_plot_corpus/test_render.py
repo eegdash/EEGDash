@@ -46,12 +46,13 @@ def test_fragments_are_offline_and_scoped(built):
 def test_kpis_flow_and_numbers_come_from_rows(rows, built):
     manifest, out = built
     k = kpis(rows)
-    assert (k["datasets"], k[STATUSES[0]], k["v1_datasets"], k["pending"]) == (
+    assert (k["datasets"], k[STATUSES[0]], k["v0_datasets"], k["v1_datasets"]) == (
         8,
         2,
-        4,
         2,
+        4,
     )  # v1 counts to ingest
+    assert "pending" not in k
     assert k["v0_hours"] == pytest.approx(150.5)
     flow = (out / "flow.html").read_text()
     assert (
@@ -77,6 +78,9 @@ def test_kpis_flow_and_numbers_come_from_rows(rows, built):
         "buckets": 4,
         "added": 1,
         "electrodes": 6,
+        "recordings": 2,
+        "recordings_v1": 1,
+        "demographics": 2,
     }
 
 
@@ -87,6 +91,14 @@ def test_unknown_status_refused(rows, tmp_path):
     write_csv(tmp_path / "a.csv", rows, list(rows[0]))
     with pytest.raises(ValueError, match="not one of"):
         read_rows(tmp_path / "a.csv")
+
+
+def test_earlier_gated_spelling_is_read_as_the_current_one(rows, tmp_path):
+    """The data copy synced before 2026-10-13 spells the gated status "Gated (To Be Ingested)": it still builds."""
+    rows[5]["status"] = "Gated (To Be Ingested)"
+    write_csv(tmp_path / "a.csv", rows, list(rows[0]))
+    read = read_rows(tmp_path / "a.csv")
+    assert read[5]["status"] == STATUSES[4] == "Gated (Distribution Forbidden)"
 
 
 def test_unknown_channel_refused(buckets, bank, electrodes):
@@ -172,8 +184,9 @@ def test_table_rows_carry_status_and_sort_values(built):
     )  # blanks sort last
     assert (
         '<option value="" selected>All statuses (8)' in t
-        and '<option value="not-converted">' in t
-    )  # opens on all
+        and t.count("<option") == 8
+        and "not-converted" not in t
+    )  # opens on all; then one option per status present, no "not yet converted" shortcut
     assert "{static}corpus_generated/atlas.csv" in t
     assert "<option" not in (out / "table-v0.html").read_text()
     v1 = (

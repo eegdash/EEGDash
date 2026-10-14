@@ -66,7 +66,7 @@
       var text = q ? q.value.trim().toLowerCase() : "", s = st ? st.value : "", n = 0;
       rows.forEach(function (r) {
         var status = r.getAttribute("data-status");
-        var ok = (!s || (s === "not-converted" ? status !== st.getAttribute("data-converted") : status === s))
+        var ok = (!s || status === s)
           && (!text || r.textContent.toLowerCase().indexOf(text) >= 0);
         r.hidden = !ok; if (ok) n++;
       });

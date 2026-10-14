@@ -91,6 +91,48 @@ Subjects against hours
 
 .. corpus-figure:: scatter-v1
 
+Recordings
+==========
+
+Recording length
+----------------
+
+How long one recording lasts in each dataset, summarised by its quantiles, on a log axis
+from minutes to days; the added datasets' lengths come from EEGDash's records.
+
+.. corpus-figure:: lengths-v1
+
+Recordings per subject
+----------------------
+
+How much each subject contributes: recordings and hours per subject, the median subject
+and the subject with the most.
+
+.. corpus-figure:: per-subject-v1
+
+People
+======
+
+Ages and sex of the subjects, for the datasets whose records state them.
+
+.. corpus-figure:: people-v1
+
+From archive to status
+======================
+
+Where the hours come from, under which licence, and how far each dataset has come;
+switch the flow width to datasets to see the datasets without hours.
+
+.. corpus-figure:: flow-licence-v1
+
+Training budget
+===============
+
+Tokens are counted in the converted Zarr store, so this is v0's budget: the datasets v1
+adds enter it when they are converted.
+
+.. corpus-figure:: tokens-v1
+
 The |v1_datasets| datasets
 ==========================
 

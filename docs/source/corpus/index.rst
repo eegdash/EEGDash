@@ -71,10 +71,11 @@ converted); version 1 extends it to |v1_datasets| datasets.
          - |v0_datasets| datasets, |v0_hours| hours, |v0_subjects| subjects
          - |v0_positions| electrode positions in |v0_buckets| channel sets
          - Hours, channels, subjects, rates, paradigms
+         - Recording lengths, subjects' ages and sex, licences, tokens, montages
 
          .. rst-class:: corpus-card-find
 
-         What you will find: the converted Zarr store measured, the electrode map in 2-D and 3-D, the table of v0.
+         What you will find: the converted Zarr store measured, the electrode map in 2-D and 3-D, the training budget, the table of v0.
 
       .. grid-item-card:: EEGDash Corpus v1
          :link: v1
@@ -87,7 +88,7 @@ converted); version 1 extends it to |v1_datasets| datasets.
 
          - |v1_new| datasets added: |v1_added_short|
          - |v1_datasets| datasets, |v1_hours| hours measured so far
-         - The same views as v0, the added datasets by status
+         - The same views as v0, the added datasets by status; tokens stay v0's until conversion
 
          .. rst-class:: corpus-card-find
 

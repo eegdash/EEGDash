@@ -12,7 +12,11 @@ def worst_ratio(row: list[float], side: float) -> float:
     s = sum(row)
     if not s or not side:
         return float("inf")
-    return max(max(side * side * v / (s * s), (s * s) / (side * side * v)) for v in row if v > 0)
+    return max(
+        max(side * side * v / (s * s), (s * s) / (side * side * v))
+        for v in row
+        if v > 0
+    )
 
 
 def squarify(
@@ -32,9 +36,9 @@ def squarify(
         side = min(w, h)
         row = [todo[0]]
         k = 1
-        while k < len(todo) and worst_ratio([a for _, a in row + [todo[k]]], side) <= worst_ratio(
-            [a for _, a in row], side
-        ):
+        while k < len(todo) and worst_ratio(
+            [a for _, a in row + [todo[k]]], side
+        ) <= worst_ratio([a for _, a in row], side):
             row.append(todo[k])
             k += 1
         todo = todo[k:]
@@ -90,7 +94,9 @@ def sankey_layout(
     height: float,
     gap: float = 12,
     min_h: float = 1.5,
-) -> tuple[list[dict[str, tuple[float, float]]], dict[tuple, tuple[float, float, float, float]]]:
+) -> tuple[
+    list[dict[str, tuple[float, float]]], dict[tuple, tuple[float, float, float, float]]
+]:
     """Node spans (y0, y1) per column and per link the band's (ys0, ys1, yt0, yt1) at its source and its target.
     One scale for every column (the column with the most nodes fills ``height``); a node is never thinner than
     ``min_h``; bands leave a node in the order of their targets and enter in the order of their sources.
@@ -109,13 +115,17 @@ def sankey_layout(
     in_at = dict(out_at)
     rank = [{n: j for j, n in enumerate(o)} for o in orders]
     bands = {}
-    for key in sorted(links, key=lambda k: (k[0], rank[k[0]][k[1]], rank[k[0] + 1][k[2]])):
+    for key in sorted(
+        links, key=lambda k: (k[0], rank[k[0]][k[1]], rank[k[0] + 1][k[2]])
+    ):
         c, s, t = key
         hs = links[key] / nodes[c][s] * (spans[c][s][1] - spans[c][s][0])
         ys = out_at[(c, s)]
         out_at[(c, s)] = ys + hs
         bands[key] = [ys, ys + hs, 0.0, 0.0]
-    for key in sorted(links, key=lambda k: (k[0], rank[k[0] + 1][k[2]], rank[k[0]][k[1]])):
+    for key in sorted(
+        links, key=lambda k: (k[0], rank[k[0] + 1][k[2]], rank[k[0]][k[1]])
+    ):
         c, s, t = key
         ht = links[key] / nodes[c + 1][t] * (spans[c + 1][t][1] - spans[c + 1][t][0])
         yt = in_at[(c + 1, t)]

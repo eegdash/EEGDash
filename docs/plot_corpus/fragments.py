@@ -14,14 +14,17 @@ from pathlib import Path
 
 from . import charts
 from .data import (
-    ATLAS_COLUMNS,
     CONVERTED,
+    CSV_COLUMNS,
+    DEMOGRAPHIC_COLUMNS,
+    RECORDING_COLUMNS,
     TO_CONVERT,
     TO_INGEST,
     numbers,
     of_status,
     read_buckets,
     read_electrodes,
+    read_optional,
     read_rows,
     v0_rows,
     v1_added,
@@ -33,11 +36,18 @@ from .table import COMPACT, table_html
 
 FRAGMENT_LIMIT = 200_000  # bytes per fragment
 V0_NAME, V1_NAME = "eegdash-corpus-v0", "eegdash-corpus-v1"
-ADDED = "eegdash-channel-sets.csv"  # channel sets of the datasets v1 adds (EEGDash records); optional
+ADDED = "eegdash-corpus-v1-channels.csv"  # channel sets of the datasets v1 adds (EEGDash records); optional
+# Per-dataset recording lengths, recordings and hours per subject, tokens (v1: the added datasets only, no tokens),
+# and the subjects' ages and sex where known; optional, a chart without its table says so.
+REC_V0, REC_V1 = "eegdash-corpus-v0-recordings.csv", "eegdash-corpus-v1-recordings.csv"
+DEMOGRAPHICS = "eegdash-corpus-demographics.csv"
 INPUTS = [
     "atlas.csv",
-    "reve-public-nc-channels.csv",
+    "eegdash-corpus-v0-channels.csv",
     ADDED,
+    REC_V0,
+    REC_V1,
+    DEMOGRAPHICS,
     "electrodes.json",
     "MANIFEST.json",
 ]
@@ -51,7 +61,7 @@ def figure(key: str, body: str, caption: str, legend: str = "") -> str:
 def csv_text(rows: list[dict[str, str]]) -> str:
     buf = io.StringIO()
     w = csv.DictWriter(
-        buf, fieldnames=ATLAS_COLUMNS, lineterminator="\n", extrasaction="ignore"
+        buf, fieldnames=CSV_COLUMNS, lineterminator="\n", extrasaction="ignore"
     )
     w.writeheader()
     w.writerows(rows)
@@ -66,16 +76,31 @@ class _Fragments(dict):
 
 
 def build_fragments(
-    rows, buckets, electrodes, synced: str, added=None
+    rows,
+    buckets,
+    electrodes,
+    synced: str,
+    added=None,
+    recordings=None,
+    recordings_v1=None,
+    demographics=None,
 ) -> dict[str, tuple[str, str]]:
-    """Key -> (fragment HTML, caption). Pure: no file is read or written."""
-    added = added or []
+    """Key -> (fragment HTML, caption). Pure: no file is read or written. The counts, status charts, roadmap and
+    full table are over every row (the paper's datasets and the release card's entries); the v0 and v1 pages over
+    the rows of their statuses.
+    """
+    added, recordings, demographics = added or [], recordings or [], demographics or []
+    rec_v1 = recordings + (
+        recordings_v1 or []
+    )  # the v1 file holds only the datasets v1 adds
     check_coverage(electrodes, buckets + added)
     v0, v1 = v0_rows(rows), v1_rows(rows)
     n_ds = len({b["dataset"] for b in buckets})
     n_ds_v1 = n_ds + len({b["dataset"] for b in added})
     legend_all = legend_html([r["status"] for r in rows])
-    legend_v1 = legend_html([CONVERTED, TO_CONVERT, TO_INGEST])
+    legend_v1 = legend_html(
+        [r["status"] for r in v1]
+    )  # only the statuses v1 holds: no "to ingest" once nothing waits
     out = _Fragments()
     add = out.add
     add("kpis", charts.kpis_universe(rows))
@@ -86,8 +111,9 @@ def build_fragments(
     add("status", charts.status_svg(rows), legend_all)
     n_pending = sum(r["status"] != CONVERTED for r in rows)
     add("table-all", (table_html(rows, "atlas.csv"),
-                      f"All {len(rows)} datasets tracked, {n_pending} of them not yet converted. "
-                      f"Click a header to sort, hover a number for its source."))  # fmt: skip
+                      f"All {len(rows)} datasets tracked (REVE's paper and its release card), {n_pending} of them not "
+                      f"yet converted. Filter by text or by status, click a header to sort, hover a number for its "
+                      f"source."))  # fmt: skip
     # v0
     add("v0-kpis", charts.kpis_v0(v0, buckets, electrodes))
     h, c = charts.hours_chart(v0)
@@ -101,6 +127,12 @@ def build_fragments(
     add("rates", charts.rates_chart(v0))
     add("paradigms", charts.paradigms_chart(v0))
     add("scatter", charts.scatter_chart(v0))
+    add("lengths", charts.lengths_chart(v0, recordings))
+    add("per-subject", charts.per_subject_chart(v0, recordings))
+    add("people", charts.people_chart(v0, demographics))
+    add("flow-licence", charts.flow_licence_chart(v0))
+    add("tokens", charts.tokens_chart(v0, recordings))
+    add("montages", charts.montage_chart(v0, buckets, electrodes))
     add(
         "table-v0",
         (
@@ -132,10 +164,15 @@ def build_fragments(
     add("rates-v1", charts.rates_chart(v1), legend_v1)
     add("paradigms-v1", charts.paradigms_chart(v1), legend_v1)
     add("scatter-v1", charts.scatter_chart(v1), legend_v1)
+    add("lengths-v1", charts.lengths_chart(v1, rec_v1), legend_v1)
+    add("per-subject-v1", charts.per_subject_chart(v1, rec_v1), legend_v1)
+    add("people-v1", charts.people_chart(v1, demographics), legend_v1)
+    add("flow-licence-v1", charts.flow_licence_chart(v1), legend_v1)
+    add("tokens-v1", charts.tokens_chart(v1, rec_v1, pending=new))
     add(
         "table-v1",
         (
-            table_html(v1, "atlas-v1.csv", pending_option=False),
+            table_html(v1, "atlas-v1.csv"),
             f"The {len(v1)} datasets of {V1_NAME}. Click a header to sort, hover a number for its source.",
         ),
     )
@@ -157,10 +194,22 @@ def build(data: Path, out: Path) -> dict:
     meta = json.loads((data / "MANIFEST.json").read_text(encoding="utf-8"))
     synced = meta["synced"]
     rows = read_rows(data / "atlas.csv")
-    buckets = read_buckets(data / "reve-public-nc-channels.csv")
+    buckets = read_buckets(data / "eegdash-corpus-v0-channels.csv")
     electrodes = read_electrodes(data / "electrodes.json")
     added = read_buckets(data / ADDED) if (data / ADDED).is_file() else []
-    frags = build_fragments(rows, buckets, electrodes, synced, added)
+    recordings = read_optional(data / REC_V0, RECORDING_COLUMNS)
+    recordings_v1 = read_optional(data / REC_V1, RECORDING_COLUMNS)
+    demographics = read_optional(data / DEMOGRAPHICS, DEMOGRAPHIC_COLUMNS)
+    frags = build_fragments(
+        rows,
+        buckets,
+        electrodes,
+        synced,
+        added,
+        recordings,
+        recordings_v1,
+        demographics,
+    )
     out.mkdir(parents=True, exist_ok=True)
     entries = {}
     for key, (text, cap) in frags.items():
@@ -182,7 +231,9 @@ def build(data: Path, out: Path) -> dict:
     manifest = {"about": "Generated by docs/prepare_corpus.py, do not hand-edit.", "synced": synced,
                 "source_commit": meta.get("source_commit", ""), "fragments": entries, "numbers": nums,
                 "rows": {"atlas": len(rows), "v0": len(v0_rows(rows)), "v1": len(v1_rows(rows)),
-                         "buckets": len(buckets), "added": len(added), "electrodes": len(electrodes)}}  # fmt: skip
+                         "buckets": len(buckets), "added": len(added), "electrodes": len(electrodes),
+                         "recordings": len(recordings), "recordings_v1": len(recordings_v1),
+                         "demographics": len(demographics)}}  # fmt: skip
     (out / "manifest.json").write_text(
         json.dumps(manifest, indent=2, ensure_ascii=False) + "\n", encoding="utf-8"
     )

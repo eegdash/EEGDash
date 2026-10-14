@@ -10,6 +10,9 @@ from pathlib import Path
 import pytest
 from plot_corpus import sync_data
 from plot_corpus.data import (
+    GATED,
+    STATUSES,
+    kpis,
     numbers,
     read_buckets,
     read_electrodes,
@@ -32,21 +35,30 @@ def test_committed_data_matches_manifest():
 def test_committed_row_counts():
     rows = read_rows(DATA / "atlas.csv")
     assert (len(rows), len(v0_rows(rows)), len(v1_rows(rows))) == (93, 66, 78)
-    assert len(read_buckets(DATA / "reve-public-nc-channels.csv")) == 968
+    # every row counts (the union of REVE's paper, 89, and its release card, 70), whatever gated spelling the copy has
+    k = kpis(rows)
+    assert (k["datasets"], k["paper"], k["card"], k["card_only"]) == (93, 89, 70, 4)
+    assert [k[s] for s in STATUSES[:6]] == [66, 12, 0, 8, 3, 4] and k[GATED] == 3
+    assert len(read_buckets(DATA / "eegdash-corpus-v0-channels.csv")) == 968
     assert (
-        len({b["dataset"] for b in read_buckets(DATA / "eegdash-channel-sets.csv")})
-        == 10
-    )  # 11 to convert, SparrKULee has no channel metadata
+        len(
+            {
+                b["dataset"]
+                for b in read_buckets(DATA / "eegdash-corpus-v1-channels.csv")
+            }
+        )
+        == 11
+    )  # 12 to convert, SparrKULee has no channel metadata
 
 
 def test_every_rst_key_exists():
     rows = read_rows(DATA / "atlas.csv")
     frags = build_fragments(
         rows,
-        read_buckets(DATA / "reve-public-nc-channels.csv"),
+        read_buckets(DATA / "eegdash-corpus-v0-channels.csv"),
         read_electrodes(DATA / "electrodes.json"),
         "2026-01-01",
-        read_buckets(DATA / "eegdash-channel-sets.csv"),
+        read_buckets(DATA / "eegdash-corpus-v1-channels.csv"),
     )
     used = {
         k
@@ -55,19 +67,39 @@ def test_every_rst_key_exists():
     }
     assert used, "no corpus-figure directive found"
     assert used <= set(frags), sorted(used - set(frags))
+    views = ["lengths", "per-subject", "people", "flow-licence", "tokens"]
+    assert (
+        set(views + [v + "-v1" for v in views] + ["montages"]) <= used
+    )  # every new view is on a page
+    for page, suffix in (
+        ("v0", ""),
+        ("v1", "-v1"),
+    ):  # in the same order on both pages, before the table
+        keys = re.findall(
+            r"^\.\. corpus-figure:: (\S+)", (RST / f"{page}.rst").read_text(), re.M
+        )
+        assert [k for k in keys if k in [v + suffix for v in views]] == [
+            v + suffix for v in views
+        ], page
+        assert (
+            keys.index(f"scatter{suffix}")
+            < keys.index(f"lengths{suffix}")
+            < keys.index(f"table-{page}")
+        )
     subs = {
         s for p in RST.glob("*.rst") for s in re.findall(r"\|(\w+)\|", p.read_text())
     }
     known = set(
         numbers(
             rows,
-            read_buckets(DATA / "reve-public-nc-channels.csv"),
+            read_buckets(DATA / "eegdash-corpus-v0-channels.csv"),
             read_electrodes(DATA / "electrodes.json"),
             "x",
-            read_buckets(DATA / "eegdash-channel-sets.csv"),
+            read_buckets(DATA / "eegdash-corpus-v1-channels.csv"),
         )
     )
     assert subs <= known, sorted(subs - known)
+    assert {"universe", "card_only_prose", "montage_rows"} <= subs
 
 
 def test_scan_catches_internal_names():
@@ -85,18 +117,19 @@ def _git(repo, *args):
 def source(tmp_path, rows, buckets, bank, added):
     """A throwaway source repository laid out as the real one."""
     src = tmp_path / "src"
-    (src / "corpus/eeg-atlas").mkdir(parents=True)
-    (src / "results/conversion/zarr").mkdir(parents=True)
-    write_csv(src / "corpus/eeg-atlas/atlas.csv", rows, list(rows[0]))
+    (src / "corpus/corpus-atlas").mkdir(parents=True)
+    write_csv(src / "corpus/corpus-atlas/atlas.csv", rows, list(rows[0]))
     write_csv(
-        src / "results/conversion/zarr/reve-public-nc-channels.csv",
+        src / "corpus/corpus-atlas/eegdash-corpus-v0-channels.csv",
         buckets,
         list(buckets[0]),
     )
     write_csv(
-        src / "results/conversion/eegdash-channel-sets.csv", added, list(added[0])
+        src / "corpus/corpus-atlas/eegdash-corpus-v1-channels.csv",
+        added,
+        list(added[0]),
     )
-    (src / "corpus/reve-positions.json").write_text(json.dumps(bank))
+    (src / "corpus/corpus-atlas/electrode-positions.json").write_text(json.dumps(bank))
     _git(src, "init", "-q")
     _git(src, "add", ".")
     _git(
@@ -115,8 +148,8 @@ def test_sync_copies_scans_and_refuses_dirty(source, tmp_path):
         and m["files"]["electrodes.json"]["rows"] == 6
     )
     assert sync_data.check(out) == []
-    (source / "corpus/eeg-atlas/atlas.csv").write_text(
-        (source / "corpus/eeg-atlas/atlas.csv")
+    (source / "corpus/corpus-atlas/atlas.csv").write_text(
+        (source / "corpus/corpus-atlas/atlas.csv")
         .read_text()
         .replace("Dataset ds000001", "Dataset by Tester")
     )
@@ -130,6 +163,36 @@ def test_sync_copies_scans_and_refuses_dirty(source, tmp_path):
         sync_data.sync(
             source, out, allow_dirty=True, synced="2026-01-02", extra_deny=[]
         )
+
+
+def test_sync_copies_optional_tables_when_present(source, tmp_path, recordings):
+    from plot_corpus.data import RECORDING_COLUMNS
+
+    write_csv(
+        source / "corpus/corpus-atlas/eegdash-corpus-v0-recordings.csv",
+        recordings,
+        RECORDING_COLUMNS,
+    )
+    _git(source, "add", ".")
+    _git(
+        source,
+        "-c",
+        "user.name=Ada Tester",
+        "-c",
+        "user.email=t@t",
+        "commit",
+        "-qm",
+        "y",
+    )
+    out = tmp_path / "data"
+    m = sync_data.sync(
+        source, out, allow_dirty=False, synced="2026-01-02", extra_deny=[]
+    )
+    assert m["files"]["eegdash-corpus-v0-recordings.csv"]["rows"] == 2
+    assert (
+        "eegdash-corpus-demographics.csv" not in m["files"]
+    )  # absent in the source: skipped
+    assert sync_data.check(out) == []
 
 
 def test_every_data_file_is_tracked_by_git():

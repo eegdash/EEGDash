@@ -12,8 +12,7 @@ EEGDash Corpus v1
 #################
 
 Version 1 extends version 0 to every publicly usable dataset named by REVE's paper:
-|v1_datasets| datasets, of which |v1_to_convert| are ingested by EEGDash and wait for
-conversion and |to_ingest| is still to be ingested. The numbers of the added datasets
+|v1_datasets| datasets; of the |v1_new| it adds, |v1_added_prose|. The numbers of the added datasets
 come from EEGDash's records until they are converted; the views below are those of v0,
 with the added datasets stacked by status.
 
@@ -25,7 +24,8 @@ What v1 adds
 SparrKULee carries CC BY-NC 4.0 in NEMAR's dataset description (EEGDash's record lists
 none), so a v1 Zarr store that includes it carries non-commercial terms; its EEGDash
 records carry no signal metadata, so its hours are measured at conversion. Siena Scalp
-EEG is held and waits for its deposit on NEMAR; its numbers follow.
+EEG is on NEMAR as a BIDS curation of the PhysioNet release; its EDF labels carry an
+``EEG`` prefix (``EEG Fp1``), stripped when the names are matched to electrode positions.
 
 In numbers
 ==========
@@ -90,6 +90,48 @@ Subjects against hours
 ----------------------
 
 .. corpus-figure:: scatter-v1
+
+Recordings
+==========
+
+Recording length
+----------------
+
+How long one recording lasts in each dataset, summarised by its quantiles, on a log axis
+from minutes to days; the added datasets' lengths come from EEGDash's records.
+
+.. corpus-figure:: lengths-v1
+
+Recordings per subject
+----------------------
+
+How much each subject contributes: recordings and hours per subject, the median subject
+and the subject with the most.
+
+.. corpus-figure:: per-subject-v1
+
+People
+======
+
+Ages and sex of the subjects, for the datasets whose records state them.
+
+.. corpus-figure:: people-v1
+
+From archive to status
+======================
+
+Where the hours come from, under which licence, and how far each dataset has come;
+switch the flow width to datasets to see the datasets without hours.
+
+.. corpus-figure:: flow-licence-v1
+
+Training budget
+===============
+
+Tokens are counted in the converted Zarr store, so this is v0's budget: the datasets v1
+adds enter it when they are converted.
+
+.. corpus-figure:: tokens-v1
 
 The |v1_datasets| datasets
 ==========================

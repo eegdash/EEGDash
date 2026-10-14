@@ -16,7 +16,7 @@ The data on this page is as of |synced|.
 Where we are
 ============
 
-Datasets at each step, from converted to out of reach.
+The |universe| datasets tracked at each step, from converted to out of reach.
 
 .. corpus-figure:: progress
 
@@ -28,22 +28,25 @@ What's next
 From REVE's paper to the versions
 =================================
 
-REVE's paper names |paper_named| datasets and its release card |card_entries|
-entries (|universe| tracked in all); version 0 converts |v0_datasets| of them,
-version 1 adds |v1_new|.
+REVE's paper names |paper_named| datasets and its release card lists |card_entries|
+entries, |card_only| of them not in the paper (|card_only_names|); version 0 converts
+|v0_datasets| of the card's entries, version 1 adds |v1_new| of the paper's datasets;
+the pages track the union, |universe| datasets.
 
 .. corpus-figure:: flow
 
 Datasets by status
 ==================
 
+The |universe| datasets tracked, by status.
+
 .. corpus-figure:: status
 
 The whole universe
 ==================
 
-Every dataset tracked (|universe|): converted, to convert, to ingest, blocked, gated
-and excluded; filter by text or by status.
+Every dataset tracked (|universe|, REVE's paper and its release card): converted, to
+convert, blocked, gated and excluded; filter by text or by status.
 
 .. corpus-figure:: table-all
 

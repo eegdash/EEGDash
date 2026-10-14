@@ -1793,6 +1793,10 @@ class _NotAtCommit(LookupError):
     """The file does not exist at the commit, although the commit does."""
 
 
+class _CommitNotServed(LookupError):
+    """The dataset's GitHub mirror does not serve the commit (e.g. history rewritten)."""
+
+
 @lru_cache(maxsize=64)
 def _commit_exists(dataset: str, commit: str) -> bool:
     """Whether the dataset's GitHub mirror serves ``commit`` (it has a description)."""
@@ -1816,37 +1820,61 @@ _IN_PLACE_CORRECTIONS = frozenset({"headers-scrubbed"})
 
 
 @lru_cache(maxsize=64)
-def _corrections(dataset: str) -> tuple[dict, ...] | None:
+def _corrections_log(dataset: str) -> tuple[dict, ...]:
     """In-place corrections in the dataset's ``.nemar/corrections.jsonl``.
 
     Read from the current default branch, since the log is appended after the
-    corrected commit. Empty when there is no log; None when it is unreadable.
+    corrected commit. Empty when there is no log; raises when it is
+    unreadable, so a transient failure is not cached.
     """
     url = GITHUB_RAW.format(ds=dataset, commit="HEAD", path=".nemar/corrections.jsonl")
+    r = _http_get(url, timeout=30)
+    if r.status_code == 404:
+        return ()
+    r.raise_for_status()
+    found = []
+    for line in r.text.splitlines():
+        e = json.loads(line) if line.strip() else None
+        if not isinstance(e, dict) or not isinstance(e.get("action"), str):
+            continue
+        if e["action"] not in _IN_PLACE_CORRECTIONS:
+            continue
+        versions = e.get("versions") or []
+        if not isinstance(versions, list):
+            versions = [versions]
+        found.append(
+            {
+                "at": e.get("at"),
+                "action": e["action"],
+                "versions": [str(v) for v in versions],
+                "verification": e.get("verification"),
+            }
+        )
+    return tuple(found)
+
+
+def _corrections(dataset: str) -> tuple[dict, ...] | None:
+    """:func:`_corrections_log`, or None when the log cannot be read."""
     try:
-        r = _http_get(url, timeout=30)
-        if r.status_code == 404:
-            return ()
-        r.raise_for_status()
-        entries = [json.loads(line) for line in r.text.splitlines() if line.strip()]
+        return _corrections_log(dataset)
     except (requests.RequestException, ValueError):
         return None
-    return tuple(
-        {k: e.get(k) for k in ("at", "action", "versions", "verification")}
-        for e in entries
-        if isinstance(e, dict) and e.get("action") in _IN_PLACE_CORRECTIONS
-    )
 
 
 def _annex_key_at_commit(dataset: str, commit: str, path: str) -> str | None:
     """git-annex key of ``path`` at ``commit``, or None if it is not annexed.
 
     Raises :class:`_NotAtCommit` when the commit exists but ``path`` does not
-    (the store was converted from a tree without this file).
+    (the store was converted from a tree without this file), and
+    :class:`_CommitNotServed` when the mirror does not serve the commit.
     """
     r = _http_get(GITHUB_RAW.format(ds=dataset, commit=commit, path=path), timeout=30)
-    if r.status_code == 404 and _commit_exists(dataset, commit):
-        raise _NotAtCommit(f"{path} does not exist at commit {commit}")
+    if r.status_code == 404:
+        if _commit_exists(dataset, commit):
+            raise _NotAtCommit(f"{path} does not exist at commit {commit}")
+        raise _CommitNotServed(
+            f"NEMAR's GitHub mirror of {dataset} does not serve commit {commit}"
+        )
     r.raise_for_status()
     try:
         target = r.content.decode("utf-8").strip()
@@ -1929,7 +1957,7 @@ class EEGDashZarrRaw(EEGDashRaw):
     1. the store's file is the raw file's current version on NEMAR;
     2. the two keys record the same byte size;
     3. the record's sampling rate equals the store's source rate, and its
-       channel count equals the store's;
+       channel count equals the store's (over all its channel groups);
     4. the record's channel names equal, ignoring case and in order, the
        names in the BIDS channels.tsv at the store's commit (the store's own
        labels may be the raw file's, e.g. ``EEG Fp1-LE`` for ``Fp1``).
@@ -1939,9 +1967,13 @@ class EEGDashZarrRaw(EEGDashRaw):
     record describes. The checks cannot show that the versions are identical
     byte for byte or sample for sample; the warning says so, names both keys
     and quotes any in-place correction in NEMAR's corrections log.
-    When either key is unavailable the check is skipped with a
-    :class:`NEMARDataWarning` rather than blocking loading. Only the raw
-    file named by the record is checked, not companion files (e.g. ``.fdt``).
+    When the record has no annex key, the store records no
+    ``source_commit``, or the mirror cannot be reached, the check is skipped
+    with a :class:`NEMARDataWarning` rather than blocking loading. A commit
+    the mirror no longer serves (e.g. after NEMAR rewrote the history), or a
+    raw file that is not annexed at it, raises ``DataIntegrityError``. Only
+    the raw file named by the record is checked, not companion files (e.g.
+    ``.fdt``).
 
     Failures to locate or open the store (no Zarr copy of the dataset or
     recording, HTTP errors, malformed metadata, a missing first or last
@@ -2058,6 +2090,16 @@ class EEGDashZarrRaw(EEGDashRaw):
                 record=self.record,
                 issues=[str(e)],
             ) from e
+        except _CommitNotServed as e:
+            # e.g. NEMAR rewrote the history; nothing ties the store to the record
+            raise DataIntegrityError(
+                message=(
+                    f"cannot check NEMAR Zarr store {url} against the record: "
+                    f"it was converted from commit {commit}, which is no longer served"
+                ),
+                record=self.record,
+                issues=[str(e), f"record annex key {expected}"],
+            ) from e
         except requests.RequestException as e:
             result["status"] = f"unverified: {type(e).__name__}: {e}"
             warnings.warn(
@@ -2067,6 +2109,15 @@ class EEGDashZarrRaw(EEGDashRaw):
             )
             return result
         result["store_annex_key"] = found
+        if found is None:
+            raise DataIntegrityError(
+                message=(
+                    f"cannot check NEMAR Zarr store {url} against the record: "
+                    f"{raw_key} is not a git-annex file at commit {commit}"
+                ),
+                record=self.record,
+                issues=[f"record annex key {expected}", f"no annex key at {commit}"],
+            )
         if found == expected:
             result["status"] = "verified"
         elif self._verify_snapshot == "strict":
@@ -2100,13 +2151,12 @@ class EEGDashZarrRaw(EEGDashRaw):
 
         try:
             current = _annex_key_at_commit(ds, "HEAD", raw_key)
-        except _NotAtCommit:
-            current = None
+            absent = f"{raw_key} is not annexed on NEMAR's current branch"
+        except (_NotAtCommit, _CommitNotServed) as e:
+            current, absent = None, str(e)
         checks["current version"] = (
             current is not None and current == found,
-            f"NEMAR's current key is {current}"
-            if current is not None
-            else f"{raw_key} is not annexed on NEMAR's current branch",
+            f"NEMAR's current key is {current}" if current is not None else absent,
         )
 
         sizes = _annex_key_size(expected), _annex_key_size(found)
@@ -2125,14 +2175,24 @@ class EEGDashZarrRaw(EEGDashRaw):
             source_rate = _open_root(url, json.dumps({}))[group["name"]].attrs.get(
                 "original_rate"
             )
-        n_store = len(raw.ch_names)
+        # The record counts every channel of the raw file; a store splits them
+        # into groups (by modality and rate) and this reader opens one.
+        groups = self._zarr_location()[1]["groups"]
+        if len(groups) == 1:
+            n_store = len(raw.ch_names)
+        elif all(isinstance(g.get("n_channels"), int) for g in groups):
+            n_store = sum(g["n_channels"] for g in groups)
+        else:
+            n_store = None
         checks["sampling rate and channel count"] = (
             isinstance(rec_rate, (int, float))
             and isinstance(source_rate, (int, float))
             and abs(rec_rate - source_rate) < 1e-6
+            and isinstance(rec_nchans, int)
             and rec_nchans == n_store,
             f"record {rec_rate} Hz and {rec_nchans} channels, "
-            f"store {source_rate} Hz and {n_store} channels",
+            f"store {source_rate} Hz and {n_store} channels"
+            + (f" in {len(groups)} groups" if len(groups) > 1 else ""),
         )
 
         tsv = _bids_channels_tsv(url, attrs)
@@ -2189,7 +2249,7 @@ class EEGDashZarrRaw(EEGDashRaw):
             log = "NEMAR's corrections log for {}: {}.".format(
                 ds,
                 "; ".join(
-                    f"{c['action']} at {c['at']} (versions {', '.join(map(str, c['versions'] or []))}, "
+                    f"{c['action']} at {c['at']} (versions {', '.join(c['versions'])}, "
                     f"verification {c['verification']})"
                     for c in corrections
                 ),

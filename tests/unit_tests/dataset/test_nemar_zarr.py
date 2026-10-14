@@ -284,7 +284,7 @@ def reset_caches():
     nz._events_from_parquet.cache_clear()
     nz._load_index.cache_clear()
     nz._commit_exists.cache_clear()
-    nz._corrections.cache_clear()
+    nz._corrections_log.cache_clear()
     nz._ALL_FILL_ARRAYS.clear()
 
 
@@ -1441,8 +1441,10 @@ def head(path):
 
 
 @pytest.fixture
-def corrected(http):
+def corrected(http, store, monkeypatch, tmp_path):
     """NEMAR's current branch has the store's file and a corrections log."""
+    http.store_url, http.index = store[0], fake_index(str(tmp_path))
+    monkeypatch.setattr(nz, "_fetch_index", lambda ds: http.index)
     http.files[head(BIDS_PATH)] = f"/annex/objects/{ANNEX_KEY}".encode()
     http.files[head(".nemar/corrections.jsonl")] = "\n".join(
         json.dumps({"version": 1, "dataset": DS, **c}) for c in CORRECTIONS
@@ -1523,6 +1525,88 @@ def test_corrections_log_absent_or_unreadable(
     assert check["nemar_corrections"] == provenance
 
 
+def test_unreadable_corrections_log_still_loads(store, corrected, tmp_path):
+    corrected.status["corrections.jsonl"] = 503
+    check, message = load_corrected(tmp_path)
+    assert check["status"] == "accepted: different version, checks passed"
+    assert check["nemar_corrections"] == "unreadable"
+    assert "could not be read" in message and "do not establish" in message
+
+
+def test_malformed_corrections_entries_are_ignored(store, corrected, tmp_path):
+    corrected.files[head(".nemar/corrections.jsonl")] = b"\n".join(
+        json.dumps(e).encode()
+        for e in [
+            {"action": ["headers-scrubbed"]},
+            {"action": {"x": 1}},
+            ["headers-scrubbed"],
+            {"action": "headers-scrubbed", "at": "t", "versions": "v1.0.0"},
+        ]
+    )
+    check, message = load_corrected(tmp_path)
+    assert check["nemar_corrections"] == [
+        {
+            "at": "t",
+            "action": "headers-scrubbed",
+            "versions": ["v1.0.0"],
+            "verification": None,
+        }
+    ]
+    assert "versions v1.0.0," in message
+
+
+def test_store_commit_no_longer_served_is_refused(store, corrected, tmp_path):
+    """After a history rewrite nothing ties the store to the record, even if keys agreed."""
+    del corrected.files[github(BIDS_PATH)]
+    for options, record in (
+        ({}, nemar_record()),
+        ({}, nemar_record(annex_key=OLD_KEY)),
+        ({"verify_snapshot": "strict"}, nemar_record(annex_key=OLD_KEY)),
+    ):
+        reset_caches()
+        with pytest.raises(DataIntegrityError, match="no longer served") as e:
+            _ = corrected_raw(tmp_path, record, **options).raw
+        assert any(COMMIT in i for i in e.value.issues)
+
+
+def test_raw_file_not_annexed_at_store_commit_is_refused(store, corrected, tmp_path):
+    corrected.files[github(BIDS_PATH)] = b"plain git file"
+    with pytest.raises(DataIntegrityError, match="is not a git-annex file"):
+        _ = corrected_raw(tmp_path).raw
+
+
+def test_multi_group_store_counts_every_group(store, corrected, tmp_path):
+    """The record counts all of the raw file's channels; the store splits them."""
+    two_group_store(store[0])
+    corrected.index = two_group_index(str(tmp_path))
+    corrected.index["stores"][0]["groups"][0]["source_rate_hz"] = 1000.0
+    record = nemar_record(annex_key=OLD_KEY)
+    record["datatype"] = "eeg"
+    record["nchans"] = len(CHANNELS) + 2
+    check, _ = load_corrected(tmp_path, record)
+    detail = check["checks"]["sampling rate and channel count"]["detail"]
+    assert "store 1000.0 Hz and 9 channels in 2 groups" in detail
+    # refused: only the opened group's count; or neither count known
+    del corrected.index["stores"][0]["groups"][1]["n_channels"]
+    for nchans in (len(CHANNELS), None):
+        record["nchans"] = nchans
+        reset_caches()
+        with warnings.catch_warnings():
+            warnings.simplefilter("ignore", NEMARDataWarning)
+            with pytest.raises(DataIntegrityError, match="fails 1 of the checks"):
+                _ = corrected_raw(tmp_path / str(nchans), record).raw
+
+
+def test_unreadable_corrections_log_is_not_cached(store, corrected, tmp_path):
+    log = corrected.files.pop(head(".nemar/corrections.jsonl"))
+    corrected.status["corrections.jsonl"] = 503
+    assert nz._corrections(DS) is None
+    del corrected.status["corrections.jsonl"]
+    corrected.files[head(".nemar/corrections.jsonl")] = log
+    assert [c["action"] for c in nz._corrections(DS)] == ["headers-scrubbed"]
+    assert nz._corrections(DS)[0]["versions"] == ["v1.0.0"]
+
+
 def test_channel_names_are_checked_against_channels_tsv_not_store_labels(
     tmp_path, corrected
 ):
@@ -1545,12 +1629,8 @@ def test_channel_names_are_checked_against_channels_tsv_not_store_labels(
     assert check["checks"]["channel names"]["passed"]
 
 
-def test_older_index_without_source_rate_uses_the_store(
-    store, corrected, monkeypatch, tmp_path
-):
-    index = fake_index(str(tmp_path))
-    del index["stores"][0]["groups"][0]["source_rate_hz"]
-    monkeypatch.setattr(nz, "_fetch_index", lambda ds: index)
+def test_older_index_without_source_rate_uses_the_store(store, corrected, tmp_path):
+    del corrected.index["stores"][0]["groups"][0]["source_rate_hz"]
     check, _ = load_corrected(tmp_path)
     assert (
         "store 1000.0 Hz"
@@ -1592,6 +1672,22 @@ def _different_channel_count(http, record):
     record["nchans"] = len(CHANNELS) + 1
 
 
+def _no_channel_count(http, record):
+    record["nchans"] = None
+
+
+def _no_source_rate(http, record):
+    root = zarr.open_group(http.store_url, mode="r+")
+    attrs = dict(root[GROUP].attrs)
+    del attrs["original_rate"]
+    root[GROUP].attrs.put(attrs)
+    del http.index["stores"][0]["groups"][0]["source_rate_hz"]
+
+
+def _no_ch_names(http, record):
+    record["ch_names"] = None
+
+
 def _renamed_channel(http, record):
     record["ch_names"] = ["Fpz", *record["ch_names"][1:]]
 
@@ -1615,6 +1711,9 @@ def _no_channels_tsv(http, record):
         (_different_rate, "sampling rate and channel count"),
         (_no_rate, "sampling rate and channel count"),
         (_different_channel_count, "sampling rate and channel count"),
+        (_no_channel_count, "sampling rate and channel count"),
+        (_no_source_rate, "sampling rate and channel count"),
+        (_no_ch_names, "channel names"),
         (_renamed_channel, "channel names"),
         (_reordered_channels, "channel names"),
         (_no_channels_tsv, "channel names"),

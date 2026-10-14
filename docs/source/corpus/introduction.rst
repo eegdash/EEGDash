@@ -83,7 +83,7 @@ Every cell carries a provenance label: ``zarr`` (measured in the converted Zarr 
 ``eegdash`` (EEGDash's catalogue records), ``card`` (REVE's release card), ``stated``
 (REVE's paper), ``download`` (our copy). A bucket is one exact channel set of one
 dataset in the Zarr store. Status vocabulary: Ingested and Converted (v0) · Ingested, but
-not Converted (v1) · To Be Ingested (v1) · Blocked (License) · Gated (Distribution
+not Converted (v1) · To Be Ingested (v1) · Blocked (ND Licence) · Gated (Distribution
 Forbidden) · Excluded.
 
 The corpus in numbers

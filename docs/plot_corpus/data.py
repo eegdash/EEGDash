@@ -29,13 +29,16 @@ CONVERTED, TO_CONVERT, TO_INGEST = (
     "To Be Ingested (v1)",
 )
 BLOCKED, GATED, EXCLUDED, PAPER_ONLY = (
-    "Blocked (License)",
+    "Blocked (ND Licence)",
     "Gated (Distribution Forbidden)",
     "Excluded",
     "Paper Only",
 )
 # Earlier spellings still accepted in a data file, mapped to the current one (until the next sync).
-RENAMED = {"Gated (To Be Ingested)": GATED}
+RENAMED = {
+    "Gated (To Be Ingested)": GATED,
+    "Blocked (License)": BLOCKED,
+}  # 2026-10-13 and 2026-10-14
 STATUSES = [CONVERTED, TO_CONVERT, TO_INGEST, BLOCKED, GATED, EXCLUDED, PAPER_ONLY]
 # CSS class suffix per status: ``corpus-fill-<slug>`` / ``corpus-bg-<slug>`` /
 # ``corpus-bd-<slug>`` read the colour variable ``--corpus-st-<slug>``.

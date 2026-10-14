@@ -51,6 +51,7 @@ import asyncio
 import csv
 import io
 import json
+import numbers
 import os
 import re
 import threading
@@ -1789,6 +1790,11 @@ def read_raw_nemar_zarr(
 # ---------------------------------------------------------------------------
 
 
+def _is_real(value) -> bool:
+    """A real number, including numpy scalars, but not a bool."""
+    return isinstance(value, numbers.Real) and not isinstance(value, bool)
+
+
 def _compare_names(record_names, tsv_names) -> tuple[bool, str]:
     """Whether the record's channel names are channels.tsv's (in order, any case)."""
     if tsv_names is None:
@@ -1998,12 +2004,14 @@ class EEGDashZarrRaw(EEGDashRaw):
     byte for byte or sample for sample; the warning says so, names both keys
     and quotes any in-place correction in NEMAR's corrections log.
     When the record has no annex key, the store records no
-    ``source_commit``, or the mirror cannot be reached (a network failure
-    that persists through retries), the check cannot be made: it is skipped
-    with a :class:`NEMARDataWarning`, or refused under ``"strict"``. A commit
-    the mirror no longer serves (e.g. after NEMAR rewrote the history), any
-    other HTTP error from the mirror, or a raw file that is not annexed at
-    the commit raises ``DataIntegrityError``. Only the raw file named by the
+    ``source_commit``, or the mirror gives no answer (a connection failure,
+    timeout, 429 or 5xx status persisting through retries, or a response cut
+    off), the check cannot be made: it is skipped
+    with a :class:`NEMARDataWarning`, or refused under ``"strict"`` (so with
+    ``"strict"`` and ``on_error="skip"``, a mirror outage skips recordings).
+    A commit the mirror no longer serves (e.g. after NEMAR rewrote the
+    history), any other HTTP error status from the mirror, or a raw file
+    that is not annexed at the commit raises ``DataIntegrityError``. Only the raw file named by the
     record is checked, not companion files (e.g. ``.fdt``).
 
     Failures to locate or open the store (no Zarr copy of the dataset or
@@ -2128,16 +2136,21 @@ class EEGDashZarrRaw(EEGDashRaw):
                 issues=[str(e), f"record annex key {expected}"],
             ) from e
         except requests.RequestException as e:
-            if not _is_transport_error(e):
-                # e.g. 403 or 451: the mirror answered, and not with the file
+            if isinstance(e, requests.HTTPError) and not _is_transport_error(e):
+                # e.g. 403 or 451: the mirror answered, and not with what was asked
+                response = e.response
                 raise DataIntegrityError(
                     message=(
                         f"cannot check NEMAR Zarr store {url} against the record: "
-                        f"the mirror refused {raw_key} at commit {commit}"
+                        f"the mirror answered HTTP {getattr(response, 'status_code', '?')} "
+                        f"for {getattr(response, 'url', None) or raw_key} while checking "
+                        f"{raw_key} at commit {commit}"
                     ),
                     record=self.record,
                     issues=[f"{type(e).__name__}: {e}", f"record annex key {expected}"],
                 ) from e
+            # any other failure to get an answer (connection, timeout, a reset
+            # mid-body, decoding, redirects) leaves the snapshot unverified
             return self._unverified(url, result, f"{type(e).__name__}: {e}", e)
         result["store_annex_key"] = found
         if found is None:
@@ -2235,10 +2248,10 @@ class EEGDashZarrRaw(EEGDashRaw):
         else:
             n_store = None
         checks["sampling rate and channel count"] = (
-            isinstance(rec_rate, (int, float))
-            and isinstance(source_rate, (int, float))
+            _is_real(rec_rate)
+            and _is_real(source_rate)
             and abs(rec_rate - source_rate) < 1e-6
-            and isinstance(rec_nchans, (int, np.integer))
+            and isinstance(rec_nchans, numbers.Integral)
             and not isinstance(rec_nchans, bool)
             and rec_nchans == n_store,
             f"record {rec_rate} Hz and {rec_nchans} channels, "

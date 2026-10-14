@@ -1766,9 +1766,19 @@ def test_channel_count_mismatch_in_length_is_described(store, corrected, tmp_pat
     assert any("record has 6 channel names, channels.tsv" in i for i in e.value.issues)
 
 
-def test_numpy_channel_count_is_accepted(store, corrected, tmp_path):
+@pytest.mark.parametrize(
+    ("rate", "nchans"),
+    [
+        (np.int64(1000), np.int64(len(CHANNELS))),
+        (1000, len(CHANNELS)),
+        (np.float32(1000.0), np.int32(len(CHANNELS))),
+    ],
+)
+def test_numpy_or_integer_rate_and_count_are_accepted(
+    store, corrected, tmp_path, rate, nchans
+):
     record = nemar_record(annex_key=OLD_KEY)
-    record["nchans"] = np.int64(len(CHANNELS))
+    record["sampling_frequency"], record["nchans"] = rate, nchans
     check, _ = load_corrected(tmp_path, record)
     assert check["checks"]["sampling rate and channel count"]["passed"]
 
@@ -1780,8 +1790,53 @@ def test_mirror_refusing_the_raw_file_is_refused(
 ):
     """Only a mirror that cannot be reached skips the check; an answer is not that."""
     corrected.status[f"/{COMMIT}/{BIDS_PATH}"] = code
-    with pytest.raises(DataIntegrityError, match="the mirror refused"):
+    with pytest.raises(
+        DataIntegrityError, match=f"answered HTTP {code} for .*{BIDS_PATH}"
+    ):
         _ = corrected_raw(tmp_path, verify_snapshot=verify).raw
+
+
+def test_refused_commit_check_names_the_request(store, corrected, tmp_path):
+    """The raw file is missing and the commit probe itself is refused."""
+    del corrected.files[github(BIDS_PATH)]
+    corrected.status["dataset_description.json"] = 403
+    with pytest.raises(
+        DataIntegrityError, match="answered HTTP 403 for .*dataset_description"
+    ):
+        _ = corrected_raw(tmp_path).raw
+
+
+class _CutOff:
+    """Fails like a connection reset while the body is read (no retry covers it)."""
+
+    def __init__(self, http, part, exc):
+        self.http, self.part, self.exc = http, part, exc
+
+    def __call__(self, url, timeout, **kw):
+        if self.part in url:
+            raise self.exc
+        return self.http(url, timeout, **kw)
+
+
+@pytest.mark.parametrize(
+    "exc",
+    [
+        requests.exceptions.ChunkedEncodingError("connection reset"),
+        requests.exceptions.ContentDecodingError("bad gzip"),
+        requests.exceptions.TooManyRedirects("loop"),
+    ],
+)
+def test_responses_without_an_answer_are_unverified(
+    store, corrected, monkeypatch, tmp_path, exc
+):
+    monkeypatch.setattr(
+        nz, "_http_get", _CutOff(corrected, f"/{COMMIT}/{BIDS_PATH}", exc)
+    )
+    with pytest.warns(NEMARDataWarning, match="cannot verify"):
+        check = corrected_raw(tmp_path).raw.nemar_provenance["eegdash_snapshot_check"]
+    assert check["status"] == f"unverified: {type(exc).__name__}: {exc}"
+    with pytest.raises(DataIntegrityError, match="verify_snapshot='strict'"):
+        _ = corrected_raw(tmp_path / "s", verify_snapshot="strict").raw
 
 
 def test_unreachable_mirror_warns_or_strict_refuses(store, corrected, tmp_path):

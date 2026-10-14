@@ -100,7 +100,7 @@ def kpis_universe(rows: list[dict[str, str]]) -> tuple[str, str]:
         (f"{k['datasets']}", "datasets tracked (paper and release card)", None),
     ]
     cap = (f"{k['v0_datasets']} of the {k['datasets']} datasets tracked (REVE's paper and its release card) are "
-           f"converted (v0) and {k[TO_CONVERT]} wait for conversion (v1); {k[BLOCKED]} are blocked by a NoDerivatives "
+           f"converted (v0) and {k[TO_CONVERT]} wait for conversion (v1); {k[BLOCKED]} are blocked by a No Derivative "
            f"licence or none, {k[GATED]} are gated (their distribution is forbidden) and {k[EXCLUDED]} excluded.")  # fmt: skip
     return kpi_html(boxes), cap
 
@@ -167,7 +167,8 @@ def progress_html(rows: list[dict[str, str]]) -> tuple[str, str]:
                   f'<small>{e(st["sub"])}</small></li>' for st in steps)  # fmt: skip
     by = {st["status"]: st for st in steps}
     cap = (f"Of the {kpis(rows)['datasets']} datasets tracked, {by[CONVERTED]['count']} are converted, "
-           f"{by[TO_CONVERT]['count']} ingested and waiting for conversion, {by[TO_INGEST]['count']} still to ingest; "
+           f"{by[TO_CONVERT]['count']} ingested and waiting for conversion"
+           + (f", {by[TO_INGEST]['count']} still to ingest" if by.get(TO_INGEST, {}).get('count') else "") + "; "
            f"{by[BLOCKED]['count']} are blocked by their licence and {by[GATED]['count']} gated (distribution "
            f"forbidden).")  # fmt: skip
     return (
@@ -455,7 +456,7 @@ def licences_chart(rows: list[dict[str, str]]) -> tuple[str, str]:
     blk = sum(r["status"] == BLOCKED for r in rows)
     cap = (f"{top['n']} of the {len(rows)} datasets are {top['key']}; of the {len(v1)} in v1, {len(cond)} carry "
            f"share-alike, non-commercial or copyleft terms, which a converted copy keeps, and {blk} "
-           f"dataset{'s are' if blk != 1 else ' is'} blocked by NoDerivatives terms or no licence.")  # fmt: skip
+           f"dataset{'s are' if blk != 1 else ' is'} blocked by No Derivative terms or no licence.")  # fmt: skip
     return hbars_svg(items, "datasets by licence"), cap
 
 

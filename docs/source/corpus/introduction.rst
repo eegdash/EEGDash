@@ -53,7 +53,7 @@ Versions are additive; each carries its own table, provenance and conversion rep
 dataset named by REVE's paper: |v1_datasets| datasets, of the added ones
 |v1_added_prose|. The |gated| gated datasets are out of every version: their
 distribution is forbidden, so only weights trained on them can be released. The
-|blocked| datasets whose licences block a converted copy (NoDerivatives terms, or no
+|blocked| datasets whose licences block a converted copy (No Derivative terms, or no
 licence) are listed with the reason. Later versions add public datasets beyond REVE's,
 chosen by licence and usability.
 

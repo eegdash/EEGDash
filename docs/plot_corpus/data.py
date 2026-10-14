@@ -56,7 +56,7 @@ SHORT = {
     CONVERTED: "v0, converted",
     TO_CONVERT: "v1, to convert",
     TO_INGEST: "to ingest",
-    BLOCKED: "blocked (licence)",
+    BLOCKED: "blocked (ND licence)",
     GATED: "gated (distribution forbidden)",
     EXCLUDED: "excluded",
     PAPER_ONLY: "paper only",
@@ -347,9 +347,9 @@ def progress(rows: list[dict[str, str]]) -> list[dict]:
              sub=f"{hours_of(v0):,.0f} h"),
         dict(status=TO_CONVERT, title="v1 to convert", count=len(v1), hours=hours_of(v1),
              sub=f"+{hours_of(v1):,.0f} h measured" + (f"; {names(unmeasured)} unmeasured" if unmeasured else "")),
-        dict(status=TO_INGEST, title="to ingest", count=len(ing), hours=hours_of(ing), sub=names(ing) or "none"),
-        dict(status=BLOCKED, title="blocked (licence)", count=len(blk), hours=hours_of(blk),
-             sub="NoDerivatives or no licence"),
+        *([        dict(status=TO_INGEST, title="to ingest", count=len(ing), hours=hours_of(ing), sub=names(ing) or "none")] if ing else []),   # the step exists only while a dataset waits for a deposit
+        dict(status=BLOCKED, title="blocked (ND licence)", count=len(blk), hours=hours_of(blk),
+             sub="No Derivative terms, or no licence"),
         dict(status=GATED, title="gated (distribution forbidden)", count=len(gat), hours=hours_of(gat),
              sub=f"{names(gat)}; never redistributable" if gat else "none"),
     ]  # fmt: skip

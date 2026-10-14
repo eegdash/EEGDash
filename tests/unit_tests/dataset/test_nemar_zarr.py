@@ -208,6 +208,7 @@ def fake_index(base):
                         "rate": 250.0,
                         "n_channels": 7,
                         "n_samples": N_SAMPLES,
+                        "source_rate_hz": 1000.0,
                     }
                 ],
                 "units_report": {
@@ -282,6 +283,8 @@ def reset_caches():
         cache.clear()
     nz._events_from_parquet.cache_clear()
     nz._load_index.cache_clear()
+    nz._commit_exists.cache_clear()
+    nz._corrections.cache_clear()
     nz._ALL_FILL_ARRAYS.clear()
 
 
@@ -1206,7 +1209,7 @@ def test_raw_streams_and_writes_nothing(store, http, tmp_path):
     assert X.shape == (7, 1)
 
 
-def test_snapshot_mismatch_is_a_data_integrity_error(store, http, tmp_path):
+def test_snapshot_mismatch_is_a_data_integrity_error(store, corrected, tmp_path):
     ds = zarr_raw(tmp_path, annex_key="SHA256E-s1--different.set")
     with pytest.raises(DataIntegrityError, match="different version"):
         _ = ds.raw
@@ -1419,6 +1422,251 @@ def test_raw_file_absent_at_commit_is_a_mismatch(store, http, tmp_path):
         _ = zarr_raw(tmp_path).raw
 
 
+# A record digested before NEMAR corrected its raw file in place: same size,
+# different content hash. The store was converted from the corrected file.
+OLD_KEY = "SHA256E-s100--" + "cd" * 32 + ".set"
+CORRECTIONS = [
+    {"action": "plan", "at": "2026-10-07T02:56:32Z", "verification": "plan-only"},
+    {
+        "action": "headers-scrubbed",
+        "at": "2026-10-07T02:56:33Z",
+        "versions": ["v1.0.0"],
+        "verification": "scanner-clean+payload-identical+rehash-ok",
+    },
+]
+
+
+def head(path):
+    return nz.GITHUB_RAW.format(ds=DS, commit="HEAD", path=path)
+
+
+@pytest.fixture
+def corrected(http):
+    """NEMAR's current branch has the store's file and a corrections log."""
+    http.files[head(BIDS_PATH)] = f"/annex/objects/{ANNEX_KEY}".encode()
+    http.files[head(".nemar/corrections.jsonl")] = "\n".join(
+        json.dumps({"version": 1, "dataset": DS, **c}) for c in CORRECTIONS
+    ).encode()
+    return http
+
+
+def corrected_raw(tmp_path, record=None, **options):
+    record = record or nemar_record(annex_key=OLD_KEY)
+    return EEGDashZarrRaw(
+        record, str(tmp_path / "cache"), zarr_options={"events": None, **options}
+    )
+
+
+def load_corrected(tmp_path, record=None):
+    """Load, returning the snapshot check and the one snapshot warning."""
+    ds = corrected_raw(tmp_path, record)
+    with warnings.catch_warnings(record=True) as caught:
+        warnings.simplefilter("always")
+        raw = ds.raw
+    snapshot = [w for w in caught if "different version" in str(w.message)]
+    assert len(snapshot) == 1 and snapshot[0].category is NEMARDataWarning
+    return raw.nemar_provenance["eegdash_snapshot_check"], str(snapshot[0].message)
+
+
+def test_corrected_raw_file_loads_with_a_warning(store, corrected, tmp_path):
+    check, message = load_corrected(tmp_path)
+    assert check["status"] == "accepted: different version, checks passed"
+    assert check["record_annex_key"] == OLD_KEY
+    assert check["store_annex_key"] == check["current_annex_key"] == ANNEX_KEY
+    assert set(check["checks"]) == {
+        "current version",
+        "byte size",
+        "sampling rate and channel count",
+        "channel names",
+    }
+    assert all(c["passed"] for c in check["checks"].values())
+    assert check["record_snapshot"]["sampling_frequency"] == 1000.0
+    assert check["record_snapshot"]["nchans"] == len(CHANNELS)
+    # only the in-place correction, not the plan
+    assert [c["action"] for c in check["nemar_corrections"]] == ["headers-scrubbed"]
+    # the warning names both keys, the record's snapshot and the correction,
+    # and says what the checks do not show
+    assert OLD_KEY in message and ANNEX_KEY in message
+    assert f"source_commit {COMMIT}" in message and "record (digested" in message
+    assert "headers-scrubbed at 2026-10-07T02:56:33Z" in message
+    assert "scanner-clean+payload-identical+rehash-ok" in message
+    assert "do not establish" in message
+    assert "byte-for-byte or sample-for-sample identical" in message
+    assert "verify_snapshot': 'strict'" in message
+
+
+def test_corrected_raw_file_streams_the_same_signal(store, corrected, tmp_path):
+    with warnings.catch_warnings():
+        warnings.simplefilter("ignore", NEMARDataWarning)
+        accepted = corrected_raw(tmp_path).raw.get_data()
+        verified = zarr_raw(tmp_path).raw.get_data()
+    np.testing.assert_array_equal(accepted, verified)
+
+
+@pytest.mark.parametrize(
+    ("log", "expected", "provenance"),
+    [
+        (None, "records no in-place correction", []),
+        (b"", "records no in-place correction", []),
+        (b"{not json", "could not be read", "unreadable"),
+    ],
+)
+def test_corrections_log_absent_or_unreadable(
+    store, corrected, tmp_path, log, expected, provenance
+):
+    if log is None:
+        del corrected.files[head(".nemar/corrections.jsonl")]
+    else:
+        corrected.files[head(".nemar/corrections.jsonl")] = log
+    check, message = load_corrected(tmp_path)
+    assert expected in message and "do not establish" in message
+    assert check["nemar_corrections"] == provenance
+
+
+def test_channel_names_are_checked_against_channels_tsv_not_store_labels(
+    tmp_path, corrected
+):
+    """nm000114: the store keeps the EDF labels ("EEG Fp1-LE"), BIDS renames them.
+
+    The record follows channels.tsv, so it matches there and nowhere else.
+    """
+    url, _, _ = build_store(
+        str(tmp_path),
+        channels=[(f"EEG {label}-LE", t, u) for label, t, u in CHANNELS],
+    )
+    assert zarr.open_group(url)[GROUP].attrs["channels"][0]["label"] == "EEG Fz-LE"
+    check, _ = load_corrected(tmp_path)
+    assert check["checks"]["channel names"]["passed"]
+    # case is ignored, as in channels.tsv vs EDF conventions
+    record = nemar_record(annex_key=OLD_KEY)
+    record["ch_names"] = [c.upper() for c in record["ch_names"]]
+    reset_caches()
+    check, _ = load_corrected(tmp_path / "upper", record)
+    assert check["checks"]["channel names"]["passed"]
+
+
+def test_older_index_without_source_rate_uses_the_store(
+    store, corrected, monkeypatch, tmp_path
+):
+    index = fake_index(str(tmp_path))
+    del index["stores"][0]["groups"][0]["source_rate_hz"]
+    monkeypatch.setattr(nz, "_fetch_index", lambda ds: index)
+    check, _ = load_corrected(tmp_path)
+    assert (
+        "store 1000.0 Hz"
+        in check["checks"]["sampling rate and channel count"]["detail"]
+    )
+
+
+def _different_size(http, record):
+    record["storage"]["annex_keys"][BIDS_PATH] = "SHA256E-s101--" + "cd" * 32 + ".set"
+
+
+def _unparseable_size(http, record):
+    record["storage"]["annex_keys"][BIDS_PATH] = "MD5-" + "cd" * 16
+
+
+def _stale_store(http, record):
+    other = "SHA256E-s100--" + "ef" * 32 + ".set"
+    http.files[head(BIDS_PATH)] = f"/annex/objects/{other}".encode()
+
+
+def _removed_since(http, record):
+    del http.files[head(BIDS_PATH)]
+    http.files[head("dataset_description.json")] = b"{}"
+
+
+def _not_annexed_now(http, record):
+    http.files[head(BIDS_PATH)] = b"plain git file"
+
+
+def _different_rate(http, record):
+    record["sampling_frequency"] = 500.0
+
+
+def _no_rate(http, record):
+    record["sampling_frequency"] = None
+
+
+def _different_channel_count(http, record):
+    record["nchans"] = len(CHANNELS) + 1
+
+
+def _renamed_channel(http, record):
+    record["ch_names"] = ["Fpz", *record["ch_names"][1:]]
+
+
+def _reordered_channels(http, record):
+    record["ch_names"] = record["ch_names"][::-1]
+
+
+def _no_channels_tsv(http, record):
+    del http.files[github("sub-01/eeg/sub-01_task-oddball_channels.tsv")]
+
+
+@pytest.mark.parametrize(
+    ("change", "failed"),
+    [
+        (_different_size, "byte size"),
+        (_unparseable_size, "byte size"),
+        (_stale_store, "current version"),
+        (_removed_since, "current version"),
+        (_not_annexed_now, "current version"),
+        (_different_rate, "sampling rate and channel count"),
+        (_no_rate, "sampling rate and channel count"),
+        (_different_channel_count, "sampling rate and channel count"),
+        (_renamed_channel, "channel names"),
+        (_reordered_channels, "channel names"),
+        (_no_channels_tsv, "channel names"),
+    ],
+)
+def test_mismatch_failing_any_check_is_a_data_integrity_error(
+    store, corrected, tmp_path, change, failed
+):
+    record = nemar_record(annex_key=OLD_KEY)
+    change(corrected, record)
+    with warnings.catch_warnings():
+        warnings.simplefilter("ignore", NEMARDataWarning)
+        with pytest.raises(DataIntegrityError, match="fails 1 of the checks") as e:
+            _ = corrected_raw(tmp_path, record).raw
+    failures = [i for i in e.value.issues if i.startswith("failed ")]
+    assert len(failures) == 1 and failures[0].startswith(f"failed {failed}:")
+    assert any(OLD_KEY in i or "s101" in i or "MD5" in i for i in e.value.issues)
+    assert any(ANNEX_KEY in i for i in e.value.issues)
+
+
+def test_failed_checks_go_through_on_error(store, corrected, tmp_path):
+    record = nemar_record(annex_key=OLD_KEY)
+    _different_size(corrected, record)
+    with warnings.catch_warnings():
+        warnings.simplefilter("ignore", NEMARDataWarning)
+        ds = EEGDashZarrRaw(
+            record,
+            str(tmp_path / "cache"),
+            zarr_options={"events": None},
+            on_error="skip",
+        )
+        assert ds.raw is None and ds._skipped
+
+
+def test_strict_refuses_any_mismatch(store, corrected, tmp_path):
+    with pytest.raises(DataIntegrityError, match="verify_snapshot='strict'"):
+        _ = corrected_raw(tmp_path, verify_snapshot="strict").raw
+    # nothing beyond the store commit's key was consulted
+    assert not any("/HEAD/" in url for _, url, _ in corrected.calls)
+    with warnings.catch_warnings():
+        warnings.simplefilter("ignore", NEMARDataWarning)
+        check = zarr_raw(tmp_path).raw.nemar_provenance["eegdash_snapshot_check"]
+    assert check["status"] == "verified"  # strict changes nothing when keys match
+
+
+def test_mismatch_checks_fail_closed_on_http_errors(store, corrected, tmp_path):
+    corrected.status["/HEAD/" + BIDS_PATH] = 503
+    with pytest.raises(DataIntegrityError, match="could not open") as e:
+        _ = corrected_raw(tmp_path).raw
+    assert nz._is_transport_error(e.value.__cause__)
+
+
 def test_open_failures_go_through_on_error(store, http, monkeypatch, tmp_path):
     index = fake_index(str(tmp_path))
     index["stores"][0]["zarr"] = "sub-01/eeg/missing.zarr"
@@ -1558,6 +1806,8 @@ def test_index_lookup_is_not_a_scan_per_recording(monkeypatch, tmp_path):
         {"events_max_bytes": -1},
         {"events_max_bytes": True},
         {"bids_status": "yes"},
+        {"verify_snapshot": "yes"},
+        {"verify_snapshot": 1},
         {"group": 3},
     ],
 )

@@ -302,9 +302,15 @@ def _check_reader_options(options: dict) -> None:
         raise ValueError(
             f"events_max_bytes must be a positive int or None, not {limit!r}"
         )
-    for flag in ("bids_status", "verify_snapshot"):
-        if not isinstance(options.get(flag, True), bool):
-            raise ValueError(f"{flag} must be True or False, not {options[flag]!r}")
+    if not isinstance(options.get("bids_status", True), bool):
+        raise ValueError(
+            f"bids_status must be True or False, not {options['bids_status']!r}"
+        )
+    verify = options.get("verify_snapshot", True)
+    if not isinstance(verify, bool) and verify != "strict":
+        raise ValueError(
+            f"verify_snapshot must be True, False or 'strict', not {verify!r}"
+        )
     if not isinstance(options.get("group", ""), (str, type(None))):
         raise ValueError(f"group must be a str or None, not {options['group']!r}")
 
@@ -1258,14 +1264,15 @@ def _read_channels_tsv(text: str) -> list[dict]:
     return list(csv.DictReader(io.StringIO(text), delimiter="\t"))
 
 
-def _bids_bads(url: str, attrs: dict, ch_names: list[str]) -> dict | None:
-    """Bad channels from the BIDS channels.tsv the store was built from.
+def _bids_channels_tsv(url: str, attrs: dict) -> dict | None:
+    """The BIDS channels.tsv the store was built from: its rows, path, commit and URL.
 
     Read at the store's own ``source_commit`` from the dataset's GitHub mirror,
-    so the status matches the exact BIDS snapshot that was converted. The
-    sidecar is first looked for under the recording's own name (right for
-    ~99% of NEMAR recordings); only if that is missing is the dataset index
-    consulted. Returns None when there is no status; raises on HTTP errors.
+    so it is the exact BIDS snapshot that was converted. The sidecar is first
+    looked for under the recording's own name (right for ~99% of NEMAR
+    recordings); only if that is missing is the dataset index consulted.
+    Returns None when the store records no commit or there is no sidecar;
+    raises on HTTP errors.
     """
     nemar = attrs.get("nemar") or {}
     ds, commit = nemar.get("dataset_id"), nemar.get("source_commit")
@@ -1291,7 +1298,21 @@ def _bids_bads(url: str, attrs: dict, ch_names: list[str]) -> dict | None:
         if r.status_code == 404:
             return None
     r.raise_for_status()
-    rows = _read_channels_tsv(r.content.decode("utf-8-sig", "replace"))
+    return {
+        "rows": _read_channels_tsv(r.content.decode("utf-8-sig", "replace")),
+        "sidecar": sidecar,
+        "commit": commit,
+        "url": GITHUB_RAW.format(ds=ds, commit=commit, path=sidecar),
+    }
+
+
+def _bids_bads(url: str, attrs: dict, ch_names: list[str]) -> dict | None:
+    """Bad channels from the BIDS channels.tsv the store was built from.
+
+    Returns None when there is no status; raises on HTTP errors.
+    """
+    tsv = _bids_channels_tsv(url, attrs)
+    rows = tsv and tsv["rows"]
     if not rows or "status" not in rows[0] or "name" not in rows[0]:
         return None
     bads = [
@@ -1309,9 +1330,9 @@ def _bids_bads(url: str, attrs: dict, ch_names: list[str]) -> dict | None:
         )
     return {
         "bads": [b for b in bads if b in ch_names],
-        "sidecar": sidecar,
-        "commit": commit,
-        "url": GITHUB_RAW.format(ds=ds, commit=commit, path=sidecar),
+        "sidecar": tsv["sidecar"],
+        "commit": tsv["commit"],
+        "url": tsv["url"],
         "ignored_missing": missing,
     }
 
@@ -1783,6 +1804,40 @@ def _commit_exists(dataset: str, commit: str) -> bool:
     return True
 
 
+def _annex_key_size(key: str | None) -> int | None:
+    """Byte size recorded in a git-annex key (``SHA256E-s<size>--...``)."""
+    m = re.match(r"[A-Z0-9]+-s(\d+)-", key or "")
+    return int(m.group(1)) if m else None
+
+
+# Corrections that rewrite a dataset's files in place (NEMAR's privacy
+# workflow); the other logged actions only remove files or republish.
+_IN_PLACE_CORRECTIONS = frozenset({"headers-scrubbed"})
+
+
+@lru_cache(maxsize=64)
+def _corrections(dataset: str) -> tuple[dict, ...] | None:
+    """In-place corrections in the dataset's ``.nemar/corrections.jsonl``.
+
+    Read from the current default branch, since the log is appended after the
+    corrected commit. Empty when there is no log; None when it is unreadable.
+    """
+    url = GITHUB_RAW.format(ds=dataset, commit="HEAD", path=".nemar/corrections.jsonl")
+    try:
+        r = _http_get(url, timeout=30)
+        if r.status_code == 404:
+            return ()
+        r.raise_for_status()
+        entries = [json.loads(line) for line in r.text.splitlines() if line.strip()]
+    except (requests.RequestException, ValueError):
+        return None
+    return tuple(
+        {k: e.get(k) for k in ("at", "action", "versions", "verification")}
+        for e in entries
+        if isinstance(e, dict) and e.get("action") in _IN_PLACE_CORRECTIONS
+    )
+
+
 def _annex_key_at_commit(dataset: str, commit: str, path: str) -> str | None:
     """git-annex key of ``path`` at ``commit``, or None if it is not annexed.
 
@@ -1848,7 +1903,8 @@ class EEGDashZarrRaw(EEGDashRaw):
     zarr_options : dict | None
         Options for the reader: ``group``, ``events``, ``events_max_bytes``,
         ``nonfinite`` and ``bids_status`` (see :class:`RawNEMARZarr`), and
-        ``verify_snapshot`` (default True). Values are validated here.
+        ``verify_snapshot`` (True, the default; ``"strict"``; or False).
+        Values are validated here.
         Without ``group``, a store with several channel groups uses the one
         whose modality matches the record's datatype.
     **kwargs
@@ -1860,10 +1916,29 @@ class EEGDashZarrRaw(EEGDashRaw):
     store was converted from the same raw file the record describes: the
     record's git-annex key for its raw file must equal that file's key at the
     ``source_commit`` stored in the store itself (not the index's, which can
-    be newer than a store left from an earlier export). A mismatch, or the
-    raw file being absent at that commit, raises
+    be newer than a store left from an earlier export). The raw file being
+    absent at that commit raises
     :class:`~eegdash.dataset.exceptions.DataIntegrityError` (handled by
-    ``on_error``), since the signal would not match the record's metadata.
+    ``on_error``).
+
+    NEMAR corrects files in place (privacy scrubs of EDF/BDF headers, header
+    unit fixes) and deletes the old versions, so a record digested earlier
+    can name a key that no longer exists. When the keys differ, the store is
+    loaded with a :class:`NEMARDataWarning` only if all of these hold:
+
+    1. the store's file is the raw file's current version on NEMAR;
+    2. the two keys record the same byte size;
+    3. the record's sampling rate equals the store's source rate, and its
+       channel count equals the store's;
+    4. the record's channel names equal, ignoring case and in order, the
+       names in the BIDS channels.tsv at the store's commit (the store's own
+       labels may be the raw file's, e.g. ``EEG Fp1-LE`` for ``Fp1``).
+
+    Otherwise, or with ``verify_snapshot="strict"``, a mismatch raises
+    ``DataIntegrityError``, since the store may not hold the recording the
+    record describes. The checks cannot show that the versions are identical
+    byte for byte or sample for sample; the warning says so, names both keys
+    and quotes any in-place correction in NEMAR's corrections log.
     When either key is unavailable the check is skipped with a
     :class:`NEMARDataWarning` rather than blocking loading. Only the raw
     file named by the record is checked, not companion files (e.g. ``.fdt``).
@@ -1992,11 +2067,14 @@ class EEGDashZarrRaw(EEGDashRaw):
             )
             return result
         result["store_annex_key"] = found
-        if found != expected:
+        if found == expected:
+            result["status"] = "verified"
+        elif self._verify_snapshot == "strict":
             raise DataIntegrityError(
                 message=(
                     f"NEMAR Zarr store {url} was converted from a different version of "
-                    f"{raw_key} than the EEGDash record describes"
+                    f"{raw_key} than the EEGDash record describes "
+                    "(verify_snapshot='strict')"
                 ),
                 record=self.record,
                 issues=[
@@ -2004,7 +2082,134 @@ class EEGDashZarrRaw(EEGDashRaw):
                     f"annex key at source_commit {commit}: {found}",
                 ],
             )
-        result["status"] = "verified"
+        else:
+            result["status"] = "different version"  # settled by _accept_mismatch
+        return result
+
+    def _accept_mismatch(self, url: str, raw: RawNEMARZarr, attrs: dict, result: dict):
+        """Load a different version of the raw file only if it is the same recording.
+
+        Runs the four checks in the class Notes. Every one must pass on
+        evidence actually read; a check that cannot be made fails, so this
+        relaxation is fail-closed. HTTP errors propagate, to be wrapped like
+        any other failure to open the store.
+        """
+        ds, raw_key = self.record["dataset"], self.record["bids_relpath"]
+        expected, found = result["record_annex_key"], result["store_annex_key"]
+        checks = {}
+
+        try:
+            current = _annex_key_at_commit(ds, "HEAD", raw_key)
+        except _NotAtCommit:
+            current = None
+        checks["current version"] = (
+            current is not None and current == found,
+            f"NEMAR's current key is {current}"
+            if current is not None
+            else f"{raw_key} is not annexed on NEMAR's current branch",
+        )
+
+        sizes = _annex_key_size(expected), _annex_key_size(found)
+        checks["byte size"] = (
+            None not in sizes and sizes[0] == sizes[1],
+            f"record {sizes[0]} bytes, store {sizes[1]} bytes",
+        )
+
+        rec_rate, rec_nchans = (
+            self.record.get("sampling_frequency"),
+            self.record.get("nchans"),
+        )
+        group = self._zarr_group()
+        source_rate = group.get("source_rate_hz")  # older indexes lack it
+        if source_rate is None:
+            source_rate = _open_root(url, json.dumps({}))[group["name"]].attrs.get(
+                "original_rate"
+            )
+        n_store = len(raw.ch_names)
+        checks["sampling rate and channel count"] = (
+            isinstance(rec_rate, (int, float))
+            and isinstance(source_rate, (int, float))
+            and abs(rec_rate - source_rate) < 1e-6
+            and rec_nchans == n_store,
+            f"record {rec_rate} Hz and {rec_nchans} channels, "
+            f"store {source_rate} Hz and {n_store} channels",
+        )
+
+        tsv = _bids_channels_tsv(url, attrs)
+        tsv_names = [row.get("name") or "" for row in tsv["rows"]] if tsv else None
+        rec_names = self.record.get("ch_names")
+        checks["channel names"] = (
+            tsv_names is not None
+            and isinstance(rec_names, list)
+            and [str(n).casefold() for n in rec_names]
+            == [n.casefold() for n in tsv_names],
+            "record names match channels.tsv at the store's commit"
+            if tsv_names is not None
+            else "no channels.tsv at the store's commit",
+        )
+
+        result.update(
+            current_annex_key=current,
+            record_snapshot={
+                k: self.record.get(k)
+                for k in ("digested_at", "sampling_frequency", "nchans", "ntimes")
+            },
+            checks={
+                name: {"passed": bool(ok), "detail": detail}
+                for name, (ok, detail) in checks.items()
+            },
+        )
+        failed = [
+            f"{name}: {detail}" for name, (ok, detail) in checks.items() if not ok
+        ]
+        if failed:
+            raise DataIntegrityError(
+                message=(
+                    f"NEMAR Zarr store {url} was converted from a different version of "
+                    f"{raw_key} than the EEGDash record describes, and it fails "
+                    f"{len(failed)} of the checks for loading it anyway"
+                ),
+                record=self.record,
+                issues=[
+                    f"record annex key {expected}",
+                    f"annex key at source_commit {result['source_commit']}: {found}",
+                    *(f"failed {f}" for f in failed),
+                ],
+            )
+
+        corrections = _corrections(ds)
+        result["nemar_corrections"] = (
+            list(corrections) if corrections is not None else "unreadable"
+        )
+        if corrections is None:
+            log = "NEMAR's corrections log could not be read."
+        elif not corrections:
+            log = f"NEMAR's corrections log records no in-place correction of {ds}."
+        else:
+            log = "NEMAR's corrections log for {}: {}.".format(
+                ds,
+                "; ".join(
+                    f"{c['action']} at {c['at']} (versions {', '.join(map(str, c['versions'] or []))}, "
+                    f"verification {c['verification']})"
+                    for c in corrections
+                ),
+            )
+        result["status"] = "accepted: different version, checks passed"
+        warnings.warn(
+            f"NEMAR Zarr store {url} was converted from a different version of "
+            f"{raw_key} than the EEGDash record describes.\n"
+            f"  record (digested {self.record.get('digested_at')}): {expected}\n"
+            f"  store (source_commit {result['source_commit']}): {found}\n"
+            "Loading it because these checks passed: "
+            + "; ".join(f"{name} ({detail})" for name, (_, detail) in checks.items())
+            + ".\nThese checks do not establish that the two versions are "
+            "byte-for-byte or sample-for-sample identical.\n"
+            f"{log}\n"
+            "Pass zarr_options={'verify_snapshot': 'strict'} to refuse such "
+            "recordings.",
+            NEMARDataWarning,
+            stacklevel=4,
+        )
         return result
 
     # -- EEGDashRaw overrides --
@@ -2033,6 +2238,8 @@ class EEGDashZarrRaw(EEGDashRaw):
                 else {"status": "not checked (verify_snapshot=False)"}
             )
             raw = RawNEMARZarr(url, group, **self._reader_options)
+            if snapshot["status"] == "different version":
+                snapshot = self._accept_mismatch(url, raw, attrs, snapshot)
             if raw.n_times:
                 # Like EEGDashRaw's check of a download: read the first and last
                 # sample, so a missing or denied shard there fails under

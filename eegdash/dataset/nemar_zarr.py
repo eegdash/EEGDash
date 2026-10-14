@@ -1937,6 +1937,31 @@ _STORE_ERRORS = (
 )
 
 
+def _mirror_gave_no_answer(exc: requests.RequestException) -> bool:
+    """Whether the snapshot check failed because the mirror gave no answer.
+
+    Only remote unavailability qualifies: a connection that could not be made
+    or was dropped, a timeout, a response cut off mid-body, or retries
+    exhausted on 429/5xx. TLS and proxy failures (also ``ConnectionError``s
+    in requests) are local or security problems, and an undecodable body or a
+    redirect loop is an answer, so those, like malformed requests, do not.
+    """
+    if isinstance(exc, (requests.exceptions.SSLError, requests.exceptions.ProxyError)):
+        return False
+    if isinstance(
+        exc,
+        (
+            requests.ConnectionError,  # includes ConnectTimeout
+            requests.Timeout,
+            requests.exceptions.ChunkedEncodingError,
+            requests.exceptions.RetryError,
+        ),
+    ):
+        return True
+    status = getattr(getattr(exc, "response", None), "status_code", None)
+    return isinstance(exc, requests.HTTPError) and status in _RETRY_STATUS
+
+
 def _is_transport_error(exc: BaseException | None) -> bool:
     """A network failure that persisted through retries (not a data problem)."""
     while exc is not None:
@@ -2005,14 +2030,16 @@ class EEGDashZarrRaw(EEGDashRaw):
     and quotes any in-place correction in NEMAR's corrections log.
     When the record has no annex key, the store records no
     ``source_commit``, or the mirror gives no answer (a connection failure,
-    timeout, 429 or 5xx status persisting through retries, or a response cut
-    off), the check cannot be made: it is skipped
-    with a :class:`NEMARDataWarning`, or refused under ``"strict"`` (so with
-    ``"strict"`` and ``on_error="skip"``, a mirror outage skips recordings).
-    A commit the mirror no longer serves (e.g. after NEMAR rewrote the
-    history), any other HTTP error status from the mirror, or a raw file
-    that is not annexed at the commit raises ``DataIntegrityError``. Only the raw file named by the
-    record is checked, not companion files (e.g. ``.fdt``).
+    a timeout, a response cut off, or 429/5xx persisting through retries),
+    the check cannot be made: it is skipped with a :class:`NEMARDataWarning`,
+    or refused under ``"strict"`` (so with ``"strict"`` and
+    ``on_error="skip"``, a mirror outage skips recordings). A commit the
+    mirror no longer serves (e.g. after NEMAR rewrote the history), any other
+    failed request to it (another HTTP error status, a TLS or proxy failure,
+    an undecodable response, a redirect loop, a malformed URL or header), or
+    a raw file that is not annexed at the commit raises
+    ``DataIntegrityError``. Only the raw file named by the record is checked,
+    not companion files (e.g. ``.fdt``).
 
     Failures to locate or open the store (no Zarr copy of the dataset or
     recording, HTTP errors, malformed metadata, a missing first or last
@@ -2136,22 +2163,26 @@ class EEGDashZarrRaw(EEGDashRaw):
                 issues=[str(e), f"record annex key {expected}"],
             ) from e
         except requests.RequestException as e:
-            if isinstance(e, requests.HTTPError) and not _is_transport_error(e):
-                # e.g. 403 or 451: the mirror answered, and not with what was asked
-                response = e.response
-                raise DataIntegrityError(
-                    message=(
-                        f"cannot check NEMAR Zarr store {url} against the record: "
-                        f"the mirror answered HTTP {getattr(response, 'status_code', '?')} "
-                        f"for {getattr(response, 'url', None) or raw_key} while checking "
-                        f"{raw_key} at commit {commit}"
-                    ),
-                    record=self.record,
-                    issues=[f"{type(e).__name__}: {e}", f"record annex key {expected}"],
-                ) from e
-            # any other failure to get an answer (connection, timeout, a reset
-            # mid-body, decoding, redirects) leaves the snapshot unverified
-            return self._unverified(url, result, f"{type(e).__name__}: {e}", e)
+            if _mirror_gave_no_answer(e):
+                return self._unverified(url, result, f"{type(e).__name__}: {e}", e)
+            # The mirror answered with something else (e.g. 403 or 451), or the
+            # request itself failed (TLS, proxy, malformed URL or header, an
+            # undecodable body, a redirect loop): refuse rather than load.
+            response = getattr(e, "response", None)
+            failure = (
+                f"the mirror answered HTTP {response.status_code} for "
+                f"{response.url or raw_key}"
+                if response is not None
+                else f"the request to the mirror failed ({type(e).__name__}: {e})"
+            )
+            raise DataIntegrityError(
+                message=(
+                    f"cannot check NEMAR Zarr store {url} against the record: "
+                    f"{failure} while checking {raw_key} at commit {commit}"
+                ),
+                record=self.record,
+                issues=[f"{type(e).__name__}: {e}", f"record annex key {expected}"],
+            ) from e
         result["store_annex_key"] = found
         if found is None:
             raise DataIntegrityError(
@@ -2302,13 +2333,14 @@ class EEGDashZarrRaw(EEGDashRaw):
         elif not corrections:
             log = f"NEMAR's corrections log records no in-place correction of {ds}."
         else:
-            log = "NEMAR's corrections log for dataset {} (not specific to this file): {}.".format(
-                ds,
-                "; ".join(
-                    f"{c['action']} at {c['at']} (versions {', '.join(c['versions'])}, "
-                    f"verification {c['verification']})"
-                    for c in corrections
-                ),
+            entries = "; ".join(
+                f"{c['action']} at {c['at']} (versions {', '.join(c['versions'])}, "
+                f"verification {c['verification']})"
+                for c in corrections
+            )
+            log = (
+                f"NEMAR's corrections log for dataset {ds} "
+                f"(not specific to this file): {entries}."
             )
         result["status"] = "accepted: different version, checks passed"
         warnings.warn(

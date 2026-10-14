@@ -1807,7 +1807,7 @@ def test_refused_commit_check_names_the_request(store, corrected, tmp_path):
 
 
 class _CutOff:
-    """Fails like a connection reset while the body is read (no retry covers it)."""
+    """Raises ``exc`` for requests to URLs containing ``part``; serves the rest."""
 
     def __init__(self, http, part, exc):
         self.http, self.part, self.exc = http, part, exc
@@ -1818,25 +1818,62 @@ class _CutOff:
         return self.http(url, timeout, **kw)
 
 
-@pytest.mark.parametrize(
-    "exc",
-    [
-        requests.exceptions.ChunkedEncodingError("connection reset"),
-        requests.exceptions.ContentDecodingError("bad gzip"),
-        requests.exceptions.TooManyRedirects("loop"),
-    ],
-)
-def test_responses_without_an_answer_are_unverified(
-    store, corrected, monkeypatch, tmp_path, exc
+_E = requests.exceptions
+
+# The mirror gave no answer: the snapshot cannot be checked.
+NO_ANSWER = [
+    _E.ConnectionError("connection refused"),
+    _E.ConnectTimeout("connect timed out"),
+    _E.ReadTimeout("read timed out"),
+    _E.ChunkedEncodingError("connection reset mid-body"),
+    _E.RetryError("too many 503 error responses"),
+]
+
+# An answer, or a request that could not be made: verification is refused.
+REFUSED = [
+    _E.InvalidURL("bad url"),
+    _E.MissingSchema("no scheme"),
+    _E.InvalidSchema("no adapter"),
+    _E.InvalidHeader("bad header"),
+    _E.SSLError("certificate verify failed"),
+    _E.ProxyError("proxy refused"),
+    _E.ContentDecodingError("bad gzip"),
+    _E.TooManyRedirects("redirect loop"),
+    _E.RequestException("unexpected"),
+]
+
+
+@pytest.mark.parametrize("probe", [f"/{COMMIT}/{BIDS_PATH}", "dataset_description"])
+@pytest.mark.parametrize("exc", NO_ANSWER, ids=lambda e: type(e).__name__)
+def test_no_answer_from_the_mirror_is_unverified(
+    store, corrected, monkeypatch, tmp_path, exc, probe
 ):
-    monkeypatch.setattr(
-        nz, "_http_get", _CutOff(corrected, f"/{COMMIT}/{BIDS_PATH}", exc)
-    )
+    """Default: warn and load; strict: refuse. Also when the commit probe fails."""
+    if probe == "dataset_description":
+        del corrected.files[github(BIDS_PATH)]  # 404, so the commit is probed
+    monkeypatch.setattr(nz, "_http_get", _CutOff(corrected, probe, exc))
     with pytest.warns(NEMARDataWarning, match="cannot verify"):
         check = corrected_raw(tmp_path).raw.nemar_provenance["eegdash_snapshot_check"]
     assert check["status"] == f"unverified: {type(exc).__name__}: {exc}"
-    with pytest.raises(DataIntegrityError, match="verify_snapshot='strict'"):
+    with pytest.raises(DataIntegrityError, match="verify_snapshot='strict'") as e:
         _ = corrected_raw(tmp_path / "s", verify_snapshot="strict").raw
+    assert e.value.__cause__ is exc
+
+
+@pytest.mark.parametrize("verify", [True, "strict"])
+@pytest.mark.parametrize("exc", REFUSED, ids=lambda e: type(e).__name__)
+def test_failed_requests_to_the_mirror_are_refused(
+    store, corrected, monkeypatch, tmp_path, exc, verify
+):
+    monkeypatch.setattr(nz, "_http_get", _CutOff(corrected, f"/{COMMIT}/", exc))
+    with warnings.catch_warnings():
+        warnings.simplefilter("error", NEMARDataWarning)  # never warn-and-load
+        with pytest.raises(
+            DataIntegrityError,
+            match=f"request to the mirror failed .{type(exc).__name__}",
+        ) as e:
+            _ = corrected_raw(tmp_path, verify_snapshot=verify).raw
+    assert e.value.__cause__ is exc and BIDS_PATH in str(e.value)
 
 
 def test_unreachable_mirror_warns_or_strict_refuses(store, corrected, tmp_path):

@@ -2168,7 +2168,9 @@ class EEGDashZarrRaw(EEGDashRaw):
             # The mirror answered with something else (e.g. 403 or 451), or the
             # request itself failed (TLS, proxy, malformed URL or header, an
             # undecodable body, a redirect loop): refuse rather than load.
-            response = getattr(e, "response", None)
+            # Only an HTTPError's response is the answer that failed; others can
+            # carry one too (TooManyRedirects keeps the last 3xx).
+            response = e.response if isinstance(e, requests.HTTPError) else None
             failure = (
                 f"the mirror answered HTTP {response.status_code} for "
                 f"{response.url or raw_key}"

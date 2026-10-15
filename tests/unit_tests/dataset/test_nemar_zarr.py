@@ -1829,6 +1829,14 @@ NO_ANSWER = [
     _E.RetryError("too many 503 error responses"),
 ]
 
+
+def _redirect(url="https://raw.githubusercontent.com/loop"):
+    """The last response of a redirect loop, as requests attaches it."""
+    r = requests.Response()
+    r.status_code, r.url, r.headers["Location"] = 302, url, url
+    return r
+
+
 # An answer, or a request that could not be made: verification is refused.
 REFUSED = [
     _E.InvalidURL("bad url"),
@@ -1838,7 +1846,7 @@ REFUSED = [
     _E.SSLError("certificate verify failed"),
     _E.ProxyError("proxy refused"),
     _E.ContentDecodingError("bad gzip"),
-    _E.TooManyRedirects("redirect loop"),
+    _E.TooManyRedirects("Exceeded 30 redirects.", response=_redirect()),
     _E.RequestException("unexpected"),
 ]
 

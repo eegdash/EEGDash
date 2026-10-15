@@ -40,6 +40,7 @@ Usage:
     python 5_inject.py --input digestion_output --database eegdash_dev --skip-validation
 """
 
+import json
 import math
 import os
 import sys
@@ -244,6 +245,52 @@ def inject_records(
         "updated_count": updated_count,
         "errors": errors,
     }
+
+
+def prune_stale_records(
+    records: list[dict],
+    api_url: str,
+    database: str,
+    admin_token: str,
+    client=None,
+) -> dict:
+    """Delete each injected dataset's records that its current digest no longer holds.
+
+    The upsert never removes a record, so a file renamed, moved or deleted on
+    the source stayed in the catalogue and its download returned 404
+    (nm000172, nm000189: renamed runs; nm000250: 520 records of an earlier
+    deposit). Every record of one digest carries that digest's
+    ``digested_at``; once all of it is upserted, a record of the same dataset
+    with an older ``digested_at`` is not in the source any more.
+    """
+    oldest: dict[str, str] = {}
+    for rec in records:
+        ds, ts = rec.get("dataset"), rec.get("digested_at")
+        if ds and isinstance(ts, str) and ts:
+            oldest[ds] = min(ts, oldest.get(ds, ts))
+
+    session = client or make_authed_client(admin_token)
+    deleted: dict[str, int] = {}
+    errors = []
+    for ds, ts in sorted(oldest.items()):
+        flt = {"dataset": ds, "digested_at": {"$lt": ts}}
+        try:
+            result, _resp = request_json(
+                "delete",
+                f"{api_url}/admin/{database}/records",
+                params={"filter": json.dumps(flt)},
+                timeout=120,
+                raise_for_status=True,
+                raise_for_request=True,
+                client=session,
+            )
+        except (httpx.RequestError, httpx.HTTPStatusError) as e:
+            errors.append(f"{ds}: {e}")
+            continue
+        n = int((result or {}).get("deleted_count") or 0)
+        if n:
+            deleted[ds] = n
+    return {"deleted": deleted, "errors": errors}
 
 
 def inject_montages(
@@ -520,6 +567,28 @@ def main():
                     )
                     stats["records_injected"] += result.get("inserted_count", 0)
                     stats["records_updated"] += result.get("updated_count", 0)
+
+                    # Prune only after every batch landed: a failed batch
+                    # leaves current records with an older digested_at.
+                    if result.get("errors"):
+                        print(
+                            "  Skipping stale-record prune: some batches failed",
+                            file=sys.stderr,
+                        )
+                    else:
+                        pruned = prune_stale_records(
+                            all_records,
+                            args.api_url,
+                            args.database,
+                            admin_token,
+                            client=client,
+                        )
+                        stats["records_pruned"] = sum(pruned["deleted"].values())
+                        for ds, n in pruned["deleted"].items():
+                            print(f"  Pruned {n} stale records of {ds}")
+                        for err in pruned["errors"]:
+                            errors.append({"dataset": "records_prune", "error": err})
+                            stats["errors"] += 1
 
             except (
                 httpx.RequestError,

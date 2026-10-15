@@ -217,6 +217,20 @@ class EEGDashDataset(BaseConcatDataset, metaclass=NumpyDocstringInheritanceInitM
         - ``"record"``: the record-level value is kept.
 
         Raises ``ValueError`` if not one of the above.
+    signal_source : str, default "bids"
+        Where each recording's signal comes from:
+
+        - ``"bids"`` (default): download the BIDS files and read them.
+        - ``"zarr"``: stream NEMAR's Zarr serving copy on demand, with nothing
+          written to ``cache_dir`` (see :mod:`eegdash.dataset.nemar_zarr`).
+          Only for NEMAR datasets, and needs ``pip install "eegdash[zarr]"``.
+          The signal is NEMAR's derived copy: resampled (250 Hz for EEG) and
+          int16-quantised, so its rate and length differ from the BIDS record.
+          Cannot be combined with ``download=False``.
+    zarr_options : dict | None
+        Reader options for ``signal_source="zarr"``: ``group``, ``events``,
+        ``events_max_bytes``, ``nonfinite``, ``bids_status`` and
+        ``verify_snapshot`` (see :class:`~eegdash.dataset.nemar_zarr.EEGDashZarrRaw`).
     **kwargs : dict
         Additional keyword arguments serving two purposes:
 
@@ -226,6 +240,16 @@ class EEGDashDataset(BaseConcatDataset, metaclass=NumpyDocstringInheritanceInitM
           ``EEGDashRaw``.
 
     """
+
+    _zarr_cls = None  # set to EEGDashZarrRaw by __init__ for signal_source="zarr"
+
+    def _recording_cls(self) -> type[EEGDashRaw]:
+        """Class for each recording: EEGDashZarrRaw for Zarr, else EEGDashRaw.
+
+        ``EEGDashRaw`` is resolved at call time so that patching the module
+        name (as tests do) keeps working.
+        """
+        return self._zarr_cls or EEGDashRaw
 
     def __init__(
         self,
@@ -243,6 +267,8 @@ class EEGDashDataset(BaseConcatDataset, metaclass=NumpyDocstringInheritanceInitM
         max_concurrency: int = 20,
         description_precedence: str = "participant_tsv",
         remove_nan_targets: bool = False,
+        signal_source: str = "bids",
+        zarr_options: dict[str, Any] | None = None,
         **kwargs,
     ):
         # Internal-only kwargs
@@ -257,6 +283,35 @@ class EEGDashDataset(BaseConcatDataset, metaclass=NumpyDocstringInheritanceInitM
                 f"got {description_precedence!r}"
             )
         self._description_precedence = description_precedence
+        if signal_source not in ("bids", "zarr"):
+            raise ValueError(
+                f"signal_source must be 'bids' or 'zarr', got {signal_source!r}"
+            )
+        if zarr_options is not None and signal_source != "zarr":
+            raise ValueError("zarr_options only applies with signal_source='zarr'")
+        if signal_source == "zarr" and not download:
+            raise ValueError(
+                "signal_source='zarr' streams from NEMAR and cannot be combined "
+                "with download=False"
+            )
+        self.signal_source = signal_source
+        if signal_source == "zarr":
+            # Optional dependencies (zarr>=3.4, aiohttp, pyarrow): imported only
+            # when requested, so `import eegdash` does not load them.
+            try:
+                from .nemar_zarr import EEGDashZarrRaw
+            except ImportError as e:
+                reason = str(e)
+                if "eegdash[zarr]" not in reason:  # a missing module, not a version
+                    reason += (
+                        '; install the extra with: pip install "eegdash[zarr]" '
+                        "(zarr>=3.4 needs Python>=3.12)"
+                    )
+                raise ImportError(
+                    f"signal_source='zarr' is unavailable: {reason}"
+                ) from e
+
+            self._zarr_cls = EEGDashZarrRaw
         self.s3_bucket = s3_bucket
         self.database = database
         self.auth_token = auth_token
@@ -292,6 +347,8 @@ class EEGDashDataset(BaseConcatDataset, metaclass=NumpyDocstringInheritanceInitM
         }
         base_dataset_kwargs["on_error"] = self._on_error
         base_dataset_kwargs["max_concurrency"] = self.max_concurrency
+        if signal_source == "zarr":
+            base_dataset_kwargs["zarr_options"] = zarr_options
 
         if "dataset" not in self.query:
             inferred = records[0].get("dataset") if records else None
@@ -307,7 +364,7 @@ class EEGDashDataset(BaseConcatDataset, metaclass=NumpyDocstringInheritanceInitM
         if records is not None:
             self.records = self._normalize_records(records)
             datasets = [
-                EEGDashRaw(
+                self._recording_cls()(
                     record,
                     self.cache_dir,
                     description=build_description(
@@ -349,7 +406,7 @@ class EEGDashDataset(BaseConcatDataset, metaclass=NumpyDocstringInheritanceInitM
                     record, description_fields, self._description_precedence, part_row
                 )
                 datasets.append(
-                    EEGDashRaw(
+                    self._recording_cls()(
                         record=record,
                         cache_dir=self.cache_dir,
                         description=desc,
@@ -597,6 +654,8 @@ class EEGDashDataset(BaseConcatDataset, metaclass=NumpyDocstringInheritanceInitM
     def download_all(self, n_jobs: int | None = None) -> None:
         """Download missing remote files in parallel.
 
+        Does nothing for ``signal_source="zarr"``, which streams the signal.
+
         Parameters
         ----------
         n_jobs : int | None
@@ -605,6 +664,8 @@ class EEGDashDataset(BaseConcatDataset, metaclass=NumpyDocstringInheritanceInitM
         """
         if self.download is False:
             return
+        if getattr(self, "signal_source", "bids") == "zarr":
+            return  # the signal is streamed; there is nothing to download
 
         if n_jobs is None:
             n_jobs = self.n_jobs
@@ -784,7 +845,7 @@ class EEGDashDataset(BaseConcatDataset, metaclass=NumpyDocstringInheritanceInitM
                 record, description_fields, self._description_precedence
             )
             datasets.append(
-                EEGDashRaw(
+                self._recording_cls()(
                     record,
                     cache_dir=self.cache_dir,
                     description=description,

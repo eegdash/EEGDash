@@ -18,7 +18,7 @@ import pandas as pd
 
 from _bids_path import normalize_modality
 from _constants import NEURO_MODALITIES
-from _file_utils import get_annex_file_size, list_git_files
+from _file_utils import get_annex_file_size
 from eegdash.dataset._source_inference import DEFAULT_STORAGE_CONFIG, STORAGE_CONFIGS
 from eegdash.schemas import Storage, create_dataset
 from source_adapter import SourceAdapter
@@ -329,15 +329,9 @@ def extract_dataset_metadata(
             dataset_modified_at = ts.get("dataset_modified_at")
             dataset_created_at = ts.get("dataset_created_at") or dataset_created_at
 
-    # A git clone gives the exact size of every file (git-annex keys carry it);
-    # prefer it over the source's figure: data.nemar.org reports 4 bytes x
-    # samples x channels (43.6 GB for nm000385, a 17 GiB EDF release).
-    # Otherwise prefer the API figure; manifest total_size is wrong for git-annex.
+    # Prefer API-supplied size_bytes; don't trust manifest total_size (wrong for git-annex).
     size_bytes = metadata.get("size_bytes")
-    if (bids_root / ".git").exists():
-        measured = sum(f["size"] for f in list_git_files(bids_root))
-        size_bytes = measured or size_bytes
-    elif size_bytes is None and bids_root.exists():
+    if size_bytes is None and bids_root.exists():
         size_bytes = sum(
             get_annex_file_size(f)
             for f in bids_root.rglob("*")

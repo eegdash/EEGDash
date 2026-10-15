@@ -51,19 +51,13 @@ def _summary(out: Path) -> dict:
     return json.loads((out / DS / f"{DS}_summary.json").read_text())
 
 
-def test_summary_records_source_commit_and_measured_size(cloned: Path, tmp_path: Path):
+def test_summary_records_source_commit(cloned: Path, tmp_path: Path):
     digest = load_digest()
     out = tmp_path / "out"
     summary = digest.digest_dataset(DS, cloned, out)
     assert summary["status"] == "success", summary
     head = _git(cloned / DS, "rev-parse", "HEAD")
     assert _summary(out)["source_commit"] == head
-
-    files = [
-        p for p in (cloned / DS).rglob("*") if ".git" not in p.parts and p.is_file()
-    ]
-    doc = json.loads((out / DS / f"{DS}_dataset.json").read_text())
-    assert doc["size_bytes"] == sum(p.stat().st_size for p in files)
 
 
 def test_same_commit_is_skipped(cloned: Path, tmp_path: Path):

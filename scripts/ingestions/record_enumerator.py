@@ -141,6 +141,7 @@ def _has_actual_recording_files(dataset_dir: Path) -> bool:
         ".cnt",
         ".snirf",
         ".mefd",
+        ".nwb",  # BIDS iEEG (MNE-BIDS ALLOWED_DATATYPE_EXTENSIONS); nm000350
     }
     for entry in dataset_dir.rglob("*"):
         if entry.is_file() or entry.is_symlink():

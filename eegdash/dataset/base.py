@@ -25,6 +25,7 @@ from typing import Any
 import filelock
 import mne.io.ctf.info as ctf_info
 import mne_bids
+import mne_bids.read as mne_bids_read  # _handle_channels_reading (0.19-0.20)
 import nemar
 import numpy as np
 from mne.io import BaseRaw
@@ -579,6 +580,19 @@ def _resolve_one_nemar_entry(
     if not dest.exists():
         dest.write_bytes(payload)
     return None
+
+
+def _read_nwb_with_channels_tsv(path: Path) -> BaseRaw:
+    """Read an NWB recording, then apply its BIDS channels.tsv as read_raw_bids would.
+
+    The NWB reader can only guess channel types (sEEG); the sidecar has the real
+    ones (e.g. ECOG) and the bad channels.
+    """
+    raw = _load_raw_direct(path)
+    tsv = path.with_name(path.name.rsplit("_", 1)[0] + "_channels.tsv")
+    if tsv.exists():
+        raw = mne_bids_read._handle_channels_reading(tsv, raw, on_ch_mismatch="warn")
+    return raw
 
 
 class EEGDashRaw(RawDataset):
@@ -1488,7 +1502,7 @@ class EEGDashRaw(RawDataset):
         # mne_bids.read_raw_bids raises for .nwb ("allowed, but not yet
         # implemented"), so NWB goes straight to the direct reader.
         if self.filecache.suffix.lower() == ".nwb":
-            return _load_raw_direct(self.filecache)
+            return _read_nwb_with_channels_tsv(self.filecache)
 
         current_split_key = self.record.get("storage", {}).get("raw_key")
         current_split_path = self.filecache

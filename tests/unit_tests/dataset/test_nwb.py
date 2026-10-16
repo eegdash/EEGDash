@@ -6,6 +6,7 @@ import h5py
 import numpy as np
 import pytest
 
+from eegdash.dataset.base import _read_nwb_with_channels_tsv
 from eegdash.dataset.dataset import _VALID_DATA_EXTENSIONS
 from eegdash.dataset.io import _load_raw_direct
 from eegdash.dataset.nwb import RawNWB, read_raw_nwb
@@ -104,3 +105,15 @@ def test_series_selects_one_of_several(tmp_path):
         tmp_path / "e.nwb", np.zeros((10, 2)), conversion=1.0, extra_series=True
     )
     assert read_raw_nwb(path, series="lfp2").n_times == 10
+
+
+def test_channels_tsv_sets_types_and_bads(tmp_path):
+    path = _write(
+        tmp_path / "sub-01_task-x_ieeg.nwb", np.zeros((10, 2)), conversion=1.0
+    )
+    (tmp_path / "sub-01_task-x_channels.tsv").write_text(
+        "name\ttype\tunits\tstatus\n0\tECOG\tV\tgood\n1\tECOG\tV\tbad\n"
+    )
+    raw = _read_nwb_with_channels_tsv(path)
+    assert raw.get_channel_types() == ["ecog", "ecog"]
+    assert raw.info["bads"] == ["1"]

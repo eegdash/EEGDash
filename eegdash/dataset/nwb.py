@@ -13,8 +13,10 @@ from pathlib import Path
 import h5py
 import numpy as np
 from mne import create_info
+
+# private, but where MNE's own readers import it from (1.11-1.13)
+from mne._fiff.utils import _mult_cal_one
 from mne.io import BaseRaw
-from mne.io.base import _mult_cal_one
 
 _VOLT_UNITS = {"volt", "volts", "v"}
 

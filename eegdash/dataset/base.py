@@ -590,9 +590,14 @@ def _read_nwb_with_channels_tsv(path: Path) -> BaseRaw:
     """
     raw = _load_raw_direct(path)
     tsv = path.with_name(path.name.rsplit("_", 1)[0] + "_channels.tsv")
-    if tsv.exists():
-        raw = mne_bids_read._handle_channels_reading(tsv, raw, on_ch_mismatch="warn")
-    return raw
+    if not tsv.exists():
+        return raw
+    # NWB names channels by electrode id; channels.tsv lists them in data order
+    # (BIDS), so take its names (on008610: ch01.., nm000350: 0..).
+    names = [ln.split("\t", 1)[0] for ln in tsv.read_text().splitlines()[1:] if ln]
+    if len(names) == len(raw.ch_names) and len(set(names)) == len(names):
+        raw.rename_channels(dict(zip(raw.ch_names, names)))
+    return mne_bids_read._handle_channels_reading(tsv, raw, on_ch_mismatch="warn")
 
 
 class EEGDashRaw(RawDataset):

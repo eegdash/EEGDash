@@ -28,6 +28,7 @@ from mne.io.eeglab import _eeglab as mne_eeglab
 from scipy.io import loadmat, savemat
 
 from ..logging import logger
+from .nwb import read_raw_nwb
 
 
 class _MultiLocaleParserInfo(parserinfo):
@@ -1639,6 +1640,7 @@ def _load_raw_direct(filepath: Path):  # -> mne.io.BaseRaw
         ".cnt": mne.io.read_raw_cnt,
         ".ds": mne.io.read_raw_ctf,
         ".snirf": mne.io.read_raw_snirf,
+        ".nwb": read_raw_nwb,  # not in MNE yet (mne-python#10427)
     }
 
     ext = filepath.suffix.lower()

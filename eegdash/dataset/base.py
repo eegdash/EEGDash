@@ -1477,6 +1477,11 @@ class EEGDashRaw(RawDataset):
           entity): attempts direct MNE reader before raising
           ``DataIntegrityError``.
         """
+        # mne_bids.read_raw_bids raises for .nwb ("allowed, but not yet
+        # implemented"), so NWB goes straight to the direct reader.
+        if self.filecache.suffix.lower() == ".nwb":
+            return _load_raw_direct(self.filecache)
+
         current_split_key = self.record.get("storage", {}).get("raw_key")
         current_split_path = self.filecache
         attempted_split_keys: set[str] = set()

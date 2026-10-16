@@ -33,7 +33,8 @@ from .bids_dataset import EEGBIDSDataset
 from .registry import register_openneuro_datasets
 
 # Valid extensions for EEG data files (from MNE-BIDS reader configuration)
-_VALID_DATA_EXTENSIONS = frozenset(reader.keys())
+# .nwb: read by eegdash.dataset.nwb until MNE/MNE-BIDS can (mne-python#10427)
+_VALID_DATA_EXTENSIONS = frozenset(reader.keys()) | {".nwb"}
 
 
 def _warn_if_competition_dataset(dataset_id: str) -> None:

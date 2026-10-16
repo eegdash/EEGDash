@@ -243,6 +243,28 @@ def download_s3_file(
     return local_path
 
 
+def download_s3_directory(
+    s3_path: str, local_dir: Path, *, filesystem: S3Client | None = None
+) -> Path:
+    """Download every object under an S3 prefix, keeping relative paths.
+
+    For recordings stored as directories (CTF ``.ds``, MEF3 ``.mefd``, whose
+    files sit in nested ``.timd/.segd`` folders). Needs ListBucket, which
+    OpenNeuro allows and NEMAR's bucket does not.
+    """
+    filesystem = filesystem or get_s3_filesystem()
+    bucket, key = _split_s3_uri(s3_path)
+    prefix = key.rstrip("/") + "/"
+    pairs = [
+        (f"s3://{bucket}/{obj['Key']}", local_dir / obj["Key"][len(prefix) :])
+        for obj in filesystem._iter_objects(f"s3://{bucket}/{prefix}")
+    ]
+    if not pairs:
+        raise FileNotFoundError(s3_path)
+    download_files(pairs, filesystem=filesystem, skip_existing=True)
+    return local_dir
+
+
 def download_files(
     files: Sequence[tuple[str, Path]] | Iterable[tuple[str, Path]],
     *,

@@ -25,6 +25,7 @@ from typing import Any
 import filelock
 import mne.io.ctf.info as ctf_info
 import mne_bids
+import mne_bids.read as mne_bids_read  # _handle_channels_reading (0.19-0.20)
 import nemar
 import numpy as np
 from mne.io import BaseRaw
@@ -581,6 +582,24 @@ def _resolve_one_nemar_entry(
     return None
 
 
+def _read_nwb_with_channels_tsv(path: Path) -> BaseRaw:
+    """Read an NWB recording, then apply its BIDS channels.tsv as read_raw_bids would.
+
+    The NWB reader can only guess channel types (sEEG); the sidecar has the real
+    ones (e.g. ECOG) and the bad channels.
+    """
+    raw = _load_raw_direct(path)
+    tsv = path.with_name(path.name.rsplit("_", 1)[0] + "_channels.tsv")
+    if not tsv.exists():
+        return raw
+    # NWB names channels by electrode id; channels.tsv lists them in data order
+    # (BIDS), so take its names (on008610: ch01.., nm000350: 0..).
+    names = [ln.split("\t", 1)[0] for ln in tsv.read_text().splitlines()[1:] if ln]
+    if len(names) == len(raw.ch_names) and len(set(names)) == len(names):
+        raw.rename_channels(dict(zip(raw.ch_names, names)))
+    return mne_bids_read._handle_channels_reading(tsv, raw, on_ch_mismatch="warn")
+
+
 class EEGDashRaw(RawDataset):
     """A single EEG recording dataset.
 
@@ -784,7 +803,15 @@ class EEGDashRaw(RawDataset):
             )
 
             try:
-                if self._raw_uri is not None:
+                if self._raw_uri is not None and self.filecache.suffix.lower() in (
+                    ".ds",
+                    ".mefd",
+                ):
+                    # a directory recording is an S3 prefix, not one object
+                    downloader.download_s3_directory(
+                        self._raw_uri, self.filecache, filesystem=filesystem
+                    )
+                elif self._raw_uri is not None:
                     downloader.download_s3_file(
                         self._raw_uri, self.filecache, filesystem=filesystem
                     )
@@ -1477,6 +1504,11 @@ class EEGDashRaw(RawDataset):
           entity): attempts direct MNE reader before raising
           ``DataIntegrityError``.
         """
+        # mne_bids.read_raw_bids raises for .nwb ("allowed, but not yet
+        # implemented"), so NWB goes straight to the direct reader.
+        if self.filecache.suffix.lower() == ".nwb":
+            return _read_nwb_with_channels_tsv(self.filecache)
+
         current_split_key = self.record.get("storage", {}).get("raw_key")
         current_split_path = self.filecache
         attempted_split_keys: set[str] = set()

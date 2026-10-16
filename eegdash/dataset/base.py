@@ -784,7 +784,15 @@ class EEGDashRaw(RawDataset):
             )
 
             try:
-                if self._raw_uri is not None:
+                if self._raw_uri is not None and self.filecache.suffix.lower() in (
+                    ".ds",
+                    ".mefd",
+                ):
+                    # a directory recording is an S3 prefix, not one object
+                    downloader.download_s3_directory(
+                        self._raw_uri, self.filecache, filesystem=filesystem
+                    )
+                elif self._raw_uri is not None:
                     downloader.download_s3_file(
                         self._raw_uri, self.filecache, filesystem=filesystem
                     )

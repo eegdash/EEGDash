@@ -670,3 +670,49 @@ def test_remote_size_zero_byte_object_is_zero_not_none():
     mock_fs = MagicMock()
     mock_fs.info.return_value = {"size": 0}
     assert _remote_size(mock_fs, "s3://bucket/empty") == 0
+
+
+class _PrefixFS:
+    """Minimal S3Client double: a listable prefix of nested objects (MEF3 layout)."""
+
+    def __init__(self, objects):
+        self.objects = objects  # key -> bytes
+
+    def _iter_objects(self, path, delimiter=None):
+        _, prefix = downloader._split_s3_uri(path)
+        for k, v in self.objects.items():
+            if k.startswith(prefix):
+                yield {"Key": k, "Size": len(v)}
+
+    def info(self, path):
+        return {"size": len(self.objects[downloader._split_s3_uri(path)[1]])}
+
+    def get_file(self, rpath, lpath, **kwargs):
+        Path(lpath).write_bytes(self.objects[downloader._split_s3_uri(rpath)[1]])
+
+
+def test_download_s3_directory_keeps_nested_layout(tmp_path):
+    fs = _PrefixFS(
+        {
+            "ds1/sub-01/ieeg/r_ieeg.mefd/C1.timd/C1-000000.segd/C1-000000.tdat": b"abc",
+            "ds1/sub-01/ieeg/r_ieeg.mefd/C1.timd/C1-000000.segd/C1-000000.tmet": b"m",
+            "ds1/sub-01/ieeg/r_ieeg.mefd2/other": b"not mine",
+        }
+    )
+    dest = tmp_path / "r_ieeg.mefd"
+    downloader.download_s3_directory(
+        "s3://openneuro.org/ds1/sub-01/ieeg/r_ieeg.mefd", dest, filesystem=fs
+    )
+    seg = dest / "C1.timd" / "C1-000000.segd"
+    assert (seg / "C1-000000.tdat").read_bytes() == b"abc"
+    assert (seg / "C1-000000.tmet").read_bytes() == b"m"
+    assert sorted(p.name for p in dest.iterdir()) == ["C1.timd"]
+
+
+def test_download_s3_directory_empty_prefix_is_not_found(tmp_path):
+    with pytest.raises(FileNotFoundError):
+        downloader.download_s3_directory(
+            "s3://openneuro.org/ds1/missing.mefd",
+            tmp_path / "x",
+            filesystem=_PrefixFS({}),
+        )

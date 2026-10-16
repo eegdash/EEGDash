@@ -55,8 +55,10 @@ classifiers = [
 dependencies = [
   "braindecode[hub]>=1.8.0",
   "eeglabio",
-  "mne>=1.12.0",  # read_raw_mef (MEF3 .mefd), which MNE-BIDS >=0.19 maps
-  "mne_bids>=0.19.0",
+  # 1.13: read_raw_mef with session reuse (mne-python#13610, #14254);
+  # mne_bids 0.20 maps .mefd to it. Floors = the versions tested.
+  "mne>=1.13.0",
+  "mne_bids>=0.20.0",
   # Official NEMAR client: owns dataset-id validation (nm*/on*),
   # manifest fetching, BIDS-path → annex-key mapping, and streaming
   # downloads. eegdash delegates the data.nemar.org safety net to it

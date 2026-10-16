@@ -171,9 +171,6 @@ def _load_neuro_data_extensions() -> set[str]:
     return extensions
 
 
-# Recording formats that MNE-BIDS' ALLOWED_DATATYPE_EXTENSIONS does not list but
-# the digest has parsers or readers for (MEF3 directories, Neuroscan, EGI, GDF).
-_EXTRA_DATA_EXTENSIONS = frozenset({".mefd", ".cnt", ".mff", ".gdf"})
 _CALIBRATION_RE = re.compile(r"_acq-(crosstalk|calibration)_meg\.")
 _LATER_SPLIT_RE = re.compile(r"_split-0*([2-9]|[1-9]\d+)_")
 
@@ -235,7 +232,7 @@ def is_neuro_data_file(filepath: str) -> bool:
     # A record needs a data extension, also inside a modality folder: the old
     # "anything under eeg/ meg/ ieeg/ is data" rule made records of .mat/.png
     # derivatives, .mrk/.pos markers and BrainVision .eeg/.vmrk companions.
-    data_exts = _load_neuro_data_extensions() | _EXTRA_DATA_EXTENSIONS
+    data_exts = _load_neuro_data_extensions() | {".mefd"}  # MEF3 dirs (640 records)
     if any(filepath_lower.endswith(ext) for ext in data_exts):
         return True
 

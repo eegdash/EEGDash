@@ -171,6 +171,13 @@ def _load_neuro_data_extensions() -> set[str]:
     return extensions
 
 
+# Recording formats that MNE-BIDS' ALLOWED_DATATYPE_EXTENSIONS does not list but
+# the digest has parsers or readers for (MEF3 directories, Neuroscan, EGI, GDF).
+_EXTRA_DATA_EXTENSIONS = frozenset({".mefd", ".cnt", ".mff", ".gdf"})
+_CALIBRATION_RE = re.compile(r"_acq-(crosstalk|calibration)_meg\.")
+_LATER_SPLIT_RE = re.compile(r"_split-0*([2-9]|[1-9]\d+)_")
+
+
 def is_neuro_data_file(filepath: str) -> bool:
     """Return True if the path is a neurophysiology data file (EEG, MEG, iEEG, EMG, fNIRS)."""
     filepath_lower = filepath.lower()
@@ -216,14 +223,20 @@ def is_neuro_data_file(filepath: str) -> bool:
         ):
             return False
 
-    for modality in MODALITY_DETECTION_TARGETS:
-        if f"/{modality}/" in filepath_lower or f"_{modality}." in filepath_lower:
-            return True
+    # macOS resource forks (._name) are not recordings.
+    if filepath_lower.rsplit("/", 1)[-1].startswith("._"):
+        return False
 
-    data_exts = _load_neuro_data_extensions()
-    is_data_ext = any(filepath_lower.endswith(ext) for ext in data_exts)
+    # MEG calibration files and the 2nd+ parts of a split recording belong to
+    # another record; they are not recordings of their own.
+    if _CALIBRATION_RE.search(filepath_lower) or _LATER_SPLIT_RE.search(filepath_lower):
+        return False
 
-    if is_data_ext:
+    # A record needs a data extension, also inside a modality folder: the old
+    # "anything under eeg/ meg/ ieeg/ is data" rule made records of .mat/.png
+    # derivatives, .mrk/.pos markers and BrainVision .eeg/.vmrk companions.
+    data_exts = _load_neuro_data_extensions() | _EXTRA_DATA_EXTENSIONS
+    if any(filepath_lower.endswith(ext) for ext in data_exts):
         return True
 
     if filepath_lower.endswith(".zip"):

@@ -102,6 +102,24 @@ def test_parse_entities_recovers_modality_from_path(
         # BIDS folder-structure files are NOT
         ("README.md", False),
         ("CHANGES", False),
+        # Only data extensions are records, also inside a modality folder (catalogue 2026-10-16:
+        # .mat/.png/.mrk/.pos/.eeg/.vmrk under eeg|meg|ieeg became records)
+        ("sub-01/ieeg/sub-01_task-x_desc-pdc_connectivity.mat", False),
+        ("sub-01/ieeg/sub-01_desc-x_connectivity.png", False),
+        ("sub-13/ses-0/meg/sub-13_ses-0_task-3_markers.mrk", False),
+        ("sub-13/ses-0/meg/sub-13_ses-0_task-3_headshape.pos", False),
+        ("sub-01/eeg/sub-01_task-x_eeg.eeg", False),
+        ("sub-01/eeg/sub-01_task-x_eeg.vmrk", False),
+        ("sub-13/ses-0/meg/sub-13_ses-0_task-3_meg.con", True),
+        ("sub-02/ieeg/sub-02_task-FUS_run-015_ieeg.nwb", True),
+        ("sub-01/ieeg/sub-01_task-x_ieeg.mefd", True),
+        # MEG calibration files and later split parts are not separate recordings
+        ("sub-17/meg/sub-17_acq-crosstalk_meg.fif", False),
+        ("sub-17/meg/sub-17_acq-calibration_meg.dat", False),
+        ("sub-14/meg/sub-14_task-asrt_run-03_split-01_meg.fif", True),
+        ("sub-14/meg/sub-14_task-asrt_run-03_split-02_meg.fif", False),
+        # macOS resource forks
+        ("sub-001/eeg/._sub-001_task-x_eeg.vhdr", False),
         # sourcedata/ originals are not records (nm000130, nm000348 layouts)
         ("sourcedata/sub-098/ses-04/eeg/sub-098_ses-04_task-ssvep_eeg.edf", False),
         ("sourcedata/2C dataset/sub-037/ses-03/eeg/data.bdf", False),

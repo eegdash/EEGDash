@@ -1485,6 +1485,8 @@ class EEGDashRaw(RawDataset):
           retries, then falls back to direct MNE loading if needed.
         - **Split FIF continuations missing locally**: derives the next split
           key, downloads it from remote storage, and retries.
+        - **Sidecar ``RecordingType: epoched``**: mne-bids refuses it; falls
+          back to direct MNE reader (EEGLAB trials are concatenated).
         - **Invalid BIDS entity characters** (hyphens in task, etc.):
           falls back to direct MNE reader.
         - **Non-numeric ``run`` entity** (e.g. ``run-5H``): MNE-BIDS rejects
@@ -1538,6 +1540,17 @@ class EEGDashRaw(RawDataset):
                     return self._retry_with_ctf_date_patch(first_error)
 
                 msg = str(first_error)
+
+                # Sidecar says RecordingType "epoched": mne-bids refuses it,
+                # the direct reader ignores sidecars. EEGLAB files that do hold
+                # trials are concatenated, as in the TypeError branch below.
+                if 'RecordingType is "epoched"' in msg and self.filecache:
+                    try:
+                        return _load_raw_direct(self.filecache)
+                    except TypeError as direct_err:
+                        if "number of trials is" not in str(direct_err):
+                            raise
+                        return _load_raw_from_eeglab_epochs(self.filecache)
 
                 # SNIRF channel mismatch — fall back to direct reader.
                 # mne-bids sometimes fails even with on_ch_mismatch="rename"

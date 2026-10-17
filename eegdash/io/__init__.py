@@ -10,6 +10,7 @@ Delete an eegdash module once the MNE release with its fix is the floor in
 ``pyproject.toml``.
 """
 
+import threading
 from contextlib import ExitStack, contextmanager
 
 import mne
@@ -46,14 +47,32 @@ def get_reader(ext):
     return ours if status == "tolerant" else getattr(mne.io, name, ours)
 
 
+_lock = threading.Lock()
+_active = 0
+_stack: ExitStack | None = None
+
+
 @contextmanager
 def tolerant():
     """Apply every pending MNE fix while reading (wrap ``read_raw_bids`` in it).
 
-    The fixes patch module globals of MNE, so this is not thread-safe.
+    The fixes patch module globals of MNE. Reads run on threads
+    (``download_all``, ``n_jobs``), and interleaved ``mock.patch`` enter/exit
+    pairs restore the wrong function, so the patches are applied once by the
+    first reader and removed by the last one.
     """
-    # ponytail: process-wide patch; fine for DataLoader workers (processes).
-    with ExitStack() as stack:
-        for module in (eeglab, snirf):
-            stack.enter_context(module.fixes())
+    global _active, _stack
+    with _lock:
+        if _active == 0:
+            _stack = ExitStack()
+            for module in (eeglab, snirf):
+                _stack.enter_context(module.fixes())
+        _active += 1
+    try:
         yield
+    finally:
+        with _lock:
+            _active -= 1
+            if _active == 0:
+                _stack.close()
+                _stack = None

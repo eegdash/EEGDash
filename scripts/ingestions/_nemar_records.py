@@ -53,6 +53,14 @@ def _records_index(dataset_id: str) -> dict[str, dict]:
         relpath = record.get("bids_relpath")
         summary = record.get("signal_summary")
         if isinstance(relpath, str) and isinstance(summary, dict):
+            # records.json keeps the rate under signal_properties, not
+            # signal_summary (nm000108: 1,514 EMG records lost their sfreq).
+            props = record.get("signal_properties")
+            if isinstance(props, dict) and summary.get("sampling_frequency") is None:
+                summary = {
+                    **summary,
+                    "sampling_frequency": props.get("sampling_frequency"),
+                }
             index[relpath] = summary
     return index
 

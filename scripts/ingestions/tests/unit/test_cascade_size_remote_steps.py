@@ -446,6 +446,7 @@ def test_default_steps_include_size_and_remote_in_correct_position():
         "MneFallbackStep",
         "RemoteHeaderStep",
         "SidecarArithmeticStep",
+        "RemoteHeaderStep",
     ]
 
 

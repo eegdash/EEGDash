@@ -118,6 +118,10 @@ jobs:
 
       - name: Digest datasets
         if: steps.changed.outputs.changed == 'true'
+        env:
+          # Read the 256-byte EDF/BDF header of recordings that no sidecar,
+          # records.json or local parser sized (nm000281: 2,785 recordings).
+          EEGDASH_REMOTE_HEADERS: missing
         run: |
           # Only digest if there are cloned datasets
           if [ -d "eegdash-dataset-listings/cloned" ] && [ "$(ls -A eegdash-dataset-listings/cloned 2>/dev/null)" ]; then

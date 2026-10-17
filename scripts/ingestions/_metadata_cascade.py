@@ -23,6 +23,7 @@ import pandas as pd
 # Imported as modules (not symbols) so the cheap-tier helpers stay
 # monkeypatchable in tests and so a single seam carries the wiring.
 import _edf_header
+import _file_utils
 import _mef3_parser
 import _nemar_records
 import _parser_utils
@@ -31,6 +32,7 @@ import _set_parser
 import _snirf_parser
 import mne
 from _format_parser_registry import get_parser_for_extension
+from _source_id import _source_from_dataset_id
 
 # Provenance source names persisted into ``_metadata_provenance``; values are
 # snapshot-tested for byte-level stability — do not rename.
@@ -710,10 +712,15 @@ class MneFallbackStep:
 
 
 class RemoteHeaderStep:
-    """Opt-in ranged remote header read — gated by ``EEGDASH_REMOTE_HEADERS=1``.
+    """Opt-in ranged remote header read — gated by ``EEGDASH_REMOTE_HEADERS``.
 
-    Default OFF → a complete no-op, so the local/shallow path and the digest
-    golden masters are byte-for-byte unchanged. When ON, it resolves a missing
+    Unset (or any other value) → a complete no-op, so the local/shallow path
+    and the digest golden masters are byte-for-byte unchanged. ``1`` reads the
+    header before any arithmetic. ``missing`` reads only EDF/BDF headers, and
+    only for a record no other source gave ntimes (nm000281: 2,785 recordings
+    whose sidecars lack RecordingDuration); the cascade runs that variant
+    (``last_resort=True``) after :class:`SidecarArithmeticStep`. When ON, it
+    resolves a missing
     EDF/BDF ``ntimes`` by fetching ONLY the 256-byte main header over an HTTP
     Range read (:class:`_remote_header.RangeReader`) and computing the
     annotation-safe record-count formula
@@ -730,8 +737,15 @@ class RemoteHeaderStep:
     file-like). All other extensions are skipped.
     """
 
+    def __init__(self, last_resort: bool = False) -> None:
+        self.last_resort = last_resort
+
     def fill(self, ctx: CascadeContext, result: CascadeResult) -> None:
-        if os.environ.get("EEGDASH_REMOTE_HEADERS") != "1":
+        mode = os.environ.get("EEGDASH_REMOTE_HEADERS")
+        if self.last_resort:
+            if mode != "missing" or ctx.ext not in (".edf", ".bdf"):
+                return
+        elif mode != "1":
             return  # opt-in only; default OFF keeps snapshots byte-identical
         if result.ntimes is not None:
             return
@@ -753,7 +767,9 @@ class RemoteHeaderStep:
             {"dataset": ctx.dataset_id, "bids_relpath": ctx.bids_relpath}
         )
         if not url:
-            return  # NEMAR S3 closed / no derivable URL → drop to T3
+            url = _nemar_object_url(ctx)
+        if not url:
+            return  # no derivable URL → drop to T3
         # block == the 256-byte main header → fetch EXACTLY 256 bytes (the
         # whole point: few bytes). The annotation-safe record-count formula
         # needs only the main header, not the per-signal headers.
@@ -818,6 +834,21 @@ class RemoteHeaderStep:
             result.stamp(PROV_REMOTE_HEADER, "ntimes", nt_before, result.ntimes)
 
 
+def _nemar_object_url(ctx: CascadeContext) -> str | None:
+    """Public NEMAR object URL of a clone's git-annex file, or ``None``.
+
+    NEMAR serves public objects by annex key only, on the virtual-hosted
+    endpoint (the path-style ``s3.amazonaws.com/nemar/...`` answers
+    PermanentRedirect).
+    """
+    if _source_from_dataset_id(ctx.dataset_id) != "nemar":
+        return None
+    key = _file_utils.get_annex_file_key(ctx.bids_file_path)
+    if not key:
+        return None
+    return f"https://nemar.s3.amazonaws.com/{ctx.dataset_id}/objects/{key}"
+
+
 class SidecarArithmeticStep:
     """Last resort: ``ntimes = round(sfreq * RecordingDuration)`` when no EXACT source produced it.
 
@@ -869,6 +900,7 @@ class MetadataCascade:
             MneFallbackStep(),
             RemoteHeaderStep(),
             SidecarArithmeticStep(),
+            RemoteHeaderStep(last_resort=True),
         )
 
     def run(self, ctx: CascadeContext) -> CascadeResult:

@@ -1,0 +1,59 @@
+"""What EEGDash can read: one table, extension -> reader, tagged with its upstream status.
+
+- ``"mne"``: MNE's own reader, as is.
+- ``"tolerant"``: MNE's reader run under the fixes in ``eegdash/io/<fmt>.py``, which
+  are not in a MNE release yet (PR drafts: ``eegdash-io-2026-10-17/upstream/``).
+- ``"vendored"``: MNE has no reader; ours is written to move to ``mne/io/<fmt>/``.
+  MNE's is used as soon as ``mne.io`` has it.
+
+Delete an eegdash module once the MNE release with its fix is the floor in
+``pyproject.toml``.
+"""
+
+from contextlib import ExitStack, contextmanager
+
+import mne
+
+from . import eeglab, nwb, snirf
+
+# extension: (name in mne.io, eegdash reader, upstream status). The extensions are
+# MNE-BIDS 0.20's ``config.reader`` (lower-cased) plus ``.nwb``; the client keeps
+# only records with one of them.
+READERS = {
+    ".con": ("read_raw_kit", None, "mne"),
+    ".sqd": ("read_raw_kit", None, "mne"),
+    ".fif": ("read_raw_fif", None, "mne"),
+    ".pdf": ("read_raw_bti", None, "mne"),
+    ".ds": ("read_raw_ctf", None, "mne"),
+    ".vhdr": ("read_raw_brainvision", None, "mne"),
+    ".edf": ("read_raw_edf", None, "mne"),
+    ".bdf": ("read_raw_bdf", None, "mne"),
+    ".lay": ("read_raw_persyst", None, "mne"),
+    ".eeg": ("read_raw_nihon", None, "mne"),  # Nihon Kohden ".EEG"
+    ".cnt": ("read_raw_cnt", None, "mne"),
+    ".bin": ("read_raw_egi", None, "mne"),
+    ".cdt": ("read_raw_curry", None, "mne"),
+    ".mefd": ("read_raw_mef", None, "mne"),  # mne>=1.13, with pymef
+    ".set": ("read_raw_eeglab", eeglab.read_raw_eeglab, "tolerant"),  # eeglab.md
+    ".snirf": ("read_raw_snirf", snirf.read_raw_snirf, "tolerant"),  # snirf.md
+    ".nwb": ("read_raw_nwb", nwb.read_raw_nwb, "vendored"),  # mne-python#10427
+}
+
+
+def get_reader(ext):
+    """Return the reader for ``ext`` (lower-case, with the dot)."""
+    name, ours, status = READERS[ext]
+    return ours if status == "tolerant" else getattr(mne.io, name, ours)
+
+
+@contextmanager
+def tolerant():
+    """Apply every pending MNE fix while reading (wrap ``read_raw_bids`` in it).
+
+    The fixes patch module globals of MNE, so this is not thread-safe.
+    """
+    # ponytail: process-wide patch; fine for DataLoader workers (processes).
+    with ExitStack() as stack:
+        for module in (eeglab, snirf):
+            stack.enter_context(module.fixes())
+        yield

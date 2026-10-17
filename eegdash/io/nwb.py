@@ -1,8 +1,8 @@
 """Read the ElectricalSeries of an NWB file as a lazy MNE Raw (h5py only).
 
 MNE has no NWB reader (mne-tools/mne-python#10427) and MNE-BIDS raises for
-``.nwb``. Written to move to ``mne/io/nwb/``; delete it here once MNE ships
-``read_raw_nwb``.
+``.nwb``. Written to move to ``mne/io/nwb/`` (draft: ``upstream/nwb.md``);
+``eegdash.io.READERS`` switches to MNE's as soon as ``mne.io.read_raw_nwb`` exists.
 """
 
 from __future__ import annotations

@@ -27,8 +27,8 @@ from dateutil.parser import parserinfo
 from mne.io.eeglab import _eeglab as mne_eeglab
 from scipy.io import loadmat, savemat
 
+from ..io import READERS, get_reader
 from ..logging import logger
-from .nwb import read_raw_nwb
 
 
 class _MultiLocaleParserInfo(parserinfo):
@@ -1631,25 +1631,12 @@ def _load_raw_direct(filepath: Path):  # -> mne.io.BaseRaw
         If the file extension is not supported.
 
     """
-    _EXT_TO_READER = {
-        ".vhdr": mne.io.read_raw_brainvision,
-        ".edf": mne.io.read_raw_edf,
-        ".bdf": mne.io.read_raw_bdf,
-        ".set": mne.io.read_raw_eeglab,
-        ".fif": mne.io.read_raw_fif,
-        ".cnt": mne.io.read_raw_cnt,
-        ".ds": mne.io.read_raw_ctf,
-        ".snirf": mne.io.read_raw_snirf,
-        ".nwb": read_raw_nwb,  # not in MNE yet (mne-python#10427)
-    }
-
     ext = filepath.suffix.lower()
-    reader = _EXT_TO_READER.get(ext)
-    if reader is None:
+    if ext not in READERS:
         raise ValueError(
-            f"No direct reader for extension {ext!r}. "
-            f"Supported: {sorted(_EXT_TO_READER)}"
+            f"No direct reader for extension {ext!r}. Supported: {sorted(READERS)}"
         )
+    reader = get_reader(ext)
 
     logger.warning(
         "Falling back to direct %s reader for %s (bypassing MNE-BIDS).",

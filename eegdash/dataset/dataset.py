@@ -5,7 +5,6 @@ from typing import Any
 import pandas as pd
 from docstring_inheritance import NumpyDocstringInheritanceInitMeta
 from joblib import Parallel, delayed
-from mne_bids.config import reader
 from rich.console import Console
 from rich.panel import Panel
 from rich.text import Text
@@ -23,6 +22,7 @@ from ..const import (
     RELEASE_TO_OPENNEURO_DATASET_MAP,
     SUBJECT_MINI_RELEASE_MAP,
 )
+from ..io import READERS
 from ..local_bids import discover_local_bids_records
 from ..logging import logger
 from ..paths import get_default_cache_dir
@@ -32,9 +32,8 @@ from .base import EEGDashRaw
 from .bids_dataset import EEGBIDSDataset
 from .registry import register_openneuro_datasets
 
-# Valid extensions for EEG data files (from MNE-BIDS reader configuration)
-# .nwb: read by eegdash.dataset.nwb until MNE/MNE-BIDS can (mne-python#10427)
-_VALID_DATA_EXTENSIONS = frozenset(reader.keys()) | {".nwb"}
+# Records whose extension EEGDash can read (eegdash.io.READERS)
+_VALID_DATA_EXTENSIONS = frozenset(READERS)
 
 
 def _warn_if_competition_dataset(dataset_id: str) -> None:

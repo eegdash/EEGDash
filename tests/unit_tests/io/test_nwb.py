@@ -1,4 +1,4 @@
-"""eegdash.dataset.nwb, laid out like the catalogue's NWB files (nm000350, on008610)."""
+"""eegdash.io.nwb, laid out like the catalogue's NWB files (nm000350, on008610)."""
 
 from __future__ import annotations
 
@@ -8,7 +8,7 @@ import pytest
 
 from eegdash.dataset.base import _read_nwb_with_channels_tsv
 from eegdash.dataset.dataset import _VALID_DATA_EXTENSIONS
-from eegdash.dataset.nwb import read_raw_nwb
+from eegdash.io.nwb import read_raw_nwb
 
 
 def _write(path, data, *, conversion=1.0, unit="volts", n_series=1):

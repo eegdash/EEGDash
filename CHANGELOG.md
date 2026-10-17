@@ -11,7 +11,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Requires `mne>=1.13` and `mne_bids>=0.20` (were 1.11 / 0.19). MNE 1.11 has no `read_raw_mef`, so MNE-BIDS left `.mefd` out of its readers and EEGDash silently dropped the 640 MEF3 records; 1.13 also reuses the MEF session across reads (mne-python#14254).
 
 ### Added
-- NWB recordings (`.nwb`, 99 records) load: `eegdash.dataset.nwb.read_raw_nwb`, a lazy reader over h5py meant to move to MNE (mne-python#10427). Channel names, types and bads come from the BIDS `channels.tsv`.
+- NWB recordings (`.nwb`, 99 records) load: `eegdash.io.nwb.read_raw_nwb`, a lazy reader over h5py meant to move to MNE (mne-python#10427). Channel names, types and bads come from the BIDS `channels.tsv`.
+- `eegdash.io`: one table, `READERS`, maps each extension to its reader and tags it `mne`, `tolerant` (MNE's reader plus fixes not yet in a MNE release) or `vendored` (MNE has none; MNE's is used once `mne.io` has it). The client's extension filter (`_VALID_DATA_EXTENSIONS`) and the direct fallback (`_load_raw_direct`) both read it, so the fallback now also covers KIT, BTi, Persyst, Nihon Kohden, EGI, Curry and MEF3. `read_raw_bids` runs under `eegdash.io.tolerant()`, so BIDS reads get the same fixes.
+- Tolerant SNIRF (`eegdash.io.snirf`): files without `TimeUnit`/`SubjectID` and with `LengthUnit="millimeter"`/`dataUnit="dimensionless"` (on007714, on007719), 2-D `landmarkLabels` (ds007463, ds007473), and time-domain channels retyped by MNE-BIDS (`FIFF_UNIT_UNITLESS`, Kernel Flow ds006545).
+- Tolerant EEGLAB (`eegdash.io.eeglab`): v7.3 `chanlocs` fields empty on every channel (on004166; MNE raised `IndexError` or silently dropped every channel name, depending on the hash order of the fields), and events without a `type` (on008496).
 
 ### Fixed
 - Directory recordings (MEF3 `.mefd`, CTF `.ds`) download as S3 prefixes. They were fetched as one object and failed with "Primary data file not found on S3" before any reader ran.

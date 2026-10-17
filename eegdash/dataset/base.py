@@ -35,6 +35,7 @@ from braindecode.datasets.base import RawDataset
 
 from .. import downloader
 from ..const import MODALITY_ALIASES
+from ..io import tolerant
 from ..logging import logger
 from ..schemas import NEMAR_ROOT_METADATA_FILES, validate_record
 from ._source_inference import (
@@ -1385,8 +1386,10 @@ class EEGDashRaw(RawDataset):
         rejects it, retries with a backported function from mne-bids
         PR #1527.  If mne-bids already supports ``task=None`` natively,
         the first call succeeds and no retry is needed.
+
+        Runs under :func:`eegdash.io.tolerant`, the MNE fixes not yet released.
         """
-        with _noop_filelock():
+        with _noop_filelock(), tolerant():
             try:
                 return mne_bids.read_raw_bids(
                     bids_path=self.bidspath,

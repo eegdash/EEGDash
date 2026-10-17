@@ -6,6 +6,7 @@ See ``python 3_digest.py --help``.
 """
 
 import functools
+import hashlib
 import json
 import logging
 import os
@@ -414,6 +415,15 @@ def digest_dataset(
             summary = _summarise_empty_or_error(dataset_id, result)
             return summary
 
+        commit = _source_commit(dataset_dir)
+        fp = result.dataset_meta.get("ingestion_fingerprint")
+        if commit and fp:
+            # The fingerprint hashes recording paths and sizes only, so a release
+            # that changes sidecars alone (nm000238 v1.1.1) looked unchanged and
+            # inject skipped it. The commit covers every file.
+            result.dataset_meta["ingestion_fingerprint"] = hashlib.sha256(
+                f"{fp}|{commit}".encode()
+            ).hexdigest()
         summary = write_dataset_outputs(
             dataset_output_dir,
             result,
@@ -422,7 +432,6 @@ def digest_dataset(
             digested_at=digested_at,
             total_files=result.total_files,
         )
-        commit = _source_commit(dataset_dir)
         if commit:
             summary["source_commit"] = commit
             summary_path = dataset_output_dir / f"{dataset_id}_summary.json"

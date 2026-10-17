@@ -90,6 +90,23 @@ def test_new_commit_is_redigested(cloned: Path, tmp_path: Path):
     assert new == _git(repo, "rev-parse", "HEAD")
 
 
+def test_sidecar_only_change_changes_the_fingerprint(cloned: Path, tmp_path: Path):
+    """Same recordings, new sidecar: inject must see a different fingerprint."""
+    digest = load_digest()
+    out = tmp_path / "out"
+    digest.digest_dataset(DS, cloned, out)
+    fp = lambda: json.loads((out / DS / f"{DS}_dataset.json").read_text())[  # noqa: E731
+        "ingestion_fingerprint"
+    ]
+    before = fp()
+    repo = cloned / DS
+    (repo / "task-x_eeg.json").write_text('{"RecordingDuration": 1}')
+    _git(repo, "add", "-A")
+    _git(repo, "commit", "-q", "-m", "sidecar")
+    digest.digest_dataset(DS, cloned, out)
+    assert fp() != before
+
+
 def test_digest_without_recorded_commit_is_kept(cloned: Path, tmp_path: Path):
     """Digests made before source_commit existed are not redone wholesale."""
     digest = load_digest()

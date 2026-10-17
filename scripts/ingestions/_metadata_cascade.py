@@ -374,6 +374,8 @@ class CascadeResult:
     ch_names: list[str] | None = None
     recording_duration: float | None = None
     duration_seconds: float | None = None
+    # NEMAR records.json ntimes, held back until no exact source produced one.
+    nemar_ntimes: int | None = None
     fif_is_split: bool = False
     fif_continuations_ok: bool = True
     provenance: dict[str, str | None] = field(
@@ -388,11 +390,32 @@ class CascadeResult:
 
 # ntimes sources that are byte-exact (not arithmetic), so ntimes/sfreq is the
 # ground-truth duration and should beat the rounded sidecar RecordingDuration.
-# NEMAR's records.json ntimes is a biosigIO header read (byte-exact), so it
-# joins the local parsers here.
+# NEMAR's records.json ntimes is NOT one: it equals round(sfreq x
+# recording_duration) (nm000242: 2,652,999 at 1000 Hz for 2652.999 s), and
+# 341 of 964 values checked against MNE reads were one sample short.
 _EXACT_NTIMES_SOURCES: frozenset[str] = frozenset(
-    {PROV_BINARY_PARSER, PROV_MNE_FALLBACK, PROV_NEMAR_RECORDS}
+    {PROV_BINARY_PARSER, PROV_MNE_FALLBACK, PROV_REMOTE_HEADER}
 )
+
+
+def correct_arithmetic_ntimes(ntimes: int, sfreq: float, ext: str) -> int:
+    """Undo the sample a ``sfreq x RecordingDuration`` product loses.
+
+    MNE-BIDS writes ``RecordingDuration = raw.times[-1] = (n - 1) / sfreq``, so
+    the product is ``n - 1``. An EDF/BDF holds whole data records (1 s each in
+    practice) and its sidecar duration may also omit the padded last record
+    (nm000160: 772,839 vs 773,000), so round up to whole seconds. Elsewhere add
+    the sample back only when that lands on a whole second (MNE-BIDS wrote a
+    whole-second recording); any other value is kept as is.
+    """
+    whole = round(sfreq)
+    if ntimes <= 0 or whole <= 0 or abs(sfreq - whole) > 1e-6:
+        return ntimes
+    if ext in (".edf", ".bdf"):
+        return -(-ntimes // whole) * whole
+    if ntimes % whole and (ntimes + 1) % whole == 0:
+        return ntimes + 1
+    return ntimes
 
 
 def derive_duration_seconds(result: CascadeResult) -> None:
@@ -460,11 +483,14 @@ class NemarRecordsStep:
         summary = _nemar_records.signal_summary(ctx.dataset_id, ctx.bids_relpath)
         if not summary:
             return
-        for field_name in ("sampling_frequency", "nchans", "ntimes"):
+        for field_name in ("sampling_frequency", "nchans"):
             value = summary.get(field_name)
             if value is not None and getattr(result, field_name) is None:
                 setattr(result, field_name, value)
                 result.stamp(PROV_NEMAR_RECORDS, field_name, None, value)
+        # ntimes is arithmetic (see _EXACT_NTIMES_SOURCES): exact header and
+        # file-size sources must beat it, so SidecarArithmeticStep applies it.
+        result.nemar_ntimes = summary.get("ntimes")
         # recording_duration is not a provenance-tracked field (it feeds
         # derive_duration_seconds), so set it directly without stamping.
         rec_dur = summary.get("recording_duration")
@@ -801,6 +827,10 @@ class SidecarArithmeticStep:
     few samples — and is therefore only used to fill a still-missing ntimes.
     Always records ``recording_duration`` so ``duration_seconds`` can derive from
     the authoritative sidecar value even when ntimes came from an exact source.
+
+    NEMAR's records.json ntimes (held in ``nemar_ntimes``) is the same product
+    computed upstream, so it is applied here too, ahead of the local sidecar.
+    Both go through :func:`correct_arithmetic_ntimes`.
     """
 
     def fill(self, ctx: CascadeContext, result: CascadeResult) -> None:
@@ -808,17 +838,18 @@ class SidecarArithmeticStep:
             result.recording_duration = extract_recording_duration_from_sidecar(
                 ctx.bids_file_path, ctx.bids_root
             )
-        if (
-            result.ntimes is None
-            and result.sampling_frequency
-            and result.recording_duration
-            and result.recording_duration > 0
-        ):
-            nt_before = result.ntimes
-            result.ntimes = round(
-                float(result.sampling_frequency) * float(result.recording_duration)
-            )
-            result.stamp(PROV_SIDECAR_ARITHMETIC, "ntimes", nt_before, result.ntimes)
+        if result.ntimes is not None:
+            return
+        sfreq = float(result.sampling_frequency or 0.0)
+        if result.nemar_ntimes:
+            source, ntimes = PROV_NEMAR_RECORDS, int(result.nemar_ntimes)
+        elif sfreq and result.recording_duration and result.recording_duration > 0:
+            source = PROV_SIDECAR_ARITHMETIC
+            ntimes = round(sfreq * float(result.recording_duration))
+        else:
+            return
+        result.ntimes = correct_arithmetic_ntimes(ntimes, sfreq, ctx.ext)
+        result.stamp(source, "ntimes", None, result.ntimes)
 
 
 # ─── Cascade runner ───────────────────────────────────────────────────────

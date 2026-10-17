@@ -26,7 +26,9 @@ on:
         description: 'Seconds before killing one dataset''s digest worker (large datasets need more)'
         required: false
         type: number
-        default: 120
+        # 7 datasets took longer than 120 s on 2026-10-17 (nm000281 ~190 s, or
+        # ~600 s with its 2,785 BDF header reads; nm000359 over 900 s).
+        default: 1800
     secrets:
       DATASET_LISTINGS_TOKEN:
         required: true

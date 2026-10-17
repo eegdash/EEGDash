@@ -22,6 +22,7 @@ from _metadata_cascade import (
     CascadeContext,
     CascadeResult,
     NemarRecordsStep,
+    SidecarArithmeticStep,
     derive_duration_seconds,
 )
 
@@ -125,16 +126,19 @@ def test_step_seeds_present_fields_with_provenance(
     got = (
         result.sampling_frequency,
         result.nchans,
-        result.ntimes,
+        result.nemar_ntimes,
         result.recording_duration,
     )
     assert got == expected
     # seeded scalars carry NEMAR provenance; null/absent ones stay unstamped.
-    names = ("sampling_frequency", "nchans", "ntimes")
+    names = ("sampling_frequency", "nchans")
     for name, value in zip(names, expected, strict=False):
         assert result.provenance[name] == (
             PROV_NEMAR_RECORDS if value is not None else None
         )
+    # ntimes is held back for SidecarArithmeticStep (it is arithmetic).
+    assert result.ntimes is None
+    assert result.provenance["ntimes"] is None
     assert "recording_duration" not in result.provenance
 
 
@@ -145,24 +149,28 @@ def test_step_passes_ctx_dataset_id_and_relpath(monkeypatch, nm_ctx):
     assert mock.call_args.args == ("nm000132", _REL)
 
 
-def test_step_is_first_writer(monkeypatch, nm_ctx):
-    """An existing value is never overwritten; a NEMAR value survives a later step."""
+def test_step_is_first_writer_but_exact_ntimes_wins(monkeypatch, nm_ctx):
+    """An existing value is never overwritten; a later exact ntimes beats NEMAR's."""
     monkeypatch.setattr(nr, "signal_summary", Mock(return_value=_SS))
 
-    prefilled = CascadeResult(ntimes=111)
+    prefilled = CascadeResult(ntimes=111, nchans=8)
     NemarRecordsStep().fill(nm_ctx, prefilled)
-    assert prefilled.ntimes == 111
+    assert (prefilled.ntimes, prefilled.nchans) == (111, 8)
     assert prefilled.provenance["ntimes"] is None
 
     seeded = CascadeResult()
     NemarRecordsStep().fill(nm_ctx, seeded)
     _later_step_sets_ntimes(nm_ctx, seeded)
-    assert seeded.ntimes == 622592
+    assert seeded.ntimes == 999
 
 
-def test_step_ntimes_is_exact_for_duration(monkeypatch, nm_ctx):
+def test_nemar_ntimes_applied_last_with_provenance(monkeypatch, nm_ctx):
     monkeypatch.setattr(nr, "signal_summary", Mock(return_value=_SS))
     result = CascadeResult()
     NemarRecordsStep().fill(nm_ctx, result)
+    SidecarArithmeticStep().fill(nm_ctx, result)
     derive_duration_seconds(result)
-    assert result.duration_seconds == pytest.approx(622592 / 1024.0)
+    assert result.ntimes == 622592
+    assert result.provenance["ntimes"] == PROV_NEMAR_RECORDS
+    # Not an exact source: the duration is NEMAR's recording_duration.
+    assert result.duration_seconds == pytest.approx(608.0)

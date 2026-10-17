@@ -16,8 +16,8 @@ and limited to a handful of operations (HEAD, GET, LIST), so ``boto3`` covers it
 directly. See https://github.com/eegdash/EEGDash/issues/397.
 """
 
-import re
 import os
+import re
 import threading
 from pathlib import Path
 from typing import Iterable, Sequence

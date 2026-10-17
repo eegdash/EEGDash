@@ -16,6 +16,7 @@ from datetime import date, datetime
 from pathlib import Path, PurePath
 from typing import Any
 
+from _bids_path import _load_neuro_data_extensions
 from eegdash.dataset.bids_dataset import EEGBIDSDataset
 from source_adapter import SourceAdapter
 
@@ -132,17 +133,10 @@ def _has_actual_recording_files(dataset_dir: Path) -> bool:
 
     Symlinks count — git-annex pointers are present from the pipeline's perspective.
     """
-    canonical_exts = {
-        ".set",
-        ".edf",
-        ".bdf",
-        ".vhdr",
-        ".fif",
-        ".cnt",
-        ".snirf",
-        ".mefd",
-        ".nwb",  # BIDS iEEG (MNE-BIDS ALLOWED_DATATYPE_EXTENSIONS); nm000350
-    }
+    # Same table as _bids_path.is_neuro_data_file (MNE-BIDS ALLOWED_DATATYPE_EXTENSIONS),
+    # so the two cannot drift again (.nwb, then KIT .con/.sqd, were missing here).
+    # .pdf is a 4D/BTi MEG extension but also any document; .cnt has a parser.
+    canonical_exts = (_load_neuro_data_extensions() - {".pdf"}) | {".mefd", ".cnt"}
     for entry in dataset_dir.rglob("*"):
         if entry.is_file() or entry.is_symlink():
             if entry.suffix in canonical_exts:

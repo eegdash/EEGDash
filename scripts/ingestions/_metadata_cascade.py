@@ -75,6 +75,7 @@ _MODALITY_SIDECAR_SUFFIXES = (
     "_eeg.json",
     "_ieeg.json",
     "_nirs.json",
+    "_emg.json",
 )
 
 _BIDS_CHANNEL_COUNT_FIELDS: tuple[str, ...] = (

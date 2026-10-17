@@ -94,6 +94,31 @@ __all__ = [
 # CI workers run on 2-16+ vCPUs; cap at 8 matches the prior magic
 # constant for >= 4 vCPU hosts and gives smaller hosts a sensible pool.
 DEFAULT_WORKERS = min(8, max(2, (os.cpu_count() or 2) * 2))
+# A record batch that fails in the parallel pass is re-sent one chunk at a time,
+# each chunk at most this many records and (roughly) this many JSON bytes.
+_RETRY_CHUNK = 100
+_RETRY_CHUNK_BYTES = 4_000_000
+
+
+def _retry_chunks(batch: list) -> list[list]:
+    """Split a failed batch into chunks small enough for the gateway.
+
+    on006545's records are ~250 KB each (24 MB per 100), so a count cap alone
+    still sends bodies the gateway drops.
+    """
+    chunks: list[list] = []
+    current: list = []
+    size = 0
+    for record in batch:
+        n = len(json.dumps(_sanitize_for_json(record), default=str))
+        if current and (len(current) >= _RETRY_CHUNK or size + n > _RETRY_CHUNK_BYTES):
+            chunks.append(current)
+            current, size = [], 0
+        current.append(record)
+        size += n
+    if current:
+        chunks.append(current)
+    return chunks
 
 
 def _sanitize_for_json(obj):
@@ -228,12 +253,27 @@ def inject_records(
             ): idx
             for idx, batch in batches
         }
+        failed = []
         for future in tqdm(
             as_completed(futures, timeout=wall_clock_budget_s),
             total=len(batches),
             desc="Injecting batches",
         ):
             res = future.result(timeout=per_batch_timeout_s)
+            if res["error"]:
+                failed.append(futures[future])
+            else:
+                inserted_count += res["inserted"]
+                updated_count += res["updated"]
+
+    # Under load the gateway drops whole 1000-record batches (2026-10-17: 5,000
+    # of 41,626 records lost in one run). Re-send each failed batch sequentially
+    # in small chunks; only chunks that still fail are reported.
+    for idx in sorted(failed):
+        for chunk in _retry_chunks(batches[idx][1]):
+            res = _bulk_upsert_batch(
+                idx, chunk, url, session, timeout=per_batch_timeout_s
+            )
             if res["error"]:
                 errors.append(res["error"])
             else:
@@ -534,6 +574,9 @@ def main():
                             client=client,
                         )
                         stats["datasets_injected"] += result.get("inserted_count", 0)
+                        for err in result.get("errors", []):
+                            stats["errors"] += 1
+                            errors.append({"dataset": "datasets_batch", "error": err})
                         print(
                             f"  Batch {i // ds_batch_size + 1}: {result.get('inserted_count', 0)} datasets"
                         )
@@ -567,6 +610,10 @@ def main():
                     )
                     stats["records_injected"] += result.get("inserted_count", 0)
                     stats["records_updated"] += result.get("updated_count", 0)
+                    # A lost batch must fail the run, not pass as a success.
+                    for err in result.get("errors", []):
+                        stats["errors"] += 1
+                        errors.append({"dataset": "records_batch", "error": err})
 
                     # Prune only after every batch landed: a failed batch
                     # leaves current records with an older digested_at.

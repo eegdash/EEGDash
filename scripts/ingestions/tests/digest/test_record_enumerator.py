@@ -66,6 +66,12 @@ def _arrange_has_actual_files(tmp_path: Path, case: str) -> None:
         # nm000350: BIDS iEEG stored as NWB (allowed by MNE-BIDS for ieeg)
         (tmp_path / "sub-01" / "ieeg").mkdir(parents=True)
         (tmp_path / "sub-01" / "ieeg" / "sub-01_task-x_ieeg.nwb").write_bytes(b"\x00")
+    elif case == "kit_con":
+        # nm000229: KIT MEG (.con), allowed by MNE-BIDS for meg
+        (tmp_path / "sub-01" / "meg").mkdir(parents=True)
+        (tmp_path / "sub-01" / "meg" / "sub-01_task-x_meg.con").write_bytes(b"\x00")
+    elif case == "pdf_document":
+        (tmp_path / "paper.pdf").write_bytes(b"%PDF")
     elif case == "empty_dir":
         (tmp_path / "sub-01").mkdir()
     elif case == "unrelated_files":
@@ -84,6 +90,10 @@ def _arrange_has_actual_files(tmp_path: Path, case: str) -> None:
             id="test_has_actual_files_detects_symlink_pointer",
         ),
         pytest.param("ieeg_nwb", True, id="test_has_actual_files_detects_ieeg_nwb"),
+        pytest.param("kit_con", True, id="test_has_actual_files_detects_kit_con"),
+        pytest.param(
+            "pdf_document", False, id="test_has_actual_files_ignores_pdf_document"
+        ),
         pytest.param(
             "empty_dir", False, id="test_has_actual_files_returns_false_on_empty_dir"
         ),

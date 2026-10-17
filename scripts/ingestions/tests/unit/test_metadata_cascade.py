@@ -367,4 +367,5 @@ def test_metadata_cascade_default_steps_in_correct_order():
         "MneFallbackStep",
         "RemoteHeaderStep",
         "SidecarArithmeticStep",
+        "RemoteHeaderStep",
     ]

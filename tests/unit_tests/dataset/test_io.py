@@ -4,6 +4,7 @@ from pathlib import Path
 from types import SimpleNamespace
 from unittest.mock import MagicMock, patch
 
+import mne
 import numpy as np
 import pytest
 from scipy.io import loadmat, savemat
@@ -1688,3 +1689,10 @@ def test_repair_channels_tsv_duplicates_preserves_other_columns(tmp_path):
     # Check second data row
     fields = lines[2].split("\t")
     assert fields == ["EEG-1", "EOG", "mV"]
+
+
+def test_read_raw_mef_has_pymef(tmp_path):
+    """MEF3 (.mefd) needs pymef, which mne does not install (on004774)."""
+    # Without pymef this is RuntimeError("... pymef module is needed").
+    with pytest.raises(FileNotFoundError):
+        mne.io.read_raw_mef(tmp_path / "missing.mefd")

@@ -76,4 +76,16 @@ EXCLUDED_DATASETS: set[str] = {
     # records x 425 (35,700, all without nchans/sfreq), which alone pushes
     # the inject nchans gate from 4.9% to 16.4% and blocks every injection.
     "nm000389",
+    # No signal files (checked 2026-10-17): ds002799 (es-fMRI; its ieeg/
+    # folders hold only channels/electrodes .tsv and .json), ds005083 (SEEG
+    # trajectories, .json/.tsv only), ds006253 (behavioural .csv/.pickle) and
+    # nm000150 (nothing outside derivatives/ and sourcedata/).
+    "ds002799",
+    "ds005083",
+    "ds006253",
+    "nm000150",
+    # Deleted on OpenNeuro ("duplicate dataset" / "subject privacy"); the
+    # GitHub mirror is gone and S3 serves nothing.
+    "ds006940",
+    "ds007630",
 }

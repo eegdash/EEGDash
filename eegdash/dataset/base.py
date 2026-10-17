@@ -37,7 +37,11 @@ from .. import downloader
 from ..const import MODALITY_ALIASES
 from ..logging import logger
 from ..schemas import NEMAR_ROOT_METADATA_FILES, validate_record
-from ._source_inference import correct_storage_inplace
+from ._source_inference import (
+    STORAGE_CONFIGS,
+    correct_storage_inplace,
+    openneuro_twin_of,
+)
 from .bids_dataset import _COMPANION_FILES
 from .exceptions import DataIntegrityError, StorageAccessError
 from .io import (
@@ -816,6 +820,8 @@ class EEGDashRaw(RawDataset):
                         self._raw_uri, self.filecache, filesystem=filesystem
                     )
             except FileNotFoundError:
+                if self._reroute_twin_to_nemar():
+                    return self._download_required_files()
                 raw_key = (self.record.get("storage") or {}).get("raw_key", "")
                 if self._storage_backend == "nemar" and self._download_nemar_data_file(
                     raw_key, self.filecache
@@ -855,6 +861,8 @@ class EEGDashRaw(RawDataset):
                         issues=[f"Missing S3 file: {self._raw_uri}"],
                     )
             except PermissionError as exc:
+                if self._reroute_twin_to_nemar():
+                    return self._download_required_files()
                 raw_key = (self.record.get("storage") or {}).get("raw_key", "")
                 if self._storage_backend == "nemar" and self._download_nemar_data_file(
                     raw_key, self.filecache
@@ -932,6 +940,23 @@ class EEGDashRaw(RawDataset):
 
         # Always set filenames (important for local datasets)
         self.filenames = [self.filecache]
+
+    def _reroute_twin_to_nemar(self) -> bool:
+        """Point an ``on*`` record back at NEMAR when its OpenNeuro twin fails.
+
+        ``correct_storage_inplace`` serves ``on*`` from the OpenNeuro twin,
+        which can be deleted, private or renamed (404/403). NEMAR still has it.
+        """
+        dataset_id = self.record.get("dataset", "")
+        if self._storage_backend != "s3" or openneuro_twin_of(dataset_id) is None:
+            return False
+        logger.warning("OpenNeuro twin of %s unavailable; using NEMAR.", dataset_id)
+        self.record["storage"]["backend"] = self._storage_backend = "nemar"
+        self.record["storage"]["base"] = (
+            f"{STORAGE_CONFIGS['nemar']['base']}/{dataset_id}"
+        )
+        self._raw_uri, self._dep_downloads = None, []
+        return True
 
     def _download_nemar_data_file(self, relpath: str, local_path: Path) -> bool:
         """Resolve *relpath* via ``nemar-py`` (data.nemar.org) and stream it.

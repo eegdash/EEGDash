@@ -59,6 +59,9 @@ dependencies = [
   # mne_bids 0.20 maps .mefd to it. Floors = the versions tested.
   "mne>=1.13.0",
   "mne_bids>=0.20.0",
+  # mne.io.read_raw_mef imports it lazily and mne does not depend on it.
+  # Wheels for cp311+ on linux x86_64, macOS universal2 and win_amd64.
+  "pymef",
   # Official NEMAR client: owns dataset-id validation (nm*/on*),
   # manifest fetching, BIDS-path → annex-key mapping, and streaming
   # downloads. eegdash delegates the data.nemar.org safety net to it

@@ -17,6 +17,8 @@ directly. See https://github.com/eegdash/EEGDash/issues/397.
 """
 
 import re
+import os
+import threading
 from pathlib import Path
 from typing import Iterable, Sequence
 
@@ -99,7 +101,12 @@ class S3Client:
                 callback.set_size(length)
 
         lpath = Path(lpath)
-        tmp = lpath.with_name(lpath.name + ".part")
+        # Unique per caller: records of one dataset share sidecars (events.tsv,
+        # electrodes.tsv, coordsystem.json) and download_all fetches them on
+        # threads; a fixed ".part" let one GET truncate another's staging file.
+        tmp = lpath.with_name(
+            f"{lpath.name}.{os.getpid()}.{threading.get_ident()}.part"
+        )
         try:
             with open(tmp, "wb") as fh:
                 for chunk in body.iter_chunks(chunk_size=1024 * 1024):

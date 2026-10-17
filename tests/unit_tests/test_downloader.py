@@ -716,3 +716,58 @@ def test_download_s3_directory_empty_prefix_is_not_found(tmp_path):
             tmp_path / "x",
             filesystem=_PrefixFS({}),
         )
+
+
+class _SlowBody:
+    def __init__(self, data, gate):
+        self.data, self.gate = data, gate
+
+    def iter_chunks(self, chunk_size):
+        half = len(self.data) // 2
+        yield self.data[:half]
+        self.gate.wait(5)  # both GETs are mid-stream at the same time
+        yield self.data[half:]
+
+
+class _SharedSidecarS3:
+    """Two records of a dataset fetch the same sidecar at once (download_all threads)."""
+
+    def __init__(self, data):
+        import threading as _t  # noqa: PLC0415
+
+        self.data, self.gate = data, _t.Barrier(2)
+
+    def get_object(self, Bucket, Key):
+        return {
+            "Body": _SlowBody(self.data, self.gate),
+            "ContentLength": len(self.data),
+        }
+
+
+def _fetch_shared(client, dest, errors):
+    try:
+        downloader.S3Client.get_file(
+            client, "s3://openneuro.org/ds1/sub-01/events.tsv", str(dest)
+        )
+    except BaseException as e:  # noqa: BLE001
+        errors.append(e)
+
+
+def test_get_file_concurrent_same_destination(tmp_path):
+    import threading  # noqa: PLC0415
+
+    data = b"onset\tduration\n" * 4096
+    client = downloader.S3Client.__new__(downloader.S3Client)
+    client._client = _SharedSidecarS3(data)
+    dest, errors = tmp_path / "sub-01_events.tsv", []
+    threads = [
+        threading.Thread(target=_fetch_shared, args=(client, dest, errors))
+        for _ in range(2)
+    ]
+    for t in threads:
+        t.start()
+    for t in threads:
+        t.join(10)
+    assert errors == []
+    assert dest.read_bytes() == data
+    assert not list(tmp_path.glob("*.part"))

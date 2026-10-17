@@ -1646,6 +1646,56 @@ def test_load_raw_projector_type_conflict_retries(tmp_path):
     assert result is mock_raw
 
 
+def test_load_raw_recordingtype_epoched_falls_back_to_direct(tmp_path):
+    """nm000256: sidecar says RecordingType 'epoched' on a continuous BDF."""
+    ds = _make_local_eegdashraw(
+        tmp_path, "nm000256", "sub-01/eeg/sub-01_task-stim02_eeg.bdf", ext=".bdf"
+    )
+
+    mock_raw = MagicMock()
+    with patch(
+        "mne_bids.read_raw_bids",
+        side_effect=RuntimeError(
+            'RecordingType is "epoched"; use mne_bids.read_epochs_bids() '
+            "instead of read_raw_bids()."
+        ),
+    ):
+        with patch(
+            "eegdash.dataset.base._load_raw_direct", return_value=mock_raw
+        ) as mock_direct:
+            result = ds._load_raw()
+
+    mock_direct.assert_called_once_with(ds.filecache)
+    assert result is mock_raw
+
+
+def test_load_raw_recordingtype_epoched_eeglab_trials_concatenated(tmp_path):
+    """ds004771: RecordingType 'epoched' on a .set that holds 445 trials."""
+    ds = _make_local_eegdashraw(
+        tmp_path, "ds004771", "sub-026/eeg/sub-026_task-PY_eeg.set", ext=".set"
+    )
+
+    mock_raw = MagicMock()
+    with (
+        patch(
+            "mne_bids.read_raw_bids",
+            side_effect=RuntimeError('RecordingType is "epoched"; use ...'),
+        ),
+        patch(
+            "eegdash.dataset.base._load_raw_direct",
+            side_effect=TypeError("The number of trials is 445. It must be 1"),
+        ),
+        patch(
+            "eegdash.dataset.base._load_raw_from_eeglab_epochs",
+            return_value=mock_raw,
+        ) as mock_epochs,
+    ):
+        result = ds._load_raw()
+
+    mock_epochs.assert_called_once_with(ds.filecache)
+    assert result is mock_raw
+
+
 # ── AssertionError → hide events.tsv and retry ──
 
 

@@ -303,6 +303,21 @@ def fetch_existing_dataset(
     return payload
 
 
+def fetch_record_count(api_url: str, database: str, dataset_id: str) -> int | None:
+    """Return the live record count of a dataset; None when the API gives no count."""
+    data, response = request_json(
+        "get",
+        f"{api_url}/api/{database}/count",
+        params={"filter": json.dumps({"dataset": dataset_id})},
+        timeout=30,
+        client=get_client(),
+    )
+    if response is None or response.status_code != 200 or not data:
+        return None
+    count = data.get("count")
+    return count if isinstance(count, int) else None
+
+
 def _ensure_fingerprint(dataset_id: str, dataset: dict | None, records: list[dict]):
     """Ensure ingestion_fingerprint is set; honours any fingerprint already stamped by digest stage."""
     if dataset is None:
@@ -342,9 +357,16 @@ def filter_changed_datasets(
         if not existing:
             changed_ids.append(dataset_id)
             continue
+        # A matching fingerprint says the doc is current, not that its
+        # records were written: 37 docs had 0 records under a matching
+        # fingerprint and stayed empty. Re-inject when the counts differ
+        # (only when records were loaded, i.e. not for --only-datasets).
         if existing_fp and current_fp and existing_fp == current_fp:
-            skipped_ids.append(dataset_id)
-            continue
+            if dataset_id not in records_by_id or fetch_record_count(
+                api_url, database, dataset_id
+            ) in (None, len(records)):
+                skipped_ids.append(dataset_id)
+                continue
         changed_ids.append(dataset_id)
 
     return changed_ids, skipped_ids

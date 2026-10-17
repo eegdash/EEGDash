@@ -1025,10 +1025,12 @@ def extract_meg_layout(
             RuntimeError,
             KeyError,
             AttributeError,
+            IndexError,
         ) as direct_exc:
             # MNE raises RuntimeError on unsupported format variant,
             # ValueError on truncated/malformed header, OSError on file
-            # not found / permission, KeyError on missing required field.
+            # not found / permission, KeyError on missing required field,
+            # IndexError on a truncated KIT header (annex pointer, nm000229).
             LOGGER.debug(
                 "[layout.meg] direct read %s failed: %s", data_file, direct_exc
             )

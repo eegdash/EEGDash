@@ -779,3 +779,14 @@ def test_zero_byte_annex_key_falls_back_to_head(tmp_path: Path) -> None:
 
     assert size == 5_000
     mock_head.assert_called_once()
+
+
+def test_meg_layout_of_kit_annex_pointer_is_none(tmp_path: Path) -> None:
+    """nm000229: an unfetched KIT .con is a ~100-byte annex pointer; MNE raises
+    IndexError reading its header. No layout, not a failed dataset."""
+    from _montage import extract_meg_layout  # noqa: PLC0415
+
+    con = tmp_path / "sub-01" / "meg" / "sub-01_task-0_meg.con"
+    con.parent.mkdir(parents=True)
+    con.write_text("/annex/objects/SHA256E-s198211820--" + "0" * 64 + ".con")
+    assert extract_meg_layout(con, tmp_path) is None

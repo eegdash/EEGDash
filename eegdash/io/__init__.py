@@ -15,7 +15,7 @@ from contextlib import ExitStack, contextmanager
 
 import mne
 
-from . import bids, ctf, eeglab, nwb, snirf
+from . import bids, ctf, eeglab, mef, nwb, snirf
 
 # extension: (name in mne.io, eegdash reader, upstream status). The extensions are
 # MNE-BIDS 0.20's ``config.reader`` (lower-cased) plus ``.nwb``; the client keeps
@@ -34,7 +34,7 @@ READERS = {
     ".cnt": ("read_raw_cnt", None, "mne"),
     ".bin": ("read_raw_egi", None, "mne"),
     ".cdt": ("read_raw_curry", None, "mne"),
-    ".mefd": ("read_raw_mef", None, "mne"),  # mne>=1.13, with pymef
+    ".mefd": ("read_raw_mef", mef.read_raw_mef, "tolerant"),  # mef.py
     ".set": ("read_raw_eeglab", eeglab.read_raw_eeglab, "tolerant"),  # eeglab.md
     ".snirf": ("read_raw_snirf", snirf.read_raw_snirf, "tolerant"),  # snirf.md
     ".nwb": ("read_raw_nwb", nwb.read_raw_nwb, "vendored"),  # mne-python#10427
@@ -65,7 +65,7 @@ def tolerant():
     with _lock:
         if _active == 0:
             _stack = ExitStack()
-            for module in (bids, ctf, eeglab, snirf):
+            for module in (bids, ctf, eeglab, mef, snirf):
                 _stack.enter_context(module.fixes())
         _active += 1
     try:

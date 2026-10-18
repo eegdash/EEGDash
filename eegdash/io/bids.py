@@ -14,6 +14,10 @@ main 085e309 as of 2026-10-18); the upstream PRs are still to be written:
   column is kept as ``events_<name>``.
 - A negative events.tsv ``duration`` (on004703: -16.35 s) trips an assertion in
   ``mne.Annotations.crop``; it becomes 0 and a warning is logged.
+- A participants.tsv ``age`` that is not an age in years (nm000149: the year
+  2018) puts the birthday, ``meas_date - age``, before year 1:
+  ``OverflowError``. The birthday is left unset, as MNE-BIDS does when
+  ``meas_date`` is unknown; the other participant fields are kept.
 """
 
 import logging
@@ -27,6 +31,7 @@ from mne_bids import read as _read
 logger = logging.getLogger("eegdash")
 _RESERVED = ("onset", "duration", "description", "ch_names", "hed_string")
 _orig_make_annotation_kwargs = _read._make_annotation_kwargs
+_orig_handle_participants_reading = _read._handle_participants_reading
 
 
 def _make_annotation_kwargs(*args, **kwargs):
@@ -43,6 +48,24 @@ def _make_annotation_kwargs(*args, **kwargs):
     return info, rows
 
 
+def _handle_participants_reading(participants_fname, raw, subject):
+    try:
+        return _orig_handle_participants_reading(participants_fname, raw, subject)
+    except OverflowError:
+        logger.warning(
+            "participants.tsv: the age of %s is not an age in years; birthday unset.",
+            subject,
+        )
+    meas_date = raw.info["meas_date"]
+    with raw.info._unlock():
+        raw.info["meas_date"] = None  # MNE-BIDS then skips the birthday
+    try:
+        return _orig_handle_participants_reading(participants_fname, raw, subject)
+    finally:
+        with raw.info._unlock():
+            raw.info["meas_date"] = meas_date
+
+
 @contextmanager
 def fixes():
     """Patch MNE-BIDS's reader globals while reading."""
@@ -54,5 +77,10 @@ def fixes():
         )
         stack.enter_context(
             mock.patch.object(_read, "_make_annotation_kwargs", _make_annotation_kwargs)
+        )
+        stack.enter_context(
+            mock.patch.object(
+                _read, "_handle_participants_reading", _handle_participants_reading
+            )
         )
         yield

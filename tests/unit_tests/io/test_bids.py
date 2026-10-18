@@ -6,6 +6,7 @@ NEMAR deposits break them. ``mne_bids.read_raw_bids`` fails on each, ours reads 
 
 import json
 import warnings
+from datetime import UTC, datetime
 from unittest.mock import patch
 
 import mne
@@ -21,10 +22,11 @@ CH_TYPES = ["seeg", "seeg", "ecog"]
 RELPATH = "sub-01/ieeg/sub-01_task-trials_ieeg.vhdr"
 
 
-def _write(root, *, sidecar=None, events=None):
+def _write(root, *, sidecar=None, events=None, meas_date=None):
     info = mne.create_info(["LA1", "LA2", "G1"], SFREQ, CH_TYPES)
     data = np.random.default_rng(0).standard_normal((3, int(10 * SFREQ))) * 1e-5
     raw = mne.io.RawArray(data, info)
+    raw.set_meas_date(meas_date)
     raw.info["bads"] = ["LA2"]
     bp = BIDSPath(
         subject="01", task="trials", datatype="ieeg", suffix="ieeg", root=root
@@ -93,6 +95,25 @@ def test_negative_duration_becomes_zero(tmp_path):
         raw = read_raw_bids(bp, verbose="ERROR")
 
     assert list(raw.annotations.duration) == [0.5, 0.0]
+
+
+def test_age_that_is_a_year_leaves_birthday_unset(tmp_path):
+    meas_date = datetime(2019, 1, 1, tzinfo=UTC)
+    bp = _write(tmp_path / "ds", meas_date=meas_date)
+    participants = tmp_path / "ds" / "participants.tsv"
+    participants.write_text(  # nm000149: the age column holds the year 2018
+        "participant_id\tage\tsex\thand\nsub-01\t2018\tF\tR\n"
+    )
+    with pytest.raises(OverflowError, match="date value out of range"):
+        read_raw_bids(bp, verbose="ERROR")
+
+    with tolerant():
+        raw = read_raw_bids(bp, verbose="ERROR")
+
+    assert raw.info["meas_date"] == meas_date
+    assert "birthday" not in raw.info["subject_info"]  # never a made-up date
+    assert raw.info["subject_info"]["sex"] == 2  # the rest of the row is kept
+    assert raw.info["subject_info"]["hand"] == 1
 
 
 def test_eegdashraw_loads_epoched_recording(tmp_path):

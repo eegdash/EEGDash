@@ -3146,3 +3146,57 @@ def test_fresh_nemar_set_retries_only_missing_dependencies(
         restarted._download_required_files()
         resolve.assert_not_called()
         primary.assert_not_called()
+
+
+def test_nemar_directory_recording_fetched_file_by_file(tmp_path, monkeypatch):
+    """CTF .ds on NEMAR: the dir has no pointer, so list it from the git tree."""
+    from eegdash.dataset import base as base_mod  # noqa: PLC0415
+
+    rel = "sub-1/meg/sub-1_meg.ds"
+    tree = (
+        f"{rel}/sub-1_meg.meg4",
+        f"{rel}/sub-1_meg.res4",
+        f"{rel}/params.dsc",
+        "sub-1/meg/sub-1_meg.json",
+    )
+    pointers = {
+        f"{rel}/sub-1_meg.meg4": ("SHA256E-s4--aa.meg4", b""),
+        f"{rel}/sub-1_meg.res4": ("SHA256E-s4--bb.res4", b""),
+        f"{rel}/params.dsc": (None, b"inline"),
+    }
+    monkeypatch.setattr(base_mod, "_nemar_tree", lambda _ds: tree)
+    monkeypatch.setattr(base_mod, "_resolve_nemar_pointer", lambda _ds, p: pointers[p])
+    fetched = []
+
+    def fake_download_files(pairs, **_kw):
+        for uri, dest in pairs:
+            fetched.append(uri)
+            dest.parent.mkdir(parents=True, exist_ok=True)
+            dest.write_bytes(b"data")
+
+    monkeypatch.setattr(base_mod.downloader, "download_files", fake_download_files)
+    record = {
+        "dataset": "on1",
+        "storage": {"backend": "nemar", "base": "s3://nemar/on1", "raw_key": rel},
+    }
+    dest = tmp_path / rel
+
+    raw_uri, _ = base_mod._resolve_nemar_uris(
+        record, raw_dest=dest, dep_keys=[], dep_dests=[]
+    )
+    assert (
+        raw_uri == f"s3://nemar/on1/{rel}"
+    )  # a prefix, no GitHub raw lookup of the dir
+
+    base_mod._download_nemar_directory(record, dest, filesystem=None)
+    assert sorted(p.name for p in dest.iterdir()) == [
+        "params.dsc",
+        "sub-1_meg.meg4",
+        "sub-1_meg.res4",
+    ]
+    assert (dest / "params.dsc").read_bytes() == b"inline"
+    assert sorted(fetched) == [
+        "s3://nemar/on1/objects/SHA256E-s4--aa.meg4",
+        "s3://nemar/on1/objects/SHA256E-s4--bb.res4",
+    ]
+    assert not dest.with_name(dest.name + ".part").exists()

@@ -37,6 +37,7 @@ from braindecode.datasets.base import RawDataset
 from .. import downloader
 from ..const import MODALITY_ALIASES
 from ..io import tolerant
+from ..io.fif import crop_unreadable_tail
 from ..logging import logger
 from ..schemas import NEMAR_ROOT_METADATA_FILES, validate_record
 from ._source_inference import (
@@ -1476,12 +1477,16 @@ class EEGDashRaw(RawDataset):
                     if n > 1:
                         self._raw.get_data(start=n - 1, stop=n)
             except Exception as e:
-                self._raw = None
-                raise DataIntegrityError(
-                    message=f"Data file unreadable: {e}",
-                    record=self.record,
-                    issues=[str(e)],
-                ) from e
+                # A FIF file cut inside its last data buffer: keep what reads.
+                cropped = crop_unreadable_tail(self._raw)
+                if cropped is None:
+                    self._raw = None
+                    raise DataIntegrityError(
+                        message=f"Data file unreadable: {e}",
+                        record=self.record,
+                        issues=[str(e)],
+                    ) from e
+                self._raw = cropped
 
     def _read_raw_bids(self, extra_params: dict | None = None) -> BaseRaw:
         """Call ``mne_bids.read_raw_bids`` with the standard arguments.

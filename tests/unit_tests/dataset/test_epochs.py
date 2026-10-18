@@ -8,7 +8,7 @@ events.tsv epochs) are kept, and concatenates the epochs into ``raw``.
 import json
 import logging
 import warnings
-from unittest.mock import MagicMock, patch
+from unittest.mock import patch
 
 import mne
 import numpy as np
@@ -164,32 +164,6 @@ def test_read_epochs_bids_failure_falls_back_to_direct_reader(tmp_path, caplog):
         "read_epochs_bids failed" in r.getMessage() and "EpochLength" in r.getMessage()
         for r in caplog.records
     )
-
-
-def test_read_epochs_bids_retried_after_sidecar_repair(tmp_path):
-    """A channels.tsv repair that read_raw_bids would get applies here too."""
-    ds = _eegdashraw(tmp_path / "ds-epoched")
-    ds.filecache.parent.mkdir(parents=True)
-    epochs = MagicMock()
-    error = ValueError("Channel names are not unique, found duplicates; renaming")
-    with (
-        patch("mne_bids.read_epochs_bids", side_effect=[error, epochs]) as read,
-        patch(
-            "eegdash.dataset.base._repair_channels_tsv_duplicates", return_value=True
-        ) as repair,
-    ):
-        assert ds._read_epochs_bids_repaired() is epochs
-    repair.assert_called_once_with(ds.filecache.parent)
-    assert read.call_count == 2
-
-
-def test_read_epochs_bids_not_retried_without_matching_repair(tmp_path):
-    ds = _eegdashraw(tmp_path / "ds-epoched")
-    ds.filecache.parent.mkdir(parents=True)
-    with patch("mne_bids.read_epochs_bids", side_effect=RuntimeError("boom")) as read:
-        with pytest.raises(RuntimeError, match="boom"):
-            ds._read_epochs_bids_repaired()
-    assert read.call_count == 1
 
 
 def test_epochs_to_raw_event_offset_and_layout():

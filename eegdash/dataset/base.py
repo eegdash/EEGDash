@@ -2102,80 +2102,6 @@ class EEGDashRaw(RawDataset):
                 bids_path=self.bidspath, verbose="ERROR", on_ch_mismatch="rename"
             )
 
-    def _repair_sidecars_for(self, error: Exception, done: set[str]) -> str | None:
-        """Apply the first sidecar repair that matches ``error`` and changes a file.
-
-        The same repairs :meth:`_load_raw` retries ``read_raw_bids`` after, minus
-        those for one format (CTF, SNIRF, VHDR) or that drop ``events.tsv``,
-        which defines the epochs. Returns the repair's name, or ``None``.
-        """
-        msg = str(error)
-        data_dir = self.filecache.parent
-        repairs = []
-        if "coordsystem.json" in msg or (
-            isinstance(error, KeyError) and "CoordinateSystem" in msg
-        ):
-            electrodes = sorted(data_dir.glob("*_electrodes.tsv"))
-            if electrodes:
-                repairs.append(
-                    (
-                        "coordsystem.json",
-                        lambda: _generate_coordsystem_json(
-                            electrodes[0], datatype=data_dir.name
-                        ),
-                    )
-                )
-        if isinstance(error, UnicodeDecodeError):
-            repairs.append(("TSV encoding", lambda: _repair_tsv_encoding(data_dir)))
-        if isinstance(error, KeyError) and error.args == ("name",):
-            repairs.append(("channels.tsv", lambda: _repair_channels_tsv(data_dir)))
-        if isinstance(error, ValueError) and "not unique" in msg and "renaming" in msg:
-            repairs.append(
-                (
-                    "channels.tsv duplicate names",
-                    lambda: _repair_channels_tsv_duplicates(data_dir),
-                )
-            )
-        if "is not in list" in msg and self.bids_root:
-            repairs.append(
-                (
-                    "participants.tsv ids",
-                    lambda: _repair_participants_tsv_ids(self.bids_root),
-                )
-            )
-        if "second must be" in msg or "does not match format" in msg:
-            repairs.append(
-                ("scans.tsv timestamps", lambda: _repair_scans_tsv_timestamps(data_dir))
-            )
-        if "could not convert string to float" in msg and "n/a" in msg:
-            repairs.append(("TSV n/a", lambda: _repair_tsv_na_whitespace(data_dir)))
-        if "cannot convert float NaN to integer" in msg:
-            repairs.append(
-                ("events.tsv NaN", lambda: _repair_events_tsv_nan_samples(data_dir))
-            )
-        for name, repair in repairs:
-            if name not in done and repair():
-                return name
-        return None
-
-    def _read_epochs_bids_repaired(self):
-        """:meth:`_read_epochs_bids`, retried after each sidecar repair that applies."""
-        done: set[str] = set()
-        while True:
-            try:
-                return self._read_epochs_bids()
-            except Exception as error:
-                repair = self._repair_sidecars_for(error, done)
-                if repair is None:
-                    raise
-                done.add(repair)
-                logger.info(
-                    "read_epochs_bids failed for %s (%s); repaired %s, retrying.",
-                    self.filecache.name,
-                    error,
-                    repair,
-                )
-
     def _load_epoched(self) -> BaseRaw:
         """Load a recording whose sidecar says ``RecordingType: "epoched"``.
 
@@ -2185,7 +2111,9 @@ class EEGDashRaw(RawDataset):
         (an EEGLAB file holding trials is concatenated) and the reason is logged.
         """
         try:
-            epochs = self._read_epochs_bids_repaired()
+            # ponytail: no sidecar-repair retry here; a failure takes the direct
+            # reader below. Add _load_raw's repairs if real datasets need them.
+            epochs = self._read_epochs_bids()
             raw = epochs_to_raw(epochs)
         except Exception as error:
             logger.warning(
@@ -2235,7 +2163,7 @@ class EEGDashRaw(RawDataset):
         if self.raw is None or self._epochs_source is None:
             return None
         if self._epochs is None:
-            self._epochs = self._read_epochs_bids_repaired()
+            self._epochs = self._read_epochs_bids()
         return self._epochs
 
     def _retry_with_generated_coordsystem(self, first_error: Exception) -> BaseRaw:

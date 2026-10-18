@@ -56,9 +56,7 @@ def epochs_to_raw(epochs: mne.BaseEpochs) -> mne.io.RawArray:
     if n_epochs == 0:
         raise ValueError("no epoch to concatenate (all dropped or none in the file)")
     # (epochs, channels, times) -> (channels, epochs * times), epoch after epoch.
-    continuous = np.ascontiguousarray(data.transpose(1, 0, 2)).reshape(
-        n_channels, n_epochs * n_per
-    )
+    continuous = data.transpose(1, 0, 2).reshape(n_channels, n_epochs * n_per)
     del data
     raw = mne.io.RawArray(continuous, epochs.info.copy(), verbose="ERROR")
 

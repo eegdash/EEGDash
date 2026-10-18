@@ -115,6 +115,26 @@ def edf_n_times_from_main_header(buf: bytes, sfreq: float | None) -> int | None:
         return None
 
 
+def edf_n_signals(buf: bytes) -> int | None:
+    """``n_signals`` (@252) from the main header, ``None`` when unparsable."""
+    n = _read_ascii_int(buf, _OFF_N_SIGNALS, _LEN_N_SIGNALS)
+    return n if n and n > 0 else None
+
+
+def edf_data_channel_count(labels: bytes, n_signals: int) -> int | None:
+    """Channels MNE reports: the signal labels minus EDF+/BDF+ annotation signals.
+
+    ``labels`` is the 16-byte-per-signal label block that follows the main header.
+    """
+    if len(labels) < 16 * n_signals:
+        return None
+    names = [
+        labels[16 * i : 16 * i + 16].decode("ascii", "replace").strip()
+        for i in range(n_signals)
+    ]
+    return sum(n not in ("EDF Annotations", "BDF Annotations") for n in names) or None
+
+
 def edf_bytes_per_sample(ext: str) -> int:
     """Bytes per sample for an EDF/BDF extension (``.edf`` → 2, ``.bdf`` → 3).
 

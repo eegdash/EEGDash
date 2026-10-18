@@ -747,10 +747,11 @@ class RemoteHeaderStep:
                 return
         elif mode != "1":
             return  # opt-in only; default OFF keeps snapshots byte-identical
-        if result.ntimes is not None:
+        edf = ctx.ext in (".edf", ".bdf")
+        if result.ntimes is not None and (result.nchans is not None or not edf):
             return
         try:
-            if ctx.ext in (".edf", ".bdf"):
+            if edf:
                 self._fill_edf(ctx, result)
             elif ctx.ext == ".mefd":
                 self._fill_mefd(ctx, result)
@@ -780,10 +781,17 @@ class RemoteHeaderStep:
         n_times = _edf_header.edf_n_times_from_main_header(
             buf, result.sampling_frequency
         )
-        if n_times is not None and n_times > 0:
-            nt_before = result.ntimes
+        if result.ntimes is None and n_times is not None and n_times > 0:
             result.ntimes = int(n_times)
-            result.stamp(PROV_REMOTE_HEADER, "ntimes", nt_before, result.ntimes)
+            result.stamp(PROV_REMOTE_HEADER, "ntimes", None, result.ntimes)
+        # nchans needs the 16-byte labels after the main header (ds005841: no channels.tsv)
+        n_signals = _edf_header.edf_n_signals(buf)
+        if result.nchans is None and n_signals:
+            labels = reader.read(_edf_header.EDF_HEADER_LEN, 16 * n_signals)
+            nchans = _edf_header.edf_data_channel_count(labels or b"", n_signals)
+            if nchans:
+                result.nchans = nchans
+                result.stamp(PROV_REMOTE_HEADER, "nchans", None, nchans)
 
     def _fill_mefd(self, ctx: CascadeContext, result: CascadeResult) -> None:
         # ctx.bids_file_path is the ``.mefd`` directory; the n_times count lives

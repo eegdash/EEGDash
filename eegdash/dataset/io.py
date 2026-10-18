@@ -11,7 +11,7 @@ import os
 import re
 from collections import Counter
 from contextlib import contextmanager
-from functools import partialmethod
+from functools import partial, partialmethod
 from pathlib import Path
 from time import strptime
 from typing import Any
@@ -22,6 +22,7 @@ import pandas as pd
 from dateutil.parser import parse as _dateutil_parse
 from dateutil.parser import parserinfo
 from mne.io.eeglab import _eeglab as mne_eeglab
+from mne_bids.tsv_handler import _from_tsv
 from scipy.io import loadmat
 
 from ..io import READERS, get_reader, tolerant
@@ -138,90 +139,49 @@ def _prepare_writable_path(path: Path) -> bool:
         return False
 
 
-def _ensure_coordsystem_symlink(data_dir: Path) -> None:
-    """Ensure coordsystem.json exists in the data directory using symlinks if needed.
+def _ensure_coordsystem(bids_path) -> None:
+    """Write a coordsystem.json when the deposit has none for a recording's positions.
 
-    MNE-BIDS can be strict about coordsystem.json location. If it's missing
-    in the data directory but present in the subject root, this function
-    creates a symlink. Otherwise it generates a minimal one with the correct
-    datatype-specific keys (EEG vs iEEG vs MEG).
-
-    Parameters
-    ----------
-    data_dir : Path
-        The directory containing the data files (e.g. sub-01/eeg/, sub-01/ieeg/).
-
+    MNE-BIDS reads electrodes.tsv positions only with a coordsystem.json. When
+    the electrodes.tsv it picks for this recording holds positions and no
+    coordsystem.json applies, a minimal one is written next to it (see
+    :func:`_generate_coordsystem_json`). Nothing is written when every
+    coordinate is n/a (ds004944, on004819).
     """
-    if not data_dir.exists():
-        return
-
-    # Infer BIDS datatype from directory name (eeg, ieeg, meg, …)
-    datatype = data_dir.name
+    from ..io.bids import _find_matching_sidecar  # the space-aware lookup
 
     try:
-        # Check if we have electrodes.tsv here (implies need for coordsystem)
-        electrodes_files = list(data_dir.glob("*_electrodes.tsv"))
-        if not electrodes_files:
+        find = partial(_find_matching_sidecar, bids_path, on_error="ignore")
+        if find("coordsystem", ".json") is not None:
             return
-
-        # Check if coordsystem.json exists and has correct keys for the datatype
-        coordsystem_files = list(data_dir.glob("*_coordsystem.json"))
-        if coordsystem_files:
-            prefix = _COORD_PREFIX.get(datatype, "EEG")
-            expected_key = f"{prefix}CoordinateSystem"
-            try:
-                content = json.loads(coordsystem_files[0].read_text(encoding="utf-8"))
-                if expected_key in content:
-                    return  # Valid — nothing to do
-            except Exception:
-                pass
-            # Keys missing/wrong or file unreadable — overwrite with correct keys
-            logger.info(
-                "coordsystem.json has wrong keys for %s datatype, regenerating...",
-                datatype,
-            )
-            _generate_coordsystem_json(electrodes_files[0], datatype=datatype)
-            return
-
-        # Look for coordsystem in parent (subject root)
-        # We assume the data_dir is sub-XX/eeg etc, so parent is sub-XX
-        subject_root = data_dir.parent
-        root_coordsystems = list(subject_root.glob("*_coordsystem.json"))
-
-        if root_coordsystems:
-            src = root_coordsystems[0]
-            # match naming convention if possible, or just use src name
-            dst = data_dir / src.name
-
-            if not dst.exists():
-                # Use relative path for portability
-                rel_target = os.path.relpath(src, dst.parent)
-                try:
-                    # Clean up potential broken symlink (FileExistsError otherwise)
-                    dst.unlink(missing_ok=True)
-                    dst.symlink_to(rel_target)
-                    logger.debug(
-                        "Created coordsystem symlink: %s -> %s", dst, rel_target
-                    )
-                except Exception as e:
-                    logger.warning("Failed to link coordsystem: %s", e)
-        else:
-            # No coordsystem.json found anywhere — generate a minimal one
-            # Infer the coordinate system from the electrodes filename
-            # (e.g. "sub-01_ses-01_space-CapTrak_electrodes.tsv")
-            _generate_coordsystem_json(electrodes_files[0], datatype=datatype)
-
+        electrodes = find("electrodes", ".tsv")
+        if electrodes is not None and _has_positions(electrodes):
+            _generate_coordsystem_json(electrodes, datatype=bids_path.datatype)
     except Exception as e:
-        logger.warning("Error checking coordsystem symlinks: %s", e)
+        logger.warning("Error checking coordsystem.json: %s", e)
+
+
+def _has_positions(electrodes_tsv: Path) -> bool:
+    """Whether a row of electrodes.tsv has numeric x, y, z, not all 0."""
+    columns = _from_tsv(electrodes_tsv)
+    for xyz in zip(*(columns.get(axis, ()) for axis in "xyz")):
+        try:
+            if any(float(v) != 0 for v in xyz):
+                return True
+        except ValueError:  # n/a
+            continue
+    return False
 
 
 def _generate_coordsystem_json(electrodes_tsv: Path, datatype: str = "eeg") -> bool:
     """Generate a minimal coordsystem.json from the electrodes.tsv filename.
 
     BIDS requires coordsystem.json whenever electrodes.tsv exists. Some
-    OpenNeuro datasets omit it. This generates a minimal valid one by
-    extracting the coordinate system from the ``space-<label>`` entity
-    in the electrodes filename.
+    OpenNeuro datasets omit it. This generates a minimal one: the coordinate
+    system is the ``space-<label>`` of the electrodes filename, or ``Other``
+    when the deposit gives none; the units are ``n/a``, for which MNE-BIDS
+    infers the unit from the coordinate magnitudes (< 1 m, < 100 cm, else mm).
+    Nothing is guessed here, and a warning says the file is not the deposit's.
 
     The JSON keys are datatype-specific per BIDS:
 
@@ -262,15 +222,21 @@ def _generate_coordsystem_json(electrodes_tsv: Path, datatype: str = "eeg") -> b
             )
             prefix = "EEG"
 
+        # ponytail: MNE-BIDS reads |coord| < 100 as cm, so a millimetre deposit
+        # with a small extent reads 10x too large; only the deposit can fix it.
         coordsystem_data = {
             f"{prefix}CoordinateSystem": coord_system,
-            f"{prefix}CoordinateUnits": "m",
+            f"{prefix}CoordinateUnits": "n/a",
         }
 
         coordsystem_path.write_text(json.dumps(coordsystem_data, indent=2))
-        logger.info(
-            f"Generated minimal coordsystem.json: {coordsystem_path.name} "
-            f"(datatype={datatype}, system={coord_system})"
+        logger.warning(
+            "%s has no coordsystem.json in the deposit; wrote %s with system %s "
+            "(%s) and units n/a (MNE-BIDS infers them from the magnitudes).",
+            electrodes_tsv.name,
+            coordsystem_path.name,
+            coord_system,
+            "its space- label" if match else "the deposit gives none",
         )
         return True
     except Exception as e:

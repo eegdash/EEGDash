@@ -13,13 +13,15 @@ import json
 import os
 import re
 import time
+from collections.abc import Iterable
 from functools import lru_cache
-from pathlib import Path
+from pathlib import Path, PurePosixPath
 from typing import Any
 
 import pandas as pd
 from mne_bids import BIDSPath, find_matching_paths, get_entities_from_fname
 from mne_bids.config import ALLOWED_DATATYPE_EXTENSIONS, EPHY_ALLOWED_DATATYPES, reader
+from mne_bids.path import _find_best_candidates
 
 # Known companion/sidecar files for specific formats (BIDS spec requirement)
 # These files must be downloaded together with the primary file
@@ -36,6 +38,39 @@ _MODALITY_DIR_ALIASES = {
 }
 
 _TSV_ENCODINGS = ("utf-8", "cp1252", "latin-1")
+
+
+def position_sidecars(bids_relpath: str, relpaths: Iterable[str]) -> list[str]:
+    """Return the electrodes.tsv and coordsystem.json MNE-BIDS weighs for a recording.
+
+    ``relpaths`` are the dataset's files, relative to its root. By BIDS
+    inheritance a sidecar in the recording's folder, or in a parent folder up to
+    the subject's, applies unless one of its entities contradicts the
+    recording's (``sub-01_acq-1min_space-MNI152NLin2009aSym_electrodes.tsv`` for
+    ``sub-01_task-x_acq-1min_ieeg.vhdr``). Of those, MNE-BIDS reads the best
+    match (``_find_best_candidates``); every tie is returned, such as one file
+    per ``space-`` label.
+    """
+    rec = PurePosixPath(bids_relpath)
+    subject = rec.parts[0]
+    if not subject.startswith("sub-"):
+        return []
+    folders = {rec.parents[i] for i in range(len(rec.parts) - 1)}
+    entities = get_entities_from_fname(rec.name, on_error="ignore")
+    relpaths = list(relpaths)
+    found = []
+    # ponytail: dataset-root sidecars (no sub- entity) are not looked for; no
+    # catalogue iEEG deposit has one. MNE-BIDS reads them when no subject one fits.
+    for suffix in ("_electrodes.tsv", "_coordsystem.json"):
+        candidates = sorted(
+            p
+            for p in relpaths
+            if p.endswith(suffix)
+            and PurePosixPath(p).parent in folders
+            and PurePosixPath(p).name.startswith(f"{subject}_")
+        )
+        found += _find_best_candidates(entities, candidates)
+    return found
 
 
 def _read_tsv_column(tsv_path: Path, column: str) -> list[str]:

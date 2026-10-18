@@ -25,6 +25,12 @@ main 085e309 as of 2026-10-18); the upstream PRs are still to be written:
   tried before latin-1. This replaces EEGDash's rewrite of the cached TSV to
   UTF-8, which made every new session download it again.
 
+Several ``space-`` electrodes files matching a recording equally well (nm000485
+``space-Other`` and ``space-Talairach``) make MNE-BIDS read no positions, and
+``BIDSPath(space=)`` would rename the data file too. The electrodes and
+coordsystem lookups then take one space: a named coordinate system before
+``Other``, then alphabetical. Positions are never merged across spaces.
+
 :func:`without_events` reads a recording as if it had no events.tsv, for an
 events file MNE-BIDS cannot turn into annotations. Only reads in the calling
 thread are affected; nothing in the dataset folder is renamed, so other runs
@@ -41,6 +47,7 @@ from unittest import mock
 
 import numpy as np
 from mne_bids import config as _config
+from mne_bids import get_entities_from_fname
 from mne_bids import read as _read
 from mne_bids import tsv_handler as _tsv_handler
 
@@ -89,9 +96,38 @@ def _handle_participants_reading(participants_fname, raw, subject):
 def _find_matching_sidecar(bids_path, suffix=None, extension=None, on_error="raise"):
     if suffix == "events" and _skip_events.get():
         return None  # read_raw_bids then reads no events.tsv / events.json
+    if suffix in ("electrodes", "coordsystem") and bids_path.space is None:
+        bids_path = _pick_space(bids_path, log=suffix == "electrodes")
     return _orig_find_matching_sidecar(
         bids_path, suffix=suffix, extension=extension, on_error=on_error
     )
+
+
+def _electrodes(bids_path):
+    return _orig_find_matching_sidecar(bids_path, "electrodes", ".tsv", "ignore")
+
+
+def _pick_space(bids_path, log=False):
+    """Give ``bids_path`` one ``space`` when its electrodes.tsv is a tie of spaces."""
+    if bids_path.root is None or _electrodes(bids_path) is not None:
+        return bids_path
+    subject_dir = Path(bids_path.root) / f"sub-{bids_path.subject}"
+    spaces = {
+        get_entities_from_fname(p.name)["space"]
+        for p in subject_dir.rglob("*_space-*_electrodes.tsv")
+    }
+    for space in sorted(spaces, key=lambda s: (s == "Other", s)):
+        candidate = bids_path.copy().update(space=space, check=False)
+        if _electrodes(candidate) is not None:
+            if log:
+                logger.warning(
+                    "%s: electrodes.tsv in several spaces (%s); reading space-%s.",
+                    bids_path.basename,
+                    ", ".join(sorted(spaces)),
+                    space,
+                )
+            return candidate
+    return bids_path
 
 
 @contextmanager

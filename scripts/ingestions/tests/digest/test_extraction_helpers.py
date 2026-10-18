@@ -233,6 +233,39 @@ def test_dep_keys_ignores_another_datatype_sidecar(tmp_path: Path):
     assert not [k for k in dep_keys if k.endswith(("_meg.json", "_ieeg.json"))]
 
 
+def test_dep_keys_find_the_position_sidecars_bids_inheritance_applies(tmp_path: Path):
+    """electrodes.tsv / coordsystem.json named without the recording's task/run.
+
+    nm000362 ``sub-031_acq-10min_space-MNI152NLin2009aSym_*``, on007118
+    ``*_task-sleep_acq-A_coordsystem.json`` and on004624's subject-level files
+    were never listed, so EEGDash read no positions for 6,389 iEEG records.
+    """
+    digest = load_digest()
+    sub = tmp_path / "sub-01"
+    ieeg = sub / "ses-01" / "ieeg"
+    ieeg.mkdir(parents=True)
+    record = ieeg / "sub-01_ses-01_task-sleep_acq-A_run-01_ieeg.edf"
+    record.touch()
+    for name in (
+        "ses-01/ieeg/sub-01_ses-01_acq-A_space-MNI152NLin2009aSym_electrodes.tsv",
+        "ses-01/ieeg/sub-01_ses-01_acq-A_space-Talairach_electrodes.tsv",
+        "ses-01/ieeg/sub-01_ses-01_acq-B_space-Talairach_electrodes.tsv",
+        "ses-01/ieeg/sub-01_ses-01_task-sleep_acq-A_coordsystem.json",
+        "sub-01_coordsystem.json",
+    ):
+        (sub / name).write_text("x")
+
+    dep_keys, _, _ = digest._build_dep_keys(
+        record, tmp_path, fif_is_split=False, fif_continuations_ok=True
+    )
+    positions = [k for k in dep_keys if k.endswith(("electrodes.tsv", "system.json"))]
+    assert positions == [
+        "sub-01/ses-01/ieeg/sub-01_ses-01_acq-A_space-MNI152NLin2009aSym_electrodes.tsv",
+        "sub-01/ses-01/ieeg/sub-01_ses-01_acq-A_space-Talairach_electrodes.tsv",
+        "sub-01/ses-01/ieeg/sub-01_ses-01_task-sleep_acq-A_coordsystem.json",
+    ]
+
+
 def test_dep_keys_includes_fdt_companion_for_set_file(tmp_path: Path):
     """.fdt companion for a .set file appears in dep_keys even when absent on disk."""
     digest = load_digest()

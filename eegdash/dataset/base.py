@@ -44,13 +44,13 @@ from ._source_inference import (
     correct_storage_inplace,
     openneuro_twin_of,
 )
-from .bids_dataset import _COMPANION_FILES
+from .bids_dataset import _COMPANION_FILES, position_sidecars
 from .exceptions import DataIntegrityError, StorageAccessError
 from .io import (
     _ANNEX_KEY_RE,
     _convert_time_with_numeric_dash,
     _eeglab_load_first_eeg,
-    _ensure_coordsystem_symlink,
+    _ensure_coordsystem,
     _fix_negative_annotation_durations,
     _generate_coordsystem_json,
     _generate_vhdr_from_metadata,
@@ -998,6 +998,51 @@ class EEGDashRaw(RawDataset):
 
         # Always set filenames (important for local datasets)
         self.filenames = [self.filecache]
+        self._download_position_sidecars()
+
+    def _download_position_sidecars(self) -> None:
+        """Fetch the electrodes.tsv and coordsystem.json MNE-BIDS will look for.
+
+        ``dep_keys`` hold only sidecars named like the recording, so those BIDS
+        inheritance applies were never fetched: ``space-`` files, ``acq-`` or
+        ``task-`` level ones, subject-level ones (6,389 iEEG records with
+        deposited positions read none). They are found in the dataset's file list.
+        """
+        relpath = self.record["bids_relpath"]
+        subject = PurePosixPath(relpath).parts[0]
+        dataset_id = self.record["dataset"]
+        base = ((self.record.get("storage") or {}).get("base") or "").rstrip("/")
+        if self._storage_backend not in ("s3", "nemar") or not base:
+            return
+        try:
+            filesystem = downloader.get_s3_filesystem()
+            if self._storage_backend == "nemar":
+                manifest = _fetch_nemar_manifest(dataset_id)
+                files = (
+                    [f.path for f in manifest.files]
+                    if manifest
+                    else _nemar_tree(dataset_id)
+                )
+            else:
+                key = downloader._split_s3_uri(base)[1]
+                files = [
+                    o["Key"][len(key) + 1 :]
+                    for o in filesystem._iter_objects(f"{base}/{subject}/")
+                ]
+            for sidecar in position_sidecars(relpath, files):
+                dest = self.bids_root / sidecar
+                if dest.exists():
+                    continue
+                if self._storage_backend == "nemar":
+                    self._fetch_nemar_companion(dest, sidecar, filesystem)
+                else:
+                    downloader.download_s3_file(
+                        f"{base}/{sidecar}", dest, filesystem=filesystem
+                    )
+        except Exception as exc:  # positions are optional; the recording reads
+            logger.warning(
+                "Could not fetch the electrode sidecars of %s: %s", relpath, exc
+            )
 
     def _reroute_twin_to_nemar(self) -> bool:
         """Point an ``on*`` record back at NEMAR when its OpenNeuro twin fails.
@@ -1341,9 +1386,8 @@ class EEGDashRaw(RawDataset):
         if self.bids_root and self.bids_root.exists():
             _repair_participants_tsv_ids(self.bids_root)
 
-        # Helper: Fix MNE-BIDS strictness regarding coordsystem.json location
         if self.filecache and self.filecache.parent.exists():
-            _ensure_coordsystem_symlink(self.filecache.parent)
+            _ensure_coordsystem(self.bidspath)
             _repair_channels_tsv(self.filecache.parent)
 
         # Helper: Handle VHDR files - generate if missing, repair if broken

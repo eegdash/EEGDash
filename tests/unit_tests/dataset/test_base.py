@@ -278,6 +278,7 @@ def test_nemar_download_required_files_falls_back_to_data_portal(tmp_path):
         ) as mock_fetch,
         patch("nemar.download_one", side_effect=_ok_download) as mock_download_one,
         patch.object(ds, "_fetch_nemar_root_metadata"),
+        patch.object(ds, "_download_position_sidecars"),
     ):
         ds._download_required_files()
 
@@ -459,11 +460,11 @@ def test_len_error_handling(mock_validate, tmp_path):
 )
 @patch("eegdash.dataset.base.validate_record")
 @patch("eegdash.dataset.base._generate_vhdr_from_metadata")
-@patch("eegdash.dataset.base._ensure_coordsystem_symlink")
+@patch("eegdash.dataset.base._ensure_coordsystem")
 @patch("eegdash.dataset.base.mne_bids")
 def test_ensure_raw_vhdr_handling(
     mock_mne_bids,
-    mock_ensure_symlink,
+    mock_ensure_coordsystem,
     mock_generate_vhdr,
     mock_validate,
     tmp_path,

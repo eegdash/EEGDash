@@ -19,6 +19,7 @@ from eegdash.dataset.io import (
     _eeglab_load_first_eeg,
     _ensure_coordsystem_symlink,
     _find_best_matching_file,
+    _fix_negative_annotation_durations,
     _generate_coordsystem_json,
     _generate_vhdr_from_metadata,
     _generate_vmrk_stub,
@@ -1696,3 +1697,16 @@ def test_read_raw_mef_has_pymef(tmp_path):
     # Without pymef this is RuntimeError("... pymef module is needed").
     with pytest.raises(FileNotFoundError):
         mne.io.read_raw_mef(tmp_path / "missing.mefd")
+
+
+def test_fix_negative_annotation_durations_clamps():
+    """on006923: the patched crop must bind ``self`` (was "'int' has no len()")."""
+    annot = mne.Annotations([0.0, 1.0], [1.0, -0.5], ["a", "b"])
+    orig = mne.Annotations.crop
+    with pytest.raises(AssertionError):
+        annot.copy().crop(0, 10)
+    with _fix_negative_annotation_durations():
+        cropped = annot.crop(0, 10)
+    assert list(cropped.description) == ["a", "b"]
+    np.testing.assert_array_equal(cropped.duration, [1.0, 0.0])
+    assert mne.Annotations.crop is orig  # restored

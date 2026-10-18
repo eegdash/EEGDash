@@ -74,6 +74,8 @@ def _handle_participants_reading(participants_fname, raw, subject):
             raw.info["meas_date"] = meas_date
 
 
+# ponytail: wraps a private MNE-BIDS helper; switch to a read_raw_bids option to
+# skip events.tsv once MNE-BIDS has one (none in 0.20 or on main 085e309).
 def _find_matching_sidecar(bids_path, suffix=None, extension=None, on_error="raise"):
     if suffix == "events" and _skip_events.get():
         return None  # read_raw_bids then reads no events.tsv / events.json

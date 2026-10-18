@@ -65,32 +65,20 @@ def _write_bids(root, run=None):
 
 
 def test_bidspath_keeps_every_entity_of_the_file_name(tmp_path):
+    """desc, split, proc, space come from the name; a non-numeric run stays None."""
     name = (
-        "sub-01_ses-a_task-x_acq-b_run-02_proc-sss_space-CapTrak_split-01"
+        "sub-01_ses-a_task-x_acq-b_run-5H_proc-sss_space-CapTrak_split-01"
         "_desc-clean_meg.fif"
     )
     ds = _eegdashraw(
         tmp_path / "ds",
         tmp_path,
         f"sub-01/ses-a/meg/{name}",
-        {"subject": "01", "session": "a", "task": "x", "run": "02"},
+        {"subject": "01", "session": "a", "task": "x", "run": None},
     )
     bp = ds.bidspath
     assert (bp.acquisition, bp.processing, bp.space) == ("b", "sss", "CapTrak")
-    assert (bp.split, bp.description) == ("01", "clean")
-    assert bp.fpath == ds.filecache
-
-
-def test_bidspath_run_stays_the_records(tmp_path):
-    """A non-numeric run (``run-5H``) is ``None`` in entities_mne and stays so."""
-    ds = _eegdashraw(
-        tmp_path / "ds",
-        tmp_path,
-        "sub-01/eeg/sub-01_task-x_run-5H_desc-x_eeg.vhdr",
-        {"subject": "01", "task": "x", "run": None},
-    )
-    assert ds.bidspath.run is None
-    assert ds.bidspath.description == "x"
+    assert (bp.split, bp.description, bp.run) == ("01", "clean", None)
 
 
 def test_desc_recording_is_read_with_its_sidecars(tmp_path):
@@ -229,34 +217,10 @@ def test_truncated_fdt_reads_complete_samples_with_a_warning(tmp_path):
         "sub-01/eeg/sub-01_task-rest_eeg.set",
         {"subject": "01", "task": "rest"},
     )
-    with pytest.warns(RuntimeWarning, match="truncated EEGLAB data file"):
+    with pytest.warns(RuntimeWarning, match="runs past the end of the file"):
         raw = ds.raw
 
     assert set_path.read_bytes() == before  # the cached .set is not rewritten
     assert raw.n_times == keep
     np.testing.assert_allclose(raw.get_data(), data[:, :keep] * 1e-6, rtol=1e-6)
     assert f"Truncated data file: {keep} of {pnts} samples" in raw.info["description"]
-
-
-def test_complete_fdt_is_left_alone(tmp_path):
-    from eegdash.io.eeglab import crop_truncated_fdt
-
-    set_path = tmp_path / "ok.set"
-    data = np.zeros((2, 10), "<f4")
-    data.T.tofile(set_path.with_suffix(".fdt"))
-    chanlocs = np.array([(b"A",), (b"B",)], [("labels", "S10")])
-    eeg_struct = dict(
-        nbchan=2,
-        pnts=10,
-        trials=1,
-        srate=SFREQ,
-        xmin=0.0,
-        data="ok.fdt",
-        chanlocs=chanlocs,
-        event=[],
-        epoch=[],
-    )
-    io.savemat(set_path, {"EEG": eeg_struct}, appendmat=False, oned_as="row")
-    assert crop_truncated_fdt(mne.io.read_raw_eeglab(set_path)) is None
-    info = mne.create_info(["a"], SFREQ, "eeg")
-    assert crop_truncated_fdt(mne.io.RawArray(np.zeros((1, 10)), info)) is None

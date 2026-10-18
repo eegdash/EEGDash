@@ -1779,7 +1779,7 @@ def _repair_eeglab_fdt(set_path: Path) -> bool:
 
     A ``.fdt`` shorter than the header declares is not hidden here: the
     reader crops to the complete samples and warns
-    (:func:`eegdash.io.eeglab.crop_truncated_fdt`).
+    (:func:`eegdash.io.fif.crop_unreadable_tail`).
 
     Tries ``_eeglab_load_first_eeg`` (scipy / MNE ``_readmat``) first;
     falls back to ``pymatreader`` with ``uint16_codec='latin-1'`` for

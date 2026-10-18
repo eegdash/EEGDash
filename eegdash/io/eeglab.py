@@ -16,15 +16,8 @@ main as of 2026-10-15) and is the diff proposed upstream (``upstream/eeglab.md``
   dropped with a warning, as EEGLAB's ``eeg_checkset`` drops out-of-range
   events.
 
-:func:`crop_truncated_fdt` reads a ``.fdt`` that is shorter than its ``.set``
-declares (ds006554 sub-11: 198,072,000 B = 773,718.75 samples x 64 channels,
-where ``pnts`` is 970,060; the stored object and the annex key have that size).
-MNE takes ``pnts`` from the header and fails on the first read past the end of
-the file. The complete samples are kept with ``Raw.crop`` and a warning that
-gives the loss; nothing is padded.
 """
 
-import os
 from contextlib import ExitStack, contextmanager
 from unittest import mock
 
@@ -107,29 +100,3 @@ def read_raw_eeglab(input_fname, **kwargs):
     """Read an EEGLAB file with :func:`mne.io.read_raw_eeglab` under :func:`fixes`."""
     with fixes():
         return _mne_read_raw_eeglab(input_fname, **kwargs)
-
-
-def crop_truncated_fdt(raw):
-    """Crop an EEGLAB ``raw`` (``preload=False``) to the samples its ``.fdt`` holds.
-
-    The ``.fdt`` stores float32 samples, all channels of one sample together, so
-    a file cut short loses the end of the recording. Returns the cropped raw, or
-    ``None`` when ``raw`` does not read a single ``.fdt`` or the file holds every
-    declared sample (or none).
-    """
-    fnames = [str(f) for f in (getattr(raw, "filenames", None) or []) if f]
-    if len(fnames) != 1 or not fnames[0].lower().endswith(".fdt"):
-        return None
-    size = os.path.getsize(fnames[0])
-    sample_bytes = 4 * raw.info["nchan"]
-    n, keep = raw.n_times, size // sample_bytes
-    if not 0 < keep < n:
-        return None
-    warn(
-        f"{os.path.basename(fnames[0])}: truncated EEGLAB data file. It holds "
-        f"{size} of the {n * sample_bytes} bytes the .set declares"
-        f"{' (cut inside a sample)' if size % sample_bytes else ''}. Reading the "
-        f"first {keep} of {n} samples; the last {(n - keep) / raw.info['sfreq']:.3f} s "
-        "are not in the file."
-    )
-    return raw.crop(tmax=raw.times[keep - 1])

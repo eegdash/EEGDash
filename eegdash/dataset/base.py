@@ -36,7 +36,6 @@ from .. import downloader
 from ..const import MODALITY_ALIASES
 from ..io import tolerant
 from ..io.bids import without_events
-from ..io.eeglab import crop_truncated_fdt
 from ..io.fif import crop_unreadable_tail
 from ..logging import logger
 from ..schemas import NEMAR_ROOT_METADATA_FILES, validate_record
@@ -105,17 +104,6 @@ _SPLIT_FIF_MISSING_RE = re.compile(
 )
 _SPLIT_ENTITY_RE = re.compile(r"_split-(?P<num>\d+)(?=_)")
 _SPLIT_PART_RE = re.compile(r"-(?P<num>\d+)(?=\.fif$)", re.IGNORECASE)
-# BIDSPath entities besides subject/session/task/run, read from the file name
-# when the record lacks them.
-_NAME_ENTITIES = (
-    "acquisition",
-    "processing",
-    "recording",
-    "space",
-    "split",
-    "description",
-    "tracking_system",
-)
 
 # `mne.create_info` rejects unknown channel types (e.g. ``ieeg``, ``fnirs``,
 # ``meg``); BIDS ``datatype`` doesn't always overlap. The lazy
@@ -781,17 +769,17 @@ class EEGDashRaw(RawDataset):
         self.s3file = self._raw_uri
 
         entities_mne = self.record.get("entities_mne") or {}
-        # Records carry subject, session, task, run and acquisition only. The
-        # other entities of the file name (desc, proc, space, recording, split,
-        # tracksys) are taken from it, or MNE-BIDS looks for another file
+        # Records carry sub/ses/task/run/acq only; desc, split, proc, space,
+        # recording come from the file name, or MNE-BIDS looks for another file
         # (on006923 ``*_desc-preprocessed_eeg.set`` -> ``*_eeg.set``). The run
-        # stays the record's: it is ``None`` when the name's run is not a number.
-        from_name = get_entities_from_fname(
+        # stays the record's: ``None`` when the name's run is not a number.
+        entities = get_entities_from_fname(
             PurePosixPath(bids_relpath).name, on_error="ignore"
         )
-        entities = {
-            key: entities_mne.get(key) or from_name.get(key) for key in _NAME_ENTITIES
-        }
+        entities.update(
+            (k, v) for k, v in entities_mne.items() if k in entities and v is not None
+        )
+        entities["run"] = entities_mne.get("run")
 
         self.bidspath = BIDSPath(
             root=self.bids_root,
@@ -802,10 +790,6 @@ class EEGDashRaw(RawDataset):
                 self.record.get("suffix", "eeg"), self.record.get("suffix", "eeg")
             ),
             extension=self.record.get("extension", self.filecache.suffix),
-            subject=entities_mne.get("subject"),
-            session=entities_mne.get("session"),
-            task=entities_mne.get("task"),
-            run=entities_mne.get("run"),
             **entities,
             check=False,
         )
@@ -1454,28 +1438,22 @@ class EEGDashRaw(RawDataset):
                 # .fdt shorter than its .set: keep the samples that are there.
                 cropped = crop_unreadable_tail(self._raw)
                 if cropped is None:
-                    cropped = crop_truncated_fdt(self._raw)
-                if cropped is None:
                     self._raw = None
                     raise DataIntegrityError(
                         message=f"Data file unreadable: {e}",
                         record=self.record,
                         issues=[str(e)],
                     ) from e
+                issue = (
+                    f"Truncated data file: {cropped.n_times} of {n} samples are in "
+                    f"the file; the last {(n - cropped.n_times) / cropped.info['sfreq']:.3f} s are missing."
+                )
+                DataIntegrityError(
+                    issue, record=self.record, issues=[issue]
+                ).log_warning()
+                old = cropped.info["description"]
+                cropped.info["description"] = f"{old}; {issue}" if old else issue
                 self._raw = cropped
-                self._report_truncation(n)
-
-    def _report_truncation(self, n_declared: int) -> None:
-        """Log a data-integrity warning and note it in ``raw.info['description']``."""
-        raw = self._raw
-        issue = (
-            f"Truncated data file: {raw.n_times} of {n_declared} samples "
-            f"({100 * raw.n_times / n_declared:.1f} %) are in the file; the last "
-            f"{(n_declared - raw.n_times) / raw.info['sfreq']:.3f} s are missing."
-        )
-        DataIntegrityError(issue, record=self.record, issues=[issue]).log_warning()
-        old = raw.info["description"]
-        raw.info["description"] = f"{old}; {issue}" if old else issue
 
     def _read_raw_bids(self, extra_params: dict | None = None) -> BaseRaw:
         """Call ``mne_bids.read_raw_bids`` with the standard arguments.

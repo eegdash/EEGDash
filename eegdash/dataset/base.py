@@ -10,6 +10,7 @@ braindecode for machine learning workflows and handles data loading from both lo
 """
 
 import configparser
+import json
 import os
 import re
 import shutil
@@ -44,7 +45,6 @@ from ._source_inference import (
     openneuro_twin_of,
 )
 from .bids_dataset import _COMPANION_FILES
-from .epochs import EPOCHED_ERROR, epochs_to_raw
 from .exceptions import DataIntegrityError, StorageAccessError
 from .io import (
     _ANNEX_KEY_RE,
@@ -357,6 +357,57 @@ def _nemar_fast_paths(storage: dict, relpath: str) -> tuple[str | None, str | No
     )
 
 
+_NEMAR_TREE_URL = (
+    "https://api.github.com/repos/NEMARDatasets/{dataset_id}/git/trees/HEAD?recursive=1"
+)
+_DIRECTORY_SUFFIXES = (".ds", ".mefd")
+
+
+@lru_cache(maxsize=16)
+def _nemar_tree(dataset_id: str) -> tuple[str, ...]:
+    """Every file path in a NEMAR dataset's git repo (one GitHub API call).
+
+    NEMAR's bucket denies ListBucket and GitHub raw cannot list, so directory
+    recordings (CTF ``.ds``, MEF3 ``.mefd``) are enumerated from the git tree.
+    """
+    headers = {"User-Agent": _NEMAR_USER_AGENT}
+    if token := os.environ.get("GITHUB_TOKEN"):
+        headers["Authorization"] = f"Bearer {token}"
+    url = _NEMAR_TREE_URL.format(dataset_id=dataset_id)
+    req = urllib.request.Request(url, headers=headers)
+    with urllib.request.urlopen(req, timeout=_NEMAR_POINTER_TIMEOUT) as resp:
+        tree = json.load(resp)
+    if tree.get("truncated"):
+        raise OSError(f"GitHub truncated the file tree of {dataset_id}")
+    return tuple(e["path"] for e in tree["tree"] if e["type"] == "blob")
+
+
+def _download_nemar_directory(record: dict, dest: Path, filesystem) -> None:
+    """Fetch a NEMAR directory recording file by file, then move it into place.
+
+    Staged in a ``.part`` sibling so ``dest`` only exists once complete.
+    """
+    storage = record["storage"]
+    dataset_id, base = record["dataset"], storage["base"].rstrip("/")
+    prefix = storage["raw_key"].rstrip("/") + "/"
+    tmp = dest.with_name(dest.name + ".part")
+    pairs = []
+    for path in _nemar_tree(dataset_id):
+        if not path.startswith(prefix):
+            continue
+        local = tmp / path[len(prefix) :]
+        annex_key, payload = _resolve_nemar_pointer(dataset_id, path)
+        if annex_key:
+            pairs.append((f"{base}/objects/{annex_key}", local))
+        else:
+            local.parent.mkdir(parents=True, exist_ok=True)
+            local.write_bytes(payload)
+    if not pairs:
+        raise FileNotFoundError(f"{base}/{prefix}")
+    downloader.download_files(pairs, filesystem=filesystem, skip_existing=True)
+    tmp.replace(dest)
+
+
 def _resolve_nemar_uris(
     record: dict, raw_dest: Path, dep_keys: list[str], dep_dests: list[Path]
 ) -> tuple[str | None, list[tuple[str, Path]]]:
@@ -384,7 +435,9 @@ def _resolve_nemar_uris(
         return None, []
 
     raw_uri = None
-    if not raw_dest.exists():
+    if not raw_dest.exists() and raw_dest.suffix.lower() in _DIRECTORY_SUFFIXES:
+        raw_uri = f"{base}/{raw_key}"  # listed and fetched per file at download
+    elif not raw_dest.exists():
         stored_key, stored_sidecar = _nemar_fast_paths(storage, raw_key)
         raw_uri = _resolve_one_nemar_entry(
             dataset_id=dataset_id,
@@ -638,11 +691,6 @@ class EEGDashRaw(RawDataset):
 
     """
 
-    # Set when ``raw`` came from mne_bids.read_epochs_bids (sidecar
-    # ``RecordingType: "epoched"``); class-level so unpickled objects have them.
-    _epochs_source: str | None = None
-    _epochs = None
-
     def __init__(
         self,
         record: dict[str, Any],
@@ -814,14 +862,19 @@ class EEGDashRaw(RawDataset):
             )
 
             try:
-                if self._raw_uri is not None and self.filecache.suffix.lower() in (
-                    ".ds",
-                    ".mefd",
+                if (
+                    self._raw_uri is not None
+                    and self.filecache.suffix.lower() in _DIRECTORY_SUFFIXES
                 ):
                     # a directory recording is an S3 prefix, not one object
-                    downloader.download_s3_directory(
-                        self._raw_uri, self.filecache, filesystem=filesystem
-                    )
+                    if self._storage_backend == "nemar":
+                        _download_nemar_directory(
+                            self.record, self.filecache, filesystem
+                        )
+                    else:
+                        downloader.download_s3_directory(
+                            self._raw_uri, self.filecache, filesystem=filesystem
+                        )
                 elif self._raw_uri is not None:
                     downloader.download_s3_file(
                         self._raw_uri, self.filecache, filesystem=filesystem
@@ -1519,10 +1572,8 @@ class EEGDashRaw(RawDataset):
           retries, then falls back to direct MNE loading if needed.
         - **Split FIF continuations missing locally**: derives the next split
           key, downloads it from remote storage, and retries.
-        - **Sidecar ``RecordingType: epoched``**: read_raw_bids refuses it;
-          reads it with ``mne_bids.read_epochs_bids`` (BIDS sidecars applied,
-          epochs concatenated, see :attr:`epochs`), and only when that fails
-          with the direct MNE reader (EEGLAB trials are concatenated).
+        - **Sidecar ``RecordingType: epoched``**: mne-bids refuses it; falls
+          back to direct MNE reader (EEGLAB trials are concatenated).
         - **Invalid BIDS entity characters** (hyphens in task, etc.):
           falls back to direct MNE reader.
         - **Non-numeric ``run`` entity** (e.g. ``run-5H``): MNE-BIDS rejects
@@ -1577,10 +1628,16 @@ class EEGDashRaw(RawDataset):
 
                 msg = str(first_error)
 
-                # Sidecar says RecordingType "epoched": read_raw_bids refuses
-                # it and points to read_epochs_bids.
-                if EPOCHED_ERROR in msg and self.filecache:
-                    return self._load_epoched()
+                # Sidecar says RecordingType "epoched": mne-bids refuses it,
+                # the direct reader ignores sidecars. EEGLAB files that do hold
+                # trials are concatenated, as in the TypeError branch below.
+                if 'RecordingType is "epoched"' in msg and self.filecache:
+                    try:
+                        return _load_raw_direct(self.filecache)
+                    except TypeError as direct_err:
+                        if "number of trials is" not in str(direct_err):
+                            raise
+                        return _load_raw_from_eeglab_epochs(self.filecache)
 
                 # SNIRF channel mismatch — fall back to direct reader.
                 # mne-bids sometimes fails even with on_ch_mismatch="rename"
@@ -2094,77 +2151,6 @@ class EEGDashRaw(RawDataset):
 
                 # Not a fixable case - re-raise original error
                 raise
-
-    def _read_epochs_bids(self):
-        """Call ``mne_bids.read_epochs_bids`` as :meth:`_read_raw_bids` calls its twin."""
-        with _noop_filelock(), tolerant():
-            return mne_bids.read_epochs_bids(
-                bids_path=self.bidspath, verbose="ERROR", on_ch_mismatch="rename"
-            )
-
-    def _load_epoched(self) -> BaseRaw:
-        """Load a recording whose sidecar says ``RecordingType: "epoched"``.
-
-        ``mne_bids.read_epochs_bids`` reads it with its BIDS sidecars, and
-        :func:`~eegdash.dataset.epochs.epochs_to_raw` concatenates the epochs.
-        When that fails, the direct MNE reader reads the file without sidecars
-        (an EEGLAB file holding trials is concatenated) and the reason is logged.
-        """
-        try:
-            # ponytail: no sidecar-repair retry here; a failure takes the direct
-            # reader below. Add _load_raw's repairs if real datasets need them.
-            epochs = self._read_epochs_bids()
-            raw = epochs_to_raw(epochs)
-        except Exception as error:
-            logger.warning(
-                "%s: sidecar says RecordingType 'epoched' and "
-                "mne_bids.read_epochs_bids failed (%s: %s); falling back to the "
-                "direct reader, without channels.tsv, events.tsv or epochs.",
-                self.filecache.name,
-                type(error).__name__,
-                error,
-            )
-            self._epochs_source = None
-            try:
-                return _load_raw_direct(self.filecache)
-            except TypeError as direct_err:
-                if "number of trials is" not in str(direct_err):
-                    raise
-                return _load_raw_from_eeglab_epochs(self.filecache)
-        logger.info(
-            "%s: read %d epochs of %d samples with mne_bids.read_epochs_bids, "
-            "concatenated (EEGDashRaw.epochs has them as Epochs).",
-            self.filecache.name,
-            len(epochs),
-            len(epochs.times),
-        )
-        self._epochs_source = "read_epochs_bids"
-        self._epochs = None
-        return raw
-
-    @property
-    def epochs(self):
-        """The recording as :class:`mne.Epochs`, for sidecar ``RecordingType: "epoched"``.
-
-        :attr:`raw` holds the same samples, epoch after epoch, with one
-        annotation per epoch (named after its event) and ``BAD boundary`` /
-        ``EDGE boundary`` at the joins. The Epochs are read again with
-        ``mne_bids.read_epochs_bids`` on first access and kept, so a dataset
-        holds the data twice only for the recordings whose epochs are asked for.
-
-        Returns
-        -------
-        mne.Epochs | None
-            ``None`` for continuous recordings, skipped records, and epoched
-            recordings that ``read_epochs_bids`` could not read (then
-            :attr:`raw` comes from the direct reader).
-
-        """
-        if self.raw is None or self._epochs_source is None:
-            return None
-        if self._epochs is None:
-            self._epochs = self._read_epochs_bids()
-        return self._epochs
 
     def _retry_with_generated_coordsystem(self, first_error: Exception) -> BaseRaw:
         """Generate a minimal coordsystem.json on-the-fly and retry loading.

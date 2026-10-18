@@ -5,7 +5,6 @@ import types
 import urllib.error
 from pathlib import Path
 
-import filelock
 import numpy as np
 import pytest
 
@@ -37,7 +36,6 @@ from eegdash.dataset.base import (
     _iter_split_fif_candidates,
     _make_tolerant_get_sample_info,
     _nemar_fast_paths,
-    _noop_filelock,
     _parse_split_fif_missing_path,
     _resolve_nemar_pointer,
     _resolve_nemar_uris,
@@ -437,19 +435,3 @@ def test_clamp_negative_annotation_durations(durations):
         assert raw.annotations.duration.size == 0
     else:
         assert np.all(raw.annotations.duration >= 0)
-
-
-@pytest.mark.parametrize("raise_inside", [False, True], ids=["normal", "exceptional"])
-def test_noop_filelock_restores_original(raise_inside):
-    original = filelock.FileLock
-
-    if raise_inside:
-        with pytest.raises(RuntimeError, match="boom"):
-            with _noop_filelock():
-                assert filelock.FileLock.__name__ == "_dummy_filelock"
-                raise RuntimeError("boom")
-    else:
-        with _noop_filelock():
-            assert filelock.FileLock.__name__ == "_dummy_filelock"
-
-    assert filelock.FileLock is original

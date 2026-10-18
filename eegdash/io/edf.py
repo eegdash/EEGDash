@@ -21,8 +21,7 @@ import re
 from contextlib import contextmanager
 from unittest import mock
 
-from mne.io import read_raw_bdf as _mne_read_raw_bdf
-from mne.io import read_raw_edf as _mne_read_raw_edf
+import mne
 from mne.io.edf import edf as _edf
 from mne.utils import warn
 
@@ -116,10 +115,10 @@ def fixes():
 def read_raw_edf(input_fname, **kwargs):
     """Read an EDF file with :func:`mne.io.read_raw_edf` under :func:`fixes`."""
     with fixes():
-        return _mne_read_raw_edf(input_fname, **kwargs)
+        return mne.io.read_raw_edf(input_fname, **kwargs)
 
 
 def read_raw_bdf(input_fname, **kwargs):
     """Read a BDF file with :func:`mne.io.read_raw_bdf` under :func:`fixes`."""
     with fixes():
-        return _mne_read_raw_bdf(input_fname, **kwargs)
+        return mne.io.read_raw_bdf(input_fname, **kwargs)

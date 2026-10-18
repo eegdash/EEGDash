@@ -83,6 +83,18 @@ def test_reserved_events_column_is_renamed(tmp_path):
     assert raw.annotations.extras[0]["events_description"] == "left hand"
 
 
+def test_negative_duration_becomes_zero(tmp_path):
+    events = "onset\tduration\ttrial_type\n2.0\t0.5\tgo\n9.0\t-1.0\tphoneme\n"
+    bp = _write(tmp_path / "ds", events=events)  # on004703
+    with pytest.raises(AssertionError):
+        read_raw_bids(bp, verbose="ERROR")
+
+    with tolerant():
+        raw = read_raw_bids(bp, verbose="ERROR")
+
+    assert list(raw.annotations.duration) == [0.5, 0.0]
+
+
 def test_eegdashraw_loads_epoched_recording(tmp_path):
     root = tmp_path / "ds-epoched"
     _write(root, sidecar={"RecordingType": "epoched"}, events=EPOCHED_EVENTS)

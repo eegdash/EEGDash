@@ -12,20 +12,29 @@ main 085e309 as of 2026-10-18); the upstream PRs are still to be written:
 - An events.tsv column named after a reserved ``mne.Annotations`` key
   (``description`` in nm000536) makes the extras raise ``ValueError``; the
   column is kept as ``events_<name>``.
+- A negative events.tsv ``duration`` (on004703: -16.35 s) trips an assertion in
+  ``mne.Annotations.crop``; it becomes 0 and a warning is logged.
 """
 
+import logging
 from contextlib import ExitStack, contextmanager
 from unittest import mock
 
+import numpy as np
 from mne_bids import config as _config
 from mne_bids import read as _read
 
+logger = logging.getLogger("eegdash")
 _RESERVED = ("onset", "duration", "description", "ch_names", "hed_string")
 _orig_make_annotation_kwargs = _read._make_annotation_kwargs
 
 
 def _make_annotation_kwargs(*args, **kwargs):
     info, rows = _orig_make_annotation_kwargs(*args, **kwargs)
+    negative = info["duration"] < 0
+    if negative.any():
+        logger.warning("events.tsv: %d negative duration(s) set to 0.", negative.sum())
+        info["duration"] = np.where(negative, 0.0, info["duration"])
     if info.get("extras"):
         info["extras"] = [
             {f"events_{k}" if k in _RESERVED else k: v for k, v in extra.items()}

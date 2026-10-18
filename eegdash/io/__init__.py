@@ -5,6 +5,8 @@
   are not in a MNE release yet (PR drafts: ``eegdash-io-2026-10-17/upstream/``).
 - ``"vendored"``: MNE has no reader; ours is written to move to ``mne/io/<fmt>/``.
   MNE's is used as soon as ``mne.io`` has it.
+- ``"options"``: MNE's reader, called with options EEGDash computes per file
+  (``brainvision.py``: ``overrides=``, MNE 1.13). Nothing to upstream.
 
 Delete an eegdash module once the MNE release with its fix is the floor in
 ``pyproject.toml``.
@@ -15,7 +17,7 @@ from contextlib import ExitStack, contextmanager
 
 import mne
 
-from . import bids, ctf, edf, eeglab, mef, nwb, snirf
+from . import bids, brainvision, ctf, edf, eeglab, mef, nwb, snirf
 
 # extension: (name in mne.io, eegdash reader, upstream status). The extensions are
 # MNE-BIDS 0.20's ``config.reader`` (lower-cased) plus ``.nwb``; the client keeps
@@ -26,7 +28,7 @@ READERS = {
     ".fif": ("read_raw_fif", None, "mne"),
     ".pdf": ("read_raw_bti", None, "mne"),
     ".ds": ("read_raw_ctf", ctf.read_raw_ctf, "tolerant"),  # ctf.py
-    ".vhdr": ("read_raw_brainvision", None, "mne"),
+    ".vhdr": ("read_raw_brainvision", brainvision.read_raw_brainvision, "options"),
     ".edf": ("read_raw_edf", edf.read_raw_edf, "tolerant"),  # edf.py
     ".bdf": ("read_raw_bdf", edf.read_raw_bdf, "tolerant"),  # edf.py
     ".lay": ("read_raw_persyst", None, "mne"),
@@ -44,7 +46,7 @@ READERS = {
 def get_reader(ext):
     """Return the reader for ``ext`` (lower-case, with the dot)."""
     name, ours, status = READERS[ext]
-    return ours if status == "tolerant" else getattr(mne.io, name, ours)
+    return ours if status in ("tolerant", "options") else getattr(mne.io, name, ours)
 
 
 _lock = threading.Lock()

@@ -453,47 +453,27 @@ def test_len_error_handling(mock_validate, tmp_path):
 
 
 @pytest.mark.parametrize(
-    "create_vhdr,create_vmrk,expect_repair,expect_generate_vhdr,expect_generate_vmrk",
-    [
-        (True, True, True, False, False),  # VHDR+VMRK exist: repair only
-        (
-            True,
-            False,
-            True,
-            False,
-            True,
-        ),  # VHDR exists, VMRK missing: repair + generate vmrk
-        (
-            False,
-            False,
-            False,
-            True,
-            True,
-        ),  # VHDR missing: generate vhdr + vmrk stub (mock doesn't create files)
-    ],
+    "create_vhdr,create_vmrk,expect_generate_vhdr",
+    [(True, True, False), (True, False, False), (False, False, True)],
     ids=["vhdr_exists", "vmrk_missing", "vhdr_missing"],
 )
 @patch("eegdash.dataset.base.validate_record")
-@patch("eegdash.dataset.base._generate_vmrk_stub")
 @patch("eegdash.dataset.base._generate_vhdr_from_metadata")
-@patch("eegdash.dataset.base._repair_vhdr_pointers")
 @patch("eegdash.dataset.base._ensure_coordsystem_symlink")
 @patch("eegdash.dataset.base.mne_bids")
 def test_ensure_raw_vhdr_handling(
     mock_mne_bids,
     mock_ensure_symlink,
-    mock_repair,
     mock_generate_vhdr,
-    mock_generate_vmrk,
     mock_validate,
     tmp_path,
     create_vhdr,
     create_vmrk,
-    expect_repair,
     expect_generate_vhdr,
-    expect_generate_vmrk,
 ):
-    """Test _ensure_raw handles VHDR/VMRK generation and repair correctly."""
+    """_ensure_raw generates a missing VHDR only; it never rewrites the header or
+    writes a stub VMRK (stale pointers are read-time overrides).
+    """
     from eegdash.dataset.base import EEGDashRaw
 
     mock_validate.return_value = None
@@ -513,12 +493,12 @@ def test_ensure_raw_vhdr_handling(
         },
     }
 
+    vhdr = eeg_dir / "sub-01_task-rest_eeg.vhdr"
     if create_vhdr:
-        (eeg_dir / "sub-01_task-rest_eeg.vhdr").write_text(
-            "[Common Infos]\nDataFile=sub-01_task-rest_eeg.eeg\n"
-        )
+        vhdr.write_text("[Common Infos]\nDataFile=OLD_NAME.eeg\n")
     if create_vmrk:
         (eeg_dir / "sub-01_task-rest_eeg.vmrk").touch()
+    before = {p.name: p.read_bytes() for p in eeg_dir.iterdir()}
 
     dataset = EEGDashRaw(record, cache_dir=str(tmp_path))
     mock_raw = MagicMock()
@@ -526,9 +506,8 @@ def test_ensure_raw_vhdr_handling(
     dataset._load_raw = MagicMock(return_value=mock_raw)
     dataset._ensure_raw()
 
-    assert mock_repair.called == expect_repair
     assert mock_generate_vhdr.called == expect_generate_vhdr
-    assert mock_generate_vmrk.called == expect_generate_vmrk
+    assert {p.name: p.read_bytes() for p in eeg_dir.iterdir()} == before
 
 
 def test_eegdashraw_backend_logic(tmp_path):
@@ -1994,50 +1973,21 @@ def test_load_raw_ctf_trial_size_mismatch_fallback_fails(tmp_path):
 # ── configparser.NoOptionError (missing MarkerFile) → repair + retry ──
 
 
-def test_load_raw_no_option_error_markerfile_repairs_and_retries(tmp_path):
-    """configparser.NoOptionError for markerfile triggers VHDR repair then retry."""
-    import configparser
-
+def test_read_raw_bids_passes_brainvision_overrides(tmp_path):
+    """A stale DataFile= reaches read_raw_bids as extra_params["overrides"]."""
     ds = _make_local_eegdashraw(
         tmp_path, "ds003944", "sub-01/eeg/sub-01_task-rest_eeg.vhdr", ext=".vhdr"
     )
-
-    mock_raw = MagicMock()
-    call_count = 0
-
-    def side_effect(**kwargs):
-        nonlocal call_count
-        call_count += 1
-        if call_count == 1:
-            raise configparser.NoOptionError("markerfile", "Common Infos")
-        return mock_raw
-
-    with patch("mne_bids.read_raw_bids", side_effect=side_effect):
-        with patch(
-            "eegdash.dataset.base._repair_vhdr_missing_markerfile", return_value=True
-        ) as mock_repair:
-            result = ds._load_raw()
-
-    mock_repair.assert_called_once_with(ds.filecache)
-    assert result is mock_raw
-    assert call_count == 2
-
-
-def test_load_raw_no_option_error_repair_fails_reraises(tmp_path):
-    """configparser.NoOptionError when repair returns False → re-raises."""
-    import configparser
-
-    ds = _make_local_eegdashraw(
-        tmp_path, "ds003944", "sub-01/eeg/sub-01_task-rest_eeg.vhdr", ext=".vhdr"
-    )
-
-    error = configparser.NoOptionError("markerfile", "Common Infos")
-    with patch("mne_bids.read_raw_bids", side_effect=error):
-        with patch(
-            "eegdash.dataset.base._repair_vhdr_missing_markerfile", return_value=False
-        ):
-            with pytest.raises(configparser.NoOptionError):
-                ds._load_raw()
+    ds.filecache.parent.mkdir(parents=True, exist_ok=True)
+    ds.filecache.write_text("[Common Infos]\nDataFile=OLD_NAME.eeg\n")
+    ds.filecache.with_suffix(".eeg").touch()
+    with patch("mne_bids.read_raw_bids", return_value=MagicMock()) as mock_read:
+        ds._read_raw_bids(extra_params={"overrides": {"sfreq": 500.0}})
+    extra = mock_read.call_args.kwargs["extra_params"]
+    assert extra["overrides"] == {
+        "data_fname": "sub-01_task-rest_eeg.eeg",
+        "sfreq": 500.0,
+    }
 
 
 def test_load_raw_no_option_error_non_markerfile_reraises(tmp_path):
@@ -2054,47 +2004,20 @@ def test_load_raw_no_option_error_non_markerfile_reraises(tmp_path):
             ds._load_raw()
 
 
-# ── UnicodeDecodeError → repair TSV encoding + retry ──
+# ── UnicodeDecodeError: no TSV rewrite, no retry ──
 
 
-def test_load_raw_unicode_decode_error_repairs_encoding(tmp_path):
-    """UnicodeDecodeError triggers TSV encoding repair then retry."""
-    ds = _make_local_eegdashraw(
-        tmp_path, "ds005692", "sub-01/eeg/sub-01_task-rest_eeg.edf"
-    )
-
-    mock_raw = MagicMock()
-    call_count = 0
-
-    def side_effect(**kwargs):
-        nonlocal call_count
-        call_count += 1
-        if call_count == 1:
-            raise UnicodeDecodeError("utf-8", b"\xb5", 0, 1, "invalid start byte")
-        return mock_raw
-
-    with patch("mne_bids.read_raw_bids", side_effect=side_effect):
-        with patch(
-            "eegdash.dataset.base._repair_tsv_encoding", return_value=True
-        ) as mock_repair:
-            result = ds._load_raw()
-
-    mock_repair.assert_called_once_with(ds.filecache.parent)
-    assert result is mock_raw
-    assert call_count == 2
-
-
-def test_load_raw_unicode_decode_error_repair_fails_reraises(tmp_path):
-    """UnicodeDecodeError when encoding repair returns False → re-raises."""
+def test_load_raw_unicode_decode_error_is_not_retried(tmp_path):
+    """No TSV is re-encoded on disk: tolerant() reads TSVs in their own encoding."""
     ds = _make_local_eegdashraw(
         tmp_path, "ds005692", "sub-01/eeg/sub-01_task-rest_eeg.edf"
     )
 
     error = UnicodeDecodeError("utf-8", b"\xb5", 0, 1, "invalid start byte")
-    with patch("mne_bids.read_raw_bids", side_effect=error):
-        with patch("eegdash.dataset.base._repair_tsv_encoding", return_value=False):
-            with pytest.raises(UnicodeDecodeError):
-                ds._load_raw()
+    with patch("mne_bids.read_raw_bids", side_effect=error) as mock_read:
+        with pytest.raises(UnicodeDecodeError):
+            ds._load_raw()
+    assert mock_read.call_count == 1
 
 
 # ── scans.tsv path mismatch → direct reader fallback ──

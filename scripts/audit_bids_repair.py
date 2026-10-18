@@ -26,21 +26,15 @@ from eegdash import EEGDash
 
 # The repair functions still in eegdash and their categories. MNE-BIDS 0.20
 # covers the TSV decimal-comma, n/a padding, NaN-onset, scans acq_time and
-# duplicate-channel repairs that used to be listed here.
+# duplicate-channel repairs that used to be listed here. Stale BrainVision
+# pointers, the EEGLAB data file (own or truncated .fdt) and non-UTF-8 TSVs are
+# handled at read time without a repair (eegdash.io.brainvision, .eeglab, .bids).
 REPAIR_CATEGORIES = {
-    "File pointers": [
-        "_repair_vhdr_pointers",
-        "_repair_vhdr_missing_markerfile",
-    ],
-    "Metadata": [
-        "_repair_tsv_encoding",
-    ],
     "Structural": [
         "_repair_channels_tsv",
         "_repair_participants_tsv_ids",
     ],
     "Format-specific": [
-        "_repair_eeglab_fdt",
         "_repair_snirf_bids_metadata",
     ],
 }

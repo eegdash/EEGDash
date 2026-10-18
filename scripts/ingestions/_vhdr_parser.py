@@ -31,7 +31,7 @@ _project_root = Path(__file__).parent.parent.parent
 if str(_project_root) not in sys.path:
     sys.path.insert(0, str(_project_root))
 
-from eegdash.dataset.io import _find_best_matching_file
+from eegdash.io.brainvision import _find_best_matching_file
 
 logger = logging.getLogger(__name__)
 

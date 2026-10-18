@@ -76,6 +76,8 @@ from typing import Any
 import numpy as np
 import pandas as pd
 
+from eegdash.dataset.bids_dataset import glob_dir
+
 try:
     import mne
 except ImportError:  # pragma: no cover - optional dependency
@@ -161,7 +163,7 @@ def _walk_up_find(
     if not str(current).startswith(str(root)):
         return None
     while True:
-        matches = sorted(current.glob(pattern))
+        matches = glob_dir(current, pattern)
         if matches:
             return matches[0]
         if current == root:

@@ -90,9 +90,9 @@ def test_keeps_a_value_another_source_gave(monkeypatch, tmp_path):
     monkeypatch.setattr(
         mc._remote_header, "RangeReader", Mock(side_effect=AssertionError("fetched"))
     )
-    result = CascadeResult(sampling_frequency=2000.0, ntimes=1000)
+    result = CascadeResult(sampling_frequency=2000.0, ntimes=1000, nchans=36)
     RemoteHeaderStep(last_resort=True).fill(_nemar_bdf(tmp_path), result)
-    assert result.ntimes == 1000
+    assert (result.ntimes, result.nchans) == (1000, 36)
 
 
 @pytest.mark.parametrize("mode", [None, "0", "1"])
@@ -131,3 +131,21 @@ def test_digest_workflow_enables_missing_mode():
     step = text[text.index("- name: Digest datasets") :]
     step = step[: step.index("- name:", 1)]
     assert "EEGDASH_REMOTE_HEADERS: missing" in step
+
+
+def test_fills_nchans_from_labels_without_annotations(monkeypatch, tmp_path):
+    """ds005841 has ntimes now but no nchans: count labels, minus the annotation signal."""
+    monkeypatch.setenv("EEGDASH_REMOTE_HEADERS", "missing")
+    labels = b"".join(
+        f"{n:<16}".encode() for n in [f"E{i}" for i in range(36)] + ["BDF Annotations"]
+    )
+    reader = Mock()
+    reader.read.side_effect = lambda off, n: (
+        _bdf_main_header(90) if off == 0 else labels[:n]
+    )
+    monkeypatch.setattr(mc._remote_header, "RangeReader", lambda url, **_k: reader)
+    rel = "sub-021/eeg/sub-021_task-signalvr_eeg.bdf"
+    result = CascadeResult(sampling_frequency=512.0, ntimes=46080)
+    RemoteHeaderStep(last_resort=True).fill(_ctx(tmp_path / "ds005841", rel), result)
+    assert (result.ntimes, result.nchans) == (46080, 36)
+    assert result.provenance["nchans"] == PROV_REMOTE_HEADER

@@ -431,7 +431,7 @@ def _download_nemar_directory(
         if not pairs:
             raise FileNotFoundError(f"{base}/{prefix}")
         downloader.download_files(pairs, filesystem=filesystem, skip_existing=True)
-        if dest.is_dir():  # replacing an incomplete copy; a peer may have moved it
+        if replace and dest.is_dir():  # set the incomplete copy aside
             try:
                 dest.rename(stale)
             except FileNotFoundError:

@@ -8,9 +8,12 @@ This module provides the EEGBIDSDataset class for interfacing with local BIDS
 datasets on the filesystem, parsing metadata, and retrieving BIDS-related information.
 """
 
+import fnmatch
 import json
 import os
 import re
+import time
+from functools import lru_cache
 from pathlib import Path
 from typing import Any
 
@@ -63,6 +66,35 @@ def _read_participants_tsv(tsv_path: Path) -> pd.DataFrame | None:
         return None
     df.set_index("participant_id", inplace=True)
     return df
+
+
+_RACY_NS = 2_000_000_000
+
+
+@lru_cache(maxsize=256)
+def _dir_names(path: str, mtime_ns: int) -> tuple[str, ...]:
+    return tuple(sorted(os.listdir(path)))
+
+
+def glob_dir(directory: Path, pattern: str) -> list[Path]:
+    """``directory.glob(pattern)`` (one level, sorted) from a cached listing.
+
+    Per-recording sidecar lookups re-list the same directory; with 22,507 files
+    in one folder (nm000359) that is quadratic. The listing is keyed on the
+    directory's mtime, so adding or removing a file invalidates it.
+    """
+    try:
+        mtime_ns = os.stat(directory).st_mtime_ns
+    except OSError:
+        return []
+    if time.time_ns() - mtime_ns < _RACY_NS:
+        # ponytail: "racy git" rule. A file added within the filesystem's mtime
+        # granularity (1 s on some) may not change mtime, so a just-modified
+        # directory is listed fresh; only settled directories are cached.
+        names = tuple(sorted(os.listdir(directory)))
+    else:
+        names = _dir_names(str(directory), mtime_ns)
+    return [directory / n for n in fnmatch.filter(names, pattern)]
 
 
 class EEGBIDSDataset:
@@ -352,7 +384,7 @@ class EEGBIDSDataset:
                 # Look for BIDS-specific JSON files (e.g., "sub-001_task-rest_eeg.json")
                 # Match files ending with the json_filename pattern
                 suffix_key = f"_{json_filename.split('.')[0]}"
-                for json_file in current_dir.glob(f"*_{json_filename}"):
+                for json_file in glob_dir(current_dir, f"*_{json_filename}"):
                     # Check if this JSON corresponds to the data file
                     data_basename = Path(data_filepath).stem
                     json_basename = json_file.stem
@@ -581,7 +613,7 @@ class EEGBIDSDataset:
         filepath = Path(data_filepath)
         channels_tsv_path = filepath.parent / "channels.tsv"
         if not channels_tsv_path.exists():
-            for tsv_file in filepath.parent.glob("*_channels.tsv"):
+            for tsv_file in glob_dir(filepath.parent, "*_channels.tsv"):
                 prefix = tsv_file.stem.replace("_channels", "").lower()
                 if filepath.stem.lower().startswith(prefix):
                     return tsv_file

@@ -321,6 +321,11 @@ def _fetch_nemar_manifest(dataset_id: str):
         return None
 
 
+# git-annex keeps no extension in the key of a file without one, or with one
+# longer than annex.maxextensionlength (4): CTF ``BadChannels``, ``.infods``.
+_ANNEX_BARE_KEY_RE = re.compile(r"^(SHA256E?|MD5E?)-s\d+--[0-9a-f]+$", re.IGNORECASE)
+
+
 @lru_cache(maxsize=4096)
 def _resolve_nemar_pointer(dataset_id: str, relpath: str) -> tuple[str | None, bytes]:
     """Return ``(annex_key, raw_bytes)`` for a NEMAR-tracked file.
@@ -339,7 +344,7 @@ def _resolve_nemar_pointer(dataset_id: str, relpath: str) -> tuple[str | None, b
     if "/annex/objects/" not in text:
         return None, raw
     candidate = text.rsplit("/", 1)[-1]
-    if _ANNEX_KEY_RE.match(candidate):
+    if _ANNEX_KEY_RE.match(candidate) or _ANNEX_BARE_KEY_RE.match(candidate):
         return candidate, raw
     return None, raw
 
@@ -382,30 +387,64 @@ def _nemar_tree(dataset_id: str) -> tuple[str, ...]:
     return tuple(e["path"] for e in tree["tree"] if e["type"] == "blob")
 
 
-def _download_nemar_directory(record: dict, dest: Path, filesystem) -> None:
+def _holds_annex_pointer(directory: Path) -> bool:
+    """Whether a file under *directory* is a git-annex pointer, not content.
+
+    Older eegdash wrote the pointer text of extension-less annex keys (CTF
+    ``BadChannels``, ``.infods``) as the file, and MNE then reads it as data.
+    """
+    return any(
+        p.is_file() and p.stat().st_size < 512 and b"/annex/objects/" in p.read_bytes()
+        for p in directory.rglob("*")
+    )
+
+
+def _download_nemar_directory(
+    record: dict, dest: Path, filesystem, *, replace: bool = False
+) -> None:
     """Fetch a NEMAR directory recording file by file, then move it into place.
 
-    Staged in a ``.part`` sibling so ``dest`` only exists once complete.
+    Staged in a caller-unique sibling and renamed, so ``dest`` only appears
+    complete and an existing ``dest`` is kept unless *replace* is set.
+    Concurrent callers (threads, or two jobs sharing a cache such as ds005279
+    and on005279) never share a staging folder.
     """
+    if dest.is_dir() and not replace:
+        return
     storage = record["storage"]
     dataset_id, base = record["dataset"], storage["base"].rstrip("/")
     prefix = storage["raw_key"].rstrip("/") + "/"
-    tmp = dest.with_name(dest.name + ".part")
-    pairs = []
-    for path in _nemar_tree(dataset_id):
-        if not path.startswith(prefix):
-            continue
-        local = tmp / path[len(prefix) :]
-        annex_key, payload = _resolve_nemar_pointer(dataset_id, path)
-        if annex_key:
-            pairs.append((f"{base}/objects/{annex_key}", local))
-        else:
-            local.parent.mkdir(parents=True, exist_ok=True)
-            local.write_bytes(payload)
-    if not pairs:
-        raise FileNotFoundError(f"{base}/{prefix}")
-    downloader.download_files(pairs, filesystem=filesystem, skip_existing=True)
-    tmp.replace(dest)
+    tmp = dest.with_name(f"{dest.name}.{uuid.uuid4().hex}.part")
+    stale = dest.with_name(f"{dest.name}.{uuid.uuid4().hex}.stale")
+    try:
+        pairs = []
+        for path in _nemar_tree(dataset_id):
+            if not path.startswith(prefix):
+                continue
+            local = tmp / path[len(prefix) :]
+            annex_key, payload = _resolve_nemar_pointer(dataset_id, path)
+            if annex_key:
+                pairs.append((f"{base}/objects/{annex_key}", local))
+            else:
+                local.parent.mkdir(parents=True, exist_ok=True)
+                local.write_bytes(payload)
+        if not pairs:
+            raise FileNotFoundError(f"{base}/{prefix}")
+        downloader.download_files(pairs, filesystem=filesystem, skip_existing=True)
+        if replace and dest.is_dir():  # set the incomplete copy aside
+            try:
+                dest.rename(stale)
+            except FileNotFoundError:
+                pass
+        try:
+            tmp.rename(dest)
+        except OSError:
+            if not dest.is_dir():
+                raise
+            # A peer published first (ENOTEMPTY/EEXIST); its copy is complete.
+    finally:
+        shutil.rmtree(tmp, ignore_errors=True)
+        shutil.rmtree(stale, ignore_errors=True)
 
 
 def _resolve_nemar_uris(
@@ -1270,18 +1309,28 @@ class EEGDashRaw(RawDataset):
         required files and, if missing, attempts a recursive download of
         the entire ``.ds`` S3 prefix.
         """
+        # Never create ds_dir here: an empty .ds would pass for cached forever.
         ds_dir = self.filecache
-        if not ds_dir.exists():
-            ds_dir.mkdir(parents=True, exist_ok=True)
 
         required_exts = (".meg4", ".res4")
         missing = [ext for ext in required_exts if not list(ds_dir.glob(f"*{ext}"))]
-
-        if not missing:
+        nemar = self._storage_backend == "nemar"
+        if not missing and not (nemar and _holds_annex_pointer(ds_dir)):
             return
 
+        if nemar:
+            # Left incomplete, or with annex pointer text, by an older eegdash.
+            try:
+                _download_nemar_directory(
+                    self.record,
+                    ds_dir,
+                    downloader.get_s3_filesystem(max_concurrency=self._max_concurrency),
+                    replace=True,
+                )
+            except Exception as e:
+                logger.warning("NEMAR CTF download failed: %s", e)
         # Attempt recursive S3 download of the full .ds prefix
-        if self._raw_uri is not None:
+        elif self._raw_uri is not None:
             logger.info(
                 "CTF .ds directory missing %s — attempting recursive S3 download.",
                 ", ".join(missing),

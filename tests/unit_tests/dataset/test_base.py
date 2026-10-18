@@ -1173,147 +1173,6 @@ def test_load_raw_eeglab_fallback_failure_raises_data_integrity(tmp_path):
                 ds._load_raw()
 
 
-# ── Error: NaN onset/sample in events.tsv → repair + retry / direct fallback ──
-
-
-def test_load_raw_na_whitespace_repair_and_retry(tmp_path):
-    """Whitespace-padded n/a in TSV triggers repair then retry."""
-    ds = _make_local_eegdashraw(
-        tmp_path, "ds004860", "sub-01/eeg/sub-01_task-rest_eeg.bdf"
-    )
-
-    mock_raw = MagicMock()
-    call_count = 0
-
-    def side_effect(**kwargs):
-        nonlocal call_count
-        call_count += 1
-        if call_count == 1:
-            raise ValueError("could not convert string to float: 'n/a      '")
-        return mock_raw
-
-    with patch("mne_bids.read_raw_bids", side_effect=side_effect):
-        with patch(
-            "eegdash.dataset.base._repair_tsv_na_whitespace", return_value=True
-        ) as mock_repair:
-            result = ds._load_raw()
-
-    mock_repair.assert_called_once()
-    assert result is mock_raw
-    assert call_count == 2
-
-
-def test_load_raw_na_whitespace_repair_no_change_falls_through(tmp_path):
-    """n/a whitespace repair returns False → error propagates."""
-    ds = _make_local_eegdashraw(
-        tmp_path, "ds004860", "sub-01/eeg/sub-01_task-rest_eeg.bdf"
-    )
-
-    with patch(
-        "mne_bids.read_raw_bids",
-        side_effect=ValueError("could not convert string to float: 'n/a      '"),
-    ):
-        with patch(
-            "eegdash.dataset.base._repair_tsv_na_whitespace",
-            return_value=False,
-        ):
-            with pytest.raises(ValueError, match="could not convert string to float"):
-                ds._load_raw()
-
-
-def test_load_raw_nan_events_repair_and_retry(tmp_path):
-    """NaN in events.tsv sample column should trigger repair then retry."""
-    ds = _make_local_eegdashraw(
-        tmp_path, "ds004841", "sub-01/eeg/sub-01_task-drive_eeg.set"
-    )
-
-    mock_raw = MagicMock()
-    call_count = 0
-
-    def side_effect(**kwargs):
-        nonlocal call_count
-        call_count += 1
-        if call_count == 1:
-            raise ValueError("cannot convert float NaN to integer")
-        return mock_raw
-
-    with patch("mne_bids.read_raw_bids", side_effect=side_effect):
-        with patch(
-            "eegdash.dataset.base._repair_events_tsv_nan_samples", return_value=True
-        ) as mock_repair:
-            result = ds._load_raw()
-
-    mock_repair.assert_called_once()
-    assert result is mock_raw
-    assert call_count == 2
-
-
-def test_load_raw_nan_events_repair_fails_propagates(tmp_path):
-    """NaN events repair fails → error propagates (no direct reader fallback)."""
-    ds = _make_local_eegdashraw(
-        tmp_path, "ds004841", "sub-01/eeg/sub-01_task-drive_eeg.set"
-    )
-
-    with patch(
-        "mne_bids.read_raw_bids",
-        side_effect=ValueError("cannot convert float NaN to integer"),
-    ):
-        with patch(
-            "eegdash.dataset.base._repair_events_tsv_nan_samples",
-            return_value=False,
-        ):
-            with pytest.raises(ValueError, match="cannot convert float NaN to integer"):
-                ds._load_raw()
-
-
-# ── Error 1: Invalid scans.tsv timestamp → repair + retry ──
-
-
-def test_load_raw_repairs_bad_scans_timestamp_and_retries(tmp_path):
-    """'second must be' error should trigger timestamp repair then retry."""
-    ds = _make_local_eegdashraw(
-        tmp_path, "ds003775", "sub-01/ses-t1/eeg/sub-01_ses-t1_task-rest_eeg.edf"
-    )
-
-    mock_raw = MagicMock()
-    call_count = 0
-
-    def side_effect(**kwargs):
-        nonlocal call_count
-        call_count += 1
-        if call_count == 1:
-            raise ValueError("second must be in 0..59")
-        return mock_raw
-
-    with patch("mne_bids.read_raw_bids", side_effect=side_effect):
-        with patch(
-            "eegdash.dataset.base._repair_scans_tsv_timestamps", return_value=True
-        ) as mock_repair:
-            result = ds._load_raw()
-
-    mock_repair.assert_called_once()
-    assert result is mock_raw
-    assert call_count == 2
-
-
-def test_load_raw_timestamp_repair_fails_still_raises(tmp_path):
-    """If timestamp repair returns False, original ValueError re-raises."""
-    ds = _make_local_eegdashraw(
-        tmp_path, "ds003775", "sub-01/ses-t1/eeg/sub-01_ses-t1_task-rest_eeg.edf"
-    )
-
-    with patch(
-        "mne_bids.read_raw_bids",
-        side_effect=ValueError("second must be in 0..59"),
-    ):
-        with patch(
-            "eegdash.dataset.base._repair_scans_tsv_timestamps",
-            return_value=False,
-        ):
-            with pytest.raises(ValueError, match="second must be"):
-                ds._load_raw()
-
-
 # ── Error 5: Unallowed BIDS entity → direct reader fallback ──
 
 
@@ -1504,47 +1363,6 @@ def test_ensure_ctf_directory_incomplete_raises(mock_validate, tmp_path):
 
     with pytest.raises(DataIntegrityError, match="CTF .ds directory incomplete"):
         ds._ensure_ctf_directory_complete()
-
-
-# ── _repair_scans_tsv_timestamps standalone tests ──
-
-
-def test_repair_scans_tsv_timestamps_fixes_bad_seconds(tmp_path):
-    """Timestamps with seconds >= 60 should be replaced with n/a."""
-    from eegdash.dataset.io import _repair_scans_tsv_timestamps
-
-    scans = tmp_path / "sub-01_scans.tsv"
-    scans.write_text(
-        "filename\tacq_time\n"
-        "eeg/file1.edf\t2020-01-01T12:30:60\n"
-        "eeg/file2.edf\t2020-01-01T12:30:45\n"
-    )
-
-    assert _repair_scans_tsv_timestamps(tmp_path) is True
-
-    lines = scans.read_text().strip().split("\n")
-    assert lines[1].split("\t")[1] == "n/a"
-    assert lines[2].split("\t")[1] == "2020-01-01T12:30:45.000000"
-
-
-def test_repair_scans_tsv_timestamps_noop_when_valid(tmp_path):
-    """No changes when all timestamps are valid."""
-    from eegdash.dataset.io import _repair_scans_tsv_timestamps
-
-    scans = tmp_path / "sub-01_scans.tsv"
-    scans.write_text("filename\tacq_time\neeg/file1.edf\t2020-01-01T12:30:45.000000\n")
-
-    assert _repair_scans_tsv_timestamps(tmp_path) is False
-
-
-def test_repair_scans_tsv_timestamps_handles_na(tmp_path):
-    """Existing n/a values should not be modified."""
-    from eegdash.dataset.io import _repair_scans_tsv_timestamps
-
-    scans = tmp_path / "sub-01_scans.tsv"
-    scans.write_text("filename\tacq_time\neeg/file1.edf\tn/a\n")
-
-    assert _repair_scans_tsv_timestamps(tmp_path) is False
 
 
 # ── _load_raw_direct standalone tests ──
@@ -1795,33 +1613,6 @@ def test_load_raw_runtime_error_unrecoverable_raises_data_integrity(
                 ds._load_raw()
 
 
-# ── CTF mandatory HPI fix → retry with patched kind dict ──
-
-
-def test_load_raw_mandatory_hpi_retries_with_fix(tmp_path):
-    """RuntimeError('mandatory HPI') retries with extended _kind_dict."""
-    ds = _make_local_eegdashraw(
-        tmp_path,
-        "ds006502",
-        "sub-01/ses-meg1/meg/sub-01_ses-meg1_task-rest_run-1_meg.ds",
-        ext=".ds",
-    )
-
-    mock_raw = MagicMock()
-    with patch(
-        "mne_bids.read_raw_bids",
-        side_effect=[
-            RuntimeError(
-                "Some of the mandatory HPI device-coordinate info was not there."
-            ),
-            mock_raw,
-        ],
-    ):
-        result = ds._load_raw()
-
-    assert result is mock_raw
-
-
 # ── KeyError FIFFV_COIL_NONE → direct reader fallback ──
 
 
@@ -2054,29 +1845,6 @@ def test_load_raw_bad_task_metadata_raises_data_integrity(tmp_path):
         pytest.raises(DataIntegrityError, match="Bad record metadata"),
     ):
         ds._load_raw()
-
-
-def test_load_raw_retries_on_coordsystem_should_exist(tmp_path):
-    """RuntimeError 'coordsystem.json should exist' triggers coordsystem retry."""
-    ds = _make_s3_raw(tmp_path, ".edf")
-    mock_raw = MagicMock()
-
-    with (
-        patch.object(
-            ds,
-            "_read_raw_bids",
-            side_effect=RuntimeError("coordsystem.json should exist for iEEG"),
-        ),
-        patch.object(
-            ds,
-            "_retry_with_generated_coordsystem",
-            return_value=mock_raw,
-        ) as mock_retry,
-    ):
-        result = ds._load_raw()
-
-    mock_retry.assert_called_once()
-    assert result is mock_raw
 
 
 def test_load_raw_retries_on_coordsystem_key_error(tmp_path):

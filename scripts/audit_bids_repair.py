@@ -24,27 +24,24 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
 from eegdash import EEGDash
 
-# The 12 repair functions and their categories
+# The repair functions still in eegdash and their categories. MNE-BIDS 0.20
+# covers the TSV decimal-comma, n/a padding, NaN-onset, scans acq_time and
+# duplicate-channel repairs that used to be listed here.
 REPAIR_CATEGORIES = {
     "File pointers": [
         "_repair_vhdr_pointers",
         "_repair_vhdr_missing_markerfile",
     ],
     "Metadata": [
-        "_repair_tsv_decimal_separators",
-        "_repair_tsv_na_whitespace",
         "_repair_tsv_encoding",
     ],
     "Structural": [
         "_repair_channels_tsv",
-        "_repair_channels_tsv_duplicates",
-        "_repair_events_tsv_nan_samples",
         "_repair_participants_tsv_ids",
     ],
     "Format-specific": [
         "_repair_eeglab_fdt",
         "_repair_snirf_bids_metadata",
-        "_repair_scans_tsv_timestamps",
     ],
 }
 

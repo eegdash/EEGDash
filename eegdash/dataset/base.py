@@ -10,6 +10,7 @@ braindecode for machine learning workflows and handles data loading from both lo
 """
 
 import configparser
+import json
 import os
 import re
 import shutil
@@ -356,6 +357,57 @@ def _nemar_fast_paths(storage: dict, relpath: str) -> tuple[str | None, str | No
     )
 
 
+_NEMAR_TREE_URL = (
+    "https://api.github.com/repos/NEMARDatasets/{dataset_id}/git/trees/HEAD?recursive=1"
+)
+_DIRECTORY_SUFFIXES = (".ds", ".mefd")
+
+
+@lru_cache(maxsize=16)
+def _nemar_tree(dataset_id: str) -> tuple[str, ...]:
+    """Every file path in a NEMAR dataset's git repo (one GitHub API call).
+
+    NEMAR's bucket denies ListBucket and GitHub raw cannot list, so directory
+    recordings (CTF ``.ds``, MEF3 ``.mefd``) are enumerated from the git tree.
+    """
+    headers = {"User-Agent": _NEMAR_USER_AGENT}
+    if token := os.environ.get("GITHUB_TOKEN"):
+        headers["Authorization"] = f"Bearer {token}"
+    url = _NEMAR_TREE_URL.format(dataset_id=dataset_id)
+    req = urllib.request.Request(url, headers=headers)
+    with urllib.request.urlopen(req, timeout=_NEMAR_POINTER_TIMEOUT) as resp:
+        tree = json.load(resp)
+    if tree.get("truncated"):
+        raise OSError(f"GitHub truncated the file tree of {dataset_id}")
+    return tuple(e["path"] for e in tree["tree"] if e["type"] == "blob")
+
+
+def _download_nemar_directory(record: dict, dest: Path, filesystem) -> None:
+    """Fetch a NEMAR directory recording file by file, then move it into place.
+
+    Staged in a ``.part`` sibling so ``dest`` only exists once complete.
+    """
+    storage = record["storage"]
+    dataset_id, base = record["dataset"], storage["base"].rstrip("/")
+    prefix = storage["raw_key"].rstrip("/") + "/"
+    tmp = dest.with_name(dest.name + ".part")
+    pairs = []
+    for path in _nemar_tree(dataset_id):
+        if not path.startswith(prefix):
+            continue
+        local = tmp / path[len(prefix) :]
+        annex_key, payload = _resolve_nemar_pointer(dataset_id, path)
+        if annex_key:
+            pairs.append((f"{base}/objects/{annex_key}", local))
+        else:
+            local.parent.mkdir(parents=True, exist_ok=True)
+            local.write_bytes(payload)
+    if not pairs:
+        raise FileNotFoundError(f"{base}/{prefix}")
+    downloader.download_files(pairs, filesystem=filesystem, skip_existing=True)
+    tmp.replace(dest)
+
+
 def _resolve_nemar_uris(
     record: dict, raw_dest: Path, dep_keys: list[str], dep_dests: list[Path]
 ) -> tuple[str | None, list[tuple[str, Path]]]:
@@ -383,7 +435,9 @@ def _resolve_nemar_uris(
         return None, []
 
     raw_uri = None
-    if not raw_dest.exists():
+    if not raw_dest.exists() and raw_dest.suffix.lower() in _DIRECTORY_SUFFIXES:
+        raw_uri = f"{base}/{raw_key}"  # listed and fetched per file at download
+    elif not raw_dest.exists():
         stored_key, stored_sidecar = _nemar_fast_paths(storage, raw_key)
         raw_uri = _resolve_one_nemar_entry(
             dataset_id=dataset_id,
@@ -808,14 +862,19 @@ class EEGDashRaw(RawDataset):
             )
 
             try:
-                if self._raw_uri is not None and self.filecache.suffix.lower() in (
-                    ".ds",
-                    ".mefd",
+                if (
+                    self._raw_uri is not None
+                    and self.filecache.suffix.lower() in _DIRECTORY_SUFFIXES
                 ):
                     # a directory recording is an S3 prefix, not one object
-                    downloader.download_s3_directory(
-                        self._raw_uri, self.filecache, filesystem=filesystem
-                    )
+                    if self._storage_backend == "nemar":
+                        _download_nemar_directory(
+                            self.record, self.filecache, filesystem
+                        )
+                    else:
+                        downloader.download_s3_directory(
+                            self._raw_uri, self.filecache, filesystem=filesystem
+                        )
                 elif self._raw_uri is not None:
                     downloader.download_s3_file(
                         self._raw_uri, self.filecache, filesystem=filesystem

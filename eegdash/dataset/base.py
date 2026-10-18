@@ -22,20 +22,21 @@ from functools import lru_cache, partial
 from pathlib import Path, PurePosixPath
 from typing import Any
 
-import filelock
 import mne.io.ctf.info as ctf_info
 import mne_bids
 import mne_bids.read as mne_bids_read  # _handle_channels_reading (0.19-0.20)
 import nemar
 import numpy as np
 from mne.io import BaseRaw
-from mne_bids import BIDSPath
+from mne_bids import BIDSPath, get_entities_from_fname
 
 from braindecode.datasets.base import RawDataset
 
 from .. import downloader
 from ..const import MODALITY_ALIASES
 from ..io import tolerant
+from ..io.bids import without_events
+from ..io.eeglab import crop_truncated_fdt
 from ..io.fif import crop_unreadable_tail
 from ..logging import logger
 from ..schemas import NEMAR_ROOT_METADATA_FILES, validate_record
@@ -104,6 +105,17 @@ _SPLIT_FIF_MISSING_RE = re.compile(
 )
 _SPLIT_ENTITY_RE = re.compile(r"_split-(?P<num>\d+)(?=_)")
 _SPLIT_PART_RE = re.compile(r"-(?P<num>\d+)(?=\.fif$)", re.IGNORECASE)
+# BIDSPath entities besides subject/session/task/run, read from the file name
+# when the record lacks them.
+_NAME_ENTITIES = (
+    "acquisition",
+    "processing",
+    "recording",
+    "space",
+    "split",
+    "description",
+    "tracking_system",
+)
 
 # `mne.create_info` rejects unknown channel types (e.g. ``ieeg``, ``fnirs``,
 # ``meg``); BIDS ``datatype`` doesn't always overlap. The lazy
@@ -769,22 +781,17 @@ class EEGDashRaw(RawDataset):
         self.s3file = self._raw_uri
 
         entities_mne = self.record.get("entities_mne") or {}
-
-        # Fallback: parse acquisition from bids_relpath for records
-        # that predate the acquisition field in entities_mne
-        acq_val = entities_mne.get("acquisition")
-        if acq_val is None:
-            _acq_match = re.search(r"acq-([^_/]+)", self.record.get("bids_relpath", ""))
-            if _acq_match:
-                acq_val = _acq_match.group(1)
-
-        recording_val = entities_mne.get("recording")
-        if recording_val is None:
-            recording_match = re.search(
-                r"(?:^|_)recording-([^_/]+)", self.filecache.name
-            )
-            if recording_match:
-                recording_val = recording_match.group(1)
+        # Records carry subject, session, task, run and acquisition only. The
+        # other entities of the file name (desc, proc, space, recording, split,
+        # tracksys) are taken from it, or MNE-BIDS looks for another file
+        # (on006923 ``*_desc-preprocessed_eeg.set`` -> ``*_eeg.set``). The run
+        # stays the record's: it is ``None`` when the name's run is not a number.
+        from_name = get_entities_from_fname(
+            PurePosixPath(bids_relpath).name, on_error="ignore"
+        )
+        entities = {
+            key: entities_mne.get(key) or from_name.get(key) for key in _NAME_ENTITIES
+        }
 
         self.bidspath = BIDSPath(
             root=self.bids_root,
@@ -799,9 +806,7 @@ class EEGDashRaw(RawDataset):
             session=entities_mne.get("session"),
             task=entities_mne.get("task"),
             run=entities_mne.get("run"),
-            acquisition=acq_val,
-            recording=recording_val,
-            split=entities_mne.get("split"),
+            **entities,
             check=False,
         )
 
@@ -1438,15 +1443,18 @@ class EEGDashRaw(RawDataset):
             # Validate that data is actually readable (catches corrupt/truncated
             # data files that MNE only discovers during lazy segment reads).
             # Read from start and end to catch truncated files.
+            n = self._raw.n_times
             try:
-                n = self._raw.n_times
                 if n > 0:
                     self._raw.get_data(start=0, stop=min(1, n))
                     if n > 1:
                         self._raw.get_data(start=n - 1, stop=n)
             except Exception as e:
-                # A FIF file cut inside its last data buffer: keep what reads.
+                # A FIF file cut inside its last data buffer, or an EEGLAB
+                # .fdt shorter than its .set: keep the samples that are there.
                 cropped = crop_unreadable_tail(self._raw)
+                if cropped is None:
+                    cropped = crop_truncated_fdt(self._raw)
                 if cropped is None:
                     self._raw = None
                     raise DataIntegrityError(
@@ -1455,6 +1463,19 @@ class EEGDashRaw(RawDataset):
                         issues=[str(e)],
                     ) from e
                 self._raw = cropped
+                self._report_truncation(n)
+
+    def _report_truncation(self, n_declared: int) -> None:
+        """Log a data-integrity warning and note it in ``raw.info['description']``."""
+        raw = self._raw
+        issue = (
+            f"Truncated data file: {raw.n_times} of {n_declared} samples "
+            f"({100 * raw.n_times / n_declared:.1f} %) are in the file; the last "
+            f"{(n_declared - raw.n_times) / raw.info['sfreq']:.3f} s are missing."
+        )
+        DataIntegrityError(issue, record=self.record, issues=[issue]).log_warning()
+        old = raw.info["description"]
+        raw.info["description"] = f"{old}; {issue}" if old else issue
 
     def _read_raw_bids(self, extra_params: dict | None = None) -> BaseRaw:
         """Call ``mne_bids.read_raw_bids`` with the standard arguments.
@@ -2151,45 +2172,30 @@ class EEGDashRaw(RawDataset):
         return raw
 
     def _retry_without_events_tsv(self, first_error: Exception) -> BaseRaw:
-        """Temporarily hide ``*_events.tsv`` and retry loading.
+        """Retry the read as if the recording had no ``*_events.tsv``.
 
         Some datasets have malformed events files that cause
         ``AssertionError`` inside MNE-BIDS annotation handling.  The
         underlying data is fine — only the event markers are broken.
 
-        Uses a lock file to prevent concurrent workers from interfering
-        when processing recordings from the same subject directory.
+        Only this read skips the events sidecar
+        (:func:`eegdash.io.bids.without_events`); no file is renamed, so the
+        other runs of the folder, read by other threads or processes, keep
+        their events.
         """
         data_dir = self.filecache.parent
-        events_files = list(data_dir.glob("*_events.tsv"))
-        if not events_files:
+        if not any(data_dir.glob("*_events.tsv")):
             raise first_error
-
-        lock_path = data_dir / ".events_tsv_hide.lock"
-        lock = filelock.FileLock(str(lock_path), timeout=60)
-        hidden = []
+        logger.warning(
+            "Reading %s without its events.tsv (annotations dropped): %s",
+            self.filecache.name,
+            first_error,
+        )
         try:
-            with lock:
-                for ef in events_files:
-                    dest = ef.with_suffix(".tsv._hidden")
-                    ef.rename(dest)
-                    hidden.append((dest, ef))
-                logger.warning(
-                    "Hiding %d events.tsv file(s) and retrying load.",
-                    len(hidden),
-                )
+            with without_events():
                 return self._read_raw_bids()
-        except filelock.Timeout:
-            logger.warning("Could not acquire events.tsv hide lock, skipping.")
-            raise first_error
         except Exception as retry_error:
             raise retry_error from first_error
-        finally:
-            for src, dst in hidden:
-                if src.exists():
-                    src.rename(dst)
-            # Clean up lock file
-            lock_path.unlink(missing_ok=True)
 
     def _make_mne_info(self):
         """Return :class:`mne.Info` for the recording without loading the data.

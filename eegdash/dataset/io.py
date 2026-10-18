@@ -1770,18 +1770,16 @@ def _eeglab_ch_names_from_eeg(eeg: dict, nbchan: int) -> list[str]:
 
 
 def _repair_eeglab_fdt(set_path: Path) -> bool:
-    """Repair .set header: fix .fdt filename mismatches and truncated data.
+    """Repair .set header: fix .fdt filename mismatches.
 
-    Handles two independent problems that prevent MNE from loading:
+    **Filename mismatch** -- The header's ``datfile``/``data`` field
+    references a non-BIDS filename (e.g. ``sub10_sess1.fdt``) while a
+    BIDS-named ``.fdt`` with the same stem as the ``.set`` file exists.
+    The header is rewritten to point at the BIDS-named file.
 
-    1. **Filename mismatch** -- The header's ``datfile``/``data`` field
-       references a non-BIDS filename (e.g. ``sub10_sess1.fdt``) that does
-       not exist on disk, while a BIDS-named ``.fdt`` with the same stem as
-       the ``.set`` file *does* exist.  The header is rewritten to point at
-       the BIDS-named file.
-    2. **Truncated data** -- The companion ``.fdt`` has fewer samples than
-       the header declares.  ``pnts``, ``xmax``, and ``times`` are patched
-       to match the actual byte count.
+    A ``.fdt`` shorter than the header declares is not hidden here: the
+    reader crops to the complete samples and warns
+    (:func:`eegdash.io.eeglab.crop_truncated_fdt`).
 
     Tries ``_eeglab_load_first_eeg`` (scipy / MNE ``_readmat``) first;
     falls back to ``pymatreader`` with ``uint16_codec='latin-1'`` for
@@ -1819,9 +1817,6 @@ def _repair_eeglab_fdt(set_path: Path) -> bool:
         except Exception:
             return False
 
-    nbchan = int(eeg.get("nbchan", 1))
-    pnts = int(eeg.get("pnts", 1))
-
     # --- locate companion .fdt ---
     # Determine what the header currently references
     if used_pymatreader:
@@ -1829,64 +1824,29 @@ def _repair_eeglab_fdt(set_path: Path) -> bool:
     else:
         data_ref = eeg.get("data")
 
-    # Track whether the original reference is a string pointing to a file
-    has_external_fdt = isinstance(data_ref, str) and bool(data_ref)
-
-    if has_external_fdt:
-        fdt_path = set_path.parent / data_ref
-        if not fdt_path.exists():
-            # Referenced .fdt missing -- try the BIDS-named companion
-            fdt_path = set_path.with_suffix(".fdt")
-    else:
+    # Only a header that points to an external .fdt can name the wrong one
+    if not (isinstance(data_ref, str) and data_ref):
+        return False
+    fdt_path = set_path.parent / data_ref
+    if not fdt_path.exists():
+        # Referenced .fdt missing -- try the BIDS-named companion
         fdt_path = set_path.with_suffix(".fdt")
-
-    if fdt_path is None or not fdt_path.exists():
+    if not fdt_path.exists():
         return False
 
-    # --- determine what needs fixing ---
+    # Filename mismatch: header references a non-BIDS .fdt name (e.g.
+    # "sub10_sess1.fdt") while the .fdt is stored under the BIDS name
+    # (e.g. "sub-10_ses-01_task-xxx_eeg.fdt").
     bids_fdt_name = set_path.stem + ".fdt"
-
-    # Filename mismatch: header references a non-BIDS .fdt name that
-    # doesn't exist on disk (e.g. "sub10_sess1.fdt") while the BIDS-named
-    # .fdt (e.g. "sub-10_ses-01_task-xxx_eeg.fdt") does exist.
-    needs_rename = has_external_fdt and str(data_ref) != bids_fdt_name
-
-    expected_bytes = nbchan * pnts * _EEGLAB_BYTES_PER_SAMPLE
-    fdt_size = fdt_path.stat().st_size
-    needs_pnts_fix = fdt_size < expected_bytes
-
-    if not needs_rename and not needs_pnts_fix:
+    if str(data_ref) == bids_fdt_name:
         return False
-
-    # --- compute actual sample count when data is truncated ---
-    actual_pnts = pnts
-    if needs_pnts_fix:
-        actual_pnts = fdt_size // _EEGLAB_BYTES_PER_SAMPLE // nbchan
-        if actual_pnts <= 0:
-            logger.warning(
-                "EEGLAB .fdt file %s has 0 readable samples "
-                "(expected %d). Data file is empty/corrupt.",
-                fdt_path.name,
-                pnts,
-            )
-            return False
 
     # --- patch header fields ---
-    srate = float(eeg.get("srate", 1.0)) or 1.0
     repaired = {
         key: value for key, value in dict(eeg).items() if not str(key).startswith("__")
     }
-
-    # Always fix the datfile/data reference to point at the BIDS-named .fdt
     repaired["datfile"] = bids_fdt_name
     repaired["data"] = bids_fdt_name
-
-    if needs_pnts_fix:
-        repaired["pnts"] = actual_pnts
-        repaired["xmax"] = (actual_pnts - 1) / srate
-        # Rebuild times array to match actual sample count
-        if "times" in repaired:
-            repaired["times"] = np.arange(actual_pnts, dtype=np.float64) / srate
 
     # When loaded via pymatreader, list fields must be converted to arrays
     # for scipy.savemat to serialize them correctly.
@@ -1902,29 +1862,12 @@ def _repair_eeglab_fdt(set_path: Path) -> bool:
     # --- write repaired .set ---
     try:
         savemat(str(set_path), {"EEG": repaired}, do_compression=False)
-        if needs_rename and needs_pnts_fix:
-            logger.info(
-                "Repaired EEGLAB .set header: %s (datfile %r -> %r, pnts %s -> %s).",
-                set_path.name,
-                data_ref,
-                bids_fdt_name,
-                pnts,
-                actual_pnts,
-            )
-        elif needs_rename:
-            logger.info(
-                "Repaired EEGLAB .set header: %s (datfile %r -> %r).",
-                set_path.name,
-                data_ref,
-                bids_fdt_name,
-            )
-        else:
-            logger.info(
-                "Repaired EEGLAB .set header: %s (pnts %s -> %s).",
-                set_path.name,
-                pnts,
-                actual_pnts,
-            )
+        logger.info(
+            "Repaired EEGLAB .set header: %s (datfile %r -> %r).",
+            set_path.name,
+            data_ref,
+            bids_fdt_name,
+        )
         return True
     except Exception as e:
         logger.warning("Failed to rewrite .set %s: %s", set_path.name, e)
@@ -1962,15 +1905,19 @@ def _load_raw_eeglab_alleeg(filepath: Path):
     if isinstance(data_ref, str):
         data_fname = _eeglab_fdt_path(filepath, eeg)
         data = np.fromfile(data_fname, dtype="<f4", count=nbchan * pnts)
-        if data.size != nbchan * pnts:
-            data = np.pad(
-                data.astype(np.float64),
-                (0, nbchan * pnts - data.size),
-                mode="constant",
-                constant_values=0,
+        present = data.size // nbchan  # complete samples; never pad with zeros
+        if present < pnts:
+            if present == 0:
+                raise ValueError(f"{Path(data_fname).name} holds no complete sample")
+            logger.warning(
+                "Truncated EEGLAB data file %s: %d of %d samples present; "
+                "reading those only.",
+                Path(data_fname).name,
+                present,
+                pnts,
             )
-        else:
-            data = data.astype(np.float64)
+            pnts = present
+        data = data[: nbchan * pnts].astype(np.float64)
         data = data.reshape(nbchan, pnts, order="F")
     else:
         data = np.asarray(data_ref, dtype=np.float64)

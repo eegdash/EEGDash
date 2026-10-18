@@ -7,7 +7,7 @@ from unittest.mock import MagicMock, patch
 import mne
 import numpy as np
 import pytest
-from scipy.io import loadmat, savemat
+from scipy.io import savemat
 from scipy.io.matlab import MatWriteWarning
 
 from eegdash.dataset.io import (
@@ -990,8 +990,8 @@ def test_repair_eeglab_fdt_nonexistent(tmp_path):
     assert _repair_eeglab_fdt(tmp_path / "file.txt") is False
 
 
-def test_repair_eeglab_fdt_truncated_fdt_repairs(tmp_path):
-    """Truncated .fdt: repair updates .set header (pnts) and returns True."""
+def test_repair_eeglab_fdt_truncated_fdt_left_alone(tmp_path):
+    """Truncated .fdt: the .set keeps its pnts (the reader crops and warns)."""
     pytest.importorskip("scipy")
 
     set_path = tmp_path / "test.set"
@@ -1007,16 +1007,10 @@ def test_repair_eeglab_fdt_truncated_fdt_repairs(tmp_path):
         "data": "test.fdt",
     }
     _savemat_without_matwritewarning(set_path, eeg)
+    before = set_path.read_bytes()
 
-    result = _repair_eeglab_fdt(set_path)
-    assert result is True
-
-    mat = loadmat(
-        str(set_path), squeeze_me=True, mat_dtype=False, struct_as_record=False
-    )
-    eeg_after = _eeglab_get_first_eeg(mat)
-    assert eeg_after is not None
-    assert int(eeg_after["pnts"]) == 1  # 8 / 4 / 2
+    assert _repair_eeglab_fdt(set_path) is False
+    assert set_path.read_bytes() == before
 
 
 def test_eeglab_get_first_eeg_alleeg():
@@ -1114,15 +1108,15 @@ def test_load_raw_eeglab_alleeg_success(tmp_path):
     assert raw.times.size == pnts
 
 
-def test_load_raw_eeglab_alleeg_truncated_fdt_pads(tmp_path):
-    """External .fdt smaller than header: padding branch is used."""
+def test_load_raw_eeglab_alleeg_truncated_fdt_keeps_complete_samples(tmp_path):
+    """External .fdt smaller than header: complete samples only, no zero padding."""
     pytest.importorskip("scipy")
 
     set_path = tmp_path / "trunc.set"
     fdt_path = tmp_path / "trunc.fdt"
     nbchan, pnts = 2, 8
-    # Only 4 bytes (1 sample total) so padding is applied
-    fdt_path.write_bytes(b"\x00" * 4)
+    # 3 complete samples and half of a 4th
+    np.arange(7, dtype="<f4").tofile(fdt_path)
     eeg = {
         "nbchan": nbchan,
         "pnts": pnts,
@@ -1132,9 +1126,9 @@ def test_load_raw_eeglab_alleeg_truncated_fdt_pads(tmp_path):
     }
     _savemat_without_matwritewarning(set_path, eeg)
     raw = _load_raw_eeglab_alleeg(set_path)
-    assert raw is not None
     assert raw.info["nchan"] == nbchan
-    assert raw.times.size == pnts
+    assert raw.times.size == 3
+    np.testing.assert_allclose(raw.get_data() * 1e6, [[0, 2, 4], [1, 3, 5]])
 
 
 def test_load_raw_eeglab_alleeg_inline_data(tmp_path):

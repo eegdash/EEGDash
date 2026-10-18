@@ -18,10 +18,16 @@ main 085e309 as of 2026-10-18); the upstream PRs are still to be written:
   2018) puts the birthday, ``meas_date - age``, before year 1:
   ``OverflowError``. The birthday is left unset, as MNE-BIDS does when
   ``meas_date`` is unknown; the other participant fields are kept.
+
+:func:`without_events` reads a recording as if it had no events.tsv, for an
+events file MNE-BIDS cannot turn into annotations. Only reads in the calling
+thread are affected; nothing in the dataset folder is renamed, so other runs
+read in parallel keep their own events.
 """
 
 import logging
 from contextlib import ExitStack, contextmanager
+from contextvars import ContextVar
 from unittest import mock
 
 import numpy as np
@@ -32,6 +38,8 @@ logger = logging.getLogger("eegdash")
 _RESERVED = ("onset", "duration", "description", "ch_names", "hed_string")
 _orig_make_annotation_kwargs = _read._make_annotation_kwargs
 _orig_handle_participants_reading = _read._handle_participants_reading
+_orig_find_matching_sidecar = _read._find_matching_sidecar
+_skip_events = ContextVar("eegdash_skip_events_tsv", default=False)
 
 
 def _make_annotation_kwargs(*args, **kwargs):
@@ -66,6 +74,24 @@ def _handle_participants_reading(participants_fname, raw, subject):
             raw.info["meas_date"] = meas_date
 
 
+def _find_matching_sidecar(bids_path, suffix=None, extension=None, on_error="raise"):
+    if suffix == "events" and _skip_events.get():
+        return None  # read_raw_bids then reads no events.tsv / events.json
+    return _orig_find_matching_sidecar(
+        bids_path, suffix=suffix, extension=extension, on_error=on_error
+    )
+
+
+@contextmanager
+def without_events():
+    """Make ``read_raw_bids`` in this thread (or task) skip the events sidecars."""
+    token = _skip_events.set(True)
+    try:
+        yield
+    finally:
+        _skip_events.reset(token)
+
+
 @contextmanager
 def fixes():
     """Patch MNE-BIDS's reader globals while reading."""
@@ -82,5 +108,8 @@ def fixes():
             mock.patch.object(
                 _read, "_handle_participants_reading", _handle_participants_reading
             )
+        )
+        stack.enter_context(
+            mock.patch.object(_read, "_find_matching_sidecar", _find_matching_sidecar)
         )
         yield

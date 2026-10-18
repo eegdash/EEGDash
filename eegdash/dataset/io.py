@@ -14,7 +14,7 @@ import textwrap
 from collections import Counter
 from contextlib import contextmanager
 from difflib import SequenceMatcher
-from functools import partial
+from functools import partialmethod
 from pathlib import Path
 from time import strptime
 from typing import Any
@@ -1481,7 +1481,7 @@ def _repair_participants_tsv_ids(bids_root: Path) -> bool:
         return False
 
 
-def _clamping_crop(orig_crop, self, *args, **kwargs):
+def _clamping_crop(self, *args, orig_crop, **kwargs):
     """Patched ``Annotations.crop`` that clamps negative durations first."""
     if hasattr(self, "duration") and self.duration is not None:
         mask = self.duration < 0
@@ -1513,7 +1513,9 @@ def _fix_negative_annotation_durations():
        interpreters) but must never be used from concurrent threads.
     """
     _orig_crop = mne.Annotations.crop
-    mne.Annotations.crop = partial(_clamping_crop, _orig_crop)
+    # partialmethod, not partial: a partial is no descriptor, so
+    # ``annot.crop(0, t)`` got ``self=0`` ("'int' has no len()", on006923).
+    mne.Annotations.crop = partialmethod(_clamping_crop, orig_crop=_orig_crop)
     try:
         yield
     finally:

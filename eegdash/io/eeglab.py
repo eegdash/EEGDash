@@ -9,6 +9,12 @@ main as of 2026-10-15) and is the diff proposed upstream (``upstream/eeglab.md``
   come first, returns no channels at all (default names ``EEG 000`` ...).
 - Events without a ``type`` field (on008496: one event, ``latency`` only)
   break ``_read_annotations_eeglab``; they get the description ``"n/a"``.
+- Events with an empty latency (on004350: a trailing event with every field
+  empty) make ``np.array(EEG.event.latency)`` ragged, and events before the
+  first sample (on004851: latency -1.3e9) make ``_check_latencies`` raise
+  although ``set_annotations`` has already cropped them away. Both are
+  dropped with a warning, as EEGLAB's ``eeg_checkset`` drops out-of-range
+  events.
 """
 
 from contextlib import ExitStack, contextmanager
@@ -17,8 +23,12 @@ from unittest import mock
 import numpy as np
 from mne.io.eeglab import eeglab as _eeglab
 from mne.io.eeglab import read_raw_eeglab as _mne_read_raw_eeglab
+from mne.utils import warn
 
-_orig = {name: getattr(_eeglab, name) for name in ("_dol_to_lod", "_bunchify")}
+_orig = {
+    name: getattr(_eeglab, name)
+    for name in ("_dol_to_lod", "_bunchify", "_read_annotations_eeglab")
+}
 
 
 def _len(value):
@@ -50,6 +60,30 @@ def _bunchify(items):
         if isinstance(item, dict) and "latency" in item:  # an event, not an epoch
             item.setdefault("type", "n/a")
     return items
+
+
+def _no_sample(latency):
+    # NaN is left to MNE, which drops it with its own warning.
+    return _is_empty(latency) or (np.ndim(latency) == 0 and latency < 0)
+
+
+def _read_annotations_eeglab(eeg, uint16_codec=None):
+    event = getattr(eeg, "event", None)
+    latency = event.get("latency") if isinstance(event, dict) else None
+    if isinstance(latency, list):
+        keep = [i for i, x in enumerate(latency) if not _no_sample(x)]
+        if len(keep) < len(latency):
+            warn(
+                f"{len(latency) - len(keep)} EEGLAB event(s) have an empty or "
+                "negative latency (no sample in the recording) and are dropped."
+            )
+            eeg.event = {
+                k: [v[i] for i in keep]
+                if isinstance(v, list) and len(v) == len(latency)
+                else v
+                for k, v in event.items()
+            }
+    return _orig["_read_annotations_eeglab"](eeg, uint16_codec=uint16_codec)
 
 
 @contextmanager

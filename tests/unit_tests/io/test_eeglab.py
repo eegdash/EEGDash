@@ -132,5 +132,37 @@ def test_io_set_typed_events_unchanged(tmp_path):
     np.testing.assert_array_equal(ours.annotations.onset, theirs.annotations.onset)
 
 
+def _events(*events):
+    """EEG.event as a MATLAB struct array; ``None`` leaves every field empty."""
+    out = np.zeros(len(events), dtype=[("type", "O"), ("latency", "O")])
+    for i, event in enumerate(events):
+        out[i] = (np.array([]), np.array([])) if event is None else event
+    return out
+
+
+def test_io_set_event_empty_latency(tmp_path):
+    """on004350: a trailing event with every field empty."""
+    fname = _write_set_v5(tmp_path / "empty.set", _events(("a", 5.0), ("b", 9.0), None))
+    with pytest.raises(ValueError, match="inhomogeneous"):
+        mne.io.read_raw_eeglab(fname)
+    with pytest.warns(RuntimeWarning, match="1 EEGLAB event"):
+        raw = read_raw_eeglab(fname)
+    assert list(raw.annotations.description) == ["a", "b"]
+    np.testing.assert_allclose(raw.annotations.onset, [4.0 / SFREQ, 8.0 / SFREQ])
+
+
+def test_io_set_event_negative_latency(tmp_path):
+    """on004851: one event 1.3e9 samples before the recording."""
+    fname = _write_set_v5(
+        tmp_path / "neg.set", _events((-1, -1288972516.33), (7, 5.0), (8, 9.0))
+    )
+    with pytest.raises(ValueError, match="negative"):
+        mne.io.read_raw_eeglab(fname)
+    with pytest.warns(RuntimeWarning, match="1 EEGLAB event"):
+        raw = read_raw_eeglab(fname)
+    assert list(raw.annotations.description) == ["7", "8"]
+    np.testing.assert_allclose(raw.get_data(), DATA * 1e-6)
+
+
 def test_eeglab_in_table():
     assert get_reader(".set") is read_raw_eeglab

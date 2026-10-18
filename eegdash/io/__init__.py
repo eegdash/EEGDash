@@ -15,7 +15,7 @@ from contextlib import ExitStack, contextmanager
 
 import mne
 
-from . import eeglab, nwb, snirf
+from . import bids, eeglab, nwb, snirf
 
 # extension: (name in mne.io, eegdash reader, upstream status). The extensions are
 # MNE-BIDS 0.20's ``config.reader`` (lower-cased) plus ``.nwb``; the client keeps
@@ -54,7 +54,7 @@ _stack: ExitStack | None = None
 
 @contextmanager
 def tolerant():
-    """Apply every pending MNE fix while reading (wrap ``read_raw_bids`` in it).
+    """Apply every pending MNE and MNE-BIDS fix while reading (wrap ``read_raw_bids`` in it).
 
     The fixes patch module globals of MNE. Reads run on threads
     (``download_all``, ``n_jobs``), and interleaved ``mock.patch`` enter/exit
@@ -65,7 +65,7 @@ def tolerant():
     with _lock:
         if _active == 0:
             _stack = ExitStack()
-            for module in (eeglab, snirf):
+            for module in (bids, eeglab, snirf):
                 _stack.enter_context(module.fixes())
         _active += 1
     try:

@@ -771,3 +771,38 @@ def test_get_file_concurrent_same_destination(tmp_path):
     assert errors == []
     assert dest.read_bytes() == data
     assert not list(tmp_path.glob("*.part"))
+
+
+class _DropOnceS3:
+    """The first stream breaks mid-body (BrokenPipe on a busy node); the retry succeeds."""
+
+    def __init__(self, data):
+        self.data, self.calls = data, 0
+
+    def get_object(self, Bucket, Key):
+        from botocore.exceptions import ResponseStreamingError  # noqa: PLC0415
+
+        self.calls += 1
+        data, broken = self.data, self.calls == 1
+
+        class _Body:
+            def iter_chunks(self, chunk_size):
+                yield data[:10]
+                if broken:
+                    raise ResponseStreamingError(
+                        error="Connection broken: BrokenPipeError(32)"
+                    )
+                yield data[10:]
+
+        return {"Body": _Body(), "ContentLength": len(data)}
+
+
+def test_get_file_retries_dropped_stream(tmp_path):
+    data = b"0123456789abcdefghij"
+    client = downloader.S3Client.__new__(downloader.S3Client)
+    client._client = _DropOnceS3(data)
+    dest = tmp_path / "sub-01_eeg.bdf"
+    client.get_file("s3://openneuro.org/ds1/sub-01_eeg.bdf", str(dest))
+    assert dest.read_bytes() == data
+    assert client._client.calls == 2
+    assert not list(tmp_path.glob("*.part"))

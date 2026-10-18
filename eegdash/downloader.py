@@ -26,7 +26,12 @@ import boto3
 import rich.progress
 from botocore import UNSIGNED
 from botocore.config import Config
-from botocore.exceptions import ClientError
+from botocore.exceptions import (
+    ClientError,
+    ConnectionClosedError,
+    ReadTimeoutError,
+    ResponseStreamingError,
+)
 from rich.console import Console
 from tqdm.auto import tqdm
 
@@ -38,6 +43,14 @@ def _split_s3_uri(uri: str) -> tuple[str, str]:
     without_scheme = re.sub(r"^s3://", "", str(uri)).lstrip("/")
     bucket, _, key = without_scheme.partition("/")
     return bucket, key
+
+
+_STREAM_RETRIES = 3
+_TRANSIENT_STREAM_ERRORS = (
+    ResponseStreamingError,
+    ConnectionClosedError,
+    ReadTimeoutError,
+)
 
 
 class S3Client:
@@ -78,8 +91,21 @@ class S3Client:
         Error mapping matches the ``s3fs`` contract callers depend on: a missing
         key raises :class:`FileNotFoundError`, and a 403 — how S3 reports a
         missing object when anonymous ``ListBucket`` is denied, e.g. NEMAR —
-        raises :class:`PermissionError`.
+        raises :class:`PermissionError`. A connection dropped mid-stream is
+        retried (``_STREAM_RETRIES`` attempts) with a fresh GET.
         """
+        for attempt in range(1, _STREAM_RETRIES + 1):
+            try:
+                return self._get_file_once(rpath, lpath, callback=callback)
+            except _TRANSIENT_STREAM_ERRORS as e:
+                if attempt == _STREAM_RETRIES:
+                    raise
+                # ponytail: progress may overshoot after a retry; reset the bar if it matters
+                logger.warning(
+                    "Retrying %s after %s (%d/%d)", rpath, e, attempt, _STREAM_RETRIES
+                )
+
+    def _get_file_once(self, rpath: str, lpath: str, *, callback=None) -> None:
         bucket, key = _split_s3_uri(rpath)
         try:
             resp = self._client.get_object(Bucket=bucket, Key=key)

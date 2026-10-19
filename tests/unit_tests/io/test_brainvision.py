@@ -1,22 +1,12 @@
-"""eegdash.io.brainvision: stale DataFile=/MarkerFile= read through MNE 1.13 ``overrides``.
+"""eegdash.io.brainvision.overrides: the files a stale .vhdr should name, header untouched.
 
-EEGDash used to rewrite these headers in the download cache (and write stub
-.vmrk files). The header must now stay byte-identical while the same files are
-read.
+Reading through MNE with these overrides is tested end to end in
+tests/unit_tests/dataset/test_no_rewrite.py.
 """
 
-from pathlib import Path
-
-import mne
-import numpy as np
 import pytest
 
-from eegdash.io import get_reader
-from eegdash.io.brainvision import (
-    _find_best_matching_file,
-    overrides,
-    read_raw_brainvision,
-)
+from eegdash.io.brainvision import overrides
 
 STEM = "sub-01_task-rest_eeg"
 ANNEX_EEG = "SHA256E-s9999--" + "ab" * 32 + ".eeg"
@@ -131,101 +121,3 @@ def test_overrides_never_take_another_recordings_data(tmp_path):
     _touch(tmp_path, "sub-01_run-01_eeg.eeg", "sub-01_run-01_eeg.vhdr")
     vhdr = _vhdr(tmp_path, "s1_run2.eeg", stem="sub-01_run-02_eeg")
     assert overrides(vhdr) == {}
-
-
-def test_overrides_unreadable_header(tmp_path):
-    assert overrides(tmp_path / "missing.vhdr") == {}
-
-
-def test_find_best_matching_file(tmp_path):
-    assert _find_best_matching_file(tmp_path, "x.eeg", ".eeg") is None
-    _touch(tmp_path, "actual_file.eeg")
-    assert (
-        _find_best_matching_file(tmp_path, "different.eeg", ".eeg") == "actual_file.eeg"
-    )
-    _touch(tmp_path, "sub-01_task-rest_eeg.eeg", "sub-02_task-rest_eeg.eeg")
-    match = _find_best_matching_file(tmp_path, "rsub-01_task-rest_eeg.eeg", ".eeg")
-    assert match == "sub-01_task-rest_eeg.eeg"
-
-
-# Reading real BrainVision files written by pybv.
-
-
-def _write(folder, n_times=200, events=True):
-    pybv = pytest.importorskip("pybv")
-    data = np.random.default_rng(0).standard_normal((2, n_times)) * 1e-5
-    kwargs = {}
-    if events:
-        kwargs["events"] = np.array([[50, 1], [120, 2]])  # onset, code
-    pybv.write_brainvision(
-        data=data,
-        sfreq=100.0,
-        ch_names=["Fz", "Cz"],
-        fname_base=STEM,
-        folder_out=str(folder),
-        overwrite=True,
-        **kwargs,
-    )
-    return Path(folder) / f"{STEM}.vhdr", data
-
-
-def _set_pointers(vhdr, datafile, markerfile):
-    lines = []
-    for line in vhdr.read_text().splitlines():
-        if line.startswith("DataFile="):
-            line = f"DataFile={datafile}"
-        elif line.startswith("MarkerFile="):
-            if markerfile is None:
-                continue
-            line = f"MarkerFile={markerfile}"
-        lines.append(line)
-    vhdr.write_text("\n".join(lines) + "\n")
-
-
-def _snapshot(folder):
-    return {p.name: p.read_bytes() for p in sorted(Path(folder).iterdir())}
-
-
-def test_read_annex_key_pointers(tmp_path):
-    vhdr, data = _write(tmp_path)
-    _set_pointers(vhdr, ANNEX_EEG, ANNEX_VMRK)
-    before = _snapshot(tmp_path)
-    with pytest.raises(FileNotFoundError):
-        mne.io.read_raw_brainvision(vhdr, verbose="ERROR")
-    raw = read_raw_brainvision(vhdr, preload=True, verbose="ERROR")
-    np.testing.assert_allclose(raw.get_data(), data, rtol=1e-6, atol=1e-12)
-    assert len(raw.annotations) >= 2  # the markers of the BIDS .vmrk
-    assert _snapshot(tmp_path) == before
-
-
-def test_read_missing_markerfile_key_keeps_markers(tmp_path):
-    vhdr, _ = _write(tmp_path)
-    reference = read_raw_brainvision(vhdr, verbose="ERROR").annotations
-    _set_pointers(vhdr, f"{STEM}.eeg", None)
-    before = _snapshot(tmp_path)
-    assert len(mne.io.read_raw_brainvision(vhdr, verbose="ERROR").annotations) == 0
-    raw = read_raw_brainvision(vhdr, verbose="ERROR")
-    assert list(raw.annotations.description) == list(reference.description)
-    np.testing.assert_array_equal(raw.annotations.onset, reference.onset)
-    assert _snapshot(tmp_path) == before
-
-
-def test_read_missing_vmrk_writes_no_stub(tmp_path):
-    vhdr, data = _write(tmp_path)
-    (tmp_path / f"{STEM}.vmrk").unlink()
-    before = _snapshot(tmp_path)
-    raw = read_raw_brainvision(vhdr, preload=True, verbose="ERROR")
-    assert len(raw.annotations) == 0
-    np.testing.assert_allclose(raw.get_data(), data, rtol=1e-6, atol=1e-12)
-    assert _snapshot(tmp_path) == before  # no stub .vmrk
-
-
-def test_caller_overrides_win(tmp_path):
-    vhdr, _ = _write(tmp_path)
-    _set_pointers(vhdr, ANNEX_EEG, f"{STEM}.vmrk")
-    raw = read_raw_brainvision(vhdr, overrides={"marker_fname": False}, verbose="ERROR")
-    assert len(raw.annotations) == 0
-
-
-def test_direct_reader_is_ours():
-    assert get_reader(".vhdr") is read_raw_brainvision

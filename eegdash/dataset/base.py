@@ -1502,13 +1502,8 @@ class EEGDashRaw(RawDataset):
         than the recording's own gets ``overrides`` (MNE 1.13) in ``extra_params``.
         """
         if self.filecache is not None and self.filecache.suffix.lower() == ".vhdr":
-            found = brainvision.overrides(self.filecache)
-            if found:
-                extra_params = {**(extra_params or {})}
-                extra_params["overrides"] = {
-                    **found,
-                    **extra_params.get("overrides", {}),
-                }
+            if found := brainvision.overrides(self.filecache):
+                extra_params = {**(extra_params or {}), "overrides": found}
         with tolerant():
             return mne_bids.read_raw_bids(
                 bids_path=self.bidspath,

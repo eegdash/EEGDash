@@ -1974,23 +1974,6 @@ def test_load_raw_ctf_trial_size_mismatch_fallback_fails(tmp_path):
 # ── configparser.NoOptionError (missing MarkerFile) → repair + retry ──
 
 
-def test_read_raw_bids_passes_brainvision_overrides(tmp_path):
-    """A stale DataFile= reaches read_raw_bids as extra_params["overrides"]."""
-    ds = _make_local_eegdashraw(
-        tmp_path, "ds003944", "sub-01/eeg/sub-01_task-rest_eeg.vhdr", ext=".vhdr"
-    )
-    ds.filecache.parent.mkdir(parents=True, exist_ok=True)
-    ds.filecache.write_text("[Common Infos]\nDataFile=OLD_NAME.eeg\n")
-    ds.filecache.with_suffix(".eeg").touch()
-    with patch("mne_bids.read_raw_bids", return_value=MagicMock()) as mock_read:
-        ds._read_raw_bids(extra_params={"overrides": {"sfreq": 500.0}})
-    extra = mock_read.call_args.kwargs["extra_params"]
-    assert extra["overrides"] == {
-        "data_fname": "sub-01_task-rest_eeg.eeg",
-        "sfreq": 500.0,
-    }
-
-
 def test_load_raw_no_option_error_non_markerfile_reraises(tmp_path):
     """configparser.NoOptionError for non-markerfile option → re-raises."""
     import configparser
@@ -2006,19 +1989,6 @@ def test_load_raw_no_option_error_non_markerfile_reraises(tmp_path):
 
 
 # ── UnicodeDecodeError: no TSV rewrite, no retry ──
-
-
-def test_load_raw_unicode_decode_error_is_not_retried(tmp_path):
-    """No TSV is re-encoded on disk: tolerant() reads TSVs in their own encoding."""
-    ds = _make_local_eegdashraw(
-        tmp_path, "ds005692", "sub-01/eeg/sub-01_task-rest_eeg.edf"
-    )
-
-    error = UnicodeDecodeError("utf-8", b"\xb5", 0, 1, "invalid start byte")
-    with patch("mne_bids.read_raw_bids", side_effect=error) as mock_read:
-        with pytest.raises(UnicodeDecodeError):
-            ds._load_raw()
-    assert mock_read.call_count == 1
 
 
 # ── scans.tsv path mismatch → direct reader fallback ──

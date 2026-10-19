@@ -2,10 +2,14 @@
 
 on004624 sub-c04 Longterm Passive run-10: channel CH20's segment has only its
 ``.tmet``; pymef 1.4.8 segfaults on it (SIGSEGV killed the read-check job twice).
-pymef is replaced by a stub here, so the test can never crash the test process.
+pymef is replaced by a stub there, so the test can never crash the test process.
+Channels of different lengths (on004624, 15 sessions) are written with pymef.
 """
 
+import warnings
+
 import mne
+import numpy as np
 import pymef.mef_session
 import pytest
 
@@ -48,3 +52,78 @@ def test_segment_without_data_is_refused_before_pymef(tmp_path, pymef_stub):
 def test_complete_session_reaches_pymef(tmp_path, pymef_stub):
     with tolerant(), pytest.raises(_Reached):
         mne.io.read_raw_mef(_session(tmp_path))
+
+
+SFREQ, START = 100.0, 1_600_000_000_000_000  # Hz, uUTC
+
+
+def _write_session(path, lengths, starts, gap=None):
+    """Unencrypted channels written with pymef (no stub); ``gap=(ch, sample)`` splits
+    that channel there into a second segment that starts 1 s late.
+    """
+    ms = pymef.mef_session.MefSession(str(path), None, new_session=True)
+    data = np.arange(max(lengths) * len(lengths), dtype="int32").reshape(
+        len(lengths), -1
+    )
+    for k, (n, start) in enumerate(zip(lengths, starts)):
+        cut = gap[1] if gap and gap[0] == k else n
+        for seg, (i0, i1, t0) in enumerate(
+            [(0, cut, start), (cut, n, start + 1_000_000)]
+        ):
+            if i1 > i0:
+                t0 += int(i0 / SFREQ * 1e6)
+                end = t0 + int((i1 - i0) / SFREQ * 1e6)
+                section_2 = {
+                    "sampling_frequency": SFREQ,
+                    "units_conversion_factor": 1.0,
+                }
+                section_2.update(start_sample=i0, recording_duration=end - t0)
+                ms.write_mef_ts_segment_metadata(
+                    f"CH{k}", seg, None, None, t0, end, section_2, {}
+                )
+                ms.write_mef_ts_segment_data(
+                    f"CH{k}", seg, None, None, 100, data[k, i0:i1]
+                )
+    return path, data
+
+
+def test_trailing_channel_tail_is_cropped_to_the_common_length(tmp_path):
+    # on004624 sub-c02 Functional Sensorimotor run-6: {206800, 207000} samples.
+    root, data = _write_session(
+        tmp_path / "run-6_ieeg.mefd", (1000, 1200, 1000), [START] * 3
+    )
+    with pytest.raises(ValueError, match="inconsistent n_samples"):
+        mne.io.read_raw_mef(root)
+
+    with (
+        tolerant(),
+        pytest.warns(RuntimeWarning, match="dropped from the end: CH1 200"),
+    ):
+        raw = mne.io.read_raw_mef(root, preload=True)
+    assert raw.n_times == 1000  # never padded
+    cals = np.array([ch["cal"] for ch in raw.info["chs"]])
+    np.testing.assert_allclose(raw.get_data() / cals[:, None], data[:, :1000])
+
+
+def test_channels_that_start_apart_are_refused(tmp_path):
+    starts = [START, START + 2_000_000, START]  # CH1 starts 2 s later
+    root, _ = _write_session(tmp_path / "run-7_ieeg.mefd", (1000, 1200, 1000), starts)
+    with tolerant(), pytest.raises(ValueError, match="do not start at the same time"):
+        mne.io.read_raw_mef(root)
+
+
+def test_channels_with_different_gaps_are_refused(tmp_path):
+    root, _ = _write_session(
+        tmp_path / "run-9_ieeg.mefd", (1000, 1200, 1000), [START] * 3, gap=(1, 500)
+    )
+    with tolerant(), pytest.raises(ValueError, match="discontinuities"):
+        mne.io.read_raw_mef(root)
+
+
+def test_equal_lengths_read_as_before(tmp_path):
+    root, data = _write_session(tmp_path / "run-8_ieeg.mefd", (1000, 1000), [START] * 2)
+    ref = mne.io.read_raw_mef(root, preload=True)
+    with tolerant(), warnings.catch_warnings():
+        warnings.simplefilter("error")
+        raw = mne.io.read_raw_mef(root, preload=True)
+    np.testing.assert_array_equal(raw.get_data(), ref.get_data())

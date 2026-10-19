@@ -460,11 +460,11 @@ def test_len_error_handling(mock_validate, tmp_path):
 )
 @patch("eegdash.dataset.base.validate_record")
 @patch("eegdash.dataset.base._generate_vhdr_from_metadata")
-@patch("eegdash.dataset.base._ensure_coordsystem")
+@patch("eegdash.dataset.base._warn_no_coordsystem")
 @patch("eegdash.dataset.base.mne_bids")
 def test_ensure_raw_vhdr_handling(
     mock_mne_bids,
-    mock_ensure_coordsystem,
+    mock_warn_no_coordsystem,
     mock_generate_vhdr,
     mock_validate,
     tmp_path,

@@ -1734,9 +1734,7 @@ class EEGDashRaw(RawDataset):
 
         while True:
             try:
-                return _attach_electrode_labels(
-                    self.filecache, self._read_raw_bids()
-                )
+                return _attach_electrode_labels(self.filecache, self._read_raw_bids())
             except NotImplementedError as first_error:
                 msg = str(first_error)
                 if (

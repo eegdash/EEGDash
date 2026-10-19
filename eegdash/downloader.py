@@ -16,6 +16,7 @@ and limited to a handful of operations (HEAD, GET, LIST), so ``boto3`` covers it
 directly. See https://github.com/eegdash/EEGDash/issues/397.
 """
 
+import json
 import os
 import re
 import threading
@@ -73,13 +74,17 @@ class S3Client:
             ),
         )
 
-    def info(self, path: str) -> dict:
+    def info(self, path: str, *, version_id: str | None = None) -> dict:
         """Return object metadata (``{"size": <bytes>}``) via a HEAD request."""
         bucket, key = _split_s3_uri(path)
-        resp = self._client.head_object(Bucket=bucket, Key=key)
+        resp = self._client.head_object(
+            Bucket=bucket, Key=key, **({"VersionId": version_id} if version_id else {})
+        )
         return {"size": resp["ContentLength"]}
 
-    def get_file(self, rpath: str, lpath: str, *, callback=None) -> None:
+    def get_file(
+        self, rpath: str, lpath: str, *, callback=None, version_id: str | None = None
+    ) -> None:
         """Download a single object with one unsigned GET (no HEAD, no LIST).
 
         Streams the body to a ``.part`` sibling and atomically renames it into
@@ -96,7 +101,12 @@ class S3Client:
         """
         for attempt in range(1, _STREAM_RETRIES + 1):
             try:
-                return self._get_file_once(rpath, lpath, callback=callback)
+                return self._get_file_once(
+                    rpath,
+                    lpath,
+                    callback=callback,
+                    **({"version_id": version_id} if version_id else {}),
+                )
             except _TRANSIENT_STREAM_ERRORS as e:
                 if attempt == _STREAM_RETRIES:
                     raise
@@ -105,10 +115,16 @@ class S3Client:
                     "Retrying %s after %s (%d/%d)", rpath, e, attempt, _STREAM_RETRIES
                 )
 
-    def _get_file_once(self, rpath: str, lpath: str, *, callback=None) -> None:
+    def _get_file_once(
+        self, rpath: str, lpath: str, *, callback=None, version_id: str | None = None
+    ) -> None:
         bucket, key = _split_s3_uri(rpath)
         try:
-            resp = self._client.get_object(Bucket=bucket, Key=key)
+            resp = self._client.get_object(
+                Bucket=bucket,
+                Key=key,
+                **({"VersionId": version_id} if version_id else {}),
+            )
         except ClientError as e:
             status = e.response.get("ResponseMetadata", {}).get("HTTPStatusCode")
             code = str(e.response.get("Error", {}).get("Code"))
@@ -230,7 +246,11 @@ def get_s3path(s3_bucket: str, filepath: str) -> str:
 
 
 def download_s3_file(
-    s3_path: str, local_path: Path, *, filesystem: S3Client | None = None
+    s3_path: str,
+    local_path: Path,
+    *,
+    filesystem: S3Client | None = None,
+    version_id: str | None = None,
 ) -> Path:
     """Download a single file from S3 to a local path.
 
@@ -245,6 +265,10 @@ def download_s3_file(
         The local file path where the downloaded file will be saved.
     filesystem : S3Client | None
         Optional pre-created accessor to reuse across multiple downloads.
+    version_id : str | None
+        Select this exact S3 object version for HEAD and GET. A sibling
+        ``.s3-version.json`` records the cache identity; unmarked caches are
+        refreshed even when the byte count matches.
 
     Returns
     -------
@@ -255,16 +279,33 @@ def download_s3_file(
     filesystem = filesystem or get_s3_filesystem()
     local_path.parent.mkdir(parents=True, exist_ok=True)
 
-    remote_size = _remote_size(filesystem, s3_path)
-    if local_path.exists():
+    # A size match alone cannot identify a version (HEAD may have equal size).
+    marker = local_path.with_name(local_path.name + ".s3-version.json")
+    identity = {"uri": s3_path, "version_id": version_id}
+    cached_identity = None
+    if marker.exists():
+        try:
+            cached_identity = json.loads(marker.read_text())
+        except (OSError, ValueError):
+            pass
+    remote_size = _remote_size(filesystem, s3_path, version_id=version_id)
+    cache_matches = cached_identity == identity if version_id else not marker.exists()
+    if local_path.exists() and cache_matches:
         if remote_size is None:
             return local_path
         if local_path.stat().st_size == remote_size:
             return local_path
         local_path.unlink(missing_ok=True)
 
+    # Invalidate before replacing the data, so a failed transfer cannot certify
+    # an object downloaded for another pin. get_file replaces data atomically.
+    marker.unlink(missing_ok=True)
     _filesystem_get(
-        filesystem=filesystem, s3path=s3_path, filepath=local_path, size=remote_size
+        filesystem=filesystem,
+        s3path=s3_path,
+        filepath=local_path,
+        size=remote_size,
+        **({"version_id": version_id} if version_id else {}),
     )
     if remote_size is not None and local_path.stat().st_size != remote_size:
         local_path.unlink(missing_ok=True)
@@ -273,6 +314,8 @@ def download_s3_file(
             f"(expected {remote_size} bytes)."
         )
 
+    if version_id:
+        marker.write_text(json.dumps(identity))
     return local_path
 
 
@@ -352,9 +395,13 @@ def download_files(
     return downloaded
 
 
-def _remote_size(filesystem: S3Client, s3path: str) -> int | None:
+def _remote_size(
+    filesystem: S3Client, s3path: str, *, version_id: str | None = None
+) -> int | None:
     try:
-        info = filesystem.info(s3path)
+        info = filesystem.info(
+            s3path, **({"version_id": version_id} if version_id else {})
+        )
     except Exception:
         return None
     # Not `size or Size`: a legitimate 0-byte object is falsy and must not be
@@ -438,6 +485,7 @@ def _filesystem_get(
     filepath: Path,
     *,
     size: int | None = None,
+    version_id: str | None = None,
 ) -> Path:
     """Perform the file download with a progress bar (Rich if a TTY, else tqdm).
 
@@ -482,7 +530,12 @@ def _filesystem_get(
         # works on those buckets. All callers here pass single object URIs; the
         # CTF directory case in base.py pre-expands via ``S3Client.ls`` into
         # per-file pairs.
-        filesystem.get_file(s3path, str(filepath), callback=callback)
+        filesystem.get_file(
+            s3path,
+            str(filepath),
+            callback=callback,
+            **({"version_id": version_id} if version_id else {}),
+        )
     finally:
         # Ensure callback is closed properly (important for Rich to clean up display)
         if hasattr(callback, "close"):

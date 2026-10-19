@@ -305,7 +305,7 @@ def download_s3_file(
         s3path=s3_path,
         filepath=local_path,
         size=remote_size,
-        version_id=version_id,
+        **({"version_id": version_id} if version_id else {}),
     )
     if remote_size is not None and local_path.stat().st_size != remote_size:
         local_path.unlink(missing_ok=True)

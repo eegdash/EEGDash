@@ -60,6 +60,25 @@ def test_channels_tsv_names_types_bads(tmp_path):
     assert raw.info["bads"] == ["ch02"]
 
 
+def test_electrode_positions_as_read_raw_bids(tmp_path):
+    """nm000369 sub-S6, nm000371: the deposit's electrodes.tsv + coordsystem.json apply."""
+    ieeg = tmp_path / "sub-01" / "ieeg"
+    ieeg.mkdir(parents=True)
+    path = _write(ieeg / "sub-01_task-x_ieeg.nwb", np.zeros((10, 2)))
+    (ieeg / "sub-01_task-x_channels.tsv").write_text(
+        "name\ttype\tunits\nA1\tSEEG\tV\nA2\tSEEG\tV\n"
+    )
+    (ieeg / "sub-01_space-ACPC_electrodes.tsv").write_text(
+        "name\tx\ty\tz\tsize\nA1\t10\t-20\t30\tn/a\nA2\tn/a\tn/a\tn/a\tn/a\n"
+    )
+    (ieeg / "sub-01_space-ACPC_coordsystem.json").write_text(
+        '{"iEEGCoordinateSystem": "ACPC", "iEEGCoordinateUnits": "mm"}'
+    )
+    raw = _read_nwb_with_channels_tsv(path)
+    np.testing.assert_allclose(raw.info["chs"][0]["loc"][:3], [0.01, -0.02, 0.03])
+    assert np.isnan(raw.info["chs"][1]["loc"][:3]).all()
+
+
 def _write_timeseries(path, data, *, unit, rate=None, timestamps=None, extra=()):
     """A generic TimeSeries in acquisition, no electrode table (nm000369, nm000371)."""
     with h5py.File(path, "w") as f:

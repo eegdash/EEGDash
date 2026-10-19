@@ -17,7 +17,6 @@ from eegdash.dataset.io import (
     _eeglab_fdt_path,
     _eeglab_get_first_eeg,
     _eeglab_load_first_eeg,
-    _ensure_coordsystem,
     _fix_negative_annotation_durations,
     _generate_coordsystem_json,
     _generate_vhdr_from_metadata,
@@ -26,6 +25,7 @@ from eegdash.dataset.io import (
     _parse_set_metadata,
     _read_bids_channels_tsv,
     _repair_channels_tsv,
+    _warn_no_coordsystem,
 )
 
 
@@ -100,7 +100,7 @@ def test_convert_time_with_numeric_dash_strips_whitespace():
     orig.assert_called_once_with("14/10/1925", "00:00:00")
 
 
-def test_ensure_coordsystem_uses_the_subject_level_one(tmp_path):
+def test_warn_no_coordsystem_uses_the_subject_level_one(tmp_path):
     """A subject-level coordsystem.json applies as is: no link, no generated file."""
     eeg_dir = tmp_path / "sub-01" / "eeg"
     eeg_dir.mkdir(parents=True)
@@ -109,7 +109,7 @@ def test_ensure_coordsystem_uses_the_subject_level_one(tmp_path):
         json.dumps({"EEGCoordinateSystem": "CapTrak", "EEGCoordinateUnits": "m"})
     )
 
-    _ensure_coordsystem(_bp(tmp_path, "eeg"))
+    _warn_no_coordsystem(_bp(tmp_path, "eeg"), "ds1")
 
     assert sorted(p.name for p in eeg_dir.iterdir()) == [
         "sub-01_task-rest_electrodes.tsv"
@@ -118,8 +118,8 @@ def test_ensure_coordsystem_uses_the_subject_level_one(tmp_path):
 
 def test_io_error_handling(tmp_path):
     """Test error handling branches in IO module."""
-    # ensure_coordsystem on a missing dataset or without electrodes
-    _ensure_coordsystem(_bp(tmp_path / "missing_dir", "eeg"))  # Should not raise
+    # warn_no_coordsystem on a missing dataset or without electrodes: no raise
+    _warn_no_coordsystem(_bp(tmp_path / "missing_dir", "eeg"), "ds1")
     assert not (tmp_path / "missing_dir").exists()
 
 
@@ -315,21 +315,20 @@ def _bp(root, datatype):
     )
 
 
-def test_ensure_coordsystem_generates_ieeg_keys(tmp_path):
-    """No coordsystem.json anywhere: iEEG keys, units n/a, system Other, warned."""
+def test_warn_no_coordsystem_writes_nothing(tmp_path):
+    """No coordsystem.json anywhere: nothing written, one warning."""
     ieeg_dir = tmp_path / "sub-01" / "ieeg"
     ieeg_dir.mkdir(parents=True)
     (ieeg_dir / "sub-01_electrodes.tsv").write_text(_ELECTRODES)
 
     with patch("eegdash.dataset.io.logger") as log:
-        _ensure_coordsystem(_bp(tmp_path, "ieeg"))
+        _warn_no_coordsystem(_bp(tmp_path, "ieeg"), "ds1")
 
-    data = json.loads((ieeg_dir / "sub-01_coordsystem.json").read_text())
-    assert data == {"iEEGCoordinateSystem": "Other", "iEEGCoordinateUnits": "n/a"}
-    assert "the deposit gives none" in log.warning.call_args.args
+    assert [p.name for p in ieeg_dir.iterdir()] == ["sub-01_electrodes.tsv"]
+    assert log.warning.call_args.args[1:] == ("ds1", "sub-01_task-rest_ieeg.vhdr")
 
 
-def test_ensure_coordsystem_keeps_correct_keys_ieeg(tmp_path):
+def test_warn_no_coordsystem_keeps_correct_keys_ieeg(tmp_path):
     """coordsystem.json with correct iEEG keys in ieeg dir is left unchanged."""
     ieeg_dir = tmp_path / "sub-01" / "ieeg"
     ieeg_dir.mkdir(parents=True)
@@ -341,7 +340,7 @@ def test_ensure_coordsystem_keeps_correct_keys_ieeg(tmp_path):
     )
     coordsystem.write_text(original_content)
 
-    _ensure_coordsystem(_bp(tmp_path, "ieeg"))
+    _warn_no_coordsystem(_bp(tmp_path, "ieeg"), "ds1")
 
     assert coordsystem.read_text() == original_content
     assert len(list(ieeg_dir.iterdir())) == 2

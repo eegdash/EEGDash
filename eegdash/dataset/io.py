@@ -139,14 +139,13 @@ def _prepare_writable_path(path: Path) -> bool:
         return False
 
 
-def _ensure_coordsystem(bids_path) -> None:
-    """Write a coordsystem.json when the deposit has none for a recording's positions.
+def _warn_no_coordsystem(bids_path, dataset) -> None:
+    """Warn when a recording's electrodes.tsv has positions but no coordsystem.json applies.
 
-    MNE-BIDS reads electrodes.tsv positions only with a coordsystem.json. When
-    the electrodes.tsv it picks for this recording holds positions and no
-    coordsystem.json applies, a minimal one is written next to it (see
-    :func:`_generate_coordsystem_json`). Nothing is written when every
-    coordinate is n/a (ds004944, on004819).
+    MNE-BIDS then skips the positions (its own warning is silenced by
+    ``verbose="ERROR"``). Nothing is generated: a written file would guess the
+    coordinate system and the units (ds004770, on005007, on006107). All-n/a
+    electrodes (ds004944, on004819) have nothing to skip, so no warning.
     """
     from ..io.bids import _find_matching_sidecar  # the space-aware lookup
 
@@ -156,7 +155,11 @@ def _ensure_coordsystem(bids_path) -> None:
             return
         electrodes = find("electrodes", ".tsv")
         if electrodes is not None and _has_positions(electrodes):
-            _generate_coordsystem_json(electrodes, datatype=bids_path.datatype)
+            logger.warning(
+                "%s %s: no coordsystem.json: positions not applied.",
+                dataset,
+                bids_path.basename,
+            )
     except Exception as e:
         logger.warning("Error checking coordsystem.json: %s", e)
 

@@ -11,6 +11,9 @@
   MNE-BIDS, which then reads no positions.
 - The generated coordsystem.json said ``"m"`` (a guess), and was written even
   when every coordinate is n/a (ds004944).
+- Positions without a coordsystem.json (ds004770, on005007, on006107): any
+  generated file guesses the system and the units, so positions are skipped
+  with one warning, as MNE-BIDS does (Bruno, 2026-10-19).
 """
 
 import json
@@ -18,7 +21,7 @@ import shutil
 import warnings
 from datetime import UTC, datetime
 from pathlib import Path
-from unittest.mock import patch
+from unittest.mock import call, patch
 
 import mne
 import numpy as np
@@ -242,7 +245,7 @@ def test_two_spaces_read_the_named_one_not_other(tmp_path):
     )
 
 
-# ── 3. the generated coordsystem.json: units n/a, none without positions ──
+# ── 3. no coordsystem.json in the deposit: nothing generated ──
 
 
 def test_no_coordsystem_is_generated_when_every_coordinate_is_na(tmp_path):
@@ -259,22 +262,25 @@ def test_no_coordsystem_is_generated_when_every_coordinate_is_na(tmp_path):
     assert np.isnan([ch["loc"][0] for ch in raw.info["chs"]]).all()
 
 
-def test_generated_coordsystem_leaves_the_unit_to_mne_bids(tmp_path):
-    """No coordsystem.json in the deposit: units n/a, MNE-BIDS reads mm (max 102)."""
+def test_positions_without_a_coordsystem_are_not_applied(tmp_path):
+    """ds004770: positions, no coordsystem.json: nothing generated, one warning."""
     root = tmp_path / "fakeds"
     relpath = _write_ieeg(root)
     (root / "sub-01" / "ieeg" / "sub-01_task-sleep_electrodes.tsv").write_text(MM)
-    with patch("eegdash.dataset.base.validate_record", return_value=None):
+    with (
+        patch("eegdash.dataset.base.validate_record", return_value=None),
+        patch("eegdash.dataset.io.logger") as log,
+    ):
         raw = EEGDashRaw(
             _record(relpath, str(root), "local", []), cache_dir=str(tmp_path)
         ).raw
 
-    generated = root / "sub-01" / "ieeg" / "sub-01_task-sleep_coordsystem.json"
-    assert json.loads(generated.read_text()) == {
-        "iEEGCoordinateSystem": "Other",
-        "iEEGCoordinateUnits": "n/a",
-    }
-    assert _positions(raw) == {
-        "A1": [0.04, -0.0125, 0.102],
-        "A2": [-0.03, 0.008, 0.055],
-    }
+    assert list(root.rglob("*_coordsystem.json")) == []
+    assert np.isnan([ch["loc"][0] for ch in raw.info["chs"]]).all()
+    assert log.warning.call_args_list == [
+        call(
+            "%s %s: no coordsystem.json: positions not applied.",
+            "fakeds",
+            "sub-01_task-sleep_ieeg.vhdr",
+        )
+    ]

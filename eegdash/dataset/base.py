@@ -50,7 +50,6 @@ from .io import (
     _ANNEX_KEY_RE,
     _convert_time_with_numeric_dash,
     _eeglab_load_first_eeg,
-    _ensure_coordsystem,
     _fix_negative_annotation_durations,
     _generate_coordsystem_json,
     _generate_vhdr_from_metadata,
@@ -63,6 +62,7 @@ from .io import (
     _repair_channels_tsv,
     _repair_participants_tsv_ids,
     _repair_snirf_bids_metadata,
+    _warn_no_coordsystem,
 )
 
 # Error messages indicating unrecoverable data corruption — the source
@@ -1397,7 +1397,7 @@ class EEGDashRaw(RawDataset):
             _repair_participants_tsv_ids(self.bids_root)
 
         if self.filecache and self.filecache.parent.exists():
-            _ensure_coordsystem(self.bidspath)
+            _warn_no_coordsystem(self.bidspath, self.record.get("dataset"))
             _repair_channels_tsv(self.filecache.parent)
 
         # Helper: Handle VHDR files - generate if missing, repair if broken

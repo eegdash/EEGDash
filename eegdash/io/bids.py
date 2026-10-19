@@ -46,6 +46,7 @@ import gzip
 import logging
 from contextlib import ExitStack, contextmanager
 from contextvars import ContextVar
+from functools import partial
 from pathlib import Path
 from unittest import mock
 
@@ -60,7 +61,6 @@ _RESERVED = ("onset", "duration", "description", "ch_names", "hed_string")
 _orig_make_annotation_kwargs = _read._make_annotation_kwargs
 _orig_handle_participants_reading = _read._handle_participants_reading
 _orig_find_matching_sidecar = _read._find_matching_sidecar
-_orig_handle_events_reading = _read._handle_events_reading
 _skip_events = ContextVar("eegdash_skip_events_tsv", default=False)
 _lead_s = ContextVar("eegdash_events_lead_s", default=0.0)
 
@@ -80,13 +80,13 @@ def _make_annotation_kwargs(*args, **kwargs):
     return info, rows
 
 
-def _handle_events_reading(events_fname, raw, **kwargs):
+def _handle_events_reading(handle, events_fname, raw, **kwargs):
     """events.tsv onsets count from the recording's first sample; a reader that
     dropped leading samples (``mef.crop_to_common_window``) sets ``_eegdash_lead_s``.
     """
     token = _lead_s.set(getattr(raw, "_eegdash_lead_s", 0.0))
     try:
-        return _orig_handle_events_reading(events_fname, raw, **kwargs)
+        return handle(events_fname, raw, **kwargs)
     finally:
         _lead_s.reset(token)
 
@@ -194,7 +194,11 @@ def fixes():
             mock.patch.object(_read, "_make_annotation_kwargs", _make_annotation_kwargs)
         )
         stack.enter_context(
-            mock.patch.object(_read, "_handle_events_reading", _handle_events_reading)
+            mock.patch.object(  # wraps the one in place (tests patch it too)
+                _read,
+                "_handle_events_reading",
+                partial(_handle_events_reading, _read._handle_events_reading),
+            )
         )
         stack.enter_context(
             mock.patch.object(

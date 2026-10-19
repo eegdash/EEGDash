@@ -1,7 +1,10 @@
 """Electrode positions of the converted Zarr store: aggregation, top-view projection, the 2-D map and the 3-D data.
 
-``aggregate_positions`` runs at sync time (``sync_data.py``) and writes
-``data/electrodes.json``; the renderer reads only that file.
+``aggregate_positions`` and ``unplaced_names`` run at sync time (``sync_data.py``)
+and write ``data/electrodes.json``; the renderer reads only that file. A channel
+whose name the position bank lacks was placed by the converter from its
+dataset's own coordinates (``electrodes.tsv``): it is listed as unplaced, not
+drawn, and counted in the captions.
 """
 
 from __future__ import annotations
@@ -15,6 +18,17 @@ CLIP = 1.15  # electrodes below the equator are drawn outside the head circle, o
 LANDMARKS = [("Fz",), ("Cz",), ("Pz",), ("Oz",), ("C3",), ("C4",), ("T7", "T3"), ("T8", "T4"), ("Fp1",), ("Fp2",),
              ("O1",), ("O2",)]  # fmt: skip
 BUCKET_NOTE = "channel set (bucket): one exact set of channel names of one dataset in the Zarr store"
+WORDS = {
+    1: "one",
+    2: "two",
+    3: "three",
+    4: "four",
+    5: "five",
+    6: "six",
+    7: "seven",
+    8: "eight",
+    9: "nine",
+}
 
 
 def aggregate_positions(
@@ -23,11 +37,11 @@ def aggregate_positions(
     added: list[dict[str, str]] | None = None,
 ) -> list[dict]:
     """One entry per electrode *position* used by the buckets: hours, datasets and buckets summed over every bucket
-    carrying it, most hours first. ``added`` are the channel sets of the datasets v1 adds (measured from EEGDash's
-    records, not converted yet): their sums go into ``added_hours`` / ``added_datasets`` / ``added_buckets``, so one
-    file serves the v0 map and the v1 map. The bank holds case-fold duplicates sharing one coordinate (``CZ`` and
-    ``Cz``), so channels are grouped by coordinates rounded to 1e-4 m and named by their spellings, most common
-    first.
+    carrying it, most hours first. ``added`` are the channel sets of the v1 store that v0 does not hold: their sums go
+    into ``added_hours`` / ``added_datasets`` / ``added_buckets``, so one file serves the v0 map and the v1 map. The
+    bank holds case-fold duplicates sharing one coordinate (``CZ`` and ``Cz``), so channels are grouped by
+    coordinates rounded to 1e-4 m and named by their spellings, most common first. A name the bank lacks is left
+    out here (``unplaced_names`` lists it).
     """
     agg: dict[tuple, dict] = {}
     for prefix, rows in (("", buckets), ("added_", added or [])):
@@ -35,9 +49,7 @@ def aggregate_positions(
             hours = float(b["hours"])
             for name in b["channels"].split("|"):
                 if name not in bank:
-                    raise ValueError(
-                        f"bucket {b['bucket']} ({b['dataset']}): channel {name!r} is not in the position bank"
-                    )
+                    continue
                 key = tuple(round(float(c), 4) for c in bank[name])
                 e = agg.setdefault(key, {"hours": 0.0, "datasets": set(), "buckets": 0, "added_hours": 0.0,
                                          "added_datasets": set(), "added_buckets": 0, "spell": {}})  # fmt: skip
@@ -61,6 +73,48 @@ def aggregate_positions(
     return sorted(out, key=lambda e: (-e["hours"], -e["added_hours"], e["names"][0]))
 
 
+def unplaced_names(
+    buckets: list[dict[str, str]],
+    bank: dict[str, list[float]],
+    added: list[dict[str, str]] | None = None,
+) -> list[dict]:
+    """The channel names the bank lacks (the converter placed them from their dataset's own coordinates, which the
+    store does not ship): per name its hours and datasets in v0 and in the channel sets v1 adds, most hours first.
+    """
+    agg: dict[str, dict] = {}
+    for prefix, rows in (("", buckets), ("added_", added or [])):
+        for b in rows:
+            for name in b["channels"].split("|"):
+                if name in bank:
+                    continue
+                u = agg.setdefault(name, {"hours": 0.0, "datasets": set(), "added_hours": 0.0,
+                                          "added_datasets": set()})  # fmt: skip
+                u[prefix + "hours"] += float(b["hours"])
+                u[prefix + "datasets"].add(b["dataset"])
+    out = [{"name": n, "hours": round(u["hours"], 1), "datasets": sorted(u["datasets"]),
+            "added_hours": round(u["added_hours"], 1), "added_datasets": sorted(u["added_datasets"])}
+           for n, u in agg.items()]  # fmt: skip
+    return sorted(out, key=lambda u: (-u["hours"], -u["added_hours"], u["name"]))
+
+
+def unplaced_note(unplaced: list[dict] | None, added: bool = False) -> str:
+    """The caption's sentence on the electrodes placed from their dataset's own coordinates, counted from the data
+    (empty when there are none in the view).
+    """
+    names, datasets = set(), set()
+    for u in unplaced or []:
+        ds = set(u["datasets"]) | (set(u.get("added_datasets", [])) if added else set())
+        if ds:
+            names.add(u["name"])
+            datasets |= ds
+    if not names:
+        return ""
+    n, k = len(names), len(datasets)
+    return (f" {n} electrode{'s' if n != 1 else ''} of {WORDS.get(k, k)} dataset{'s' if k != 1 else ''} "
+            f"{'were' if n != 1 else 'was'} placed from {'their' if k != 1 else 'its'} own coordinates and "
+            f"{'are' if n != 1 else 'is'} not drawn.")  # fmt: skip
+
+
 def view(e: dict, added: bool) -> tuple[float, int, int]:
     """(hours, datasets, buckets) of a position: v0 alone, or v0 plus the datasets v1 adds."""
     if not added:
@@ -74,9 +128,17 @@ def shown(electrodes: list[dict], added: bool) -> list[dict]:
     return [e for e in electrodes if view(e, added)[0] > 0]
 
 
-def check_coverage(electrodes: list[dict], buckets: list[dict[str, str]]) -> None:
-    """Refuse buckets whose channels no electrode entry names (electrodes.json out of step with the buckets)."""
-    known = {n for e in electrodes for n in e["names"]}
+def check_coverage(
+    electrodes: list[dict],
+    buckets: list[dict[str, str]],
+    unplaced: list[dict] | None = None,
+) -> None:
+    """Refuse buckets whose channels neither an electrode entry nor the unplaced list names (electrodes.json out of
+    step with the buckets).
+    """
+    known = {n for e in electrodes for n in e["names"]} | {
+        u["name"] for u in unplaced or []
+    }
     for b in buckets:
         for name in b["channels"].split("|"):
             if name not in known:
@@ -188,7 +250,12 @@ def landmark_of(e: dict) -> str | None:
 
 
 def electrode_svg(
-    electrodes: list[dict], n_datasets: int, n_buckets: int, *, added: bool = False
+    electrodes: list[dict],
+    n_datasets: int,
+    n_buckets: int,
+    *,
+    added: bool = False,
+    unplaced: list[dict] | None = None,
 ) -> tuple[str, str]:
     """The scalp map: one circle per position, ramp step and radius by hours (log) or datasets (linear), both
     precomputed so the toggle only swaps attributes; ``added`` draws v0 plus the datasets v1 adds. Returns the
@@ -230,10 +297,12 @@ def electrode_svg(
     parts.append(legend_svg(electrodes, n_datasets, W, H - 50, added))
     parts.append("</svg>")
     parts.append(note_html())
-    return "".join(parts), caption(electrodes, added)
+    return "".join(parts), caption(electrodes, added, unplaced)
 
 
-def caption(electrodes: list[dict], added: bool = False) -> str:
+def caption(
+    electrodes: list[dict], added: bool = False, unplaced: list[dict] | None = None
+) -> str:
     els = shown(electrodes, added)
     top = max(els, key=lambda e: view(e, added)[0])
     th, td, _ = view(top, added)
@@ -243,11 +312,16 @@ def caption(electrodes: list[dict], added: bool = False) -> str:
     new = len(els) - len(shown(electrodes, False)) if added else 0
     extra = f", {new} of them only in the datasets v1 adds" if new else ""
     return (f"{len(els)} electrode positions{extra}; {top['names'][0]} carries the most data ({th:,.0f} h "
-            f"over {td} datasets); {rare}.")  # fmt: skip
+            f"over {td} datasets); {rare}.{unplaced_note(unplaced, added)}")  # fmt: skip
 
 
 def electrodes_3d(
-    electrodes: list[dict], n_datasets: int, n_buckets: int, *, added: bool = False
+    electrodes: list[dict],
+    n_datasets: int,
+    n_buckets: int,
+    *,
+    added: bool = False,
+    unplaced: list[dict] | None = None,
 ) -> tuple[str, str]:
     """The 3-D view: a canvas drawn by corpus-3d.js from inline JSON (positions in head radii, both encodings,
     the landmark label where the 2-D map carries one), with the same legend and note as the 2-D view.
@@ -277,4 +351,4 @@ def electrodes_3d(
         f'aria-hidden="true">{legend_svg(electrodes, n_datasets, 500, 34, added)}</svg></div>'
         + note_html("Drag, or focus the view and use the arrow keys, to rotate. ")
     )
-    return body, caption(electrodes, added)
+    return body, caption(electrodes, added, unplaced)

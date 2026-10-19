@@ -2,8 +2,8 @@
 
 Every function is a pure function of ``rows`` (``atlas.csv``, one row per
 dataset of the universe), ``buckets`` (one row per channel set of the
-converted v0 Zarr store), ``added`` (one row per channel set of the datasets v1
-adds, from EEGDash's records), ``electrodes`` (one entry per electrode position
+converted v0 Zarr store), ``added`` (one row per channel set of the v1 store
+that v0 does not hold), ``electrodes`` (one entry per electrode position
 used by those channel sets), ``recordings`` (one row per dataset: recording
 lengths, recordings and hours per subject, tokens) or ``demographics`` (one row
 per dataset with ages or sex known).
@@ -23,8 +23,9 @@ from pathlib import Path
 
 # The one status vocabulary, copied literally from the source of truth (the
 # corpus tables' ``STATUSES``); a row with any other status is refused.
-CONVERTED, TO_CONVERT, TO_INGEST = (
+CONVERTED, CONVERTED_V1, TO_CONVERT, TO_INGEST = (
     "Ingested and Converted (v0)",
+    "Ingested and Converted (v1)",
     "Ingested, but not Converted (v1)",
     "To Be Ingested (v1)",
 )
@@ -39,11 +40,26 @@ RENAMED = {
     "Gated (To Be Ingested)": GATED,
     "Blocked (License)": BLOCKED,
 }  # 2026-10-13 and 2026-10-14
-STATUSES = [CONVERTED, TO_CONVERT, TO_INGEST, BLOCKED, GATED, EXCLUDED, PAPER_ONLY]
+STATUSES = [
+    CONVERTED,
+    CONVERTED_V1,
+    TO_CONVERT,
+    TO_INGEST,
+    BLOCKED,
+    GATED,
+    EXCLUDED,
+    PAPER_ONLY,
+]
+CONVERTED_ANY = (
+    CONVERTED,
+    CONVERTED_V1,
+)  # in a converted Zarr store (v0's, or the one v1 adds to it)
+PENDING = (TO_CONVERT, TO_INGEST)  # v1 datasets no store holds yet
 # CSS class suffix per status: ``corpus-fill-<slug>`` / ``corpus-bg-<slug>`` /
 # ``corpus-bd-<slug>`` read the colour variable ``--corpus-st-<slug>``.
 SLUGS = {
     CONVERTED: "converted",
+    CONVERTED_V1: "converted-v1",
     TO_CONVERT: "to-convert",
     TO_INGEST: "to-ingest",
     BLOCKED: "blocked",
@@ -54,6 +70,7 @@ SLUGS = {
 # Short labels for legends and KPI boxes.
 SHORT = {
     CONVERTED: "v0, converted",
+    CONVERTED_V1: "v1, converted",
     TO_CONVERT: "v1, to convert",
     TO_INGEST: "to ingest",
     BLOCKED: "blocked (ND licence)",
@@ -115,11 +132,18 @@ CHECKS = {
 # What comes next, in order; {keys} are filled from the rows at build time.
 ROADMAP = [
     "Host the converted Zarr store eegdash-corpus-v0 ({v0_datasets} datasets, {v0_hours} h) through EEGDash",
+    "Host the converted Zarr store eegdash-corpus-v1 ({v1_datasets} datasets, {v1_hours} h) through EEGDash",
     "One conversion pass for v1: the {to_convert} datasets ingested but not converted "
     "({to_convert_hours} h measured so far)",
     "Deposit the datasets still to ingest ({ingest_names}) on NEMAR so EEGDash serves them",
     "Multi-dataset download in EEGDash: one call fetches a list of dataset ids",
 ]
+# A roadmap step listed only while it has work: (placeholder, the kpis key that must be non-zero).
+ROADMAP_WHILE = {
+    "{v1_datasets}": CONVERTED_V1,
+    "{to_convert}": TO_CONVERT,
+    "{ingest_names}": TO_INGEST,
+}
 ISSUES = "https://github.com/eegdash/EEGDash/issues"
 WORDS = {
     1: "one",
@@ -184,6 +208,14 @@ def read_electrodes(path: Path) -> list[dict]:
     return data["electrodes"] if isinstance(data, dict) else data
 
 
+def read_unplaced(path: Path) -> list[dict]:
+    """``electrodes.json``'s channel names the position bank lacks (placed from their dataset's own coordinates):
+    ``name``, ``hours``, ``datasets``, ``added_hours``, ``added_datasets``; empty for a copy synced before the list.
+    """
+    data = json.loads(Path(path).read_text(encoding="utf-8"))
+    return data.get("unplaced", []) if isinstance(data, dict) else []
+
+
 def fnum(v: str) -> float | None:
     """A cell as a positive number, or None (empty, non-numeric or zero cannot go on a log axis)."""
     try:
@@ -226,15 +258,24 @@ def v0_rows(rows: list[dict[str, str]]) -> list[dict[str, str]]:
 
 
 def v1_rows(rows: list[dict[str, str]]) -> list[dict[str, str]]:
-    """v1 = v0 converted, the datasets ingested and waiting for conversion, and those still to ingest: the
-    three statuses whose name says (v1).
+    """v1 = v0 converted plus the statuses whose name says (v1): converted into the v1 store, ingested and waiting
+    for conversion, still to ingest.
     """
-    return of_status(rows, CONVERTED, TO_CONVERT, TO_INGEST)
+    return of_status(rows, CONVERTED, CONVERTED_V1, TO_CONVERT, TO_INGEST)
 
 
 def v1_added(rows: list[dict[str, str]]) -> list[dict[str, str]]:
-    """The datasets v1 adds to v0: to convert first, then to ingest."""
-    return of_status(rows, TO_CONVERT) + of_status(rows, TO_INGEST)
+    """The datasets v1 adds to v0: converted first, then to convert, then to ingest."""
+    return (
+        of_status(rows, CONVERTED_V1)
+        + of_status(rows, TO_CONVERT)
+        + of_status(rows, TO_INGEST)
+    )
+
+
+def v1_pending(rows: list[dict[str, str]]) -> list[dict[str, str]]:
+    """The datasets v1 adds that no store holds yet (their numbers come from EEGDash's catalogue)."""
+    return of_status(rows, *PENDING)
 
 
 def hours_of(rows: list[dict[str, str]]) -> float:
@@ -325,8 +366,13 @@ def kpis(rows: list[dict[str, str]]) -> dict:
         "v1_hours": hours_of(v1),
         "v1_subjects": int(total(v1, "n_subjects")),
         "v1_datasets": len(v1),
+        "v1_converted": len(of_status(v1, CONVERTED_V1)),
         "v1_to_convert": len(of_status(v1, TO_CONVERT)),
         "v1_to_ingest": len(of_status(v1, TO_INGEST)),
+        # converted in either store (v0's, and v1's, which holds v0's datasets and the ones it adds)
+        "conv_datasets": len(of_status(rows, *CONVERTED_ANY)),
+        "conv_hours": hours_of(of_status(rows, *CONVERTED_ANY)),
+        "conv_subjects": int(total(of_status(rows, *CONVERTED_ANY), "n_subjects")),
         "paper": sum(r["in_reve_paper"] == "yes" for r in rows),
         "card": sum(r["in_release_card"] == "yes" for r in rows),
         "card_only": sum(
@@ -338,21 +384,54 @@ def kpis(rows: list[dict[str, str]]) -> dict:
 def progress(rows: list[dict[str, str]]) -> list[dict]:
     """The steps from what is converted to what is out of reach, with counts, hours and names."""
     names = lambda rs: ", ".join(short_title(r) for r in rs)  # noqa: E731
-    v0, v1, ing, blk, gat = (
-        of_status(rows, s) for s in (CONVERTED, TO_CONVERT, TO_INGEST, BLOCKED, GATED)
+    v0, cv1, v1, ing, blk, gat, exc = (
+        of_status(rows, s)
+        for s in (
+            CONVERTED,
+            CONVERTED_V1,
+            TO_CONVERT,
+            TO_INGEST,
+            BLOCKED,
+            GATED,
+            EXCLUDED,
+        )
     )
     unmeasured = [r for r in v1 if not fnum(r["hours"])]
     return [
         dict(status=CONVERTED, title="converted (v0)", count=len(v0), hours=hours_of(v0),
              sub=f"{hours_of(v0):,.0f} h"),
-        dict(status=TO_CONVERT, title="v1 to convert", count=len(v1), hours=hours_of(v1),
-             sub=f"+{hours_of(v1):,.0f} h measured" + (f"; {names(unmeasured)} unmeasured" if unmeasured else "")),
-        *([        dict(status=TO_INGEST, title="to ingest", count=len(ing), hours=hours_of(ing), sub=names(ing) or "none")] if ing else []),   # the step exists only while a dataset waits for a deposit
+        # the v1 steps exist only while they hold a dataset: converted into the v1 store, waiting, to deposit
+        *([dict(status=CONVERTED_V1, title="converted (v1)", count=len(cv1), hours=hours_of(cv1),
+                sub=f"+{hours_of(cv1):,.0f} h")] if cv1 else []),
+        *([dict(status=TO_CONVERT, title="v1 to convert", count=len(v1), hours=hours_of(v1),
+                sub=f"+{hours_of(v1):,.0f} h measured" + (f"; {names(unmeasured)} unmeasured" if unmeasured else ""))]
+          if v1 else []),
+        *([dict(status=TO_INGEST, title="to ingest", count=len(ing), hours=hours_of(ing), sub=names(ing) or "none")] if ing else []),
         dict(status=BLOCKED, title="blocked (ND licence)", count=len(blk), hours=hours_of(blk),
              sub="No Derivative terms, or no licence"),
         dict(status=GATED, title="gated (distribution forbidden)", count=len(gat), hours=hours_of(gat),
              sub=f"{names(gat)}; never redistributable" if gat else "none"),
+        dict(status=EXCLUDED, title="excluded", count=len(exc), hours=hours_of(exc),
+             sub="not a dataset for the corpus (the table's notes say why)"),
     ]  # fmt: skip
+
+
+def status_summary(rows: list[dict[str, str]]) -> str:
+    """Where the datasets tracked stand, in one sentence: converted (v0, added in v1), then the ones that will not
+    be converted (blocked by licence or gated, excluded); a v1 dataset in no store yet is named apart.
+    """
+    k = kpis(rows)
+    pending, paper = k[TO_CONVERT] + k[TO_INGEST], k[PAPER_ONLY]
+    out = k[BLOCKED] + k[GATED] + k[EXCLUDED]
+    text = (f"{k[CONVERTED] + k[CONVERTED_V1]} of the {k['datasets']} datasets tracked are converted "
+            f"({k[CONVERTED]} in v0, {k[CONVERTED_V1]} added in v1)")  # fmt: skip
+    if pending:
+        text += f"; {pending} more {'is' if pending == 1 else 'are'} in v1 but in no store yet"
+    if paper:
+        text += f"; {paper} {'is' if paper == 1 else 'are'} named by the paper only"
+    text += (f"; the {'remaining' if pending or paper else 'other'} {out} will not be converted: "
+             f"{k[BLOCKED] + k[GATED]} blocked ({k[BLOCKED]} by licence, {k[GATED]} gated) and {k[EXCLUDED]} excluded.")  # fmt: skip
+    return text
 
 
 def roadmap_items(rows: list[dict[str, str]]) -> list[str]:
@@ -362,14 +441,15 @@ def roadmap_items(rows: list[dict[str, str]]) -> list[str]:
         s.format(
             v0_datasets=k["v0_datasets"],
             v0_hours=f"{k['v0_hours']:,.0f}",
+            v1_datasets=k["v1_datasets"],
+            v1_hours=f"{k['v1_hours']:,.0f}",
             to_convert=k[TO_CONVERT],
             to_convert_hours=f"{hours_of(of_status(rows, TO_CONVERT)):,.0f}",
             ingest_names=", ".join(ing) or "none",
         )
         for s in ROADMAP
-        if ing
-        or "{ingest_names}"
-        not in s  # nothing left to deposit: the step is done, not listed
+        # a step with nothing to do (nothing converted into v1 yet, nothing left to convert or deposit) is not listed
+        if all(k[status] for key, status in ROADMAP_WHILE.items() if key in s)
     ]
 
 
@@ -433,6 +513,21 @@ def montage_names(
     return shared, uses
 
 
+def added_prose(k: dict, long: bool) -> str:
+    """The datasets v1 adds in words, each status named only when it holds one (no "0 still to be ingested")."""
+    parts = [
+        (k["v1_converted"], "converted into the v1 store", "converted"),
+        (
+            k["v1_to_convert"],
+            "ingested by EEGDash for the next conversion pass",
+            "to convert",
+        ),
+        (k["v1_to_ingest"], "still to be ingested", "to ingest"),
+    ]
+    said = [f"{n} {words if long else short}" for n, words, short in parts if n]
+    return ", ".join(said) or "none"
+
+
 def numbers(
     rows: list[dict[str, str]],
     buckets: list[dict[str, str]],
@@ -477,18 +572,24 @@ def numbers(
         "v1_hours": f"{k['v1_hours']:,.0f}",
         "v1_new": str(len(new)),
         "v1_new_hours": f"{hours_of(new):,.0f}",
+        "v1_converted": str(k["v1_converted"]),
         "v1_to_convert": str(k["v1_to_convert"]),
         # the added datasets in words, without a "0 still to ingest" once every one is on NEMAR
-        "v1_added_prose": f"{k['v1_to_convert']} ingested by EEGDash and waiting for conversion"
-        + (f", {k['v1_to_ingest']} still to be ingested" if k["v1_to_ingest"] else ""),
-        "v1_added_short": f"{k['v1_to_convert']} to convert"
-        + (f", {k['v1_to_ingest']} to ingest" if k["v1_to_ingest"] else ""),
+        "v1_added_prose": added_prose(k, long=True),
+        "v1_added_short": added_prose(k, long=False),
         "v1_unmeasured": str(sum(not fnum(r["hours"]) for r in new)),
         "to_ingest": str(k[TO_INGEST]),
         "blocked": str(k[BLOCKED]),
         "gated": str(k[GATED]),
         "excluded": str(k[EXCLUDED]),
         "montage_rows": str(len(names)),
+        "montage_rows_v1": str(
+            len(
+                montage_names(electrode_sets(buckets + added, electrodes), electrodes)[
+                    0
+                ]
+            )
+        ),
         "montage_min": str(MONTAGE_MIN),
         "synced": synced,
         **RECIPE,

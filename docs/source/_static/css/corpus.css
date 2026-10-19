@@ -2,7 +2,9 @@
    Every rule is scoped under .corpus; colours are variables, redefined for the dark theme. */
 
 .corpus {
-  --corpus-st-converted: #2f9e44;
+  /* two greens: v0 the lighter, v1 (v0 plus the datasets it adds) the darker */
+  --corpus-st-converted: #82c991;
+  --corpus-st-converted-v1: #2b8a3e;
   --corpus-st-to-convert: var(--eegdash-primary, #006ca3);
   --corpus-st-to-ingest: var(--eegdash-accent, #f7941d);
   --corpus-st-blocked: #c0392b;
@@ -19,7 +21,8 @@
   --corpus-fg: var(--pst-color-text-base, #1d2733);
 }
 html[data-theme="dark"] .corpus {
-  --corpus-st-converted: #4cbf63;
+  --corpus-st-converted: #b2f2bb;
+  --corpus-st-converted-v1: #40c057;
   --corpus-st-blocked: #e5675a;
   --corpus-st-gated: #a57fcf;
   --corpus-st-excluded: #9aa0a8;
@@ -31,6 +34,7 @@ html[data-theme="dark"] .corpus {
 
 /* status colours as classes: fill (SVG), stroke (SVG), background (HTML), edge (HTML) */
 .corpus .corpus-fill-converted { fill: var(--corpus-st-converted); }
+.corpus .corpus-fill-converted-v1 { fill: var(--corpus-st-converted-v1); }
 .corpus .corpus-fill-to-convert { fill: var(--corpus-st-to-convert); }
 .corpus .corpus-fill-to-ingest { fill: var(--corpus-st-to-ingest); }
 .corpus .corpus-fill-blocked { fill: var(--corpus-st-blocked); }
@@ -38,9 +42,11 @@ html[data-theme="dark"] .corpus {
 .corpus .corpus-fill-excluded { fill: var(--corpus-st-excluded); }
 .corpus .corpus-fill-paper-only { fill: var(--corpus-st-paper-only); }
 .corpus .corpus-stroke-converted { stroke: var(--corpus-st-converted); }
+.corpus .corpus-stroke-converted-v1 { stroke: var(--corpus-st-converted-v1); }
 .corpus .corpus-stroke-to-convert { stroke: var(--corpus-st-to-convert); }
 .corpus .corpus-stroke-to-ingest { stroke: var(--corpus-st-to-ingest); }
 .corpus .corpus-bg-converted { background: var(--corpus-st-converted); }
+.corpus .corpus-bg-converted-v1 { background: var(--corpus-st-converted-v1); }
 .corpus .corpus-bg-to-convert { background: var(--corpus-st-to-convert); }
 .corpus .corpus-bg-to-ingest { background: var(--corpus-st-to-ingest); }
 .corpus .corpus-bg-blocked { background: var(--corpus-st-blocked); }
@@ -48,6 +54,7 @@ html[data-theme="dark"] .corpus {
 .corpus .corpus-bg-excluded { background: var(--corpus-st-excluded); }
 .corpus .corpus-bg-paper-only { background: var(--corpus-st-paper-only); }
 .corpus .corpus-bd-converted { --corpus-edge: var(--corpus-st-converted); }
+.corpus .corpus-bd-converted-v1 { --corpus-edge: var(--corpus-st-converted-v1); }
 .corpus .corpus-bd-to-convert { --corpus-edge: var(--corpus-st-to-convert); }
 .corpus .corpus-bd-to-ingest { --corpus-edge: var(--corpus-st-to-ingest); }
 .corpus .corpus-bd-blocked { --corpus-edge: var(--corpus-st-blocked); }
@@ -58,6 +65,7 @@ html[data-theme="dark"] .corpus {
 .corpus .corpus-q4 { fill: var(--corpus-q4); } .corpus .corpus-q5 { fill: var(--corpus-q5); }
 .corpus .corpus-q6 { fill: var(--corpus-q6); } .corpus .corpus-q7 { fill: var(--corpus-q7); }
 .corpus .corpus-on-mark { fill: #fff; }
+.corpus .corpus-on-converted { fill: #1d2733; } /* the light v0 green takes dark ink */
 /* text on a ramp tile: the page's ink on the light half (q0-q3), the page's background on the dark half (q4-q7);
    the dark theme reverses the ramp and the two inks with it */
 .corpus .corpus-ink-lo { fill: var(--corpus-fg); }

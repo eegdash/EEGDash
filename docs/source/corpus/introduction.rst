@@ -61,7 +61,7 @@ How to get it today
 ===================
 
 ``EEGDashDataset(dataset="<id>", cache_dir=...)`` for any raw dataset of the table;
-the converted Zarr store is to be hosted through EEGDash.
+the converted Zarr stores of v0 and v1 are to be hosted through EEGDash.
 
 How it was built and checked
 ============================
@@ -70,7 +70,9 @@ How it was built and checked
 archives.
 
 **Convert.** The recipe above, per recording, with a report of what was dropped and
-why.
+why. Each electrode takes its position from a bank of templates (REVE's public bank
+plus the BioSemi-160 and BioSemi-256 caps); for electrodes the bank lacks, the
+dataset's own ``electrodes.tsv``, aligned to the bank, places them.
 
 **Verify.** |check_loader_datasets| datasets compared against the authors' own loader
 sample by sample; REVE-Base retrained on the Zarr store scores within |check_bench_gap| of
@@ -82,9 +84,9 @@ Where the numbers come from
 Every cell carries a provenance label: ``zarr`` (measured in the converted Zarr store),
 ``eegdash`` (EEGDash's catalogue records), ``card`` (REVE's release card), ``stated``
 (REVE's paper), ``download`` (our copy). A bucket is one exact channel set of one
-dataset in the Zarr store. Status vocabulary: Ingested and Converted (v0) · Ingested, but
-not Converted (v1) · To Be Ingested (v1) · Blocked (ND Licence) · Gated (Distribution
-Forbidden) · Excluded.
+dataset in the Zarr store. Status vocabulary: Ingested and Converted (v0) · Ingested and
+Converted (v1) · Ingested, but not Converted (v1) · To Be Ingested (v1) · Blocked (ND
+Licence) · Gated (Distribution Forbidden) · Excluded.
 
 The corpus in numbers
 =====================

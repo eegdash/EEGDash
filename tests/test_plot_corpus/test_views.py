@@ -10,9 +10,9 @@ import pytest
 from plot_corpus import charts
 from plot_corpus.data import (
     CONVERTED,
+    CONVERTED_V1,
     CSV_COLUMNS,
     EXCLUDED,
-    TO_CONVERT,
     TO_INGEST,
     kpis,
     label_of,
@@ -82,10 +82,12 @@ def test_card_only_entries_count_everywhere(
     assert (k["datasets"], k[CONVERTED], k["v0_datasets"], k[EXCLUDED]) == (10, 3, 3, 2)
     assert (k["paper"], k["card"], k["card_only"]) == (8, 4, 2)
     assert (
-        "<b>10</b><span>datasets tracked (paper and release card)</span>"
+        "<b>10</b><span>datasets tracked (REVE&#x27;s paper and release card)</span>"
         in frags["kpis"][0]
     )
-    assert frags["status"][1].startswith("3 of the 10 datasets tracked are converted")
+    assert frags["status"][1].startswith(
+        "4 of the 10 datasets tracked are converted (3 in v0, 1 added in v1)"
+    )
     assert (
         'data-count="3"' in frags["status"][0]
         and "Feedback (ds004262)" in frags["hours"][0]
@@ -170,7 +172,7 @@ def test_lengths_rows_and_caption(rows, recordings, recordings_v1):
     )
     assert "from 12 min (DS000002) to 1.5 h (DS000001)" in cap and "up to 10.0 h" in cap
     body, cap = charts.lengths_chart(v1_rows(rows), recordings + recordings_v1)
-    assert body.count('class="corpus-row"') == 3 and "corpus-fill-to-convert" in body
+    assert body.count('class="corpus-row"') == 3 and "corpus-fill-converted-v1" in body
 
 
 def test_per_subject_caption(rows, recordings):
@@ -262,16 +264,22 @@ def test_tokens_treemap_sums_to_the_frame(rows, recordings, recordings_v1):
         "8.00 B tokens per epoch over 2 datasets: DS000001 alone holds 75 %"
     )
     assert "colour is each dataset's share" in cap
-    v1 = v1_rows(rows)
-    new = [r for r in v1 if r["status"] != CONVERTED]
-    body, cap = charts.tokens_chart(v1, recordings + recordings_v1, pending=new)
-    assert (
-        "nm000003" not in body
-        and "Tokens exist only for converted data: the 2 datasets v1 adds" in cap
+    v1 = v1_rows(
+        rows
+    )  # nm000003 converted in v1: its tokens join v0's; x-ingest has none yet
+    pending = [r for r in v1 if r["status"] == TO_INGEST]
+    body, cap = charts.tokens_chart(v1, recordings + recordings_v1, pending=pending)
+    assert "nm000003" in body and cap.startswith(
+        "9.00 B tokens per epoch over 3 datasets"
     )
-    assert charts.tokens_chart(v1, recordings_v1)[1].startswith(
-        "No token counts"
-    )  # v1 file alone: empty tokens
+    assert cap.endswith(
+        "Tokens exist only for converted data: the 1 dataset no store holds yet (0 h measured so far) enters "
+        "this budget when converted."
+    )
+    assert (
+        "Tokens exist only"
+        not in charts.tokens_chart(v1, recordings + recordings_v1)[1]
+    )
 
 
 # ------------------------------------------------------------------------------------------------ licence flow
@@ -314,11 +322,11 @@ def test_flow_licence_toggle_and_caption(rows):
     assert body.count("<svg") == 2 and 'data-corpus-show="datasets"' in body
     assert cap.startswith("162 h over 3 of the 4 datasets")
     assert (
-        "93 % of the hours are converted" in cap
+        "100 % of the hours are converted" in cap
         and "1 dataset without hours shows in the datasets view only" in cap
     )
     assert (
-        f'data-node="2:{TO_CONVERT}"' in body
+        f'data-node="2:{CONVERTED_V1}"' in body
         and f'data-node="2:{EXCLUDED}"' not in body
     )
 
@@ -397,6 +405,25 @@ def test_montage_columns_by_channel_band(rows, buckets, bank):
     assert "data-family" not in body  # no row grouping by naming family
 
 
+def test_v1_channel_bands_measured_per_bucket_once_converted(
+    rows, buckets, electrodes, added, to_convert
+):
+    """Every v1 dataset in a store: the bands are measured per bucket, v1's added sets stacked in their own colour;
+    a dataset waiting for conversion falls back to each dataset's mean channel count.
+    """
+    body, cap = charts.channel_bands_buckets(buckets, added)
+    assert "corpus-fill-converted-v1" in body and "(v1 adds)" in body
+    assert cap.startswith(
+        "100 % of the 162 converted hours come from 1–16-channel recordings (3 datasets)"
+    )
+    frags = frags_of(
+        [r for r in rows if r["status"] != TO_INGEST], buckets, electrodes, added
+    )
+    assert frags["channel-bands-v1"][1] == cap
+    frags = frags_of(rows + [to_convert], buckets, electrodes, added)
+    assert "by each dataset's mean channel count" in frags["channel-bands-v1"][1]
+
+
 def test_new_fragments_build_scoped_and_small(built_all):
     manifest, _ = built_all
     for key in NEW_KEYS + [k + "-v1" for k in NEW_KEYS if k != "montages"]:
@@ -411,7 +438,9 @@ def built_all(data_dir, tmp_path):
 
 
 def test_v1_legends_show_only_the_statuses_v1_holds(rows, buckets, electrodes, added):
-    """With nothing left to ingest (2026-10-14), the v1 charts' legends carry converted and to-convert only."""
+    """With nothing left to ingest (2026-10-14) and v1 converted (2026-10-18), the v1 charts' legends carry the
+    two converted statuses only.
+    """
     from plot_corpus.fragments import build_fragments
 
     rest = [r for r in rows if r["status"] != TO_INGEST]
@@ -424,7 +453,8 @@ def test_v1_legends_show_only_the_statuses_v1_holds(rows, buckets, electrodes, a
         "lengths-v1",
     ):
         legend = frags[key][0].split('class="corpus-legend"')[1].split("</div>")[0]
-        assert "to ingest" not in legend and "to convert" in legend, key
+        assert "to ingest" not in legend and "to convert" not in legend, key
+        assert "v0, converted" in legend and "v1, converted" in legend, key
     frags = build_fragments(
         rows, buckets, electrodes, "2026-01-02", added
     )  # a dataset to ingest: back in the legend
@@ -432,3 +462,15 @@ def test_v1_legends_show_only_the_statuses_v1_holds(rows, buckets, electrodes, a
         "to ingest"
         in frags["hours-v1"][0].split('class="corpus-legend"')[1].split("</div>")[0]
     )
+
+
+def test_v1_montages_use_both_stores_buckets(rows, buckets, electrodes, added):
+    """v1's heatmap is v0's built from the v1 store's buckets (v0's and the added ones), the added columns in v1's
+    colour.
+    """
+    body, _ = charts.montage_chart(
+        v1_rows(rows), buckets + added, electrodes, min_datasets=2
+    )
+    cols = re.findall(r'data-dataset="([^"]+)" data-on="(\d+)" data-n="(\d+)"', body)
+    assert ("nm000003", "1", "2") in cols and len(cols) == 3
+    assert "corpus-fill-converted-v1" in body and "corpus-fill-converted" in body

@@ -1,5 +1,6 @@
-"""Fixtures for the EEGDash Corpus renderer tests: a tiny atlas covering every status, four buckets (one spelling
-``CZ``, three ``Cz``), a position bank, the per-dataset recording tables (v0 with tokens, v1 without) and the
+"""Fixtures for the EEGDash Corpus renderer tests: a tiny atlas covering every status but "to convert" (as the corpus
+stands since v1 was converted; tests that need one add it), four buckets (one spelling ``CZ``, three ``Cz``), the
+channel set the v1 store adds, a position bank, the per-dataset recording tables (both with tokens) and the
 demographics (one dataset with ages and sex, one with sex only), all built in memory or under ``tmp_path``. No
 network.
 
@@ -21,10 +22,17 @@ if str(_DOCS) not in sys.path:
     sys.path.insert(0, str(_DOCS))
 
 from plot_corpus.data import (  # noqa: E402
+    BLOCKED,
+    CONVERTED,
+    CONVERTED_V1,
     CSV_COLUMNS,
     DEMOGRAPHIC_COLUMNS,
+    EXCLUDED,
+    GATED,
+    PAPER_ONLY,
     RECORDING_COLUMNS,
-    STATUSES,
+    TO_CONVERT,
+    TO_INGEST,
 )
 from plot_corpus.electrodes import aggregate_positions  # noqa: E402
 
@@ -44,8 +52,10 @@ def make_row(i: str, status: str, **kw) -> dict[str, str]:
         in_reve_paper="yes",
         provenance="hours:zarr; subjects:zarr",
     )
-    row["in_v0"] = "yes" if status == STATUSES[0] else "no"
-    row["in_v1"] = "yes" if status in STATUSES[:3] else "no"
+    row["in_v0"] = "yes" if status == CONVERTED else "no"
+    row["in_v1"] = (
+        "yes" if status in (CONVERTED, CONVERTED_V1, TO_CONVERT, TO_INGEST) else "no"
+    )
     row["in_release_card"] = row["in_v0"]
     row.update(kw)
     return row
@@ -53,21 +63,30 @@ def make_row(i: str, status: str, **kw) -> dict[str, str]:
 
 @pytest.fixture
 def rows() -> list[dict[str, str]]:
-    """Eight rows: two converted (v0), then one of every other status."""
-    conv, conv_ = STATUSES[0], STATUSES[1]
+    """Eight rows: two converted (v0), one converted into the v1 store, then one of every other status but to
+    convert.
+    """
+    conv, conv_ = CONVERTED, CONVERTED_V1
     return [
         make_row("ds000001", conv, hours="120.5", n_subjects="40", n_sessions="80", mean_channels="64",
                  native_sfreq="500", paradigm="motor imagery", licence="CC-BY-4.0"),
         make_row("ds000002", conv, hours="30.0", n_subjects="10", n_sessions="10", mean_channels="19.7",
                  native_sfreq="200"),
         make_row("nm000003", conv_, hours="12.0", n_subjects="5", n_sessions="9", mean_channels="32",
-                 native_sfreq="250", provenance="hours:eegdash"),
-        make_row("x-ingest", STATUSES[2]),
-        make_row("x-blocked", STATUSES[3], licence="CC-BY-NC-ND-4.0"),
-        make_row("x-gated", STATUSES[4], hours="26847", provenance="hours:stated"),
-        make_row("x-excluded", STATUSES[5]),
-        make_row("x-paper", STATUSES[6]),
+                 native_sfreq="250", provenance="hours:zarr"),
+        make_row("x-ingest", TO_INGEST),
+        make_row("x-blocked", BLOCKED, licence="CC-BY-NC-ND-4.0"),
+        make_row("x-gated", GATED, hours="26847", provenance="hours:stated"),
+        make_row("x-excluded", EXCLUDED),
+        make_row("x-paper", PAPER_ONLY),
     ]  # fmt: skip
+
+
+@pytest.fixture
+def to_convert() -> dict[str, str]:
+    """A dataset ingested by EEGDash and not converted yet, its numbers from EEGDash's catalogue."""
+    return make_row("nm000004", TO_CONVERT, hours="6.0", n_subjects="3", n_sessions="3", mean_channels="16",
+                    native_sfreq="256", provenance="hours:eegdash")  # fmt: skip
 
 
 @pytest.fixture
@@ -92,16 +111,15 @@ def buckets() -> list[dict[str, str]]:
 
 @pytest.fixture
 def added() -> list[dict[str, str]]:
-    """One channel set of the dataset v1 adds, from EEGDash's records: Pz is new to the map, Cz shared with v0."""
+    """One channel set the v1 store adds (nm000003, converted in v1): Pz is new to the map, Cz shared with v0."""
     return [
         {
-            "bucket": "nm000003-0",
+            "bucket": "4",
             "dataset": "nm000003",
             "n_chans": "2",
             "n_sessions": "9",
             "hours": "12.0",
             "channels": "Cz|Pz",
-            "queried_on": "2026-01-01",
         }
     ]
 
@@ -129,12 +147,12 @@ def recordings() -> list[dict[str, str]]:
 
 @pytest.fixture
 def recordings_v1() -> list[dict[str, str]]:
-    """The v1 recording table: the added dataset only, tokens empty (counted at conversion)."""
+    """The v1 recording table: the added dataset only, measured in the v1 store (tokens included)."""
     return [
         make_rec("nm000003", n_recordings="9", n_subjects="5", minutes_p10="60", minutes_p25="70",
                  minutes_p50="80", minutes_p75="90", minutes_p90="100", minutes_max="110",
                  rec_per_subject_p50="2", rec_per_subject_max="3", hours_per_subject_p50="2.4",
-                 hours_per_subject_max="4"),
+                 hours_per_subject_max="4", tokens="1000000000"),
     ]  # fmt: skip
 
 

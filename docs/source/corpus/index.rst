@@ -15,8 +15,8 @@ EEGDash Corpus
 
 EEGDash Corpus is an aggregated, training-ready collection of public EEG datasets
 for pretraining EEG foundation models, served through EEGDash as raw datasets and as
-one converted Zarr store. Version 0 holds |v0_datasets| datasets (|v0_hours| hours,
-converted); version 1 extends it to |v1_datasets| datasets.
+converted Zarr stores. Version 0 holds |v0_datasets| datasets (|v0_hours| hours,
+converted); version 1 extends it to |v1_datasets| datasets (|v1_hours| hours, converted).
 
 .. corpus-figure:: kpis
 
@@ -84,11 +84,11 @@ converted); version 1 extends it to |v1_datasets| datasets.
 
          .. rst-class:: corpus-card-label
 
-         Next version
+         Converted
 
          - |v1_new| datasets added: |v1_added_short|
-         - |v1_datasets| datasets, |v1_hours| hours measured so far
-         - The same views as v0, the added datasets by status; tokens stay v0's until conversion
+         - |v1_datasets| datasets, |v1_hours| hours, |v1_positions| electrode positions in |v1_buckets| channel sets
+         - The same sections as v0, the added datasets in their own colour: training budget, montages
 
          .. rst-class:: corpus-card-find
 

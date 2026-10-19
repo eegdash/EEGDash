@@ -45,8 +45,8 @@ The |universe| datasets tracked, by status.
 The whole universe
 ==================
 
-Every dataset tracked (|universe|, REVE's paper and its release card): converted, to
-convert, blocked, gated and excluded; filter by text or by status.
+Every dataset tracked (|universe|, REVE's paper and its release card): converted in v0
+or v1, blocked, gated and excluded; filter by text or by status.
 
 .. corpus-figure:: table-all
 

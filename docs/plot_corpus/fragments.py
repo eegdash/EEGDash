@@ -14,9 +14,12 @@ from pathlib import Path
 
 from . import charts
 from .data import (
-    CONVERTED,
+    BLOCKED,
+    CONVERTED_V1,
     CSV_COLUMNS,
     DEMOGRAPHIC_COLUMNS,
+    EXCLUDED,
+    GATED,
     RECORDING_COLUMNS,
     TO_CONVERT,
     TO_INGEST,
@@ -26,8 +29,10 @@ from .data import (
     read_electrodes,
     read_optional,
     read_rows,
+    read_unplaced,
     v0_rows,
     v1_added,
+    v1_pending,
     v1_rows,
 )  # fmt: skip
 from .electrodes import check_coverage, electrode_svg, electrodes_3d
@@ -36,9 +41,9 @@ from .table import COMPACT, table_html
 
 FRAGMENT_LIMIT = 200_000  # bytes per fragment
 V0_NAME, V1_NAME = "eegdash-corpus-v0", "eegdash-corpus-v1"
-ADDED = "eegdash-corpus-v1-channels.csv"  # channel sets of the datasets v1 adds (EEGDash records); optional
-# Per-dataset recording lengths, recordings and hours per subject, tokens (v1: the added datasets only, no tokens),
-# and the subjects' ages and sex where known; optional, a chart without its table says so.
+ADDED = "eegdash-corpus-v1-channels.csv"  # channel sets the v1 store adds to v0 (its buckets v0 lacks); optional
+# Per-dataset recording lengths, recordings and hours per subject, tokens (v1: the added datasets only), and the
+# subjects' ages and sex where known; optional, a chart without its table says so.
 REC_V0, REC_V1 = "eegdash-corpus-v0-recordings.csv", "eegdash-corpus-v1-recordings.csv"
 DEMOGRAPHICS = "eegdash-corpus-demographics.csv"
 INPUTS = [
@@ -84,16 +89,18 @@ def build_fragments(
     recordings=None,
     recordings_v1=None,
     demographics=None,
+    unplaced=None,
 ) -> dict[str, tuple[str, str]]:
     """Key -> (fragment HTML, caption). Pure: no file is read or written. The counts, status charts, roadmap and
     full table are over every row (the paper's datasets and the release card's entries); the v0 and v1 pages over
-    the rows of their statuses.
+    the rows of their statuses. ``unplaced`` are the channel names the position bank lacks (not drawn, counted in
+    the electrode captions).
     """
     added, recordings, demographics = added or [], recordings or [], demographics or []
     rec_v1 = recordings + (
         recordings_v1 or []
     )  # the v1 file holds only the datasets v1 adds
-    check_coverage(electrodes, buckets + added)
+    check_coverage(electrodes, buckets + added, unplaced)
     v0, v1 = v0_rows(rows), v1_rows(rows)
     n_ds = len({b["dataset"] for b in buckets})
     n_ds_v1 = n_ds + len({b["dataset"] for b in added})
@@ -109,19 +116,18 @@ def build_fragments(
     add("roadmap", charts.roadmap_html(rows, synced))
     add("flow", charts.flow_svg(rows))
     add("status", charts.status_svg(rows), legend_all)
-    n_pending = sum(r["status"] != CONVERTED for r in rows)
-    add("table-all", (table_html(rows, "atlas.csv"),
-                      f"All {len(rows)} datasets tracked (REVE's paper and its release card), {n_pending} of them not "
-                      f"yet converted. Filter by text or by status, click a header to sort, hover a number for its "
-                      f"source."))  # fmt: skip
+    add("table-all", (table_html(rows, "atlas.csv"), table_all_caption(rows)))
     # v0
-    add("v0-kpis", charts.kpis_v0(v0, buckets, electrodes))
+    add("v0-kpis", charts.store_kpis(v0, buckets, electrodes))
     h, c = charts.hours_chart(v0)
     add("hours", (order_toggle() + h, c))
     h, c = charts.channels_chart(v0)
     add("channels", (order_toggle() + h, c))
-    add("electrodes", electrode_svg(electrodes, n_ds, len(buckets)))
-    add("electrodes-3d", electrodes_3d(electrodes, n_ds, len(buckets)))
+    add("electrodes", electrode_svg(electrodes, n_ds, len(buckets), unplaced=unplaced))
+    add(
+        "electrodes-3d",
+        electrodes_3d(electrodes, n_ds, len(buckets), unplaced=unplaced),
+    )
     add("channel-bands", charts.channel_bands_buckets(buckets))
     add("subjects", charts.subjects_chart(v0))
     add("rates", charts.rates_chart(v0))
@@ -141,25 +147,46 @@ def build_fragments(
         ),
     )
     # v1
-    new = v1_added(rows)
-    n_conv, n_ing = len(of_status(new, TO_CONVERT)), len(of_status(new, TO_INGEST))
-    add("v1-adds-table", (table_html(new, "atlas-v1.csv", columns=COMPACT, controls=False),
-                          f"The {len(new)} datasets v1 adds: {n_conv} ingested by EEGDash and not yet converted, "
-                          f"{n_ing} still to be ingested; numbers from EEGDash's records until converted."))  # fmt: skip
-    add("v1-kpis", charts.kpis_v1(v1))
+    new, pending = v1_added(rows), v1_pending(rows)
+    add(
+        "v1-adds-table",
+        (
+            table_html(new, "atlas-v1.csv", columns=COMPACT, controls=False),
+            adds_caption(new, added),
+        ),
+    )
+    add("v1-kpis", charts.store_kpis(v1, buckets + added, electrodes, added=True))
     add(
         "electrodes-v1",
-        electrode_svg(electrodes, n_ds_v1, len(buckets) + len(added), added=True),
+        electrode_svg(
+            electrodes,
+            n_ds_v1,
+            len(buckets) + len(added),
+            added=True,
+            unplaced=unplaced,
+        ),
     )
     add(
         "electrodes-3d-v1",
-        electrodes_3d(electrodes, n_ds_v1, len(buckets) + len(added), added=True),
+        electrodes_3d(
+            electrodes,
+            n_ds_v1,
+            len(buckets) + len(added),
+            added=True,
+            unplaced=unplaced,
+        ),
     )
     h, c = charts.hours_chart(v1)
     add("hours-v1", (order_toggle() + h, c), legend_v1)
     h, c = charts.channels_chart(v1)
     add("channels-v1", (order_toggle() + h, c), legend_v1)
-    add("channel-bands-v1", charts.channel_bands_rows(v1), legend_v1)
+    # every v1 dataset in a store: measured per bucket as on v0; else by each dataset's mean channel count
+    bands_v1 = (
+        charts.channel_bands_rows(v1)
+        if pending
+        else charts.channel_bands_buckets(buckets, added)
+    )
+    add("channel-bands-v1", bands_v1, legend_v1)
     add("subjects-v1", charts.subjects_chart(v1), legend_v1)
     add("rates-v1", charts.rates_chart(v1), legend_v1)
     add("paradigms-v1", charts.paradigms_chart(v1), legend_v1)
@@ -168,7 +195,8 @@ def build_fragments(
     add("per-subject-v1", charts.per_subject_chart(v1, rec_v1), legend_v1)
     add("people-v1", charts.people_chart(v1, demographics), legend_v1)
     add("flow-licence-v1", charts.flow_licence_chart(v1), legend_v1)
-    add("tokens-v1", charts.tokens_chart(v1, rec_v1, pending=new))
+    add("tokens-v1", charts.tokens_chart(v1, rec_v1, pending=pending))
+    add("montages-v1", charts.montage_chart(v1, buckets + added, electrodes))
     add(
         "table-v1",
         (
@@ -177,6 +205,33 @@ def build_fragments(
         ),
     )
     return {k: (figure(k, body, cap, leg), cap) for k, (body, cap, leg) in out.items()}
+
+
+def table_all_caption(rows: list[dict[str, str]]) -> str:
+    """The full table's caption: how many of the datasets tracked will not be converted (blocked, gated, excluded)."""
+    out = len(of_status(rows, BLOCKED, GATED, EXCLUDED))
+    pending = len(v1_pending(rows))
+    wait = f", {pending} more in v1 but in no store yet" if pending else ""
+    return (f"All {len(rows)} datasets tracked (REVE's paper and its release card); {out} of them will not be "
+            f"converted{wait}. Filter by text or by status, click a header to sort, hover a number for its source.")  # fmt: skip
+
+
+def adds_caption(new: list[dict[str, str]], added: list[dict[str, str]]) -> str:
+    """The caption of the table of what v1 adds, each status named only when it holds a dataset."""
+    n = {s: len(of_status(new, s)) for s in (CONVERTED_V1, TO_CONVERT, TO_INGEST)}
+    said = [f"{n[s]} {words}" for s, words in ((CONVERTED_V1, "converted into the v1 store"),
+                                              (TO_CONVERT, "ingested by EEGDash for the next conversion pass"),
+                                              (TO_INGEST, "still to be ingested")) if n[s]]  # fmt: skip
+    conv = {r["dataset_id"] for r in of_status(new, CONVERTED_V1)}
+    sets = [
+        b for b in added if b["dataset"] in conv
+    ]  # summed over the store's buckets, not the rounded rows
+    cap = f"The {len(new)} datasets v1 adds: {', '.join(said) or 'none'}"
+    if sets:
+        cap += f"; {sum(float(b['hours']) for b in sets):,.1f} h in {len(sets)} channel sets, measured in the v1 store"
+    if n[TO_CONVERT] or n[TO_INGEST]:
+        cap += "; the others' numbers come from EEGDash's catalogue"
+    return cap + "."
 
 
 def numbers_inc(nums: dict[str, str]) -> str:
@@ -196,6 +251,7 @@ def build(data: Path, out: Path) -> dict:
     rows = read_rows(data / "atlas.csv")
     buckets = read_buckets(data / "eegdash-corpus-v0-channels.csv")
     electrodes = read_electrodes(data / "electrodes.json")
+    unplaced = read_unplaced(data / "electrodes.json")
     added = read_buckets(data / ADDED) if (data / ADDED).is_file() else []
     recordings = read_optional(data / REC_V0, RECORDING_COLUMNS)
     recordings_v1 = read_optional(data / REC_V1, RECORDING_COLUMNS)
@@ -209,6 +265,7 @@ def build(data: Path, out: Path) -> dict:
         recordings,
         recordings_v1,
         demographics,
+        unplaced,
     )
     out.mkdir(parents=True, exist_ok=True)
     entries = {}
@@ -232,6 +289,7 @@ def build(data: Path, out: Path) -> dict:
                 "source_commit": meta.get("source_commit", ""), "fragments": entries, "numbers": nums,
                 "rows": {"atlas": len(rows), "v0": len(v0_rows(rows)), "v1": len(v1_rows(rows)),
                          "buckets": len(buckets), "added": len(added), "electrodes": len(electrodes),
+                         "unplaced": len(unplaced),
                          "recordings": len(recordings), "recordings_v1": len(recordings_v1),
                          "demographics": len(demographics)}}  # fmt: skip
     (out / "manifest.json").write_text(

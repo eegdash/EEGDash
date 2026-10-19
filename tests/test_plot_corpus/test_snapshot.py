@@ -11,12 +11,15 @@ import pytest
 from plot_corpus import sync_data
 from plot_corpus.data import (
     GATED,
+    RECORDING_COLUMNS,
     STATUSES,
     kpis,
     numbers,
     read_buckets,
     read_electrodes,
+    read_optional,
     read_rows,
+    read_unplaced,
     v0_rows,
     v1_rows,
 )
@@ -38,17 +41,42 @@ def test_committed_row_counts():
     # every row counts (the union of REVE's paper, 89, and its release card, 70), whatever gated spelling the copy has
     k = kpis(rows)
     assert (k["datasets"], k["paper"], k["card"], k["card_only"]) == (93, 89, 70, 4)
-    assert [k[s] for s in STATUSES[:6]] == [66, 12, 0, 8, 3, 4] and k[GATED] == 3
-    assert len(read_buckets(DATA / "eegdash-corpus-v0-channels.csv")) == 968
+    # converted v0, converted v1, to convert, to ingest, blocked, gated, excluded (v1 converted 2026-10-18)
+    assert [k[s] for s in STATUSES[:7]] == [66, 12, 0, 0, 8, 3, 4] and k[GATED] == 3
+    buckets = read_buckets(DATA / "eegdash-corpus-v0-channels.csv")
+    added = read_buckets(DATA / "eegdash-corpus-v1-channels.csv")
+    assert len(buckets) == 968 and len(added) == 31  # the v1 store: 999 buckets
     assert (
-        len(
-            {
-                b["dataset"]
-                for b in read_buckets(DATA / "eegdash-corpus-v1-channels.csv")
-            }
-        )
-        == 11
-    )  # 12 to convert, SparrKULee has no channel metadata
+        sum(b["dataset"] == "ds003004" for b in buckets) == 34
+    )  # PEERS's BioSemi-256 sets
+    assert {b["dataset"] for b in added} == {
+        r["dataset_id"] for r in rows if r["status"] == STATUSES[1]
+    }  # every dataset v1 adds is in its store
+    assert round(sum(float(b["hours"]) for b in added), 1) == 1237.8
+    rec_v1 = read_optional(DATA / "eegdash-corpus-v1-recordings.csv", RECORDING_COLUMNS)
+    assert len(rec_v1) == 12 and all(int(r["tokens"]) > 0 for r in rec_v1)
+
+
+def test_committed_electrodes_cover_the_buckets():
+    """Every channel of both stores is drawn or listed as placed from its dataset's own coordinates (the 12 names
+    the bank lacks, ds002680's and the CB1/CB2 it shares with ds003690); the BioSemi-256 template names render.
+    """
+    from plot_corpus.electrodes import check_coverage, unplaced_note
+
+    els = read_electrodes(DATA / "electrodes.json")
+    unplaced = read_unplaced(DATA / "electrodes.json")
+    buckets = read_buckets(DATA / "eegdash-corpus-v0-channels.csv")
+    check_coverage(
+        els, buckets + read_buckets(DATA / "eegdash-corpus-v1-channels.csv"), unplaced
+    )
+    assert len(unplaced) == 12 and {d for u in unplaced for d in u["datasets"]} == {
+        "ds002680",
+        "ds003690",
+    }
+    assert unplaced_note(unplaced).startswith(
+        " 12 electrodes of two datasets were placed"
+    )
+    assert sum(n.startswith("biosemi256_") for e in els for n in e["names"]) == 256
 
 
 def test_every_rst_key_exists():
@@ -59,6 +87,7 @@ def test_every_rst_key_exists():
         read_electrodes(DATA / "electrodes.json"),
         "2026-01-01",
         read_buckets(DATA / "eegdash-corpus-v1-channels.csv"),
+        unplaced=read_unplaced(DATA / "electrodes.json"),
     )
     used = {
         k
@@ -210,3 +239,25 @@ def test_every_data_file_is_tracked_by_git():
         pytest.skip("not a git checkout")
     on_disk = sorted(p.name for p in DATA.iterdir() if p.is_file())
     assert sorted(Path(t).name for t in tracked) == on_disk
+
+
+def page_sections(page: str) -> list[str]:
+    return re.findall(r"^(.+)\n[=-]{3,}\n", (RST / f"{page}.rst").read_text(), re.M)
+
+
+def page_keys(page: str) -> list[str]:
+    return re.findall(
+        r"^\s*\.\. corpus-figure:: (\S+)", (RST / f"{page}.rst").read_text(), re.M
+    )
+
+
+def test_v1_page_mirrors_v0():
+    """After "What v1 adds", the v1 page has v0's sections, in v0's order, under v0's titles, each with its -v1 view."""
+    v0, v1 = page_sections("v0"), page_sections("v1")
+    assert (
+        v1[0] == "What v1 adds" and v1[1:-1] == v0[:-1]
+    )  # the last is "The |vN_datasets| datasets"
+    assert page_keys("v1")[1:] == [
+        "table-v1" if k == "table-v0" else ("v1-kpis" if k == "v0-kpis" else f"{k}-v1")
+        for k in page_keys("v0")
+    ]

@@ -1,7 +1,7 @@
-:og:description: EEGDash Corpus v1: the datasets it adds to v0, and the same views as v0 with the added datasets by status.
+:og:description: EEGDash Corpus v1: the datasets it adds to v0, and the same views as v0, measured in the v1 Zarr store.
 
 .. meta::
-   :description: EEGDash Corpus v1: the datasets it adds to v0, and the same views as v0 with the added datasets by status.
+   :description: EEGDash Corpus v1: the datasets it adds to v0, and the same views as v0, measured in the v1 Zarr store.
 
 .. include:: /_static/corpus_generated/numbers.inc
 
@@ -11,10 +11,11 @@
 EEGDash Corpus v1
 #################
 
-Version 1 extends version 0 to every publicly usable dataset named by REVE's paper:
-|v1_datasets| datasets; of the |v1_new| it adds, |v1_added_prose|. The numbers of the added datasets
-come from EEGDash's records until they are converted; the views below are those of v0,
-with the added datasets stacked by status.
+Version 1 extends version 0 to every publicly usable dataset of REVE's paper and its
+release card: |v1_datasets| datasets; of the |v1_new| it adds, |v1_added_prose|. The v1
+Zarr store holds v0's datasets and the added ones, and every number below is measured in
+it. After the table of what v1 adds, the sections are those of v0, in the same order,
+with the added datasets in their own colour.
 
 What v1 adds
 ============
@@ -22,8 +23,7 @@ What v1 adds
 .. corpus-figure:: v1-adds-table
 
 SparrKULee carries CC BY-NC 4.0 in NEMAR's dataset description (EEGDash's record lists
-none), so a v1 Zarr store that includes it carries non-commercial terms; its EEGDash
-records carry no signal metadata, so its hours are measured at conversion. Siena Scalp
+none), so the v1 Zarr store, which includes it, carries non-commercial terms. Siena Scalp
 EEG is on NEMAR as a BIDS curation of the PhysioNet release; its EDF labels carry an
 ``EEG`` prefix (``EEG Fp1``), stripped when the names are matched to electrode positions.
 
@@ -35,11 +35,9 @@ In numbers
 Electrode coverage
 ==================
 
-One mark per electrode position (|v1_positions| positions in |v1_buckets| channel
-sets): v0's positions measured in the Zarr store, plus the channel sets of
-|v1_mapped| of the datasets v1 adds, read from EEGDash's records with the hours those
-records state; hover a mark for the v0 and added shares. Not on the map yet:
-|v1_unmapped| (no channel metadata in EEGDash's records, or not yet ingested).
+One mark per electrode position of the v1 Zarr store (|v1_positions| positions in
+|v1_buckets| channel sets), coloured and sized by the hours recorded there or by the
+number of datasets that include it; hover a mark for the v0 and added shares.
 
 .. tab-set::
 
@@ -97,8 +95,8 @@ Recordings
 Recording length
 ----------------
 
-How long one recording lasts in each dataset, summarised by its quantiles, on a log axis
-from minutes to days; the added datasets' lengths come from EEGDash's records.
+How long one recording lasts in each dataset, summarised by its quantiles (the
+per-recording lengths themselves are not shipped), on a log axis from minutes to days.
 
 .. corpus-figure:: lengths-v1
 
@@ -120,7 +118,7 @@ Ages and sex of the subjects, for the datasets whose records state them.
 From archive to status
 ======================
 
-Where the hours come from, under which licence, and how far each dataset has come;
+Where the hours come from and under which licence: archive, then licence, then status;
 switch the flow width to datasets to see the datasets without hours.
 
 .. corpus-figure:: flow-licence-v1
@@ -128,10 +126,20 @@ switch the flow width to datasets to see the datasets without hours.
 Training budget
 ===============
 
-Tokens are counted in the converted Zarr store, so this is v0's budget: the datasets v1
-adds enter it when they are converted.
+What one training epoch reads: tokens per dataset, grouped by paradigm, each tile
+shaded by its share of the tokens.
 
 .. corpus-figure:: tokens-v1
+
+Montages
+========
+
+A channel is one electrode. The columns are the datasets, by channel count, and the
+rows the |montage_rows_v1| standard names used by at least |montage_min| datasets, so nets
+with their own naming, such as EGI or BioSemi, show only the electrodes whose names
+coincide.
+
+.. corpus-figure:: montages-v1
 
 The |v1_datasets| datasets
 ==========================

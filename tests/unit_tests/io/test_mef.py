@@ -6,6 +6,7 @@ pymef is replaced by a stub there, so the test can never crash the test process.
 Channels of different lengths (on004624, 15 sessions) are written with pymef.
 """
 
+import logging
 import warnings
 
 import mne
@@ -87,7 +88,7 @@ def _write_session(path, lengths, starts, gap=None):
     return path, data
 
 
-def test_trailing_channel_tail_is_cropped_to_the_common_length(tmp_path):
+def test_trailing_channel_tail_is_cropped_to_the_common_length(tmp_path, caplog):
     # on004624 sub-c02 Functional Sensorimotor run-6: {206800, 207000} samples.
     root, data = _write_session(
         tmp_path / "run-6_ieeg.mefd", (1000, 1200, 1000), [START] * 3
@@ -95,11 +96,9 @@ def test_trailing_channel_tail_is_cropped_to_the_common_length(tmp_path):
     with pytest.raises(ValueError, match="inconsistent n_samples"):
         mne.io.read_raw_mef(root)
 
-    with (
-        tolerant(),
-        pytest.warns(RuntimeWarning, match="dropped from the end: CH1 200"),
-    ):
-        raw = mne.io.read_raw_mef(root, preload=True)
+    with tolerant(), caplog.at_level(logging.WARNING, logger="eegdash"):
+        raw = mne.io.read_raw_mef(root, preload=True, verbose="ERROR")
+    assert "Samples dropped from the end: CH1 200." in caplog.text
     assert raw.n_times == 1000  # never padded
     cals = np.array([ch["cal"] for ch in raw.info["chs"]])
     np.testing.assert_allclose(raw.get_data() / cals[:, None], data[:, :1000])
@@ -120,10 +119,11 @@ def test_channels_with_different_gaps_are_refused(tmp_path):
         mne.io.read_raw_mef(root)
 
 
-def test_equal_lengths_read_as_before(tmp_path):
+def test_equal_lengths_read_as_before(tmp_path, caplog):
     root, data = _write_session(tmp_path / "run-8_ieeg.mefd", (1000, 1000), [START] * 2)
     ref = mne.io.read_raw_mef(root, preload=True)
-    with tolerant(), warnings.catch_warnings():
+    with tolerant(), warnings.catch_warnings(), caplog.at_level(logging.WARNING):
         warnings.simplefilter("error")
         raw = mne.io.read_raw_mef(root, preload=True)
+    assert caplog.text == ""
     np.testing.assert_array_equal(raw.get_data(), ref.get_data())

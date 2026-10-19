@@ -15,6 +15,7 @@ they have in common, with a warning naming the samples dropped per channel.
 Nothing is padded, and channels that do not start at the same time are refused.
 """
 
+import logging
 from contextlib import contextmanager
 from pathlib import Path
 from unittest import mock
@@ -23,8 +24,8 @@ import mne
 import pymef.mef_session
 from mne.io.mef import mef as _mef
 from mne.io.mef._utils import _mef_get
-from mne.utils import warn
 
+logger = logging.getLogger("eegdash")
 _SEGMENT_FILES = (".tmet", ".tidx", ".tdat")  # metadata, indices, data
 _orig_init = _mef.RawMEF.__init__
 
@@ -93,9 +94,12 @@ def crop_to_common_length(session):
     dropped = ", ".join(
         f"{ch} {n - common}" for ch, n in n_samples.items() if n > common
     )
-    warn(
-        f"MEF channels have inconsistent n_samples; reading the {common} samples all "
-        f"channels have. Samples dropped from the end: {dropped}."
+    logger.warning(  # an eegdash warning: read_raw_bids reads with MNE at verbose=ERROR
+        "%s: MEF channels have inconsistent n_samples; reading the %d samples all "
+        "channels have. Samples dropped from the end: %s.",
+        Path(session.path).name,
+        common,
+        dropped,
     )
     return session
 

@@ -1,13 +1,8 @@
 """EEGDashRaw reads deposit quirks without writing a byte into the cached dataset.
 
-EEGDash used to fix these by rewriting the cached file: stale BrainVision
-``DataFile=``/``MarkerFile=`` (plus stub ``.vmrk`` files), an EEGLAB ``.set``
-naming another recording's ``.fdt`` or a truncated ``.fdt`` (``savemat``), and
-non-UTF-8 TSVs. The rewritten file no longer matched its S3 size, so each new
-session downloaded it again and rewrote it, and a second process sharing the
-cache could read it half written. Now the right files are chosen at read time
-(MNE 1.13 ``overrides``, ``eegdash.io.eeglab``, ``eegdash.io.bids``), and every
-file of the dataset must stay byte-identical, with no file added.
+Stale BrainVision pointers (MNE 1.13 ``overrides``, through read_raw_bids and the
+direct reader) and an EEGLAB ``.set`` naming another recording's ``.fdt``. The
+truncated ``.fdt`` case is in test_base_fixes.py, the cp1252 TSV in io/test_bids.py.
 """
 
 import json
@@ -164,26 +159,4 @@ def test_eeglab_own_fdt_read_without_rewrite(tmp_path):
     raw = _eegdashraw(root, "sub-01/eeg/sub-01_task-wake_eeg.set", "wake", tmp_path).raw
 
     np.testing.assert_allclose(raw.get_data(), DATA * 1e-6, rtol=1e-6)
-    assert _snapshot(root) == before
-
-
-def test_eeglab_truncated_fdt_read_without_rewrite(tmp_path):
-    """ds006554: the complete samples are read and the loss reported; the .set stays."""
-    root = tmp_path / "ds-set"
-    eeg = _write_eeglab_bids(root)
-    fdt = eeg / "sub-01_task-sleep_eeg.fdt"
-    n_complete = 800
-    fdt.write_bytes(fdt.read_bytes()[: (n_complete * len(CH_NAMES) + 2) * 4 + 1])
-    before = _snapshot(root)
-
-    with pytest.warns(RuntimeWarning, match="runs past the end of the file"):
-        raw = _eegdashraw(
-            root, "sub-01/eeg/sub-01_task-sleep_eeg.set", "sleep", tmp_path
-        ).raw
-
-    assert raw.n_times == n_complete
-    np.testing.assert_allclose(
-        raw.get_data(), (DATA[:, :n_complete] + 1000) * 1e-6, rtol=1e-6
-    )
-    assert f"{n_complete} of {N_TIMES} samples" in raw.info["description"]
     assert _snapshot(root) == before

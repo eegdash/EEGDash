@@ -1202,8 +1202,6 @@ def _load_raw_from_eeglab_epochs(set_path: Path):
             # External .fdt file: the own one first (on004348)
             fdt_path = eeglab_io.own_data_file(set_path, data_ref)
             if not fdt_path.exists():
-                fdt_path = set_path.with_suffix(".fdt")
-            if not fdt_path.exists():
                 raise ValueError(
                     f"No .fdt file found for '{set_path.name}' "
                     f"(expected '{fdt_path.name}')"

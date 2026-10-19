@@ -1,19 +1,9 @@
-"""MNE's BrainVision reader, told by ``overrides=`` (MNE 1.13) which files to read.
+"""MNE's BrainVision reader, told by ``overrides=`` (MNE 1.13, mne-python#13884) which files to read.
 
-Deposits often carry a ``.vhdr`` whose ``DataFile=`` / ``MarkerFile=`` still
-name the files as they were before the BIDS rename, or a git-annex key
-(``SHA256E-s…--….eeg``) that only resolves inside the annex. EEGDash used to
-rewrite the cached ``.vhdr`` (and write stub ``.vmrk`` files). The rewritten
-header then no longer matched the size on S3, so every new session downloaded it
-again and rewrote it, and a second process sharing the cache could read it half
-written. :func:`overrides` finds the same files without touching the header,
-and :func:`read_raw_brainvision` hands them to
-:func:`mne.io.read_raw_brainvision` (``overrides``, mne-python#13884).
-
-MNE 1.13 already reads a header without ``MarkerFile=`` (no annotations), and a
-``MarkerFile=`` that does not exist (the sibling ``.vmrk`` if there is one, else
-no annotations, with a warning). The overrides keep the markers in the first
-case, when the sibling ``.vmrk`` exists.
+A ``.vhdr`` whose ``DataFile=``/``MarkerFile=`` name pre-BIDS files or git-annex
+keys is read as it is: :func:`overrides` names the recording's own files and MNE
+reads them. Rewriting the cached header made every session download it again
+and let a second process read it half written.
 """
 
 import logging
@@ -71,6 +61,8 @@ def _resolve(vhdr: Path, value: str | None, ext: str) -> str | None:
     # A data file with neither the header's name nor the BIDS name: the most
     # similar .eeg (typos, pre-BIDS names), but never one that has its own
     # .vhdr, which is another recording's data.
+    # ponytail: name similarity; wrong if two runs' .eeg differ by a character and
+    # neither has a .vhdr. Map names from the DB record if that shows up.
     match = _find_best_matching_file(folder, value, ext)
     if (
         match
@@ -115,12 +107,6 @@ def overrides(vhdr_fname) -> dict:
 
 
 def read_raw_brainvision(vhdr_fname, **kwargs):
-    """Read with :func:`mne.io.read_raw_brainvision`, passing :func:`overrides`.
-
-    Overrides given by the caller win over the computed ones.
-    """
-    found = overrides(vhdr_fname)
-    if found:
-        kwargs["overrides"] = {**found, **(kwargs.get("overrides") or {})}
-    # Looked up at call time, so tests that patch mne.io see the call.
+    """Read with :func:`mne.io.read_raw_brainvision`, passing :func:`overrides`."""
+    kwargs.setdefault("overrides", overrides(vhdr_fname) or None)
     return mne.io.read_raw_brainvision(vhdr_fname, **kwargs)

@@ -140,16 +140,16 @@ def without_events():
         _skip_events.reset(token)
 
 
-def tsv_encoding(fname, chunk_size=None):
+def tsv_encoding(fname):
     """Return the encoding to read the TSV ``fname`` with (UTF-8, else cp1252, else latin-1).
 
-    Replaces ``mne_bids.tsv_handler._detect_file_encoding`` while reading;
-    ``chunk_size`` is accepted for its signature and ignored.
+    Replaces ``mne_bids.tsv_handler._detect_file_encoding`` while reading.
     """
     fname = Path(fname)
     opener = gzip.open if fname.suffix == ".gz" else open
     with opener(fname, "rb") as f:
-        content = f.read()  # TSVs are small: decode all of it, not 64 KiB
+        # ponytail: whole file in memory, fine for sidecars; chunked if a GB TSV shows up
+        content = f.read()
     if content.startswith(codecs.BOM_UTF8):
         return "utf-8-sig"
     if content.startswith((codecs.BOM_UTF16_LE, codecs.BOM_UTF16_BE)):

@@ -59,6 +59,8 @@ def own_data_file(set_fname, dataname):
     set_fname = Path(set_fname)
     named = set_fname.parent / str(dataname)
     own = set_fname.with_suffix(".fdt")
+    # ponytail: the BIDS name wins over EEG.data; wrong only if a deposit stores
+    # the right samples under another name next to a wrong <stem>.fdt.
     if named.suffix.lower() == ".set" or not own.is_file():
         return named
     return own

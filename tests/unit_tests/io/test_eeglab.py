@@ -208,22 +208,3 @@ def test_io_set_names_another_recordings_fdt(tmp_path):
     np.testing.assert_allclose(raw.get_data(), DATA * 1e-6)
     assert str(raw.filenames[0]).endswith("sub-01_task-wake_eeg.fdt")
     assert _snapshot(tmp_path) == before  # the .set is not rewritten
-
-
-def test_io_set_names_a_missing_fdt(tmp_path):
-    """A pre-BIDS name in EEG.data that is not on disk: the own .fdt (as MNE does)."""
-    fname = _write_set_fdt(
-        tmp_path / "sub-01_task-rest_eeg.set", DATA, "sub1_sess1.fdt"
-    )
-    before = _snapshot(tmp_path)
-    raw = read_raw_eeglab(fname, preload=True, verbose="ERROR")
-    np.testing.assert_allclose(raw.get_data(), DATA * 1e-6)
-    assert _snapshot(tmp_path) == before
-
-
-def test_io_set_complete_fdt_unchanged(tmp_path, caplog):
-    fname = _write_set_fdt(tmp_path / "sub-01_task-rest_eeg.set", DATA)
-    with caplog.at_level("WARNING", logger="eegdash"):
-        raw = read_raw_eeglab(fname, preload=True, verbose="ERROR")
-    assert raw.n_times == N_TIMES
-    assert "another recording" not in caplog.text

@@ -26,15 +26,19 @@ subject's ``*_task-sleep_eeg.fdt``. (MNE already falls back to the own ``.fdt``
 when the named one is missing.)
 """
 
+import inspect
 import logging
 from contextlib import ExitStack, contextmanager
 from pathlib import Path
 from unittest import mock
 
+import mne
 import numpy as np
 from mne.io.eeglab import eeglab as _eeglab
 from mne.io.eeglab import read_raw_eeglab as _mne_read_raw_eeglab
 from mne.utils import warn
+
+from .eeglab_salvage import read_raw_truncated_eeglab
 
 logger = logging.getLogger("eegdash")
 
@@ -147,10 +151,29 @@ def fixes():
     with ExitStack() as stack:
         for name in _orig:
             stack.enter_context(mock.patch.object(_eeglab, name, globals()[name]))
+        stack.enter_context(
+            mock.patch.object(mne.io, "read_raw_eeglab", _read_or_salvage)
+        )
         yield
+
+
+def _read_or_salvage(input_fname, **kwargs):
+    inspect.signature(_mne_read_raw_eeglab).bind(input_fname, **kwargs)
+    try:
+        return _mne_read_raw_eeglab(input_fname, **kwargs)
+    except (OSError, ValueError, TypeError, AttributeError, KeyError) as original:
+        if kwargs.get("eog", ()) not in ((), None):
+            raise original from None  # salvage uses only deposited channel types
+        try:
+            return read_raw_truncated_eeglab(
+                input_fname, preload=kwargs.get("preload", False)
+            )
+        except (OSError, ValueError, KeyError, UnicodeError) as refusal:
+            logger.debug("Truncated EEGLAB salvage refused: %s", refusal)
+            raise original from None
 
 
 def read_raw_eeglab(input_fname, **kwargs):
     """Read an EEGLAB file with :func:`mne.io.read_raw_eeglab` under :func:`fixes`."""
     with fixes():
-        return _mne_read_raw_eeglab(input_fname, **kwargs)
+        return _read_or_salvage(input_fname, **kwargs)

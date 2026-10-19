@@ -11,7 +11,6 @@ import os
 import re
 from collections import Counter
 from contextlib import contextmanager
-from difflib import SequenceMatcher
 from functools import partialmethod
 from pathlib import Path
 from time import strptime
@@ -23,9 +22,11 @@ import pandas as pd
 from dateutil.parser import parse as _dateutil_parse
 from dateutil.parser import parserinfo
 from mne.io.eeglab import _eeglab as mne_eeglab
-from scipy.io import loadmat, savemat
+from scipy.io import loadmat
 
-from ..io import READERS, get_reader
+from ..io import READERS, get_reader, tolerant
+from ..io import eeglab as eeglab_io
+from ..io.bids import tsv_encoding
 from ..logging import logger
 
 
@@ -72,51 +73,6 @@ def _convert_time_with_numeric_dash(date_str: str, time_str: str, *, orig):
         pass
 
     return orig(date_str, time_str)
-
-
-def _find_best_matching_file(
-    directory: Path, target_name: str, extension: str, threshold: float = 0.5
-) -> str | None:
-    """Find the best matching file in a directory using fuzzy string matching.
-
-    Parameters
-    ----------
-    directory : Path
-        Directory to search in.
-    target_name : str
-        The filename we're looking for (may have typos or different naming).
-    extension : str
-        File extension to filter by (e.g., ".eeg", ".vmrk").
-    threshold : float
-        Minimum similarity ratio (0-1) to consider a match.
-
-    Returns
-    -------
-    str | None
-        The best matching filename, or None if no good match found.
-
-    """
-    candidates = list(directory.glob(f"*{extension}"))
-    if not candidates:
-        return None
-
-    # If only one file with this extension, use it
-    if len(candidates) == 1:
-        return candidates[0].name
-
-    # Find best match using similarity ratio
-    target_stem = Path(target_name).stem.lower()
-    best_match = None
-    best_ratio = threshold
-
-    for candidate in candidates:
-        candidate_stem = candidate.stem.lower()
-        ratio = SequenceMatcher(None, target_stem, candidate_stem).ratio()
-        if ratio > best_ratio:
-            best_ratio = ratio
-            best_match = candidate.name
-
-    return best_match
 
 
 _ANNEX_KEY_RE = re.compile(r"^(SHA256E|MD5E)-s\d+--[0-9a-f]+\.", flags=re.IGNORECASE)
@@ -180,181 +136,6 @@ def _prepare_writable_path(path: Path) -> bool:
         return True
     except OSError:
         return False
-
-
-class _VHDRPointerFixer:
-    """Helper class to fix VHDR pointers with state tracking."""
-
-    def __init__(self, vhdr_path: Path):
-        self.vhdr_path = vhdr_path
-        self.data_dir = vhdr_path.parent
-        self.changes = False
-
-    def replace(self, match) -> str:
-        """Regex replacement callback."""
-        key = match.group(1)  # DataFile or MarkerFile
-        old_val = match.group(2).strip()
-
-        is_annex_key = bool(_ANNEX_KEY_RE.match(old_val))
-
-        # If the pointed file exists AND it's not an annex key, keep it.
-        # Annex keys are always rewritten: the key-based filename only
-        # resolves inside a git-annex repo, so outside that context
-        # (e.g. S3 download cache) it will always fail.
-        if not is_annex_key and (self.data_dir / old_val).exists():
-            return match.group(0)
-
-        # Determine expected extension
-        ext = ".vmrk" if key == "MarkerFile" else ".eeg"
-
-        # Strategy 1: Use BIDS filename (same stem as .vhdr).
-        # For annex keys we always rewrite — the target file need not
-        # exist yet (a VMRK stub may be generated right after repair).
-        bids_name = self.vhdr_path.with_suffix(ext).name
-        if not _ANNEX_KEY_RE.match(bids_name) and (
-            is_annex_key or (self.data_dir / bids_name).exists()
-        ):
-            self.changes = True
-            logger.info(
-                f"Auto-repairing {self.vhdr_path.name}: {key}={old_val} -> {bids_name}"
-            )
-            return f"{key}={bids_name}"
-
-        # Strategy 2: Fuzzy match - find best matching file with same extension
-        # This handles typos (rsub- vs sub-, sternbeg vs sternberg) and
-        # BIDS renames where original filename was completely different
-        fuzzy_match = _find_best_matching_file(self.data_dir, old_val, ext)
-        if (
-            fuzzy_match
-            and (self.data_dir / fuzzy_match).exists()
-            and not _ANNEX_KEY_RE.match(fuzzy_match)
-        ):
-            self.changes = True
-            logger.info(
-                f"Auto-repairing {self.vhdr_path.name}: {key}={old_val} -> {fuzzy_match} (fuzzy match)"
-            )
-            return f"{key}={fuzzy_match}"
-
-        return match.group(0)
-
-
-def _repair_vhdr_pointers(vhdr_path: Path) -> bool:
-    """Fix VHDR file pointing to internal filenames instead of BIDS filenames.
-
-    Checks if the DataFile and MarkerFile pointers in a .vhdr file refer
-    to files that exist. If not, checks if files matching the BIDS naming
-    convention exist in the same directory and updates the pointers accordingly.
-
-    Parameters
-    ----------
-    vhdr_path : Path
-        Path to the .vhdr file to check and repair.
-
-    Returns
-    -------
-    bool
-        True if changes were made, False otherwise.
-
-    """
-    if not vhdr_path.exists() or vhdr_path.suffix != ".vhdr":
-        return False
-
-    try:
-        content = vhdr_path.read_text(encoding="utf-8", errors="ignore")
-    except Exception as e:
-        logger.warning("Failed to read VHDR %s: %s", vhdr_path, e)
-        return False
-
-    fixer = _VHDRPointerFixer(vhdr_path)
-
-    # Common section for VHDR
-    # Case insensitive keys, value until end of line
-    new_content = re.sub(
-        r"(DataFile|MarkerFile)\s*=\s*(.*)",
-        fixer.replace,
-        content,
-        flags=re.IGNORECASE,
-    )
-
-    if fixer.changes:
-        try:
-            # Handle symlinks (e.g. git-annex) before writing
-            if not _prepare_writable_path(vhdr_path):
-                logger.warning(
-                    "Cannot write repaired VHDR %s: parent directory not writable",
-                    vhdr_path,
-                )
-                return False
-            vhdr_path.write_text(new_content, encoding="utf-8")
-            return True
-        except Exception as e:
-            logger.error("Failed to write repaired VHDR %s: %s", vhdr_path, e)
-            return False
-
-    return False
-
-
-def _repair_vhdr_missing_markerfile(vhdr_path: Path) -> bool:
-    """Add a missing MarkerFile entry to a VHDR ``[Common Infos]`` section.
-
-    Some BrainVision files omit ``MarkerFile`` entirely, which causes
-    ``configparser.NoOptionError`` in MNE's reader.  This inserts the
-    entry and generates a VMRK stub if the marker file does not exist.
-
-    Parameters
-    ----------
-    vhdr_path : Path
-        Path to the VHDR file.
-
-    Returns
-    -------
-    bool
-        True if the VHDR was modified, False otherwise.
-
-    """
-    if not vhdr_path.exists() or vhdr_path.suffix != ".vhdr":
-        return False
-
-    try:
-        content = vhdr_path.read_text(encoding="utf-8", errors="ignore")
-    except Exception:
-        return False
-
-    # Check if MarkerFile is already present (case-insensitive)
-    if re.search(r"(?i)^\s*MarkerFile\s*=", content, re.MULTILINE):
-        return False
-
-    # Find [Common Infos] section and insert MarkerFile after it
-    match = re.search(r"(?i)(\[Common Infos\][^\[]*)", content)
-    if not match:
-        return False
-
-    vmrk_name = vhdr_path.with_suffix(".vmrk").name
-    section = match.group(1)
-    # Insert MarkerFile at end of section (before next section or EOF)
-    new_section = section.rstrip("\n") + f"\nMarkerFile={vmrk_name}\n"
-    new_content = content[: match.start()] + new_section + content[match.end() :]
-
-    try:
-        # Handle symlinks (e.g. git-annex) before writing
-        if not _prepare_writable_path(vhdr_path):
-            logger.warning(
-                "Cannot write MarkerFile to VHDR %s: parent directory not writable",
-                vhdr_path,
-            )
-            return False
-        vhdr_path.write_text(new_content, encoding="utf-8")
-        logger.info("Added missing MarkerFile=%s to %s", vmrk_name, vhdr_path.name)
-    except Exception as e:
-        logger.warning("Failed to write MarkerFile to VHDR: %s", e)
-        return False
-
-    # Ensure the VMRK file exists
-    vmrk_path = vhdr_path.with_suffix(".vmrk")
-    if not vmrk_path.exists():
-        _generate_vmrk_stub(vmrk_path, vhdr_path.name)
-
-    return True
 
 
 def _ensure_coordsystem_symlink(data_dir: Path) -> None:
@@ -497,92 +278,6 @@ def _generate_coordsystem_json(electrodes_tsv: Path, datatype: str = "eeg") -> b
         return False
 
 
-def _generate_vmrk_stub(vmrk_path: Path, vhdr_name: str) -> bool:
-    """Generate a minimal VMRK marker file stub.
-
-    BrainVision requires a .vmrk file to exist. This creates a minimal
-    valid stub with just the DataFile reference.
-
-    Parameters
-    ----------
-    vmrk_path : Path
-        Path where the VMRK file should be created.
-    vhdr_name : str
-        Name of the corresponding VHDR file.
-
-    Returns
-    -------
-    bool
-        True if file was generated, False on failure.
-
-    """
-    content = f"""Brain Vision Data Exchange Marker File Version 1.0
-; Generated by EEGDash - minimal stub
-
-[Common Infos]
-Codepage=UTF-8
-DataFile={vhdr_name.replace(".vhdr", ".eeg")}
-
-[Marker Infos]
-; No markers defined
-"""
-    try:
-        # Handle symlinks (e.g. git-annex) before writing
-        if not _prepare_writable_path(vmrk_path):
-            logger.warning(
-                "Cannot write VMRK stub %s: parent directory not writable",
-                vmrk_path,
-            )
-            return False
-        vmrk_path.write_text(content, encoding="utf-8")
-        logger.info("Generated VMRK stub: %s", vmrk_path.name)
-        return True
-    except Exception as e:
-        logger.error("Failed to write VMRK stub %s: %s", vmrk_path, e)
-        return False
-
-
-def _repair_tsv_encoding(data_dir: Path) -> bool:
-    """Fix TSV files with non-UTF-8 encoding (e.g., Latin-1).
-
-    Some datasets have channels.tsv files saved with Latin-1 encoding
-    (common when using µ for microvolts). This converts them to UTF-8.
-
-    Parameters
-    ----------
-    data_dir : Path
-        Directory containing TSV files to check.
-
-    Returns
-    -------
-    bool
-        True if any files were repaired, False otherwise.
-
-    """
-    if not data_dir.exists():
-        return False
-
-    repaired_any = False
-    for tsv_path in data_dir.glob("*.tsv"):
-        try:
-            tsv_path.read_text(encoding="utf-8")
-        except UnicodeDecodeError:
-            for encoding in ("cp1252", "latin-1"):
-                try:
-                    content = tsv_path.read_text(encoding=encoding)
-                    tsv_path.write_text(content, encoding="utf-8")
-                    logger.info(
-                        f"Repaired TSV encoding: {tsv_path.name} ({encoding} -> UTF-8)"
-                    )
-                    repaired_any = True
-                    break
-                except Exception:
-                    continue
-        except Exception:
-            pass
-    return repaired_any
-
-
 def _generate_vhdr_from_metadata(
     vhdr_path: Path,
     record: dict[str, Any],
@@ -670,12 +365,6 @@ def _generate_vhdr_from_metadata(
             return False
         vhdr_path.write_text("\n".join(lines), encoding="utf-8")
         logger.info("Generated VHDR from metadata: %s", vhdr_path.name)
-
-        # Also generate VMRK stub if missing
-        vmrk_path = vhdr_path.with_suffix(".vmrk")
-        if not vmrk_path.exists():
-            _generate_vmrk_stub(vmrk_path, vhdr_path.name)
-
         return True
     except Exception as e:
         logger.error("Failed to write generated VHDR %s: %s", vhdr_path, e)
@@ -774,12 +463,6 @@ def _generate_vhdr_from_sibling(vhdr_path: Path) -> bool:
                 vhdr_path.name,
                 sibling.name,
             )
-
-            # Also generate VMRK stub if missing
-            vmrk_path = vhdr_path.with_suffix(".vmrk")
-            if not vmrk_path.exists():
-                _generate_vmrk_stub(vmrk_path, vhdr_path.name)
-
             return True
         except Exception:
             continue
@@ -838,7 +521,9 @@ def _repair_snirf_bids_metadata(snirf_path: Path, record: dict[str, Any]) -> boo
             if snirf_base.startswith(tsv_base) or tsv_base in snirf_base:
                 # Read existing channels.tsv to preserve structure
                 try:
-                    existing_df = pd.read_csv(channels_tsv, sep="\t")
+                    existing_df = pd.read_csv(
+                        channels_tsv, sep="\t", encoding=tsv_encoding(channels_tsv)
+                    )
 
                     # Check if channel names match
                     if list(existing_df["name"]) != ch_names:
@@ -895,7 +580,7 @@ def _repair_channels_tsv(data_dir: Path) -> bool:
 
     for tsv_path in tsv_files:
         try:
-            content = tsv_path.read_text(encoding="utf-8-sig")
+            content = tsv_path.read_text(encoding=tsv_encoding(tsv_path))
             stripped = content.strip()
 
             if not stripped:
@@ -1332,7 +1017,7 @@ def _read_bids_channels_tsv(
 
     ch_names = []
     ch_types = []
-    with open(tsv_path, newline="") as f:
+    with open(tsv_path, newline="", encoding=tsv_encoding(tsv_path)) as f:
         reader = csv.DictReader(f, delimiter="\t")
         for row in reader:
             name = row.get("name", "").strip()
@@ -1466,7 +1151,9 @@ def _load_raw_from_eeglab_epochs(set_path: Path):
     # ---- Try MNE's read_epochs_eeglab first ----
     used_mne = False
     try:
-        epochs = mne.io.read_epochs_eeglab(str(set_path), verbose="ERROR")
+        # tolerant(): the own .fdt, as for Raw (eegdash.io.eeglab)
+        with tolerant():
+            epochs = mne.io.read_epochs_eeglab(str(set_path), verbose="ERROR")
         used_mne = True
     except (AttributeError, IndexError, KeyError) as epoch_error:
         # Common failures:
@@ -1546,8 +1233,8 @@ def _load_raw_from_eeglab_epochs(set_path: Path):
         data_ref = _get("data")
 
         if isinstance(data_ref, str):
-            # External .fdt file
-            fdt_path = set_path.parent / data_ref
+            # External .fdt file: the own one first (on004348)
+            fdt_path = eeglab_io.own_data_file(set_path, data_ref)
             if not fdt_path.exists():
                 fdt_path = set_path.with_suffix(".fdt")
             if not fdt_path.exists():
@@ -1735,10 +1422,7 @@ def _eeglab_fdt_path(set_path: Path, eeg: dict) -> Path | None:
     data_ref = eeg.get("data")
     if not isinstance(data_ref, str):
         return None
-    p = set_path.parent / data_ref
-    if not p.exists():
-        p = set_path.with_suffix(".fdt")
-    return p
+    return eeglab_io.own_data_file(set_path, data_ref)
 
 
 def _eeglab_ch_names_from_eeg(eeg: dict, nbchan: int) -> list[str]:
@@ -1767,111 +1451,6 @@ def _eeglab_ch_names_from_eeg(eeg: dict, nbchan: int) -> list[str]:
                 pass
         ch_names.append(f"CH{i + 1}")
     return ch_names
-
-
-def _repair_eeglab_fdt(set_path: Path) -> bool:
-    """Repair .set header: fix .fdt filename mismatches.
-
-    **Filename mismatch** -- The header's ``datfile``/``data`` field
-    references a non-BIDS filename (e.g. ``sub10_sess1.fdt``) while a
-    BIDS-named ``.fdt`` with the same stem as the ``.set`` file exists.
-    The header is rewritten to point at the BIDS-named file.
-
-    A ``.fdt`` shorter than the header declares is not hidden here: the
-    reader crops to the complete samples and warns
-    (:func:`eegdash.io.fif.crop_unreadable_tail`).
-
-    Tries ``_eeglab_load_first_eeg`` (scipy / MNE ``_readmat``) first;
-    falls back to ``pymatreader`` with ``uint16_codec='latin-1'`` for
-    .set files whose char arrays trip the "buffer too small" error in scipy.
-
-    Parameters
-    ----------
-    set_path : Path
-        Path to the .set file.
-
-    Returns
-    -------
-    bool
-        True if the .set was modified, False otherwise.
-
-    """
-    if not set_path.exists() or set_path.suffix.lower() != ".set":
-        return False
-
-    # --- load header ---
-    eeg = _eeglab_load_first_eeg(set_path)
-    used_pymatreader = False
-
-    if eeg is None:
-        # scipy/MNE _readmat failed (e.g. "buffer too small" for non-ASCII
-        # char arrays).  Try pymatreader which handles uint16 codec.
-        try:
-            import pymatreader
-
-            mat = pymatreader.read_mat(str(set_path), uint16_codec="latin-1")
-            eeg = mat.get("EEG", mat)
-            if not isinstance(eeg, dict) or "pnts" not in eeg:
-                return False
-            used_pymatreader = True
-        except Exception:
-            return False
-
-    # --- locate companion .fdt ---
-    # Determine what the header currently references
-    if used_pymatreader:
-        data_ref = eeg.get("datfile") or eeg.get("data")
-    else:
-        data_ref = eeg.get("data")
-
-    # Only a header that points to an external .fdt can name the wrong one
-    if not (isinstance(data_ref, str) and data_ref):
-        return False
-    fdt_path = set_path.parent / data_ref
-    if not fdt_path.exists():
-        # Referenced .fdt missing -- try the BIDS-named companion
-        fdt_path = set_path.with_suffix(".fdt")
-    if not fdt_path.exists():
-        return False
-
-    # Filename mismatch: header references a non-BIDS .fdt name (e.g.
-    # "sub10_sess1.fdt") while the .fdt is stored under the BIDS name
-    # (e.g. "sub-10_ses-01_task-xxx_eeg.fdt").
-    bids_fdt_name = set_path.stem + ".fdt"
-    if str(data_ref) == bids_fdt_name:
-        return False
-
-    # --- patch header fields ---
-    repaired = {
-        key: value for key, value in dict(eeg).items() if not str(key).startswith("__")
-    }
-    repaired["datfile"] = bids_fdt_name
-    repaired["data"] = bids_fdt_name
-
-    # When loaded via pymatreader, list fields must be converted to arrays
-    # for scipy.savemat to serialize them correctly.
-    if used_pymatreader:
-        for k in list(repaired.keys()):
-            v = repaired[k]
-            if isinstance(v, list):
-                try:
-                    repaired[k] = np.array(v)
-                except ValueError:
-                    repaired[k] = np.array(v, dtype="O")
-
-    # --- write repaired .set ---
-    try:
-        savemat(str(set_path), {"EEG": repaired}, do_compression=False)
-        logger.info(
-            "Repaired EEGLAB .set header: %s (datfile %r -> %r).",
-            set_path.name,
-            data_ref,
-            bids_fdt_name,
-        )
-        return True
-    except Exception as e:
-        logger.warning("Failed to rewrite .set %s: %s", set_path.name, e)
-        return False
 
 
 def _load_raw_eeglab_alleeg(filepath: Path):

@@ -166,3 +166,64 @@ def test_io_set_event_negative_latency(tmp_path):
 
 def test_eeglab_in_table():
     assert get_reader(".set") is read_raw_eeglab
+
+
+def _write_set_fdt(fname, data, dataname=None):
+    """EEGLAB .set (MATLAB v5) whose samples are in an external .fdt."""
+    data.T.astype("<f4").tofile(fname.with_suffix(".fdt"))
+    chanlocs = np.array(
+        [(name.encode(),) for name in CH_NAMES], dtype=[("labels", "S10")]
+    )
+    eeg = dict(
+        nbchan=len(CH_NAMES),
+        pnts=data.shape[1],
+        trials=1,
+        srate=SFREQ,
+        xmin=0.0,
+        data=dataname or fname.with_suffix(".fdt").name,
+        chanlocs=chanlocs,
+        event=[],
+        epoch=[],
+    )
+    io.savemat(fname, {"EEG": eeg}, appendmat=False, oned_as="row")
+    return fname
+
+
+def _snapshot(folder):
+    return {p.name: p.read_bytes() for p in sorted(folder.iterdir())}
+
+
+def test_io_set_names_another_recordings_fdt(tmp_path):
+    """on004348: the wake .set names the sleep .fdt, which exists; read the wake one."""
+    sleep = _write_set_fdt(tmp_path / "sub-01_task-sleep_eeg.set", DATA + 1000)
+    wake = _write_set_fdt(
+        tmp_path / "sub-01_task-wake_eeg.set",
+        DATA,
+        dataname=sleep.with_suffix(".fdt").name,
+    )
+    before = _snapshot(tmp_path)
+    theirs = mne.io.read_raw_eeglab(wake, preload=True, verbose="ERROR")
+    np.testing.assert_allclose(theirs.get_data(), (DATA + 1000) * 1e-6)  # sleep!
+    raw = read_raw_eeglab(wake, preload=True, verbose="ERROR")
+    np.testing.assert_allclose(raw.get_data(), DATA * 1e-6)
+    assert str(raw.filenames[0]).endswith("sub-01_task-wake_eeg.fdt")
+    assert _snapshot(tmp_path) == before  # the .set is not rewritten
+
+
+def test_io_set_names_a_missing_fdt(tmp_path):
+    """A pre-BIDS name in EEG.data that is not on disk: the own .fdt (as MNE does)."""
+    fname = _write_set_fdt(
+        tmp_path / "sub-01_task-rest_eeg.set", DATA, "sub1_sess1.fdt"
+    )
+    before = _snapshot(tmp_path)
+    raw = read_raw_eeglab(fname, preload=True, verbose="ERROR")
+    np.testing.assert_allclose(raw.get_data(), DATA * 1e-6)
+    assert _snapshot(tmp_path) == before
+
+
+def test_io_set_complete_fdt_unchanged(tmp_path, caplog):
+    fname = _write_set_fdt(tmp_path / "sub-01_task-rest_eeg.set", DATA)
+    with caplog.at_level("WARNING", logger="eegdash"):
+        raw = read_raw_eeglab(fname, preload=True, verbose="ERROR")
+    assert raw.n_times == N_TIMES
+    assert "another recording" not in caplog.text

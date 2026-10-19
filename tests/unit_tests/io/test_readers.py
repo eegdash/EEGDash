@@ -17,6 +17,7 @@ def test_table_covers_mne_bids_and_feeds_the_client():
     assert _VALID_DATA_EXTENSIONS == frozenset(READERS)
     assert {status for *_, status in READERS.values()} <= {
         "mne",
+        "options",
         "tolerant",
         "vendored",
     }

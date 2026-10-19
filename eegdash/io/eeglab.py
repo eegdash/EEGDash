@@ -16,9 +16,19 @@ main as of 2026-10-15) and is the diff proposed upstream (``upstream/eeglab.md``
   dropped with a warning, as EEGLAB's ``eeg_checkset`` drops out-of-range
   events.
 
+One more fix picks the data file at read time (``_check_load_mat``). It replaces
+EEGDash's old rewrite of the cached ``.set`` (``savemat``), which made every new
+session download the ``.set`` again and let a second process read it half
+written. When ``EEG.data`` names another file than ``<set stem>.fdt`` while that
+file exists, the own ``.fdt`` is read. MNE trusts ``EEG.data`` whenever the file
+it names exists, and on004348 has 7 ``*_task-wake_eeg.set`` that name the same
+subject's ``*_task-sleep_eeg.fdt``. (MNE already falls back to the own ``.fdt``
+when the named one is missing.)
 """
 
+import logging
 from contextlib import ExitStack, contextmanager
+from pathlib import Path
 from unittest import mock
 
 import numpy as np
@@ -26,10 +36,32 @@ from mne.io.eeglab import eeglab as _eeglab
 from mne.io.eeglab import read_raw_eeglab as _mne_read_raw_eeglab
 from mne.utils import warn
 
+logger = logging.getLogger("eegdash")
+
 _orig = {
     name: getattr(_eeglab, name)
-    for name in ("_dol_to_lod", "_bunchify", "_read_annotations_eeglab")
+    for name in (
+        "_dol_to_lod",
+        "_bunchify",
+        "_read_annotations_eeglab",
+        "_check_load_mat",
+    )
 }
+
+
+def own_data_file(set_fname, dataname):
+    """Return the ``.fdt`` to read for ``set_fname`` whose ``EEG.data`` is ``dataname``.
+
+    ``<set stem>.fdt`` when it exists, else the file ``EEG.data`` names (which
+    may not exist). A ``dataname`` that is the ``.set`` itself (samples stored
+    in the ``.set``) is kept.
+    """
+    set_fname = Path(set_fname)
+    named = set_fname.parent / str(dataname)
+    own = set_fname.with_suffix(".fdt")
+    if named.suffix.lower() == ".set" or not own.is_file():
+        return named
+    return own
 
 
 def _len(value):
@@ -85,6 +117,26 @@ def _read_annotations_eeglab(eeg, uint16_codec=None):
                 for k, v in event.items()
             }
     return _orig["_read_annotations_eeglab"](eeg, uint16_codec=uint16_codec)
+
+
+def _check_load_mat(fname, uint16_codec, *, preload=False):
+    eeg = _orig["_check_load_mat"](fname, uint16_codec, preload=preload)
+    if not isinstance(eeg.get("data"), str) or not eeg.data:
+        return eeg
+    fname = Path(fname)
+    data_file = own_data_file(fname, eeg.data)
+    named = fname.parent / eeg.data
+    if data_file != named:
+        if named.is_file():  # MNE would read it; it logs nothing at verbose=ERROR
+            logger.warning(
+                "%s: EEG.data names %r, the data file of another recording; "
+                "reading %s instead.",
+                fname.name,
+                eeg.data,
+                data_file.name,
+            )
+        eeg.data = data_file.name  # MNE resolves it next to the .set
+    return eeg
 
 
 @contextmanager

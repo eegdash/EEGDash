@@ -116,6 +116,35 @@ def test_age_that_is_a_year_leaves_birthday_unset(tmp_path):
     assert raw.info["subject_info"]["hand"] == 1
 
 
+def _cp1252_events(n_ascii_rows):
+    """events.tsv whose only non-UTF-8 bytes (cp1252 en dash) follow ``n_ascii_rows``."""
+    rows = "".join("0.5\t0.0\tgo\n" for _ in range(n_ascii_rows))
+    text = "onset\tduration\ttrial_type\n" + rows + "3.0\t0.0\tgo \u2013 stop\n"
+    return text.encode("cp1252")
+
+
+@pytest.mark.parametrize("n_ascii_rows", [0, 8000], ids=["first_64k", "after_64k"])
+def test_cp1252_events_read_in_place(tmp_path, n_ascii_rows):
+    """on004588 sub-S37: a cp1252 events.tsv is read as it is, never rewritten."""
+    bp = _write(tmp_path / "ds")
+    events = tmp_path / "ds" / "sub-01" / "ieeg" / "sub-01_task-trials_events.tsv"
+    events.write_bytes(_cp1252_events(n_ascii_rows))
+    before = events.read_bytes()
+    if n_ascii_rows:  # MNE-BIDS checks 64 KiB, then the rest fails
+        assert len(before) > 65536
+        with pytest.raises(UnicodeDecodeError):
+            read_raw_bids(bp, verbose="ERROR")
+    else:  # MNE-BIDS reads latin-1: the dash is a control character
+        raw = read_raw_bids(bp, verbose="ERROR")
+        assert "go \x96 stop" in raw.annotations.description
+
+    with tolerant():
+        raw = read_raw_bids(bp, verbose="ERROR")
+
+    assert "go \u2013 stop" in raw.annotations.description
+    assert events.read_bytes() == before
+
+
 def test_eegdashraw_loads_epoched_recording(tmp_path):
     root = tmp_path / "ds-epoched"
     _write(root, sidecar={"RecordingType": "epoched"}, events=EPOCHED_EVENTS)

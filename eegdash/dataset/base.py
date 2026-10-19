@@ -34,8 +34,8 @@ from braindecode.datasets.base import RawDataset
 
 from .. import downloader
 from ..const import MODALITY_ALIASES
-from ..io import tolerant
-from ..io.bids import without_events
+from ..io import brainvision, tolerant
+from ..io.bids import tsv_encoding, without_events
 from ..io.fif import crop_unreadable_tail
 from ..logging import logger
 from ..schemas import NEMAR_ROOT_METADATA_FILES, validate_record
@@ -55,19 +55,14 @@ from .io import (
     _generate_coordsystem_json,
     _generate_vhdr_from_metadata,
     _generate_vhdr_from_sibling,
-    _generate_vmrk_stub,
     _is_annex_placeholder,
     _load_raw_direct,
     _load_raw_eeglab_alleeg,
     _load_raw_eeglab_fallback,
     _load_raw_from_eeglab_epochs,
     _repair_channels_tsv,
-    _repair_eeglab_fdt,
     _repair_participants_tsv_ids,
     _repair_snirf_bids_metadata,
-    _repair_tsv_encoding,
-    _repair_vhdr_missing_markerfile,
-    _repair_vhdr_pointers,
 )
 
 # Error messages indicating unrecoverable data corruption — the source
@@ -665,10 +660,12 @@ def _read_nwb_with_channels_tsv(path: Path) -> BaseRaw:
         return raw
     # NWB names channels by electrode id; channels.tsv lists them in data order
     # (BIDS), so take its names (on008610: ch01.., nm000350: 0..).
-    names = [ln.split("\t", 1)[0] for ln in tsv.read_text().splitlines()[1:] if ln]
+    text = tsv.read_text(encoding=tsv_encoding(tsv))
+    names = [ln.split("\t", 1)[0] for ln in text.splitlines()[1:] if ln]
     if len(names) == len(raw.ch_names) and len(set(names)) == len(names):
         raw.rename_channels(dict(zip(raw.ch_names, names)))
-    return mne_bids_read._handle_channels_reading(tsv, raw, on_ch_mismatch="warn")
+    with tolerant():  # reads the TSV in its own encoding
+        return mne_bids_read._handle_channels_reading(tsv, raw, on_ch_mismatch="warn")
 
 
 class EEGDashRaw(RawDataset):
@@ -1347,7 +1344,6 @@ class EEGDashRaw(RawDataset):
         # Helper: Fix MNE-BIDS strictness regarding coordsystem.json location
         if self.filecache and self.filecache.parent.exists():
             _ensure_coordsystem_symlink(self.filecache.parent)
-            _repair_tsv_encoding(self.filecache.parent)
             _repair_channels_tsv(self.filecache.parent)
 
         # Helper: Handle VHDR files - generate if missing, repair if broken
@@ -1373,11 +1369,8 @@ class EEGDashRaw(RawDataset):
                     ],
                 )
 
-            # Generate VMRK stub first so pointer repair can find the target
-            vmrk_path = self.filecache.with_suffix(".vmrk")
-            if not vmrk_path.exists():
-                _generate_vmrk_stub(vmrk_path, self.filecache.name)
-
+            # Stale DataFile=/MarkerFile= pointers are not rewritten: they are
+            # passed to MNE as overrides at read time (eegdash.io.brainvision).
             if not self.filecache.exists():
                 # Generate VHDR from database metadata if file is missing
                 if not _generate_vhdr_from_metadata(self.filecache, self.record):
@@ -1400,12 +1393,8 @@ class EEGDashRaw(RawDataset):
                     if not _generate_vhdr_from_metadata(self.filecache, self.record):
                         _generate_vhdr_from_sibling(self.filecache)
 
-                # Auto-Repair broken VHDR pointers (common in OpenNeuro exports)
-                _repair_vhdr_pointers(self.filecache)
-
-        # Repair .set header: fix .fdt filename mismatches and truncated data
-        if self.filecache and self.filecache.suffix.lower() == ".set":
-            _repair_eeglab_fdt(self.filecache)
+        # A .set naming another recording's .fdt, or a truncated .fdt, is handled
+        # at read time by eegdash.io.eeglab; the cached .set is not rewritten.
 
         if self._raw is None:
             try:
@@ -1465,7 +1454,17 @@ class EEGDashRaw(RawDataset):
         names in channels.tsv (``-0``, ``-1``, ...).
 
         Runs under :func:`eegdash.io.tolerant`, the MNE fixes not yet released.
+        A BrainVision header whose ``DataFile=``/``MarkerFile=`` name other files
+        than the recording's own gets ``overrides`` (MNE 1.13) in ``extra_params``.
         """
+        if self.filecache is not None and self.filecache.suffix.lower() == ".vhdr":
+            found = brainvision.overrides(self.filecache)
+            if found:
+                extra_params = {**(extra_params or {})}
+                extra_params["overrides"] = {
+                    **found,
+                    **extra_params.get("overrides", {}),
+                }
         with tolerant():
             return mne_bids.read_raw_bids(
                 bids_path=self.bidspath,
@@ -1763,16 +1762,6 @@ class EEGDashRaw(RawDataset):
                                 issues=[msg, str(fallback_error)],
                             ) from first_error
 
-                # Non-UTF-8 encoding in TSV sidecar files (e.g. µ in Latin-1)
-                if isinstance(first_error, UnicodeDecodeError) and self.filecache:
-                    data_dir = self.filecache.parent
-                    if _repair_tsv_encoding(data_dir):
-                        logger.info("Repaired non-UTF-8 TSV encoding, retrying load...")
-                        try:
-                            return self._read_raw_bids()
-                        except Exception as retry_error:
-                            raise retry_error from first_error
-
                 # CTF "no valid samples" — MNE misinterprets a zeroed
                 # system clock (SCLK01) channel as empty data (OSError).
                 # Retry with system_clock="ignore" to bypass the SCLK check.
@@ -1995,19 +1984,6 @@ class EEGDashRaw(RawDataset):
                     return self._retry_without_events_tsv(first_error)
                 raise
             except Exception as first_error:
-                # Missing MarkerFile entry in VHDR [Common Infos]
-                if (
-                    isinstance(first_error, configparser.NoOptionError)
-                    and "markerfile" in str(first_error).lower()
-                    and self.filecache
-                    and self.filecache.suffix.lower() == ".vhdr"
-                ):
-                    if _repair_vhdr_missing_markerfile(self.filecache):
-                        try:
-                            return self._read_raw_bids()
-                        except Exception as retry_error:
-                            raise retry_error from first_error
-
                 # Corrupted VHDR file (missing required sections)
                 if isinstance(first_error, configparser.NoSectionError):
                     raise DataIntegrityError(

@@ -6,6 +6,7 @@ header-size field (on003343).
 """
 
 import json
+import logging
 import warnings
 from datetime import UTC, datetime
 
@@ -100,18 +101,20 @@ def _write_overlapped(path):
 
 
 @pytest.mark.parametrize("ext", [".edf", ".bdf"])
-def test_header_written_over_data_reads_with_corrected_header(tmp_path, ext):
+def test_header_written_over_data_reads_with_corrected_header(tmp_path, ext, caplog):
     fname = _write_overlapped(tmp_path / f"bad{ext}")
     mne_reader = getattr(mne.io, f"read_raw_{ext[1:]}")
     ref = mne_reader(tmp_path / f"good{ext}", preload=True)
     with pytest.raises(AssertionError):
         mne_reader(fname)
 
-    match = "header covers the first"
-    with pytest.warns(RuntimeWarning, match=match):
+    match = "the header covers the first"
+    with caplog.at_level(logging.WARNING, logger="eegdash"):
         raw = get_reader(ext)(fname, preload=True)
-    with tolerant(), pytest.warns(RuntimeWarning, match=match):
-        raw_bids_path = mne_reader(fname, preload=True)  # what read_raw_bids calls
+        assert caplog.text.count(match) == 1
+        with tolerant():
+            raw_bids_path = mne_reader(fname, preload=True)  # what read_raw_bids calls
+        assert caplog.text.count(match) == 2
 
     n_bad = -(-OVERLAP // (3 if ext == ".bdf" else 2))  # samples of Cz under the header
     for r in (raw, raw_bids_path):
@@ -131,14 +134,16 @@ def test_header_written_over_data_reads_with_corrected_header(tmp_path, ext):
     fixed.write_bytes(
         head[:184] + _field(768, 8) + head[192:768] + head[768 - OVERLAP :]
     )
-    with warnings.catch_warnings():
+    caplog.clear()
+    with warnings.catch_warnings(), caplog.at_level(logging.WARNING, logger="eegdash"):
         warnings.simplefilter("error")
         raw_fixed = get_reader(ext)(fixed, preload=True)
+    assert caplog.text == ""
     np.testing.assert_array_equal(raw_fixed.get_data(), raw.get_data())
     assert len(raw_fixed.annotations) == 0
 
 
-def test_header_overlap_annotation_survives_read_raw_bids(tmp_path):
+def test_header_overlap_annotation_survives_read_raw_bids(tmp_path, caplog):
     eeg = tmp_path / "sub-01" / "eeg"
     eeg.mkdir(parents=True)
     (tmp_path / "dataset_description.json").write_text(
@@ -161,10 +166,11 @@ def test_header_overlap_annotation_survives_read_raw_bids(tmp_path):
         extension=".bdf",
         root=tmp_path,
     )
-    with tolerant(), warnings.catch_warnings():
+    with tolerant(), warnings.catch_warnings(), caplog.at_level(logging.WARNING):
         warnings.simplefilter("ignore")
         raw = read_raw_bids(bp, verbose="ERROR")
     assert sorted(raw.annotations.description) == ["BAD_header_overlap", "go"]
+    assert "the header covers the first" in caplog.text  # seen at verbose="ERROR"
 
 
 @pytest.mark.parametrize("ext", [".edf", ".bdf"])

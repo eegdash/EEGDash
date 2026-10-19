@@ -16,13 +16,14 @@ on main as of 2026-10-18); the upstream PR is still to be written:
   header over its first 768 (1024) bytes. MNE already reads the data from the
   field's offset; it gets the header with the field corrected, in memory, and
   the samples of the first channel under the header are annotated
-  ``BAD_header_overlap`` (kept by ``read_raw_bids``), with a warning. Any other
+  ``BAD_header_overlap`` (kept by ``read_raw_bids``), with an eegdash warning. Any other
   mismatch is refused with a ``ValueError`` that says why ("Bad EDF/BDF
   header: ..."). Nothing is written; once the deposit has a correct header
   (nemarDatasets/on003343#3) this path is not taken.
 """
 
 import io
+import logging
 import os
 import re
 from contextlib import ExitStack, contextmanager
@@ -34,6 +35,7 @@ import mne_bids.read
 from mne.io.edf import edf as _edf
 from mne.utils import warn
 
+logger = logging.getLogger("eegdash")
 _orig_read_edf_header = _edf._read_edf_header
 # What datetime.replace raises for an hour, minute or second out of range.
 _BAD_TIME = re.compile(r"^(hour|minute|second) must be in")
@@ -164,12 +166,17 @@ def _read_edf_header(fname, exclude, infer_types, file_type, *args, **kwargs):
     sel = list(edf_info["sel"])
     name = edf_info["ch_names"][sel.index(0)] if 0 in sel else None
     edf_info["header_overlap"] = (name, n_bad / sfreq) if name else None
-    warn(
-        f"{Path(fname).name}: the header-size field says {offset} bytes, but its "
-        f"{edf_info['nchan']} signals take {len(head)}, and the file size puts the "
-        f"data at {offset}: the header covers the first {n_bad} samples of the "
-        f"first channel. Read with the field corrected in memory; those samples "
-        f"are annotated BAD_header_overlap."
+    logger.warning(  # an eegdash warning: read_raw_bids reads with MNE at verbose=ERROR
+        "%s: the header-size field says %d bytes, but its %d signals take %d, and "
+        "the file size puts the data at %d: the header covers the first %d samples "
+        "of the first channel. Read with the field corrected in memory; those "
+        "samples are annotated BAD_header_overlap.",
+        Path(fname).name,
+        offset,
+        edf_info["nchan"],
+        len(head),
+        offset,
+        n_bad,
     )
     return edf_info, orig_units
 

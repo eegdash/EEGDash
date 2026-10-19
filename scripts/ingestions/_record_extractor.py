@@ -21,7 +21,7 @@ from _constants import NEURO_MODALITIES
 from _metadata_cascade import CascadeContext, MetadataCascade
 from _montage import _walk_up_find as _walk
 from eegdash.dataset._source_inference import DEFAULT_STORAGE_CONFIG, STORAGE_CONFIGS
-from eegdash.dataset.bids_dataset import _COMPANION_FILES
+from eegdash.dataset.bids_dataset import _COMPANION_FILES, position_sidecars
 from eegdash.schemas import create_record
 from source_adapter import SourceAdapter, get_source_adapter
 
@@ -258,8 +258,6 @@ _DEP_SUFFIXES: tuple[str, ...] = (
     "_channels.tsv",
     "_events.tsv",
     "_events.json",
-    "_electrodes.tsv",
-    "_coordsystem.json",
     # NIRS-specific sidecars
     "_optodes.tsv",
     "_optodes.json",
@@ -270,6 +268,8 @@ _DEP_SUFFIXES: tuple[str, ...] = (
 # the list cannot drift as datatypes are added, and -- because a record only
 # ever probes its own suffix -- an EEG record in a session that also holds
 # ``sub-01_ses-01_meg.json`` no longer picks the MEG sidecar up as a dependency.
+# electrodes.tsv / coordsystem.json are not listed either: ``position_sidecars``
+# finds the ones BIDS inheritance applies (``space-``, ``acq-``, subject level).
 
 
 def _build_dep_keys(
@@ -316,6 +316,20 @@ def _build_dep_keys(
                         dep_keys.append(str(dep_file.relative_to(bids_root)))
                     except ValueError:
                         pass
+
+    try:
+        relpath = bids_file_path.relative_to(bids_root)
+        subject_dir = bids_root / relpath.parts[0]
+        dep_keys += position_sidecars(
+            relpath.as_posix(),
+            (
+                p.relative_to(bids_root).as_posix()
+                for pattern in ("*_electrodes.tsv", "*_coordsystem.json")
+                for p in subject_dir.rglob(pattern)
+            ),
+        )
+    except ValueError:
+        pass
 
     ext = bids_file_path.suffix.lower()
     for comp_ext in _COMPANION_FILES.get(ext, []):

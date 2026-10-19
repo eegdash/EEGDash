@@ -17,7 +17,7 @@ from eegdash.dataset.io import (
     _eeglab_fdt_path,
     _eeglab_get_first_eeg,
     _eeglab_load_first_eeg,
-    _ensure_coordsystem_symlink,
+    _ensure_coordsystem,
     _fix_negative_annotation_durations,
     _generate_coordsystem_json,
     _generate_vhdr_from_metadata,
@@ -100,42 +100,27 @@ def test_convert_time_with_numeric_dash_strips_whitespace():
     orig.assert_called_once_with("14/10/1925", "00:00:00")
 
 
-def test_ensure_coordsystem_symlink(tmp_path):
-    """Test symlink creation for coordsystem.json."""
-    dataset_root = tmp_path
-    eeg_dir = dataset_root / "sub-01" / "eeg"
+def test_ensure_coordsystem_uses_the_subject_level_one(tmp_path):
+    """A subject-level coordsystem.json applies as is: no link, no generated file."""
+    eeg_dir = tmp_path / "sub-01" / "eeg"
     eeg_dir.mkdir(parents=True)
+    (eeg_dir / "sub-01_task-rest_electrodes.tsv").write_text(_ELECTRODES)
+    (tmp_path / "sub-01" / "sub-01_coordsystem.json").write_text(
+        json.dumps({"EEGCoordinateSystem": "CapTrak", "EEGCoordinateUnits": "m"})
+    )
 
-    # Create dummy files
-    (eeg_dir / "sub-01_task-rest_electrodes.tsv").touch()
+    _ensure_coordsystem(_bp(tmp_path, "eeg"))
 
-    # Create coordsystem in subject root
-    subject_root = dataset_root / "sub-01"
-    (subject_root / "sub-01_coordsystem.json").touch()
-
-    # Run ensure function
-    _ensure_coordsystem_symlink(eeg_dir)
-
-    # Verify symlink
-    expected_link = eeg_dir / "sub-01_coordsystem.json"
-    assert expected_link.exists()
-    assert expected_link.is_symlink()
+    assert sorted(p.name for p in eeg_dir.iterdir()) == [
+        "sub-01_task-rest_electrodes.tsv"
+    ]
 
 
 def test_io_error_handling(tmp_path):
     """Test error handling branches in IO module."""
-    # Test 3: ensure_symlink non-existent dir
-    _ensure_coordsystem_symlink(tmp_path / "missing_dir")  # Should not raise
-
-    # Test 4: ensure_symlink missing electrodes (early return)
-    exists_dir = tmp_path / "exists"
-    exists_dir.mkdir()
-    _ensure_coordsystem_symlink(exists_dir)  # Should return early
-
-    # Test 5: ensure_symlink already has coordsystem
-    (exists_dir / "sub-01_electrodes.tsv").touch()
-    (exists_dir / "sub-01_coordsystem.json").touch()
-    _ensure_coordsystem_symlink(exists_dir)  # Should return early branch
+    # ensure_coordsystem on a missing dataset or without electrodes
+    _ensure_coordsystem(_bp(tmp_path / "missing_dir", "eeg"))  # Should not raise
+    assert not (tmp_path / "missing_dir").exists()
 
 
 @pytest.mark.parametrize(
@@ -286,7 +271,7 @@ def test_generate_coordsystem_json_datatype_keys(tmp_path, datatype, expected_pr
     assert f"{expected_prefix}CoordinateSystem" in data
     assert data[f"{expected_prefix}CoordinateSystem"] == "MNI"
     assert f"{expected_prefix}CoordinateUnits" in data
-    assert data[f"{expected_prefix}CoordinateUnits"] == "m"
+    assert data[f"{expected_prefix}CoordinateUnits"] == "n/a"
 
 
 def test_generate_coordsystem_json_no_space_entity(tmp_path):
@@ -313,75 +298,53 @@ def test_generate_coordsystem_json_default_datatype(tmp_path):
     assert "EEGCoordinateSystem" in data
 
 
-def test_ensure_coordsystem_symlink_generates_ieeg_keys(tmp_path):
-    """_ensure_coordsystem_symlink infers ieeg datatype from directory name."""
-    ieeg_dir = tmp_path / "sub-01" / "ieeg"
-    ieeg_dir.mkdir(parents=True)
-
-    (ieeg_dir / "sub-01_electrodes.tsv").write_text("name\tx\ty\tz\nCh1\t0\t0\t0\n")
-
-    _ensure_coordsystem_symlink(ieeg_dir)
-
-    coordsystem = ieeg_dir / "sub-01_coordsystem.json"
-    assert coordsystem.exists()
-    data = json.loads(coordsystem.read_text())
-    assert "iEEGCoordinateSystem" in data
-    assert "iEEGCoordinateUnits" in data
+_ELECTRODES = "name\tx\ty\tz\nCh1\t40.0\t-12.5\t102.0\nCh2\tn/a\tn/a\tn/a\n"
 
 
-def test_ensure_coordsystem_symlink_overwrites_wrong_keys_ieeg(tmp_path):
-    """coordsystem.json with EEG keys in ieeg dir is overwritten with iEEG keys."""
-    ieeg_dir = tmp_path / "sub-01" / "ieeg"
-    ieeg_dir.mkdir(parents=True)
+def _bp(root, datatype):
+    from mne_bids import BIDSPath
 
-    (ieeg_dir / "sub-01_electrodes.tsv").write_text("name\tx\ty\tz\nCh1\t0\t0\t0\n")
-    coordsystem = ieeg_dir / "sub-01_coordsystem.json"
-    # Write wrong keys (EEG instead of iEEG)
-    coordsystem.write_text(
-        json.dumps({"EEGCoordinateSystem": "Other", "EEGCoordinateUnits": "m"})
+    return BIDSPath(
+        root=root,
+        subject="01",
+        task="rest",
+        datatype=datatype,
+        suffix=datatype,
+        extension=".vhdr",
+        check=False,
     )
 
-    _ensure_coordsystem_symlink(ieeg_dir)
 
-    data = json.loads(coordsystem.read_text())
-    assert "iEEGCoordinateSystem" in data
-    assert "EEGCoordinateSystem" not in data
+def test_ensure_coordsystem_generates_ieeg_keys(tmp_path):
+    """No coordsystem.json anywhere: iEEG keys, units n/a, system Other, warned."""
+    ieeg_dir = tmp_path / "sub-01" / "ieeg"
+    ieeg_dir.mkdir(parents=True)
+    (ieeg_dir / "sub-01_electrodes.tsv").write_text(_ELECTRODES)
+
+    with patch("eegdash.dataset.io.logger") as log:
+        _ensure_coordsystem(_bp(tmp_path, "ieeg"))
+
+    data = json.loads((ieeg_dir / "sub-01_coordsystem.json").read_text())
+    assert data == {"iEEGCoordinateSystem": "Other", "iEEGCoordinateUnits": "n/a"}
+    assert "the deposit gives none" in log.warning.call_args.args
 
 
-def test_ensure_coordsystem_symlink_keeps_correct_keys_ieeg(tmp_path):
+def test_ensure_coordsystem_keeps_correct_keys_ieeg(tmp_path):
     """coordsystem.json with correct iEEG keys in ieeg dir is left unchanged."""
     ieeg_dir = tmp_path / "sub-01" / "ieeg"
     ieeg_dir.mkdir(parents=True)
 
-    (ieeg_dir / "sub-01_electrodes.tsv").write_text("name\tx\ty\tz\nCh1\t0\t0\t0\n")
+    (ieeg_dir / "sub-01_electrodes.tsv").write_text(_ELECTRODES)
     coordsystem = ieeg_dir / "sub-01_coordsystem.json"
     original_content = json.dumps(
         {"iEEGCoordinateSystem": "MNI305", "iEEGCoordinateUnits": "mm"}
     )
     coordsystem.write_text(original_content)
 
-    _ensure_coordsystem_symlink(ieeg_dir)
+    _ensure_coordsystem(_bp(tmp_path, "ieeg"))
 
     assert coordsystem.read_text() == original_content
-
-
-def test_ensure_coordsystem_symlink_overwrites_wrong_keys_eeg(tmp_path):
-    """coordsystem.json with iEEG keys in eeg dir is overwritten with EEG keys."""
-    eeg_dir = tmp_path / "sub-01" / "eeg"
-    eeg_dir.mkdir(parents=True)
-
-    (eeg_dir / "sub-01_electrodes.tsv").write_text("name\tx\ty\tz\nCh1\t0\t0\t0\n")
-    coordsystem = eeg_dir / "sub-01_coordsystem.json"
-    # Write wrong keys (iEEG instead of EEG)
-    coordsystem.write_text(
-        json.dumps({"iEEGCoordinateSystem": "Other", "iEEGCoordinateUnits": "m"})
-    )
-
-    _ensure_coordsystem_symlink(eeg_dir)
-
-    data = json.loads(coordsystem.read_text())
-    assert "EEGCoordinateSystem" in data
-    assert "iEEGCoordinateSystem" not in data
+    assert len(list(ieeg_dir.iterdir())) == 2
 
 
 # Tests for TSV decimal separator repair

@@ -12,6 +12,7 @@ from typing import Any
 
 from mne_bids import find_matching_paths
 from mne_bids.config import ALLOWED_DATATYPE_EXTENSIONS
+from mne_bids.path import _filter_fnames, _fnames_to_bidspaths
 
 from .const import MODALITY_ALIASES
 from .schemas import create_record
@@ -165,6 +166,20 @@ def discover_local_bids_records(
     dataset_root_path = Path(dataset_root)
     records_out: list[dict[str, Any]] = []
 
+    # ponytail: mne-bids 0.20 find_matching_paths keeps files and .ds folders
+    # only (path._filter_paths_optimized), so .mefd folders go through the same
+    # datatype glob, entity regexp and BIDSPath. Drop when mne-bids returns them
+    # (test_discover_directory_recordings then sees each .mefd twice).
+    mefd = [
+        p
+        for m in modalities
+        for p in dataset_root_path.glob(f"**/{m}/*.mefd")
+        if p.is_dir()
+    ]
+    entities = {arg_map[k]: v for k, v in matching_args.items()}
+    mefd = _filter_fnames(mefd, suffix=modalities, **entities)
+    matched_paths += _fnames_to_bidspaths(mefd, dataset_root)
+
     valid_raw_extensions = {
         ext
         for m in modalities
@@ -242,44 +257,5 @@ def discover_local_bids_records(
         rec.update(_get_file_metadata(ds_helper, str(bids_path.fpath)))
 
         records_out.append(rec)
-
-    # --- Fallback: discover directory-based formats (.ds, .mefd) that
-    # find_matching_paths cannot find (it only matches files, not dirs).
-    if not records_out:
-        _DIR_EXTS = (".ds", ".mefd")
-        _found_relpaths = set()
-        for dext in _DIR_EXTS:
-            for dpath in dataset_root_path.rglob(f"*{dext}"):
-                if not dpath.is_dir():
-                    continue
-                try:
-                    rel = dpath.relative_to(dataset_root_path.resolve())
-                except ValueError:
-                    rel = Path(dpath.name)
-                if rel.as_posix() in _found_relpaths:
-                    continue
-                _found_relpaths.add(rel.as_posix())
-                # Parse entities from the directory name
-                _ents = dict(re.findall(r"(sub|ses|task|run|acq)-([^_/]+)", str(rel)))
-                datatype = (
-                    dpath.parent.name
-                    if dpath.parent.name in ("eeg", "ieeg", "meg")
-                    else modalities[0]
-                )
-                rec = create_record(
-                    dataset=dataset_id,
-                    storage_base=str(dataset_root_path),
-                    bids_relpath=rel.as_posix(),
-                    subject=_ents.get("sub"),
-                    session=_ents.get("ses"),
-                    task=_ents.get("task"),
-                    run=_ents.get("run"),
-                    acquisition=_ents.get("acq"),
-                    dep_keys=[],
-                    datatype=datatype,
-                    suffix=datatype,
-                    storage_backend="local",
-                )
-                records_out.append(rec)
 
     return records_out

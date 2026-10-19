@@ -10,6 +10,7 @@ braindecode for machine learning workflows and handles data loading from both lo
 """
 
 import configparser
+import inspect
 import json
 import os
 import re
@@ -869,6 +870,13 @@ class EEGDashRaw(RawDataset):
             (k, v) for k, v in entities_mne.items() if k in entities and v is not None
         )
         entities["run"] = entities_mne.get("run")
+        # Parsing recognizes entities (e.g. part) that BIDSPath cannot represent.
+        # Keep their values so loading cannot silently select a different file.
+        parameters = inspect.signature(BIDSPath).parameters
+        self._unsupported_bids_entities = {
+            k: v for k, v in entities.items() if k not in parameters and v is not None
+        }
+        entities = {k: v for k, v in entities.items() if k in parameters}
 
         self.bidspath = BIDSPath(
             root=self.bids_root,
@@ -1723,6 +1731,15 @@ class EEGDashRaw(RawDataset):
           entity): attempts direct MNE reader before raising
           ``DataIntegrityError``.
         """
+        if self._unsupported_bids_entities:
+            logger.warning(
+                "BIDSPath does not support entities %s; reading the exact file %s "
+                "with the direct reader (BIDS sidecars are not applied).",
+                self._unsupported_bids_entities,
+                self.filecache,
+            )
+            return _load_raw_direct(self.filecache)
+
         # mne_bids.read_raw_bids raises for .nwb ("allowed, but not yet
         # implemented"), so NWB goes straight to the direct reader.
         if self.filecache.suffix.lower() == ".nwb":

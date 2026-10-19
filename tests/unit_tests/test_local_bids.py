@@ -206,23 +206,38 @@ def test_discover_fallback_glob_after_valueerror(monkeypatch, tmp_path):
     assert records[0]["storage"]["backend"] == "local"
 
 
-@pytest.mark.parametrize("datatype,ext", [("meg", ".ds"), ("ieeg", ".mefd")])
-def test_discover_directory_format_fallback(monkeypatch, tmp_path, datatype, ext):
+_EDF = "sub-01/ieeg/sub-01_task-rest_run-01_ieeg.edf"
+_MEFD1 = "sub-01/ieeg/sub-01_task-rest_run-02_ieeg.mefd"
+_MEFD2 = "sub-02/ieeg/sub-02_task-rest_run-01_ieeg.mefd"
+_DS = "sub-01/meg/sub-01_task-rest_run-01_meg.ds"
+
+
+@pytest.mark.parametrize(
+    "filters,expected",
+    [
+        # folders next to file recordings are kept
+        ({"modality": "ieeg"}, {_EDF, _MEFD1, _MEFD2}),
+        ({"modality": "meg"}, {_DS}),
+        # subject / run filters apply to folders too
+        ({"modality": "ieeg", "subject": "02"}, {_MEFD2}),
+        ({"modality": "ieeg", "subject": "01", "run": "02"}, {_MEFD1}),
+        ({"modality": "ieeg", "task": "other"}, set()),
+        # and the modality filter
+        ({"modality": "eeg"}, set()),
+    ],
+)
+def test_discover_directory_recordings(tmp_path, filters, expected):
     root = tmp_path / "ds1"
-    relpath = f"sub-01/{datatype}/sub-01_task-rest_run-01_{datatype}{ext}"
-    (root / relpath).mkdir(parents=True)
+    for relpath in (_MEFD1, _MEFD2, _DS, "derivatives/x/" + _MEFD2):
+        (root / relpath).mkdir(parents=True)
+    (root / _EDF).touch()
 
-    monkeypatch.setattr("eegdash.local_bids.find_matching_paths", lambda **_: [])
+    records = discover_local_bids_records(root, {"dataset": "ds1", **filters})
 
-    records = discover_local_bids_records(
-        root, {"dataset": "ds1", "modality": datatype}
-    )
-
-    assert len(records) == 1
-    assert records[0]["entities"]["subject"] == "01"
-    assert records[0]["datatype"] == datatype
-    assert records[0]["suffix"] == datatype
-    # a local folder is never an S3 prefix
-    assert records[0]["storage"]["backend"] == "local"
-    assert records[0]["storage"]["base"] == str(root)
-    assert records[0]["storage"]["raw_key"] == relpath
+    assert sorted(r["bids_relpath"] for r in records) == sorted(expected)
+    for record in records:
+        assert record["datatype"] == record["suffix"] == filters["modality"]
+        # a local folder is never an S3 prefix
+        assert record["storage"]["backend"] == "local"
+        assert record["storage"]["base"] == str(root)
+        assert record["storage"]["raw_key"] == record["bids_relpath"]

@@ -284,3 +284,44 @@ def test_positions_without_a_coordsystem_are_not_applied(tmp_path):
             "sub-01_task-sleep_ieeg.vhdr",
         )
     ]
+
+
+# ── 4. labels-only: anatomical labels surfaced, positions stay absent ──
+
+
+def test_labels_only_electrodes_tsv_is_surfaced_without_positions(tmp_path):
+    """nm000410 ``region``, nm000477 ``target``: label, no invented xyz."""
+    from eegdash.dataset.base import electrode_labels
+
+    root = tmp_path / "fakeds"
+    relpath = _write_ieeg(root)
+    ieeg = root / "sub-01" / "ieeg"
+    (ieeg / "sub-01_task-sleep_electrodes.tsv").write_text(
+        "name\tx\ty\tz\tregion\nA1\tn/a\tn/a\tn/a\thippocampus\nA2\tn/a\tn/a\tn/a\tamygdala\n"
+    )
+    rec = root / relpath
+    labels = electrode_labels(rec)
+    assert labels.loc["A1", "region"] == "hippocampus"
+    assert labels.loc["A2", "region"] == "amygdala"
+
+    with patch("eegdash.dataset.base.validate_record", return_value=None):
+        raw = EEGDashRaw(
+            _record(relpath, str(root), "local", []), cache_dir=str(tmp_path)
+        ).raw
+    # no download needed: electrodes.tsv is already fetched with the recording
+    assert raw.info["temp"]["electrode_labels"].loc["A1", "region"] == "hippocampus"
+    assert np.isnan([ch["loc"][0] for ch in raw.info["chs"]]).all()
+
+
+def test_labels_in_a_different_column_channels_tsv(tmp_path):
+    """channels.tsv ``anatomy`` column (a different column than electrodes.tsv)."""
+    from eegdash.dataset.base import electrode_labels
+
+    root = tmp_path / "fakeds"
+    relpath = _write_ieeg(root)
+    (root / "sub-01" / "ieeg" / "sub-01_task-sleep_channels.tsv").write_text(
+        "name\ttype\tanatomy\nA1\tSEEG\tsuperior temporal gyrus\nA2\tSEEG\tn/a\n"
+    )
+    labels = electrode_labels(root / relpath)
+    assert labels.loc["A1", "anatomy"] == "superior temporal gyrus"
+    assert "A2" not in labels.index  # all-n/a row dropped

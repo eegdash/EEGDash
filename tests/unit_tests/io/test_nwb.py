@@ -138,3 +138,27 @@ def test_timeseries_not_voltage_is_not_picked(tmp_path):
         read_raw_nwb(
             _write_timeseries(tmp_path / "d.nwb", np.ones((10, 2)), unit="", rate=10.0)
         )
+
+
+def test_nwb_electrode_location_labels_surfaced_no_positions(tmp_path):
+    """on008610: NWB electrodes ``location`` is a label, x/y/z stay absent."""
+    import h5py as _h5py
+
+    from eegdash.dataset.base import electrode_labels
+
+    ieeg = tmp_path / "sub-01" / "ieeg"
+    ieeg.mkdir(parents=True)
+    path = _write(ieeg / "sub-01_task-x_ieeg.nwb", np.zeros((10, 2)))
+    with _h5py.File(path, "a") as f:
+        tab = f["general/extracellular_ephys/electrodes"]
+        tab.create_dataset("location", data=np.array([b"VPL", b"insula"], dtype="S8"))
+    (ieeg / "sub-01_task-x_channels.tsv").write_text(
+        "name\ttype\tunits\nch01\tSEEG\tV\nch02\tSEEG\tV\n"
+    )
+    labels = electrode_labels(path)
+    assert set(labels["location"]) == {"VPL", "insula"}
+
+    raw = _read_nwb_with_channels_tsv(path)
+    assert "electrode_labels" in raw.info["temp"]
+    assert set(raw.info["temp"]["electrode_labels"]["location"]) == {"VPL", "insula"}
+    assert np.isnan([ch["loc"][0] for ch in raw.info["chs"]]).all()

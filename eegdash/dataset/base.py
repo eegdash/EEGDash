@@ -967,7 +967,14 @@ class EEGDashRaw(RawDataset):
                         )
                 elif self._raw_uri is not None:
                     downloader.download_s3_file(
-                        self._raw_uri, self.filecache, filesystem=filesystem
+                        self._raw_uri,
+                        self.filecache,
+                        filesystem=filesystem,
+                        **(
+                            {"version_id": self.record["storage"]["version_id"]}
+                            if (self.record.get("storage") or {}).get("version_id")
+                            else {}
+                        ),
                     )
             except FileNotFoundError:
                 if self._reroute_twin_to_nemar():
@@ -1070,8 +1077,17 @@ class EEGDashRaw(RawDataset):
                 for uri, dest in self._dep_downloads
                 if not (embedded_samples and dest.suffix.lower() == ".fdt")
             ]
+            version_ids = (self.record.get("storage") or {}).get("version_ids") or {}
+            pinned = {
+                self.bids_root / key: version for key, version in version_ids.items()
+            }
+            for uri, dest in dependencies:
+                if dest in pinned:
+                    downloader.download_s3_file(
+                        uri, dest, filesystem=filesystem, version_id=pinned[dest]
+                    )
             downloader.download_files(
-                dependencies,
+                [(uri, dest) for uri, dest in dependencies if dest not in pinned],
                 filesystem=filesystem,
                 skip_existing=True,
                 skip_missing=True,
@@ -1142,6 +1158,9 @@ class EEGDashRaw(RawDataset):
         ``correct_storage_inplace`` serves ``on*`` from the OpenNeuro twin,
         which can be deleted, private or renamed (404/403). NEMAR still has it.
         """
+        storage = self.record.get("storage") or {}
+        if storage.get("version_id") or storage.get("version_ids"):
+            return False  # A failed pin must never silently fall back to HEAD.
         dataset_id = self.record.get("dataset", "")
         if self._storage_backend != "s3" or openneuro_twin_of(dataset_id) is None:
             return False

@@ -27,6 +27,7 @@ import mne_bids
 import mne_bids.read as mne_bids_read  # _handle_channels_reading (0.19-0.20)
 import nemar
 import numpy as np
+import pandas as pd
 from mne.io import BaseRaw
 from mne_bids import BIDSPath, get_entities_from_fname
 
@@ -35,7 +36,7 @@ from braindecode.datasets.base import RawDataset
 from .. import downloader
 from ..const import MODALITY_ALIASES
 from ..io import brainvision, tolerant
-from ..io.bids import tsv_encoding, without_events
+from ..io.bids import _find_matching_sidecar, tsv_encoding, without_events
 from ..io.fif import crop_unreadable_tail
 from ..logging import logger
 from ..schemas import NEMAR_ROOT_METADATA_FILES, validate_record
@@ -648,6 +649,86 @@ def _resolve_one_nemar_entry(
     return None
 
 
+# Anatomical labels of iEEG electrodes.tsv: never coordinates. Surfaces in
+# raw.info["electrode_labels"]; never feeds an xyz position.
+_LABEL_SUBSTR = ("region", "label", "anatom", "location", "target", "trajector")
+
+
+def electrode_labels(path: Path) -> pd.DataFrame:
+    """Anatomical labels of a recording (BIDS electrodes.tsv, NWB electrodes table).
+
+    Returns a DataFrame indexed by channel/electrode name with the label columns
+    the deposit carries (eg anatomical_label, region, target, location); empty if
+    none. BIDS channels.tsv ``anatomy``/``location`` columns are honoured too.
+    """
+    path = Path(path)
+    frames = []
+    if path.suffix.lower() == ".nwb":
+        try:
+            import h5py
+
+            with h5py.File(path, "r") as f:
+                tab = f.get("general/extracellular_ephys/electrodes")
+                if tab is not None and "location" in tab:
+                    loc = [
+                        v.decode() if isinstance(v, bytes) else str(v)
+                        for v in tab["location"][()]
+                    ]
+                    if "id" in tab:
+                        names = [str(v) for v in tab["id"][()]]
+                    elif "ch_name" in tab:
+                        names = [
+                            v.decode() if isinstance(v, bytes) else str(v)
+                            for v in tab["ch_name"][()]
+                        ]
+                    else:
+                        names = [str(i) for i in range(len(loc))]
+                    frames.append(
+                        pd.DataFrame({"name": names, "location": loc}).set_index("name")
+                    )
+        except Exception:
+            pass
+    for suffix, ext in (("electrodes", ".tsv"), ("channels", ".tsv")):
+        try:
+            bp = mne_bids.get_bids_path_from_fname(path, check=False)
+            f = _find_matching_sidecar(bp, suffix, ext, on_error="ignore")
+        except Exception:
+            f = None
+        if f is None and suffix == "channels":
+            cand = sorted(path.parent.glob("*_channels.tsv"))
+            f = cand[0] if cand else None
+        if f is None or not Path(f).exists():
+            continue
+        try:
+            df = pd.read_csv(f, sep="	", dtype=str, encoding=tsv_encoding(Path(f)))
+        except Exception:
+            continue
+        if "name" not in df.columns:
+            continue
+        cols = [
+            c
+            for c in df.columns
+            if c != "name" and any(sub in c.lower() for sub in _LABEL_SUBSTR)
+        ]
+        if cols:
+            frames.append(df.set_index("name")[cols])
+    if not frames:
+        return pd.DataFrame()
+    out = frames[0]
+    for extra in frames[1:]:
+        out = out.join(extra, how="outer", lsuffix="", rsuffix="_channels")
+    out.index.name = "name"
+    out = out.replace({"n/a": np.nan, "": np.nan})  # BIDS n/a / empty -> NaN
+    return out.dropna(how="all")
+
+
+def _attach_electrode_labels(path: Path, raw: BaseRaw) -> BaseRaw:
+    labels = electrode_labels(path)
+    if not labels.empty:  # MNE Info refuses new keys; "temp" is its scratch slot
+        raw.info["temp"] = {"electrode_labels": labels}
+    return raw
+
+
 def _read_nwb_with_channels_tsv(path: Path) -> BaseRaw:
     """Read an NWB recording, then apply its BIDS channels.tsv as read_raw_bids would.
 
@@ -656,6 +737,7 @@ def _read_nwb_with_channels_tsv(path: Path) -> BaseRaw:
     the electrodes.tsv and coordsystem.json read_raw_bids would pick.
     """
     raw = _load_raw_direct(path)
+    _attach_electrode_labels(path, raw)
     tsv = path.with_name(path.name.rsplit("_", 1)[0] + "_channels.tsv")
     if not tsv.exists():
         return raw
@@ -1652,7 +1734,7 @@ class EEGDashRaw(RawDataset):
 
         while True:
             try:
-                return self._read_raw_bids()
+                return _attach_electrode_labels(self.filecache, self._read_raw_bids())
             except NotImplementedError as first_error:
                 msg = str(first_error)
                 if (

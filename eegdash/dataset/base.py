@@ -652,7 +652,8 @@ def _read_nwb_with_channels_tsv(path: Path) -> BaseRaw:
     """Read an NWB recording, then apply its BIDS channels.tsv as read_raw_bids would.
 
     The NWB reader can only guess channel types (sEEG); the sidecar has the real
-    ones (e.g. ECOG) and the bad channels.
+    ones (e.g. ECOG) and the bad channels. The electrode positions follow, from
+    the electrodes.tsv and coordsystem.json read_raw_bids would pick.
     """
     raw = _load_raw_direct(path)
     tsv = path.with_name(path.name.rsplit("_", 1)[0] + "_channels.tsv")
@@ -664,8 +665,17 @@ def _read_nwb_with_channels_tsv(path: Path) -> BaseRaw:
     names = [ln.split("\t", 1)[0] for ln in text.splitlines()[1:] if ln]
     if len(names) == len(raw.ch_names) and len(set(names)) == len(names):
         raw.rename_channels(dict(zip(raw.ch_names, names)))
-    with tolerant():  # reads the TSV in its own encoding
-        return mne_bids_read._handle_channels_reading(tsv, raw, on_ch_mismatch="warn")
+    with tolerant():  # TSV in its own encoding; the space-aware sidecar lookup
+        raw = mne_bids_read._handle_channels_reading(tsv, raw, on_ch_mismatch="warn")
+        # positions, as read_raw_bids reads them, for a file in a BIDS tree
+        if any(p.name.startswith("sub-") for p in path.parents):
+            bp = mne_bids.get_bids_path_from_fname(path, check=False)
+            find = partial(mne_bids_read._find_matching_sidecar, bp, on_error="ignore")
+            if (el := find("electrodes", ".tsv")) and (
+                co := find("coordsystem", ".json")
+            ):
+                mne_bids_read._read_dig_bids(el, co, bp.datatype, raw)
+    return raw
 
 
 class EEGDashRaw(RawDataset):

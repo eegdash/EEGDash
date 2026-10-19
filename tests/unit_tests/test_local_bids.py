@@ -206,16 +206,23 @@ def test_discover_fallback_glob_after_valueerror(monkeypatch, tmp_path):
     assert records[0]["storage"]["backend"] == "local"
 
 
-def test_discover_directory_format_fallback(monkeypatch, tmp_path):
+@pytest.mark.parametrize("datatype,ext", [("meg", ".ds"), ("ieeg", ".mefd")])
+def test_discover_directory_format_fallback(monkeypatch, tmp_path, datatype, ext):
     root = tmp_path / "ds1"
-    ds_dir = root / "sub-01" / "meg" / "sub-01_task-rest_run-01_meg.ds"
-    ds_dir.mkdir(parents=True)
+    relpath = f"sub-01/{datatype}/sub-01_task-rest_run-01_{datatype}{ext}"
+    (root / relpath).mkdir(parents=True)
 
     monkeypatch.setattr("eegdash.local_bids.find_matching_paths", lambda **_: [])
 
-    records = discover_local_bids_records(root, {"dataset": "ds1", "modality": "meg"})
+    records = discover_local_bids_records(
+        root, {"dataset": "ds1", "modality": datatype}
+    )
 
     assert len(records) == 1
     assert records[0]["entities"]["subject"] == "01"
-    assert records[0]["datatype"] == "meg"
-    assert records[0]["suffix"] == "meg"
+    assert records[0]["datatype"] == datatype
+    assert records[0]["suffix"] == datatype
+    # a local folder is never an S3 prefix
+    assert records[0]["storage"]["backend"] == "local"
+    assert records[0]["storage"]["base"] == str(root)
+    assert records[0]["storage"]["raw_key"] == relpath

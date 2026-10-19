@@ -278,6 +278,7 @@ def discover_local_bids_records(
                     dep_keys=[],
                     datatype=datatype,
                     suffix=datatype,
+                    storage_backend="local",
                 )
                 records_out.append(rec)
 

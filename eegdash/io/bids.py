@@ -24,6 +24,10 @@ main 085e309 as of 2026-10-18); the upstream PRs are still to be written:
   come back as control characters. The whole file is checked, and cp1252 is
   tried before latin-1. This replaces EEGDash's rewrite of the cached TSV to
   UTF-8, which made every new session download it again.
+- A reader that drops a recording's leading samples (``mef.py``: on004624's
+  neural channels start 0.1-0.2 s after its aux channels) sets
+  ``raw._eegdash_lead_s``; events.tsv onsets, counted from the earliest start,
+  are moved back by as much so they stay on the same samples.
 
 Several ``space-`` electrodes files matching a recording equally well (nm000485
 ``space-Other`` and ``space-Talairach``) make MNE-BIDS read no positions, and
@@ -56,11 +60,14 @@ _RESERVED = ("onset", "duration", "description", "ch_names", "hed_string")
 _orig_make_annotation_kwargs = _read._make_annotation_kwargs
 _orig_handle_participants_reading = _read._handle_participants_reading
 _orig_find_matching_sidecar = _read._find_matching_sidecar
+_orig_handle_events_reading = _read._handle_events_reading
 _skip_events = ContextVar("eegdash_skip_events_tsv", default=False)
+_lead_s = ContextVar("eegdash_events_lead_s", default=0.0)
 
 
 def _make_annotation_kwargs(*args, **kwargs):
     info, rows = _orig_make_annotation_kwargs(*args, **kwargs)
+    info["onset"] = info["onset"] - _lead_s.get()
     negative = info["duration"] < 0
     if negative.any():
         logger.warning("events.tsv: %d negative duration(s) set to 0.", negative.sum())
@@ -71,6 +78,17 @@ def _make_annotation_kwargs(*args, **kwargs):
             for extra in info["extras"]
         ]
     return info, rows
+
+
+def _handle_events_reading(events_fname, raw, **kwargs):
+    """events.tsv onsets count from the recording's first sample; a reader that
+    dropped leading samples (``mef.crop_to_common_window``) sets ``_eegdash_lead_s``.
+    """
+    token = _lead_s.set(getattr(raw, "_eegdash_lead_s", 0.0))
+    try:
+        return _orig_handle_events_reading(events_fname, raw, **kwargs)
+    finally:
+        _lead_s.reset(token)
 
 
 def _handle_participants_reading(participants_fname, raw, subject):
@@ -174,6 +192,9 @@ def fixes():
         )
         stack.enter_context(
             mock.patch.object(_read, "_make_annotation_kwargs", _make_annotation_kwargs)
+        )
+        stack.enter_context(
+            mock.patch.object(_read, "_handle_events_reading", _handle_events_reading)
         )
         stack.enter_context(
             mock.patch.object(

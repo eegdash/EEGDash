@@ -13,6 +13,7 @@ import mne
 import numpy as np
 import pymef.mef_session
 import pytest
+from mne_bids import BIDSPath, read_raw_bids
 
 from eegdash.io import get_reader, tolerant
 
@@ -89,7 +90,7 @@ def _write_session(path, lengths, starts, gap=None):
 
 
 def test_trailing_channel_tail_is_cropped_to_the_common_length(tmp_path, caplog):
-    # on004624 sub-c02 Functional Sensorimotor run-6: {206800, 207000} samples.
+    # Same start, CH1 200 samples longer.
     root, data = _write_session(
         tmp_path / "run-6_ieeg.mefd", (1000, 1200, 1000), [START] * 3
     )
@@ -98,24 +99,73 @@ def test_trailing_channel_tail_is_cropped_to_the_common_length(tmp_path, caplog)
 
     with tolerant(), caplog.at_level(logging.WARNING, logger="eegdash"):
         raw = mne.io.read_raw_mef(root, preload=True, verbose="ERROR")
-    assert "Samples dropped from the end: CH1 200." in caplog.text
+    assert "dropped at the start: none; at the end: CH1 200." in caplog.text
     assert raw.n_times == 1000  # never padded
     cals = np.array([ch["cal"] for ch in raw.info["chs"]])
     np.testing.assert_allclose(raw.get_data() / cals[:, None], data[:, :1000])
 
 
-def test_channels_that_start_apart_are_refused(tmp_path):
-    starts = [START, START + 2_000_000, START]  # CH1 starts 2 s later
-    root, _ = _write_session(tmp_path / "run-7_ieeg.mefd", (1000, 1200, 1000), starts)
-    with tolerant(), pytest.raises(ValueError, match="do not start at the same time"):
-        mne.io.read_raw_mef(root)
-
-
-def test_channels_with_different_gaps_are_refused(tmp_path):
-    root, _ = _write_session(
-        tmp_path / "run-9_ieeg.mefd", (1000, 1200, 1000), [START] * 3, gap=(1, 500)
+def test_channels_that_start_apart_are_read_on_their_common_window(tmp_path, caplog):
+    # on004624 sub-c02 Functional Sensorimotor run-3: 32 channels start 0.2 s
+    # (200 samples) after the other 7 and all end together. Here CH1 starts 2 s later and
+    # CH2 ends 1 s earlier: the window all channels have is [2 s, 11 s].
+    starts = [START, START + 2_000_000, START]
+    root, data = _write_session(
+        tmp_path / "run-7_ieeg.mefd", (1200, 1000, 1100), starts
     )
-    with tolerant(), pytest.raises(ValueError, match="discontinuities"):
+    with tolerant(), caplog.at_level(logging.WARNING, logger="eegdash"):
+        raw = mne.io.read_raw_mef(root, preload=True, verbose="ERROR")
+    assert "dropped at the start: CH0 200, CH2 200" in caplog.text
+    assert "at the end: CH0 100, CH1 100" in caplog.text
+    assert raw.n_times == 900  # never padded
+    assert raw.info["meas_date"].timestamp() == (START + 2_000_000) / 1e6
+    cals = np.array([ch["cal"] for ch in raw.info["chs"]])
+    want = [data[0, 200:1100], data[1, :900], data[2, 200:1100]]  # same times
+    np.testing.assert_allclose(raw.get_data() / cals[:, None], want)
+
+
+def test_events_tsv_stay_on_their_samples_after_the_lead_is_dropped(tmp_path):
+    # on004624: events.tsv onsets count from the aux channels' start (the BCI2000
+    # StimulusCode changes at onset x 1000 samples), 0.1-0.2 s before the neural ones.
+    root = tmp_path / "bids"
+    ieeg = root / "sub-01" / "ieeg"
+    ieeg.mkdir(parents=True)
+    (root / "dataset_description.json").write_text(
+        '{"Name": "t", "BIDSVersion": "1.9"}'
+    )
+    _write_session(
+        ieeg / "sub-01_task-x_ieeg.mefd", (1200, 1000), [START, START + 2_000_000]
+    )
+    (ieeg / "sub-01_task-x_events.tsv").write_text(
+        "onset\tduration\ttrial_type\n5.0\t1.0\tgo\n"
+    )
+    bp = BIDSPath(
+        subject="01",
+        task="x",
+        datatype="ieeg",
+        suffix="ieeg",
+        extension=".mefd",
+        root=root,
+    )
+    with tolerant():
+        raw = read_raw_bids(bp, verbose="ERROR")
+    assert list(raw.annotations.onset) == [3.0]  # 5 s after CH0's first sample
+
+
+@pytest.mark.parametrize(
+    "starts, gap, match",
+    [
+        ([START, START + 2_000_000, START], (1, 500), "discontinuities"),
+        ([START, START + 2_005_000, START], None, "whole number of samples"),
+    ],
+)
+def test_channels_not_on_one_time_base_are_refused(tmp_path, starts, gap, match):
+    # A 1 s gap in CH1 only, or a start half a sample off: sample i would not
+    # be the same time on every channel.
+    root, _ = _write_session(
+        tmp_path / "run-9_ieeg.mefd", (1200, 1000, 1200), starts, gap
+    )
+    with tolerant(), pytest.raises(ValueError, match=match):
         mne.io.read_raw_mef(root)
 
 
@@ -125,5 +175,5 @@ def test_equal_lengths_read_as_before(tmp_path, caplog):
     with tolerant(), warnings.catch_warnings(), caplog.at_level(logging.WARNING):
         warnings.simplefilter("error")
         raw = mne.io.read_raw_mef(root, preload=True)
-    assert caplog.text == ""
+    assert not [r for r in caplog.records if r.levelno >= logging.WARNING]
     np.testing.assert_array_equal(raw.get_data(), ref.get_data())

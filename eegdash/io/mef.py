@@ -16,7 +16,9 @@ channel is read on the time window they all have, so sample ``i`` is the same
 time on every channel: leading samples of the earlier channels and the tail of
 the longer ones are dropped, with a warning that names them per channel.
 events.tsv onsets, counted from the earliest start, are moved back by the
-dropped lead (``bids.py``). Nothing is padded; anything else is refused.
+dropped lead (``bids.py``). In two sessions the neural channels also skip
+0.1 s right after their start; the window then starts after that gap, if that
+only drops a short leading part. Nothing is padded; anything else is refused.
 """
 
 import logging
@@ -26,6 +28,7 @@ from pathlib import Path
 from unittest import mock
 
 import mne
+import numpy as np
 import pymef.mef_session
 from mne.io.mef import mef as _mef
 from mne.io.mef._utils import _mef_get
@@ -33,6 +36,10 @@ from mne.io.mef._utils import _mef_get
 logger = logging.getLogger("eegdash")
 _SEGMENT_FILES = (".tmet", ".tidx", ".tdat")  # metadata, indices, data
 _orig_init = _mef.RawMEF.__init__
+# ponytail: the window moves past gaps not every channel has only to drop a leading
+# part (on004624: 0.3 s of ~207 s); a gap later on would need samples cut out of the
+# channels that lack it, so it is refused. Raise only with depositor evidence.
+_MAX_LEAD_S, _MAX_LEAD_FRACTION = 1.0, 0.01
 
 
 def check_session(fname):
@@ -62,6 +69,15 @@ def _gaps(session, ch, first, n):
     flags, _, samples, times = session.get_channel_toc(ch)
     keep = (flags == 1) & (samples > first) & (samples < first + n)
     return tuple(zip((samples[keep] - first).tolist(), times[keep].tolist()))
+
+
+def _sample_at(session, ch, t, rate):
+    """Index of channel ``ch``'s sample at uUTC ``t``, or None if it has none there."""
+    _, n_block, samples, times = session.get_channel_toc(ch)
+    j = int(np.searchsorted(times, t, side="right")) - 1  # block holding t
+    k = samples[j] + (t - times[j]) * rate / 1e6 if j >= 0 else -1
+    whole = k == int(k) and samples[j] <= k < samples[j] + n_block[j]
+    return int(k) if whole else None
 
 
 def _read_shifted(read, first, channel_map, sample_map, process_n=None):
@@ -113,6 +129,25 @@ def crop_to_common_window(session):
     common = min(n_samples[ch] - k for ch, k in first.items())
     if common <= 0:
         raise ValueError("MEF channels have time ranges that do not overlap.")
+    gaps = {ch: _gaps(session, ch, first[ch], common) for ch in channels}
+    if len(set(gaps.values())) > 1:  # start after the last gap not all channels have
+        times = [{t for _, t in g} for g in gaps.values()]
+        t0 = max(set.union(*times) - set.intersection(*times), default=t0)
+        first = {ch: _sample_at(session, ch, t0, rate) for ch in channels}
+        if any(
+            k is None
+            or k > rate * _MAX_LEAD_S
+            or k > _MAX_LEAD_FRACTION * n_samples[ch]
+            for ch, k in first.items()
+        ):
+            raise ValueError(
+                "MEF channels have inconsistent n_samples and their discontinuities "
+                f"differ until {(t0 - min(starts.values())) / 1e6:g} s after the "
+                "earliest start; starting after them is only done when it drops at "
+                f"most {_MAX_LEAD_S:g} s and {_MAX_LEAD_FRACTION:.0%} of every "
+                "channel, on a sample of every channel."
+            )
+        common = min(n_samples[ch] - k for ch, k in first.items())
     if len({_gaps(session, ch, first[ch], common) for ch in channels}) > 1:
         raise ValueError(
             "MEF channels have inconsistent n_samples and their discontinuities "

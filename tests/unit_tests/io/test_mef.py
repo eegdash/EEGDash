@@ -59,9 +59,9 @@ def test_complete_session_reaches_pymef(tmp_path, pymef_stub):
 SFREQ, START = 100.0, 1_600_000_000_000_000  # Hz, uUTC
 
 
-def _write_session(path, lengths, starts, gap=None):
+def _write_session(path, lengths, starts, gap=None, gap_us=1_000_000):
     """Unencrypted channels written with pymef (no stub); ``gap=(ch, sample)`` splits
-    that channel there into a second segment that starts 1 s late.
+    that channel there into a second segment that starts ``gap_us`` late.
     """
     ms = pymef.mef_session.MefSession(str(path), None, new_session=True)
     data = np.arange(max(lengths) * len(lengths), dtype="int32").reshape(
@@ -69,9 +69,7 @@ def _write_session(path, lengths, starts, gap=None):
     )
     for k, (n, start) in enumerate(zip(lengths, starts)):
         cut = gap[1] if gap and gap[0] == k else n
-        for seg, (i0, i1, t0) in enumerate(
-            [(0, cut, start), (cut, n, start + 1_000_000)]
-        ):
+        for seg, (i0, i1, t0) in enumerate([(0, cut, start), (cut, n, start + gap_us)]):
             if i1 > i0:
                 t0 += int(i0 / SFREQ * 1e6)
                 end = t0 + int((i1 - i0) / SFREQ * 1e6)
@@ -124,18 +122,15 @@ def test_channels_that_start_apart_are_read_on_their_common_window(tmp_path, cap
     np.testing.assert_allclose(raw.get_data() / cals[:, None], want)
 
 
-def test_events_tsv_stay_on_their_samples_after_the_lead_is_dropped(tmp_path):
-    # on004624: events.tsv onsets count from the aux channels' start (the BCI2000
-    # StimulusCode changes at onset x 1000 samples), 0.1-0.2 s before the neural ones.
+def _bids_session(tmp_path, *args, **kwargs):
+    """A BIDS tree with one session (``_write_session`` args), events.tsv onset 5 s."""
     root = tmp_path / "bids"
     ieeg = root / "sub-01" / "ieeg"
     ieeg.mkdir(parents=True)
     (root / "dataset_description.json").write_text(
         '{"Name": "t", "BIDSVersion": "1.9"}'
     )
-    _write_session(
-        ieeg / "sub-01_task-x_ieeg.mefd", (1200, 1000), [START, START + 2_000_000]
-    )
+    _, data = _write_session(ieeg / "sub-01_task-x_ieeg.mefd", *args, **kwargs)
     (ieeg / "sub-01_task-x_events.tsv").write_text(
         "onset\tduration\ttrial_type\n5.0\t1.0\tgo\n"
     )
@@ -147,24 +142,76 @@ def test_events_tsv_stay_on_their_samples_after_the_lead_is_dropped(tmp_path):
         extension=".mefd",
         root=root,
     )
+    return bp, data
+
+
+def test_events_tsv_stay_on_their_samples_after_the_lead_is_dropped(tmp_path):
+    # on004624: events.tsv onsets count from the aux channels' start (the BCI2000
+    # StimulusCode changes at onset x 1000 samples), 0.1-0.2 s before the neural ones.
+    bp, _ = _bids_session(tmp_path, (1200, 1000), [START, START + 2_000_000])
     with tolerant():
         raw = read_raw_bids(bp, verbose="ERROR")
     assert list(raw.annotations.onset) == [3.0]  # 5 s after CH0's first sample
 
 
+def test_a_leading_gap_on_some_channels_is_dropped_with_the_lead(tmp_path, caplog):
+    # on004624 sub-c02 Sensorimotor run-6 / sub-c04 run-11: the neural channels start
+    # 0.1 s after the aux ones, then skip 0.1 s; from 0.3 s on all are continuous and
+    # end together. Here CH1 has samples at 0.1-0.19 s, then from 0.3 s to 40 s.
+    bp, data = _bids_session(
+        tmp_path, (4000, 3980), [START, START + 100_000], (1, 10), 100_000
+    )
+    with pytest.raises(ValueError, match="inconsistent n_samples"):
+        read_raw_bids(bp, verbose="ERROR")
+
+    with tolerant(), caplog.at_level(logging.WARNING, logger="eegdash"):
+        raw = read_raw_bids(bp, verbose="ERROR")
+    assert "dropped at the start: CH0 30, CH1 10; at the end: none." in caplog.text
+    assert raw.n_times == 3970  # never padded
+    assert raw.info["meas_date"].timestamp() == (START + 300_000) / 1e6
+    cals = np.array([ch["cal"] for ch in raw.info["chs"]])
+    want = [data[0, 30:4000], data[1, 10:3980]]  # both from 0.3 s on
+    np.testing.assert_allclose(raw.get_data() / cals[:, None], want)
+    np.testing.assert_allclose(raw.annotations.onset, [4.7])  # still at 5 s of CH0
+
+
 @pytest.mark.parametrize(
-    "starts, gap, match",
+    "lengths, starts, gap, gap_us, match",
     [
-        ([START, START + 2_000_000, START], (1, 500), "discontinuities"),
-        ([START, START + 2_005_000, START], None, "whole number of samples"),
+        # a 1 s gap in the middle of CH1 only (the Stimulation runs)
+        (
+            (1200, 1000, 1200),
+            [START, START + 2_000_000, START],
+            (1, 500),
+            1_000_000,
+            "discontinuities",
+        ),
+        # the leading gap above, but 30 of 2000 samples (> 1 %)
+        ((2000, 1980), [START, START + 100_000], (1, 10), 100_000, "discontinuities"),
+        # a leading gap ending 1.8 s in (> 1 s), though < 1 % of 20000 samples
+        (
+            (20000, 19830),
+            [START, START + 100_000],
+            (1, 10),
+            1_600_000,
+            "discontinuities",
+        ),
+        # a start half a sample off
+        (
+            (1200, 1000, 1200),
+            [START, START + 2_005_000, START],
+            None,
+            0,
+            "whole number of samples",
+        ),
     ],
 )
-def test_channels_not_on_one_time_base_are_refused(tmp_path, starts, gap, match):
-    # A 1 s gap in CH1 only, or a start half a sample off: sample i would not
-    # be the same time on every channel.
-    root, _ = _write_session(
-        tmp_path / "run-9_ieeg.mefd", (1200, 1000, 1200), starts, gap
-    )
+def test_channels_not_on_one_time_base_are_refused(
+    tmp_path, lengths, starts, gap, gap_us, match
+):
+    # Sample i would not be the same time on every channel without dropping more
+    # than a leading part of the recording.
+    root, _ = _write_session(tmp_path / "run-9_ieeg.mefd", lengths, starts, gap, gap_us)
     with tolerant(), pytest.raises(ValueError, match=match):
         mne.io.read_raw_mef(root)
 

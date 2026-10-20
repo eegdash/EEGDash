@@ -155,6 +155,9 @@ class S3Client:
                     fh.write(chunk)
                     if callback is not None:
                         callback(len(chunk))
+            length = resp.get("ContentLength")
+            if length is not None and tmp.stat().st_size != length:
+                raise OSError(f"Incomplete download for {rpath} -> {lpath}.")
             tmp.replace(lpath)
         except BaseException:
             # Interruption / mid-stream error: drop the partial so the next run
@@ -290,12 +293,14 @@ def download_s3_file(
             pass
     remote_size = _remote_size(filesystem, s3_path, version_id=version_id)
     cache_matches = cached_identity == identity if version_id else not marker.exists()
-    if local_path.exists() and cache_matches:
-        if remote_size is None:
-            return local_path
-        if local_path.stat().st_size == remote_size:
-            return local_path
-        local_path.unlink(missing_ok=True)
+    if cache_matches:
+        try:
+            local_size = local_path.stat().st_size
+        except FileNotFoundError:
+            pass  # Another caller may be refreshing this shared sidecar.
+        else:
+            if remote_size is None or local_size == remote_size:
+                return local_path
 
     # Invalidate before replacing the data, so a failed transfer cannot certify
     # an object downloaded for another pin. get_file replaces data atomically.
@@ -308,7 +313,6 @@ def download_s3_file(
         **({"version_id": version_id} if version_id else {}),
     )
     if remote_size is not None and local_path.stat().st_size != remote_size:
-        local_path.unlink(missing_ok=True)
         raise OSError(
             f"Incomplete download for {s3_path} -> {local_path} "
             f"(expected {remote_size} bytes)."
@@ -369,11 +373,17 @@ def download_files(
         dest.parent.mkdir(parents=True, exist_ok=True)
         remote_size = _remote_size(filesystem, uri)
 
-        if dest.exists():
-            if skip_existing:
-                if remote_size is None or dest.stat().st_size == remote_size:
+        if skip_existing:
+            try:
+                local_size = dest.stat().st_size
+            except FileNotFoundError:
+                pass
+            else:
+                if remote_size is None or local_size == remote_size:
                     continue
-            dest.unlink(missing_ok=True)
+
+        # Never unlink a shared destination: get_file validates its own staging
+        # file and replaces atomically, keeping concurrent readers safe.
 
         try:
             _filesystem_get(
@@ -386,7 +396,6 @@ def download_files(
             raise
 
         if remote_size is not None and dest.stat().st_size != remote_size:
-            dest.unlink(missing_ok=True)
             raise OSError(
                 f"Incomplete download for {uri} -> {dest} (expected {remote_size} bytes)."
             )

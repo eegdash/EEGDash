@@ -804,7 +804,9 @@ class RemoteHeaderStep:
         # beat the sidecar (on006465: 1000 samples per 1 s record, sidecar 500 Hz).
         shape = _edf_header.edf_raw_shape(buf, sig)
         if shape is not None:
-            for name, value in zip(("sampling_frequency", "ntimes", "nchans"), shape):
+            for name, value in zip(
+                ("sampling_frequency", "ntimes", "nchans"), shape, strict=True
+            ):
                 if getattr(result, name) != value:
                     setattr(result, name, value)
                     result.provenance[name] = PROV_REMOTE_HEADER

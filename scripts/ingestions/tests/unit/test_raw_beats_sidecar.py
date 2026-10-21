@@ -131,11 +131,13 @@ def test_vhdr_header_channel_count_beats_channels_tsv(monkeypatch, tmp_path):
     monkeypatch.setattr(
         mc,
         "get_parser_for_extension",
-        lambda ext: lambda _p: {
-            "sampling_frequency": 1000.0,
-            "nchans": 30,
-            "n_times": 86560,
-        },
+        lambda ext: (
+            lambda _p: {
+                "sampling_frequency": 1000.0,
+                "nchans": 30,
+                "n_times": 86560,
+            }
+        ),
     )
     ctx = _ctx(tmp_path / "on005815", "sub-14/ses-1/eeg/sub-14_eeg.vhdr")
     result = CascadeResult(sampling_frequency=1000.0, nchans=31, ch_names=["x"] * 31)

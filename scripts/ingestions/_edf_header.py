@@ -135,6 +135,40 @@ def edf_data_channel_count(labels: bytes, n_signals: int) -> int | None:
     return sum(n not in ("EDF Annotations", "BDF Annotations") for n in names) or None
 
 
+def edf_raw_shape(main: bytes, signals: bytes) -> tuple[float, int, int] | None:
+    """``(sfreq, n_times, nchans)`` MNE reads, from the main + per-signal headers.
+
+    ``signals`` is the ``256 x n_signals`` block after the main header (labels at
+    16 bytes each, samples-per-record at ``216 x n_signals + 8 x i``). The rate is
+    the highest data-channel samples-per-record over the record duration, which
+    may be fractional (on005007: 438 samples per 0.219 s). Annotation signals are
+    not channels. ``None`` on any unparsable field. **Never raises.**
+    """
+    try:
+        n_signals = edf_n_signals(main)
+        n_records = _read_ascii_int(main, _OFF_N_RECORDS, _LEN_N_RECORDS)
+        duration = float(
+            main[_OFF_REC_DURATION : _OFF_REC_DURATION + _LEN_REC_DURATION].decode(
+                "ascii"
+            )
+        )
+        if not n_signals or not n_records or n_records <= 0 or duration <= 0:
+            return None
+        if len(signals) < 256 * n_signals:
+            return None
+        spr = []
+        for i in range(n_signals):
+            label = signals[16 * i : 16 * i + 16].decode("ascii", "replace").strip()
+            off = 216 * n_signals + 8 * i
+            if label not in ("EDF Annotations", "BDF Annotations"):
+                spr.append(int(signals[off : off + 8].decode("ascii").strip()))
+        if not spr or max(spr) <= 0:
+            return None
+        return max(spr) / duration, n_records * max(spr), len(spr)
+    except (ValueError, UnicodeDecodeError):
+        return None
+
+
 def edf_bytes_per_sample(ext: str) -> int:
     """Bytes per sample for an EDF/BDF extension (``.edf`` → 2, ``.bdf`` → 3).
 

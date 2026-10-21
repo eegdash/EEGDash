@@ -615,6 +615,10 @@ class BinaryParserStep:
             result.sampling_frequency = float(header_sf)
             result.provenance["sampling_frequency"] = PROV_BINARY_PARSER
         result.nchans = n_before or md.get("nchans")
+        # Likewise the header's channel count (on005815: NumberOfChannels=30, channels.tsv 31).
+        if n_before and md.get("nchans") and md["nchans"] != n_before:
+            result.nchans = int(md["nchans"])
+            result.provenance["nchans"] = PROV_BINARY_PARSER
         result.ntimes = nt_before or md.get("n_times") or md.get("n_samples")
         result.ch_names = ch_before or md.get("ch_names")
 
@@ -753,11 +757,12 @@ class RemoteHeaderStep:
         if self.last_resort:
             if mode != "missing" or not edf:
                 return
-        elif mode != "1" and not (mode == "missing" and edf):
+        elif mode != "1" and not (mode == "missing" and (edf or ctx.ext == ".snirf")):
             # opt-in only; default OFF keeps snapshots byte-identical. ``missing``
             # reads EDF/BDF headers here, BEFORE the sidecar arithmetic: whole
             # data records make sfreq x RecordingDuration up to one record too
-            # long (on008082: 158,104 vs 131 x 6 s x 200 Hz = 157,200).
+            # long (on008082: 158,104 vs 131 x 6 s x 200 Hz = 157,200). SNIRF too:
+            # its time vector, not the sidecar, sets the rate (on007554).
             return
         if result.ntimes is not None and (result.nchans is not None or not edf):
             return
@@ -789,6 +794,21 @@ class RemoteHeaderStep:
         buf = reader.read(0, _edf_header.EDF_HEADER_LEN)
         if not buf:
             return
+        n_signals = _edf_header.edf_n_signals(buf)
+        sig = (
+            reader.read(_edf_header.EDF_HEADER_LEN, 256 * n_signals)
+            if n_signals
+            else b""
+        ) or b""
+        # The signal headers give the rate, length and channels MNE reads; they
+        # beat the sidecar (on006465: 1000 samples per 1 s record, sidecar 500 Hz).
+        shape = _edf_header.edf_raw_shape(buf, sig)
+        if shape is not None:
+            for name, value in zip(("sampling_frequency", "ntimes", "nchans"), shape):
+                if getattr(result, name) != value:
+                    setattr(result, name, value)
+                    result.provenance[name] = PROV_REMOTE_HEADER
+            return
         n_times = _edf_header.edf_n_times_from_main_header(
             buf, result.sampling_frequency
         )
@@ -796,10 +816,10 @@ class RemoteHeaderStep:
             result.ntimes = int(n_times)
             result.stamp(PROV_REMOTE_HEADER, "ntimes", None, result.ntimes)
         # nchans needs the 16-byte labels after the main header (ds005841: no channels.tsv)
-        n_signals = _edf_header.edf_n_signals(buf)
         if result.nchans is None and n_signals:
-            labels = reader.read(_edf_header.EDF_HEADER_LEN, 16 * n_signals)
-            nchans = _edf_header.edf_data_channel_count(labels or b"", n_signals)
+            nchans = _edf_header.edf_data_channel_count(
+                sig[: 16 * n_signals], n_signals
+            )
             if nchans:
                 result.nchans = nchans
                 result.stamp(PROV_REMOTE_HEADER, "nchans", None, nchans)
@@ -838,7 +858,9 @@ class RemoteHeaderStep:
             {"dataset": ctx.dataset_id, "bids_relpath": ctx.bids_relpath}
         )
         if not url:
-            return  # NEMAR S3 closed / no derivable URL → drop to T3
+            url = _nemar_object_url(ctx)
+        if not url:
+            return  # no derivable URL → drop to T3
         # RangeReader is the seekable HDF5-over-Range file-like; reading
         # ``.shape`` fetches only HDF5 metadata blocks (zero signal). HDF5 object
         # headers are NOT guaranteed near the start (a real 80 MB SNIRF needed a
@@ -846,11 +868,15 @@ class RemoteHeaderStep:
         # required — but the actual fetch is still tiny (~0.2% of the file). A
         # blown budget / h5py error is caught by the outer guard in ``fill``.
         reader = _remote_header.RangeReader(url, budget=_SNIRF_RANGE_BUDGET)
-        n_times = _snirf_parser.snirf_n_times_from_fileobj(reader)
+        # The time vector's rate beats the sidecar's (on007554: 0.02 s steps, sidecar 10 Hz).
+        sfreq, n_times = _snirf_parser.snirf_rate_and_n_times_from_fileobj(reader)
         if n_times is not None and n_times > 0:
             nt_before = result.ntimes
             result.ntimes = int(n_times)
             result.stamp(PROV_REMOTE_HEADER, "ntimes", nt_before, result.ntimes)
+        if sfreq and result.sampling_frequency != sfreq:
+            result.sampling_frequency = sfreq
+            result.provenance["sampling_frequency"] = PROV_REMOTE_HEADER
 
 
 def _nemar_object_url(ctx: CascadeContext) -> str | None:

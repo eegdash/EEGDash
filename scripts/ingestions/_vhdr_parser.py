@@ -140,7 +140,7 @@ def parse_vhdr_metadata(vhdr_path: Path | str) -> dict[str, Any] | None:
     # Extract SamplingInterval from [Common Infos] section
     # SamplingInterval is in microseconds
     sampling_interval_match = re.search(
-        r"^\s*SamplingInterval\s*=\s*([\d.]+)",
+        r"^\s*SamplingInterval\s*=\s*([\d.]+(?:[eE][+-]?\d+)?)",
         content,
         re.MULTILINE | re.IGNORECASE,
     )

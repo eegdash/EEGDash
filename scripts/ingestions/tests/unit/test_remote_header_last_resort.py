@@ -109,13 +109,13 @@ def test_needs_missing_mode(monkeypatch, tmp_path, mode):
     assert result.ntimes is None
 
 
-def test_first_remote_step_ignores_missing_mode(monkeypatch, tmp_path):
+def test_first_remote_step_reads_only_edf_in_missing_mode(monkeypatch, tmp_path):
     monkeypatch.setenv("EEGDASH_REMOTE_HEADERS", "missing")
     monkeypatch.setattr(
         mc._remote_header, "RangeReader", Mock(side_effect=AssertionError("fetched"))
     )
-    result = CascadeResult(sampling_frequency=2000.0)
-    RemoteHeaderStep().fill(_nemar_bdf(tmp_path), result)
+    result = CascadeResult(sampling_frequency=10.0)
+    RemoteHeaderStep().fill(_ctx(tmp_path / "nm000281", "sub-1_nirs.snirf"), result)
     assert result.ntimes is None
 
 

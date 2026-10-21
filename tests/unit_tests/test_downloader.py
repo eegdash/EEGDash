@@ -390,7 +390,9 @@ def test_downloader_download_s3_file_incomplete(tmp_path):
     with pytest.raises(OSError, match="Incomplete download"):
         downloader.download_s3_file("s3://b/f", f, filesystem=mock_fs)
 
-    assert not f.exists()  # Should remain unlinked
+    # A custom client wrote an invalid file, but deleting this shared path
+    # could remove a concurrent caller's completed replacement.
+    assert f.read_text() == "b" * 50
 
 
 def test_downloader_batch_skip_existing(tmp_path):
@@ -569,7 +571,7 @@ def test_remote_size_returns_size_from_Size_key():
 
 
 def test_download_s3_file_replaces_mismatched_local(tmp_path):
-    """Test download_s3_file deletes and re-downloads when size mismatches."""
+    """Test download_s3_file replaces a cache whose size mismatches."""
     from unittest.mock import MagicMock, patch
 
     from eegdash.downloader import download_s3_file

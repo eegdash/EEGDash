@@ -189,15 +189,13 @@ def test_edf_header_beats_sidecar_arithmetic(monkeypatch, tmp_path, seed):
     assert result.provenance["ntimes"] == PROV_REMOTE_HEADER
 
 
-def test_missing_mode_does_not_read_snirf_or_mef_before_arithmetic(
-    monkeypatch, tmp_path
-):
+def test_missing_mode_does_not_read_mef_before_arithmetic(monkeypatch, tmp_path):
     monkeypatch.setenv("EEGDASH_REMOTE_HEADERS", "missing")
     monkeypatch.setattr(
         mc._remote_header, "RangeReader", Mock(side_effect=AssertionError("fetched"))
     )
     result = CascadeResult(sampling_frequency=10.0, recording_duration=100.0)
-    ctx = _ctx(tmp_path / "on007554", "sub-1/nirs/sub-1_nirs.snirf")
+    ctx = _ctx(tmp_path / "on006392", "sub-1/ieeg/sub-1_ieeg.mefd")
     for step in _late_steps():
         step.fill(ctx, result)
     assert result.ntimes == 1000

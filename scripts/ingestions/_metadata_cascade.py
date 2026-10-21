@@ -608,6 +608,12 @@ class BinaryParserStep:
         ch_before = result.ch_names
 
         result.sampling_frequency = sf_before or md.get("sampling_frequency")
+        # The reader takes the rate from the header; a sidecar holds the nominal
+        # rate (on007605: 1000 vs SamplingInterval 999.976914 us).
+        header_sf = md.get("sampling_frequency")
+        if sf_before and header_sf and abs(float(header_sf) - float(sf_before)) > 1e-9:
+            result.sampling_frequency = float(header_sf)
+            result.provenance["sampling_frequency"] = PROV_BINARY_PARSER
         result.nchans = n_before or md.get("nchans")
         result.ntimes = nt_before or md.get("n_times") or md.get("n_samples")
         result.ch_names = ch_before or md.get("ch_names")
@@ -716,10 +722,11 @@ class RemoteHeaderStep:
 
     Unset (or any other value) → a complete no-op, so the local/shallow path
     and the digest golden masters are byte-for-byte unchanged. ``1`` reads the
-    header before any arithmetic. ``missing`` reads only EDF/BDF headers, and
-    only for a record no other source gave ntimes (nm000281: 2,785 recordings
-    whose sidecars lack RecordingDuration); the cascade runs that variant
-    (``last_resort=True``) after :class:`SidecarArithmeticStep`. When ON, it
+    header before any arithmetic. ``missing`` reads only EDF/BDF headers, for
+    every record no exact source sized, also before the arithmetic (a sidecar
+    duration can be up to one data record longer than the file, on008082); the
+    ``last_resort=True`` variant retries after :class:`SidecarArithmeticStep`
+    (nm000281: 2,785 recordings whose sidecars lack RecordingDuration). When ON, it
     resolves a missing
     EDF/BDF ``ntimes`` by fetching ONLY the 256-byte main header over an HTTP
     Range read (:class:`_remote_header.RangeReader`) and computing the
@@ -742,12 +749,16 @@ class RemoteHeaderStep:
 
     def fill(self, ctx: CascadeContext, result: CascadeResult) -> None:
         mode = os.environ.get("EEGDASH_REMOTE_HEADERS")
-        if self.last_resort:
-            if mode != "missing" or ctx.ext not in (".edf", ".bdf"):
-                return
-        elif mode != "1":
-            return  # opt-in only; default OFF keeps snapshots byte-identical
         edf = ctx.ext in (".edf", ".bdf")
+        if self.last_resort:
+            if mode != "missing" or not edf:
+                return
+        elif mode != "1" and not (mode == "missing" and edf):
+            # opt-in only; default OFF keeps snapshots byte-identical. ``missing``
+            # reads EDF/BDF headers here, BEFORE the sidecar arithmetic: whole
+            # data records make sfreq x RecordingDuration up to one record too
+            # long (on008082: 158,104 vs 131 x 6 s x 200 Hz = 157,200).
+            return
         if result.ntimes is not None and (result.nchans is not None or not edf):
             return
         try:

@@ -519,10 +519,14 @@ def read_with_encoding_fallback(
                 s3_url,
             )
             return fetch_from_s3(s3_url, encodings=encodings)
-        else:
-            logger.debug(
-                "Broken symlink is not an OpenNeuro dataset, cannot use S3 fallback: %s",
-                path,
-            )
+        # NEMAR serves public objects by annex key only (on007605: the .vhdr is
+        # annexed, so without this the header rate was never read).
+        nemar = re.search(r"[/\\]((?:nm|on)\d+)[/\\]", str(path.absolute()))
+        target = os.readlink(path)
+        if nemar and "/annex/objects/" in target:
+            key = target.rstrip("/").rsplit("/", 1)[-1]
+            url = f"https://nemar.s3.amazonaws.com/{nemar.group(1)}/objects/{key}"
+            return fetch_from_s3(url, encodings=encodings)
+        logger.debug("Broken symlink has no S3 fallback: %s", path)
 
     return None

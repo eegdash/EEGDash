@@ -114,6 +114,7 @@ def test_nemar_download_required_files_uses_annex_object_uri(tmp_path):
         f"s3://nemar/nm000104/objects/{annex_key}",
         tmp_path / "nm000104" / bids_relpath,
         filesystem=mock_deps.call_args.kwargs["filesystem"],
+        annex_key=annex_key,
     )
 
 

@@ -194,3 +194,132 @@ def test_github_raw_fallback_leaves_no_partial(tmp_path, monkeypatch):
         )
     assert not dest.exists()
     assert not list(dest.parent.glob("*.part"))
+
+
+RAW = "sub-01/eeg/sub-01_task-rest_eeg.edf"
+DEP = "sub-01/eeg/sub-01_task-rest_channels.tsv"
+
+
+def _openneuro_record(**storage):
+    """A ds* record served from OpenNeuro's BIDS-named objects, its key in the record."""
+    return {
+        "dataset": "ds001234",
+        "bids_relpath": RAW,
+        "storage": {
+            "backend": "s3",
+            "base": "s3://openneuro.org/ds001234",
+            "raw_key": RAW,
+            "dep_keys": [],
+            "annex_keys": {RAW: KEY},
+            **storage,
+        },
+    }
+
+
+@pytest.mark.parametrize(
+    "damage", [DATA[:10], b"/annex/objects/" + KEY.encode()], ids=["short", "pointer"]
+)
+def test_download_all_refetches_a_damaged_cached_file(tmp_path, monkeypatch, damage):
+    """A short or pointer-text raw file is refetched, not kept because it exists."""
+    from eegdash.dataset.dataset import EEGDashDataset
+
+    record = _openneuro_record()
+    ds = EEGDashDataset(cache_dir=tmp_path, dataset="ds001234", records=[record])
+    raw = ds.datasets[0].filecache
+    raw.parent.mkdir(parents=True, exist_ok=True)
+    raw.write_bytes(damage)
+    client = _client(DATA)
+    monkeypatch.setattr(downloader, "get_s3_filesystem", lambda **_: client)
+    ds.download_all(n_jobs=1)
+    assert raw.read_bytes() == DATA
+    assert client._client.gets == 1
+
+
+def test_openneuro_uri_gets_the_record_key(tmp_path, monkeypatch, caplog):
+    """A BIDS-named URI carries no key: the record's must reach the size check."""
+    rec = base.EEGDashRaw(_openneuro_record(), cache_dir=str(tmp_path))
+    assert rec._raw_uri == f"s3://openneuro.org/ds001234/{RAW}"
+    monkeypatch.setattr(downloader, "get_s3_filesystem", lambda **_: _client(DATA[:10]))
+    with caplog.at_level("WARNING", logger="eegdash"):
+        rec._download_required_files()
+    assert f"{KEY} says 20 bytes, openneuro.org serves 10" in caplog.text
+
+
+def test_openneuro_sidecar_gets_the_record_key(tmp_path, monkeypatch, caplog):
+    """A dependency's key in the record reaches its size check as well."""
+    dep_key = f"SHA256E-s5--{'c' * 64}.tsv"
+    record = _openneuro_record(dep_keys=[DEP], annex_keys={RAW: KEY, DEP: dep_key})
+    rec = base.EEGDashRaw(record, cache_dir=str(tmp_path))
+    monkeypatch.setattr(downloader, "get_s3_filesystem", lambda **_: _client(DATA))
+    with caplog.at_level("WARNING", logger="eegdash"):
+        rec._download_required_files()
+    assert f"{dep_key} says 5 bytes, openneuro.org serves 20" in caplog.text
+    assert (tmp_path / "ds001234" / DEP).read_bytes() == DATA
+
+
+OPENNEURO_URI = f"s3://openneuro.org/ds001234/{RAW}"
+
+
+class _ServedS3(_FakeS3):
+    """S3 whose HEAD and GET report *size* bytes, whatever the body holds."""
+
+    def __init__(self, data, size):
+        super().__init__(data)
+        self.size = size
+
+    def head_object(self, **_):
+        return {"ContentLength": self.size}
+
+    def get_object(self, **kwargs):
+        return {**super().get_object(**kwargs), "ContentLength": self.size}
+
+
+def _served(data, size):
+    client = downloader.S3Client.__new__(downloader.S3Client)
+    client._client = _ServedS3(data, size)
+    return client
+
+
+def test_stale_record_key_accepts_what_openneuro_serves(tmp_path, caplog):
+    """Key says 20, OpenNeuro serves 30 and 30 arrive: the record is stale, not the file."""
+    dest = tmp_path / "sub-01_eeg.edf"
+    served = DATA + b"0123456789"
+    with caplog.at_level("WARNING", logger="eegdash"):
+        downloader.download_s3_file(
+            OPENNEURO_URI, dest, filesystem=_served(served, 30), annex_key=KEY
+        )
+    assert dest.read_bytes() == served
+    assert "says 20 bytes, openneuro.org serves 30: the record is stale" in caplog.text
+
+
+def test_stale_record_key_accepts_a_cached_copy_without_a_transfer(tmp_path, caplog):
+    """A cached file of S3's size (not the key's) is complete on that route."""
+    dest = tmp_path / "sub-01_eeg.edf"
+    dest.write_bytes(DATA + b"0123456789")
+    client = _served(b"", 30)
+    with caplog.at_level("WARNING", logger="eegdash"):
+        downloader.download_s3_file(
+            OPENNEURO_URI, dest, filesystem=client, annex_key=KEY
+        )
+    assert client._client.gets == 0
+    assert "the record is stale, file accepted" in caplog.text
+
+
+def test_size_matching_neither_key_nor_s3_is_refused(tmp_path):
+    """Key 20, S3 30, 25 received: refused, nothing published."""
+    dest = tmp_path / "sub-01_eeg.edf"
+    with pytest.raises(OSError, match="Incomplete download"):
+        downloader.download_s3_file(
+            OPENNEURO_URI, dest, filesystem=_served(DATA + b"01234", 30), annex_key=KEY
+        )
+    assert list(tmp_path.iterdir()) == []
+
+
+def test_objects_route_refuses_a_mismatch_whatever_s3_says(tmp_path):
+    """On NEMAR's objects/<key> the key names the object: S3's size never overrides it."""
+    dest = tmp_path / "sub-01_eeg.edf"
+    with pytest.raises(OSError, match="expected 20 bytes, got 30"):
+        downloader.download_s3_file(
+            URI, dest, filesystem=_served(DATA + b"0123456789", 30)
+        )
+    assert list(tmp_path.iterdir()) == []

@@ -509,15 +509,23 @@ def _destination_lock(dest: Path) -> threading.Lock:
         return _DESTINATION_LOCKS.setdefault(key, threading.Lock())
 
 
-def _cached_complete(local_path: Path, annex_key: str | None) -> bool:
+def _cached_complete(
+    local_path: Path, annex_key: str | None, s3_uri: str | None = None
+) -> bool:
     """Whether *local_path* exists and, when *annex_key* gives a size, has it.
 
     Existence alone let a truncated I-CARE object (nm000289, 2026-10-16) pass.
+    With *s3_uri*, a key that does not name that object may be stale: S3's
+    own size then counts as complete too.
     """
     try:
         downloader.verify_file(local_path, annex_key or "")
-    except OSError:  # missing (FileNotFoundError) or of the wrong size
+    except FileNotFoundError:
         return False
+    except OSError:  # of the wrong size
+        return bool(s3_uri) and downloader._accept_stale_key(
+            local_path, local_path.stat().st_size, annex_key, s3_uri
+        )
     return True
 
 
@@ -945,6 +953,37 @@ class EEGDashRaw(RawDataset):
         bids_filename = PurePosixPath(self.record["bids_relpath"]).name
         return uri.rsplit("/", 1)[0] + "/" + bids_filename
 
+    def _annex_key_for(self, path: Path) -> str | None:
+        """The record's git-annex key for *path* (raw file or sidecar), if any.
+
+        An OpenNeuro twin serves BIDS-named URIs that carry no key, while the
+        record still names one (ds004840, 2026-10-21): the key must flow from
+        the record for its size, and hash, to govern.
+        """
+        storage = self.record.get("storage") or {}
+        keys = storage.get("annex_keys") or {}
+        if not keys:
+            return None
+        if path == self.filecache and storage.get("raw_key") in keys:
+            return keys[storage["raw_key"]]
+        try:
+            return keys.get(Path(path).relative_to(self.bids_root).as_posix())
+        except ValueError:
+            return None
+
+    def _cached_files_complete(self) -> bool:
+        """Whether the raw file and every dependency are cached at their key's size.
+
+        Existence alone kept a truncated or pointer-text file forever.
+        """
+        uris = {dest: uri for uri, dest in self._dep_downloads}
+        if self._raw_uri:
+            uris[self.filecache] = self._raw_uri
+        return all(
+            _cached_complete(path, self._annex_key_for(path), uris.get(path))
+            for path in (self.filecache, *self._dep_paths)
+        )
+
     @property
     def _is_remote(self) -> bool:
         """Whether the recording must be fetched from a remote source.
@@ -1001,6 +1040,7 @@ class EEGDashRaw(RawDataset):
                             self._raw_uri, self.filecache, filesystem=filesystem
                         )
                 elif self._raw_uri is not None:
+                    raw_annex_key = self._annex_key_for(self.filecache)
                     downloader.download_s3_file(
                         self._raw_uri,
                         self.filecache,
@@ -1010,6 +1050,7 @@ class EEGDashRaw(RawDataset):
                             if (self.record.get("storage") or {}).get("version_id")
                             else {}
                         ),
+                        **({"annex_key": raw_annex_key} if raw_annex_key else {}),
                     )
             except FileNotFoundError:
                 if self._reroute_twin_to_nemar():
@@ -1027,11 +1068,13 @@ class EEGDashRaw(RawDataset):
                         self._raw_uri,
                         resolved_uri,
                     )
+                    raw_annex_key = self._annex_key_for(self.filecache)
                     try:
                         downloader.download_s3_file(
                             resolved_uri,
                             self.filecache,
                             filesystem=filesystem,
+                            **({"annex_key": raw_annex_key} if raw_annex_key else {}),
                         )
                     except FileNotFoundError:
                         raise DataIntegrityError(
@@ -1098,7 +1141,7 @@ class EEGDashRaw(RawDataset):
                 selected = [
                     (key, dest)
                     for key, dest in zip(dep_keys, self._dep_paths, strict=True)
-                    if not dest.exists()
+                    if not _cached_complete(dest, self._annex_key_for(dest))
                     and not (embedded_samples and dest.suffix.lower() == ".fdt")
                 ]
                 _, self._dep_downloads = _resolve_nemar_uris(
@@ -1116,16 +1159,30 @@ class EEGDashRaw(RawDataset):
             pinned = {
                 self.bids_root / key: version for key, version in version_ids.items()
             }
+            dep_annex_keys = {
+                dest: key
+                for _, dest in dependencies
+                if (key := self._annex_key_for(dest))
+            }
             for uri, dest in dependencies:
                 if dest in pinned:
                     downloader.download_s3_file(
-                        uri, dest, filesystem=filesystem, version_id=pinned[dest]
+                        uri,
+                        dest,
+                        filesystem=filesystem,
+                        version_id=pinned[dest],
+                        **(
+                            {"annex_key": dep_annex_keys[dest]}
+                            if dest in dep_annex_keys
+                            else {}
+                        ),
                     )
             downloader.download_files(
                 [(uri, dest) for uri, dest in dependencies if dest not in pinned],
                 filesystem=filesystem,
                 skip_existing=True,
                 skip_missing=True,
+                **({"annex_keys": dep_annex_keys} if dep_annex_keys else {}),
             )
 
             # Auto-discover and download companion files (.fdt, .eeg, .vmrk)
@@ -1174,13 +1231,17 @@ class EEGDashRaw(RawDataset):
                 ]
             for sidecar in position_sidecars(relpath, files):
                 dest = self.bids_root / sidecar
-                if dest.exists():
+                annex_key = self._annex_key_for(dest)
+                if _cached_complete(dest, annex_key):
                     continue
                 if self._storage_backend == "nemar":
                     self._fetch_nemar_companion(dest, sidecar, filesystem)
                 else:
                     downloader.download_s3_file(
-                        f"{base}/{sidecar}", dest, filesystem=filesystem
+                        f"{base}/{sidecar}",
+                        dest,
+                        filesystem=filesystem,
+                        **({"annex_key": annex_key} if annex_key else {}),
                     )
         except Exception as exc:  # positions are optional; the recording reads
             logger.warning(
@@ -1322,7 +1383,8 @@ class EEGDashRaw(RawDataset):
 
         for ext in companions:
             local_path = self.filecache.with_suffix(ext)
-            if local_path.exists():
+            annex_key = self._annex_key_for(local_path)
+            if _cached_complete(local_path, annex_key):
                 continue
 
             # Skip companions already declared at digest time — they were
@@ -1348,7 +1410,10 @@ class EEGDashRaw(RawDataset):
 
             try:
                 downloader.download_s3_file(
-                    companion_uri, local_path, filesystem=filesystem
+                    companion_uri,
+                    local_path,
+                    filesystem=filesystem,
+                    **({"annex_key": annex_key} if annex_key else {}),
                 )
             except FileNotFoundError:
                 # For .set files, the .fdt may have a non-BIDS name embedded

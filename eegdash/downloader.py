@@ -114,6 +114,46 @@ def _annex_key_of(uri: str) -> str | None:
     return name if annex_key_info(name) != (None, None, None) else None
 
 
+def _accept_stale_key(
+    path: Path,
+    got: int,
+    annex_key: str | None,
+    s3_uri: str,
+    *,
+    s3_size: int | None = None,
+    filesystem: "S3Client | None" = None,
+    version_id: str | None = None,
+) -> bool:
+    """Whether a file that disagrees with *annex_key* is still what S3 serves.
+
+    A record's key comes from NEMAR's copy of an OpenNeuro dataset, while an
+    ``openneuro.org`` URI serves OpenNeuro's latest snapshot: *got* bytes equal
+    to S3's own size mean the record is stale, not the file bad. Never when
+    the key names the object (NEMAR ``…/objects/<key>``), where a mismatch is
+    a bad object (nm000289, 2026-10-16). Logs a warning when it accepts.
+    """
+    if not annex_key or _annex_key_of(s3_uri) == annex_key:
+        return False
+    if s3_size is None:
+        s3_size = _remote_size(
+            filesystem or get_s3_filesystem(),
+            s3_uri,
+            **({"version_id": version_id} if version_id else {}),
+        )
+    if s3_size is None or got != s3_size:
+        return False
+    logger.warning(
+        "%s: record key %s says %s bytes, %s serves %s: the record is stale, "
+        "file accepted",
+        path,
+        annex_key,
+        annex_key_info(annex_key)[0],
+        _split_s3_uri(s3_uri)[0],
+        s3_size,
+    )
+    return True
+
+
 def verify_file(
     path: Path, key_or_expected: str | int, *, verify_hash: bool = False
 ) -> Path:
@@ -286,7 +326,11 @@ class S3Client:
                 try:
                     verify_file(tmp, annex_key, verify_hash=verify_hash)
                 except OSError as e:
-                    raise OSError(f"{e} ({rpath} -> {lpath})") from e
+                    # length is S3's own size of the object (checked above)
+                    if not _accept_stale_key(
+                        lpath, tmp.stat().st_size, annex_key, rpath, s3_size=length
+                    ):
+                        raise OSError(f"{e} ({rpath} -> {lpath})") from e
             tmp.replace(lpath)
         except BaseException:
             # Interruption / mid-stream error: drop the partial so the next run
@@ -422,6 +466,8 @@ def download_s3_file(
     local_path.parent.mkdir(parents=True, exist_ok=True)
     annex_key = annex_key or _annex_key_of(s3_path)
     key_size = annex_key_info(annex_key)[0] if annex_key else None
+    # The key does not name the object (an OpenNeuro twin): S3's size may win.
+    stale_ok = bool(annex_key) and _annex_key_of(s3_path) != annex_key
 
     # A size match alone cannot identify a version (HEAD may have equal size).
     marker = local_path.with_name(local_path.name + ".s3-version.json")
@@ -451,6 +497,15 @@ def download_s3_file(
                     return verify_file(local_path, annex_key, verify_hash=True)
                 except OSError as e:
                     logger.warning("Refetching %s: %s", s3_path, e)
+            elif stale_ok and _accept_stale_key(
+                local_path,
+                local_size,
+                annex_key,
+                s3_path,
+                filesystem=filesystem,
+                version_id=version_id,
+            ):
+                return local_path
 
     # Invalidate before replacing the data, so a failed transfer cannot certify
     # an object downloaded for another pin. get_file replaces data atomically.
@@ -464,7 +519,8 @@ def download_s3_file(
         **({"annex_key": annex_key, "verify_hash": verify_hash} if annex_key else {}),
     )
     got = local_path.stat().st_size
-    if remote_size is not None and got != remote_size:
+    # get_file has checked a stale-key download against S3's own size.
+    if remote_size is not None and got != remote_size and not stale_ok:
         raise OSError(
             f"Incomplete download for {s3_path} -> {local_path} "
             f"(expected {remote_size} bytes, got {got})."
@@ -503,6 +559,7 @@ def download_files(
     filesystem: S3Client | None = None,
     skip_existing: bool = True,
     skip_missing: bool = False,
+    annex_keys: dict[Path, str] | None = None,
 ) -> list[Path]:
     """Download multiple S3 URIs to local destinations.
 
@@ -519,6 +576,9 @@ def download_files(
         If True, do not download files that already exist locally.
     skip_missing : bool
         If True, skip files that do not exist on S3 instead of raising.
+    annex_keys : dict of Path to str | None
+        git-annex key per destination, for URIs that do not end in one (an
+        OpenNeuro twin's BIDS-named objects); it beats the HEAD size.
 
     """
     filesystem = filesystem or get_s3_filesystem()
@@ -526,7 +586,7 @@ def download_files(
     for uri, dest in files:
         dest = Path(dest)
         dest.parent.mkdir(parents=True, exist_ok=True)
-        key = _annex_key_of(uri)
+        key = (annex_keys or {}).get(dest) or _annex_key_of(uri)
         remote_size = annex_key_info(key)[0] if key else None
         if remote_size is None:
             remote_size = _remote_size(filesystem, uri)
@@ -538,6 +598,8 @@ def download_files(
                 pass
             else:
                 if remote_size is None or local_size == remote_size:
+                    continue
+                if _accept_stale_key(dest, local_size, key, uri, filesystem=filesystem):
                     continue
 
         # Never unlink a shared destination: get_file validates its own staging
@@ -557,7 +619,12 @@ def download_files(
                 continue
             raise
 
-        if remote_size is not None and dest.stat().st_size != remote_size:
+        stale_ok = bool(key) and _annex_key_of(uri) != key
+        if (
+            remote_size is not None
+            and dest.stat().st_size != remote_size
+            and not stale_ok
+        ):
             got = dest.stat().st_size
             raise OSError(
                 f"Incomplete download for {uri} -> {dest} "

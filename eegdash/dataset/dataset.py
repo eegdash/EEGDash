@@ -28,7 +28,7 @@ from ..logging import logger
 from ..paths import get_default_cache_dir
 from ..schemas import validate_record
 from ._source_inference import correct_storage_inplace
-from .base import EEGDashRaw
+from .base import EEGDashRaw, _cached_complete
 from .bids_dataset import EEGBIDSDataset
 from .registry import register_openneuro_datasets
 
@@ -613,8 +613,12 @@ class EEGDashDataset(BaseConcatDataset, metaclass=NumpyDocstringInheritanceInitM
         for ds in self.datasets:
             if not ds._is_remote:
                 continue
-            if not ds.filecache.exists() or any(
-                not path.exists() for path in getattr(ds, "_dep_paths", [])
+            # A file of the wrong size (truncated, or git-annex pointer text)
+            # must be refetched too, not only a missing one.
+            if (
+                not ds.filecache.exists()
+                or any(not path.exists() for path in getattr(ds, "_dep_paths", []))
+                or (isinstance(ds, EEGDashRaw) and not ds._cached_files_complete())
             ):
                 targets.append(ds)
 
@@ -688,11 +692,15 @@ class EEGDashDataset(BaseConcatDataset, metaclass=NumpyDocstringInheritanceInitM
             max_concurrency=self.max_concurrency,
         )
 
-        # Download files that don't exist locally
+        # Download files that are missing, or short of their git-annex key's size
+        annex_keys = storage.get("annex_keys") or {}
         files_to_download = []
+        dest_keys = {}
         for key in keys_to_download:
             dest = self.data_dir / key
-            if not dest.exists():
+            if annex_keys.get(key):
+                dest_keys[dest] = annex_keys[key]
+            if not _cached_complete(dest, annex_keys.get(key)):
                 files_to_download.append((f"{base}/{key}", dest))
 
         if files_to_download:
@@ -700,6 +708,7 @@ class EEGDashDataset(BaseConcatDataset, metaclass=NumpyDocstringInheritanceInitM
                 files_to_download,
                 filesystem=filesystem,
                 skip_existing=True,
+                **({"annex_keys": dest_keys} if dest_keys else {}),
             )
 
     def _find_local_bids_records(

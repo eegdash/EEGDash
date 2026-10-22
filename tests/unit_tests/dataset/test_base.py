@@ -160,6 +160,7 @@ def test_nemar_download_pairs_annex_object_with_its_own_destination(tmp_path):
         patch("eegdash.dataset.base.downloader.download_s3_file"),
         patch("eegdash.dataset.base._download_via_nemar", return_value=True),
         patch.object(ds, "_fetch_nemar_root_metadata"),
+        patch.object(ds, "_require_data_file"),  # downloads are mocked: no .eeg
     ):
         ds._download_required_files()
 
@@ -1678,19 +1679,92 @@ def test_download_companion_files_set_fdt(tmp_path):
     mock_dl.assert_called_once_with(expected_uri, expected_local, filesystem=mock_fs)
 
 
-def test_download_companion_files_vhdr_eeg_vmrk_dat(tmp_path):
-    """All .eeg, .vmrk, and .dat companions should be downloaded for .vhdr files."""
+def _fake_s3(present: dict[str, str]):
+    """download_s3_file over a bucket holding ``present`` (file name -> text)."""
+
+    def download(uri, path, filesystem=None, **kwargs):
+        name = uri.rsplit("/", 1)[1]
+        if name not in present:
+            raise FileNotFoundError(uri)
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.write_text(present[name])
+
+    return download
+
+
+def test_download_companion_files_vhdr_eeg_vmrk(tmp_path):
+    """A .vhdr's companions are its .eeg and .vmrk; no deposit holds a .dat (#427)."""
     ds = _make_s3_raw(tmp_path, ".vhdr")
-    mock_fs = MagicMock()
+    stem = "sub-01_task-rest_eeg"
+    bucket = {f"{stem}.eeg": "x", f"{stem}.vmrk": "x"}
 
-    with patch("eegdash.dataset.base.downloader.download_s3_file") as mock_dl:
-        ds._download_companion_files(mock_fs)
+    with patch(
+        "eegdash.dataset.base.downloader.download_s3_file", side_effect=_fake_s3(bucket)
+    ) as mock_dl:
+        ds._download_companion_files(MagicMock())
 
-    assert mock_dl.call_count == 3
     uris = [call.args[0] for call in mock_dl.call_args_list]
-    assert "s3://openneuro.org/ds_test/sub-01/eeg/sub-01_task-rest_eeg.eeg" in uris
-    assert "s3://openneuro.org/ds_test/sub-01/eeg/sub-01_task-rest_eeg.vmrk" in uris
-    assert "s3://openneuro.org/ds_test/sub-01/eeg/sub-01_task-rest_eeg.dat" in uris
+    assert uris == [
+        f"s3://openneuro.org/ds_test/sub-01/eeg/{stem}.eeg",
+        f"s3://openneuro.org/ds_test/sub-01/eeg/{stem}.vmrk",
+    ]
+
+
+def _download_brainvision(tmp_path, header, bucket):
+    ds = _make_s3_raw(tmp_path, ".vhdr")
+    bucket = {"sub-01_task-rest_eeg.vhdr": f"[Common Infos]\n{header}", **bucket}
+    with (
+        patch("eegdash.dataset.base.downloader.get_s3_filesystem"),
+        patch(
+            "eegdash.dataset.base.downloader.download_s3_file",
+            side_effect=_fake_s3(bucket),
+        ),
+        patch("eegdash.dataset.base.downloader.download_files"),
+        patch("eegdash.dataset.base.EEGDashRaw._download_position_sidecars"),
+    ):
+        ds._download_required_files()
+    return ds
+
+
+def test_download_fails_when_the_brainvision_data_file_is_missing(tmp_path):
+    """A .eeg that is 404 fails the download naming it, not a skip warning (#427).
+
+    ds006576 sub-170/sub-178 and ds007454 sub-032/033/048 hold a .vhdr and
+    .vmrk whose .eeg is not in the deposit; the download reported success.
+    """
+    from eegdash.dataset.exceptions import DataIntegrityError
+
+    stem = "sub-01_task-rest_eeg"
+    header = f"DataFile={stem}.eeg\nMarkerFile={stem}.vmrk\n"
+    with pytest.raises(DataIntegrityError, match=f"{stem}.eeg") as err:
+        _download_brainvision(tmp_path, header, {f"{stem}.vmrk": "x"})
+    assert err.value.issues == [f"Missing required file: sub-01/eeg/{stem}.eeg"]
+
+
+def test_download_fetches_the_data_file_the_brainvision_header_names(tmp_path):
+    """DataFile= naming a file other than <stem>.eeg is fetched by that name."""
+    header = "DataFile=rest.dat\nMarkerFile=sub-01_task-rest_eeg.vmrk\n"
+    ds = _download_brainvision(tmp_path, header, {"rest.dat": "samples"})
+    assert (ds.filecache.parent / "rest.dat").read_text() == "samples"
+
+
+def test_download_fails_when_the_eeglab_fdt_is_missing(tmp_path):
+    """The .fdt EEG.data names is required too; a .set with samples needs none."""
+    import scipy.io
+
+    from eegdash.dataset.exceptions import DataIntegrityError
+
+    ds = _make_s3_raw(tmp_path, ".set")
+    ds.filecache.parent.mkdir(parents=True)
+    scipy.io.savemat(ds.filecache, {"EEG": {"data": "other.fdt"}})
+    with (
+        patch(
+            "eegdash.dataset.base.downloader.download_s3_file",
+            side_effect=_fake_s3({}),
+        ),
+        pytest.raises(DataIntegrityError, match="other.fdt"),
+    ):
+        ds._download_companion_files(MagicMock())
 
 
 def test_download_companion_files_skips_existing(tmp_path):
@@ -2424,7 +2498,7 @@ def test_download_required_files_annex_key_fallback(tmp_path):
         ds._download_required_files()
 
     # First two calls: annex URI (fails), then BIDS URI (succeeds).
-    # Additional calls are companion file downloads (.eeg, .vmrk, .dat).
+    # Additional calls are companion file downloads (.eeg, .vmrk).
     assert mock_dl.call_count >= 2
     assert "MD5E-s11657--" in mock_dl.call_args_list[0][0][0]
     assert mock_dl.call_args_list[1][0][0] == bids_uri

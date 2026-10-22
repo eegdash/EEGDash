@@ -34,8 +34,8 @@ from pathlib import Path
 import pooch
 import pytest
 
-VERSION = "0.3.0"
-SHA256 = "cde637bc3cda6e349a263aff522b239078ad713c7a5c514ad6b5d9ab5996acc9"
+VERSION = "0.3.1"
+SHA256 = "17a28e19e50de09fae56447876d1c12cfc3e5e19557629187e9a6b9287b8e5a5"
 URL = (
     "https://codeload.github.com/eegdash/eegdash-testing-data/"
     f"tar.gz/refs/tags/v{VERSION}"

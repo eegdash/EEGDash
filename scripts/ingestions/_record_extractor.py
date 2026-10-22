@@ -22,6 +22,7 @@ from _metadata_cascade import CascadeContext, MetadataCascade
 from _montage import _walk_up_find as _walk
 from eegdash.dataset._source_inference import DEFAULT_STORAGE_CONFIG, STORAGE_CONFIGS
 from eegdash.dataset.bids_dataset import _COMPANION_FILES, position_sidecars
+from eegdash.io.brainvision import companion_names
 from eegdash.schemas import create_record
 from source_adapter import SourceAdapter, get_source_adapter
 
@@ -332,8 +333,14 @@ def _build_dep_keys(
         pass
 
     ext = bids_file_path.suffix.lower()
-    for comp_ext in _COMPANION_FILES.get(ext, []):
-        comp_file = bids_file_path.with_suffix(comp_ext)
+    comp_files = [bids_file_path.with_suffix(e) for e in _COMPANION_FILES.get(ext, [])]
+    if ext == ".vhdr":  # the files the header names, if the deposit holds them
+        found = (
+            [p for n in names if (p := parent_dir / n).exists() or p.is_symlink()]
+            for names in companion_names(bids_file_path)
+        )
+        comp_files = [paths[0] for paths in found if paths]
+    for comp_file in comp_files:
         try:
             dep_keys.append(str(comp_file.relative_to(bids_root)))
         except ValueError:

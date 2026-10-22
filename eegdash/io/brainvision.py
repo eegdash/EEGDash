@@ -106,6 +106,28 @@ def overrides(vhdr_fname) -> dict:
     return out
 
 
+def companion_names(vhdr_fname) -> list[tuple[str, ...]]:
+    """Return the candidate names of the data file and of the marker file, best first.
+
+    The header's ``DataFile=``/``MarkerFile=`` when it is a plain file name (not
+    an annex key), then the BIDS name (``<stem>.eeg``, ``<stem>.vmrk``), which
+    is all there is when the header cannot be read.
+    """
+    vhdr = Path(vhdr_fname)
+    try:
+        text = vhdr.read_text(encoding="utf-8", errors="ignore")
+    except OSError:
+        text = ""
+    found = {key.lower(): value for key, value in _POINTER_RE.findall(text)}
+    names = []
+    for key, ext in (("datafile", ".eeg"), ("markerfile", ".vmrk")):
+        value = found.get(key, "")
+        plain = value == Path(value).name and not _ANNEX_KEY_RE.match(value)
+        named = [value] if value and plain else []
+        names.append(tuple(dict.fromkeys([*named, vhdr.with_suffix(ext).name])))
+    return names
+
+
 def read_raw_brainvision(vhdr_fname, **kwargs):
     """Read with :func:`mne.io.read_raw_brainvision`, passing :func:`overrides`."""
     kwargs.setdefault("overrides", overrides(vhdr_fname) or None)

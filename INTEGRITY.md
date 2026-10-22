@@ -6,14 +6,17 @@ BIDS-named OpenNeuro twins, and explicitly pinned historical S3 versions.
 A URI ending in an annex key governs over a separately supplied key.
 HEAD and GET ContentLength describe the stored object; neither proves that
 an already-short deposit matches its record. A mismatch is refused, not
-accepted as a stale record. Inspect the deposit and re-digest the catalogue
+accepted as a stale record. An unpinned mirrored on* recording may retry its
+exact recorded NEMAR object; that transfer is checked against the same key. Inspect the deposit and re-digest the catalogue
 record when the authoritative version has changed.
 
 Transfers validate a unique staging file before atomic replacement, preserving
 an existing shared cache on failure. Version pins do not fall back to latest.
 `download_all()` scans the cache without network calls, attempts each target
 record, and raises one `DataIntegrityError` with `.failures` (record/error pairs)
-afterward if any recording failed. Per-record errors include the destination
+afterward if any recording failed. Global/session metadata errors cannot hide
+collected recording failures; those additional errors are available in
+`.metadata_failures`. Per-record errors include the destination
 and pin (when present), rather than a temporary staging filename.
 A record whose key size disagrees with the latest nemar-py manifest is refused
 before transfer; verified latest bytes are not silently substituted and fetched
@@ -32,7 +35,8 @@ Known-bad remote objects are not negatively cached: a later call may retry them.
   transport-size checks, not record-key verification.
 - Records without a usable key retain transport-size/existence behavior.
 - Keyed channels.tsv, participants.tsv and VHDR files are not rewritten by the
-  remaining read-repair helpers; malformed deposited metadata may need repair
+  remaining read-repair helpers; channels repairs are limited to explicitly
+  current-record paths and never scan arbitrary sibling recordings; malformed deposited metadata may need repair
   upstream rather than mutation of the shared cache.
 - S3Client provides EEGDash's small synchronous S3 interface, not a drop-in s3fs
   replacement when its annex_key/verify_hash extensions are used.

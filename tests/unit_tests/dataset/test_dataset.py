@@ -1299,9 +1299,15 @@ def test_download_all_parallel_execution(tmp_path):
         ds._download_dataset_files = MagicMock()
 
         with patch("eegdash.dataset.dataset.Parallel") as mock_parallel:
-            mock_parallel.return_value = MagicMock(return_value=None)
+            mock_parallel.return_value = MagicMock(
+                side_effect=lambda tasks: [
+                    func(*args, **kwargs) for func, args, kwargs in tasks
+                ]
+            )
             ds.download_all(n_jobs=2)
             mock_parallel.assert_called_once()
+            mock_raw1._download_required_files.assert_called_once()
+            mock_raw2._download_required_files.assert_called_once()
 
 
 def test_challenge_dataset_subjects_tuple_in_query(tmp_path):

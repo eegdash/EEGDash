@@ -1035,6 +1035,8 @@ class EEGDashRaw(RawDataset):
         try:
             self._download_required_files_impl()
         except downloader.DownloadIntegrityError as exc:
+            if self._reroute_twin_to_nemar():
+                return self._download_required_files()
             raise DataIntegrityError(
                 str(exc), record=self.record, issues=[str(exc)]
             ) from exc
@@ -1055,7 +1057,13 @@ class EEGDashRaw(RawDataset):
         if (
             self._raw_uri is None
             and self._storage_backend == "nemar"
-            and not _cached_complete(self.filecache, raw_annex_key)
+            and (
+                not _cached_complete(self.filecache, raw_annex_key)
+                or any(
+                    not _cached_complete(path, self._annex_key_for(path))
+                    for path in self._dep_paths
+                )
+            )
         ):
             self._raw_uri, self._dep_downloads = _resolve_nemar_uris(
                 self.record,
@@ -1064,7 +1072,7 @@ class EEGDashRaw(RawDataset):
                 dep_dests=[] if deferred_nemar_deps else list(self._dep_paths),
             )
 
-        if self._raw_uri is not None or deferred_nemar_deps:
+        if self._raw_uri is not None or self._dep_downloads or deferred_nemar_deps:
             filesystem = downloader.get_s3_filesystem(
                 max_concurrency=self._max_concurrency
             )
@@ -1296,7 +1304,8 @@ class EEGDashRaw(RawDataset):
         """Point an ``on*`` record back at NEMAR when its OpenNeuro twin fails.
 
         ``correct_storage_inplace`` serves ``on*`` from the OpenNeuro twin,
-        which can be deleted, private or renamed (404/403). NEMAR still has it.
+        which can be unavailable or disagree with the record key. Retry the
+        exact recorded NEMAR object instead; never silently substitute latest.
         """
         storage = self.record.get("storage") or {}
         if storage.get("version_id") or storage.get("version_ids"):
@@ -1304,7 +1313,9 @@ class EEGDashRaw(RawDataset):
         dataset_id = self.record.get("dataset", "")
         if self._storage_backend != "s3" or openneuro_twin_of(dataset_id) is None:
             return False
-        logger.warning("OpenNeuro twin of %s unavailable; using NEMAR.", dataset_id)
+        logger.warning(
+            "OpenNeuro twin of %s unavailable or mismatched; using NEMAR.", dataset_id
+        )
         self.record["storage"]["backend"] = self._storage_backend = "nemar"
         self.record["storage"]["base"] = (
             f"{STORAGE_CONFIGS['nemar']['base']}/{dataset_id}"
@@ -1678,6 +1689,20 @@ class EEGDashRaw(RawDataset):
                 issues=[f"Missing required CTF file(s): {', '.join(still_missing)}"],
             )
 
+    def _repair_current_channels_tsv(self) -> bool:
+        """Never rewrite siblings absent from this record's sparse key map."""
+        current = self.filecache.with_name(
+            self.filecache.stem.rsplit("_", 1)[0] + "_channels.tsv"
+        )
+        eligible = {current} | {
+            path for path in self._dep_paths if path.name.endswith("_channels.tsv")
+        }
+        return _repair_channels_tsv(
+            self.filecache.parent,
+            protected=self._protected_cache_paths(),
+            eligible=eligible,
+        )
+
     def _protected_cache_paths(self) -> set[Path]:
         """Files described by annex keys must never be rewritten by read repairs."""
         keys = (self.record.get("storage") or {}).get("annex_keys") or {}
@@ -1702,9 +1727,7 @@ class EEGDashRaw(RawDataset):
 
         if self.filecache and self.filecache.parent.exists():
             _warn_no_coordsystem(self.bidspath, self.record.get("dataset"))
-            _repair_channels_tsv(
-                self.filecache.parent, protected=self._protected_cache_paths()
-            )
+            self._repair_current_channels_tsv()
 
         # Helper: Handle VHDR files - generate if missing, repair if broken
         if (
@@ -2183,9 +2206,7 @@ class EEGDashRaw(RawDataset):
 
                 # Malformed channels.tsv (empty or missing 'name' column)
                 if isinstance(first_error, KeyError) and first_error.args == ("name",):
-                    if self.filecache and _repair_channels_tsv(
-                        self.filecache.parent, protected=self._protected_cache_paths()
-                    ):
+                    if self.filecache and self._repair_current_channels_tsv():
                         logger.info("Repaired malformed channels.tsv, retrying load...")
                         try:
                             return self._read_raw_bids()

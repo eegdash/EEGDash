@@ -632,6 +632,8 @@ class EEGDashDataset(BaseConcatDataset, metaclass=NumpyDocstringInheritanceInitM
             ):
                 targets.append(ds)
 
+        failures = []
+        metadata_failures = []
         if not targets:
             self._download_dataset_files()
         else:
@@ -644,8 +646,13 @@ class EEGDashDataset(BaseConcatDataset, metaclass=NumpyDocstringInheritanceInitM
             )
             failures = [result for result in results if result is not None]
 
-            # Download global dataset files (participants.tsv, etc.)
-            self._download_dataset_files()
+            # Do not let a metadata failure hide already-collected record errors.
+            try:
+                self._download_dataset_files()
+            except Exception as exc:
+                if not failures:
+                    raise
+                metadata_failures.append(("global dataset files", exc))
         nemar = [
             ds
             for ds in self.datasets
@@ -653,21 +660,35 @@ class EEGDashDataset(BaseConcatDataset, metaclass=NumpyDocstringInheritanceInitM
             and hasattr(ds, "_fetch_nemar_session_metadata")
         ]
         if nemar:
-            filesystem = downloader.get_s3_filesystem(
-                max_concurrency=self.max_concurrency
-            )
-            # One scans.tsv serves every record of a subject/session; share the
-            # attempted set so an absent one costs a single probe, not one per
-            # record.
-            seen_scans: set[Path] = set()
-            for ds in nemar:
-                ds._fetch_nemar_session_metadata(filesystem, seen_scans)
+            try:
+                filesystem = downloader.get_s3_filesystem(
+                    max_concurrency=self.max_concurrency
+                )
+            except Exception as exc:
+                if not failures:
+                    raise
+                metadata_failures.append(("NEMAR session access", exc))
+            else:
+                # One scans.tsv serves every record of a subject/session; share the
+                # attempted set so an absent one costs a single probe, not one per
+                # record.
+                seen_scans: set[Path] = set()
+                for ds in nemar:
+                    try:
+                        ds._fetch_nemar_session_metadata(filesystem, seen_scans)
+                    except Exception as exc:
+                        if not failures:
+                            raise
+                        metadata_failures.append((ds.record.get("bids_relpath"), exc))
 
         if targets and failures:
             issues = [
                 f"{record.get('dataset')}/{record.get('bids_relpath')}: {exc}"
                 for record, exc in failures
             ]
+            issues.extend(
+                f"Metadata {label}: {exc}" for label, exc in metadata_failures
+            )
             error = DataIntegrityError(
                 f"{len(failures)} of {len(targets)} recording downloads failed; "
                 "other recordings were attempted.\n" + "\n".join(issues),
@@ -675,6 +696,7 @@ class EEGDashDataset(BaseConcatDataset, metaclass=NumpyDocstringInheritanceInitM
                 issues=issues,
             )
             error.failures = failures
+            error.metadata_failures = metadata_failures
             raise error from failures[0][1]
 
     def _download_dataset_files(self) -> None:

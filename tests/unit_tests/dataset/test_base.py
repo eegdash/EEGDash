@@ -160,6 +160,7 @@ def test_nemar_download_pairs_annex_object_with_its_own_destination(tmp_path):
         patch("eegdash.dataset.base.downloader.download_s3_file"),
         patch("eegdash.dataset.base._download_via_nemar", return_value=True),
         patch.object(ds, "_fetch_nemar_root_metadata"),
+        patch.object(ds, "_require_data_file"),  # downloads are mocked: no .eeg
     ):
         ds._download_required_files()
 

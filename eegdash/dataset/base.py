@@ -445,10 +445,10 @@ def _resolve_nemar_uris(
         return None, []
 
     raw_uri = None
+    stored_key, stored_sidecar = _nemar_fast_paths(storage, raw_key)
     if not raw_dest.exists() and raw_dest.suffix.lower() in _DIRECTORY_SUFFIXES:
         raw_uri = f"{base}/{raw_key}"  # listed and fetched per file at download
-    elif not raw_dest.exists():
-        stored_key, stored_sidecar = _nemar_fast_paths(storage, raw_key)
+    elif not _cached_complete(raw_dest, stored_key):  # short copy: refetch
         raw_uri = _resolve_one_nemar_entry(
             dataset_id=dataset_id,
             relpath=raw_key,
@@ -510,19 +510,51 @@ def _destination_lock(dest: Path) -> threading.Lock:
         return _DESTINATION_LOCKS.setdefault(key, threading.Lock())
 
 
-def _download_via_nemar(dataset_id: str, relpath: str, local_path: Path) -> bool:
+def _cached_complete(
+    local_path: Path, annex_key: str | None, s3_uri: str | None = None
+) -> bool:
+    """Offline cache size check; never probe S3 during the bulk pre-scan.
+
+    Cached directory contents are not revalidated here. ``s3_uri`` is retained
+    for compatibility but cannot override the authoritative key.
+    """
+    try:
+        downloader.verify_file(local_path, annex_key or "")
+    except OSError:
+        return False
+    return True
+
+
+def _write_staged(dest: Path, payload: bytes) -> None:
+    """Write *payload* to *dest* through a caller-unique ``.part`` sibling.
+
+    A failed or concurrent write never leaves a partial file under *dest*.
+    """
+    tmp = dest.with_name(f"{dest.name}.{uuid.uuid4().hex}.part")
+    try:
+        with open(tmp, "wb") as fh:
+            fh.write(payload)
+        tmp.replace(dest)
+    finally:
+        tmp.unlink(missing_ok=True)
+
+
+def _download_via_nemar(
+    dataset_id: str, relpath: str, local_path: Path, annex_key: str | None = None
+) -> bool:
     """Download *relpath* from data.nemar.org via ``nemar-py``.
 
     nemar-py resolves the dataset index → version manifest → file mapping
     and streams the bytes (version-pinned, with retries and checksum
     verification), so this is the canonical NEMAR sidecar/companion path.
-    Returns ``True`` once the file is on disk (including already-present),
-    ``False`` when the dataset/file isn't served by data.nemar.org (callers
-    then fall back to the GitHub-raw pointer).
+    Returns ``True`` once the file is on disk (including already-present, and
+    of the size *annex_key* gives when one is known), ``False`` when the
+    dataset/file isn't served by data.nemar.org (callers then fall back to the
+    GitHub-raw pointer).
     """
     if not (dataset_id and relpath):
         return False
-    if local_path.exists():
+    if _cached_complete(local_path, annex_key):
         return True
     manifest = _fetch_nemar_manifest(dataset_id)
     if manifest is None:
@@ -530,6 +562,17 @@ def _download_via_nemar(dataset_id: str, relpath: str, local_path: Path) -> bool
     target = relpath.lstrip("/")
     if target not in manifest:
         return False
+    entry = manifest.file(target)
+    expected = downloader.annex_key_info(annex_key)[0] if annex_key else None
+    manifest_size = getattr(entry, "size", None)
+    if expected is not None and manifest_size is not None and expected != manifest_size:
+        raise DataIntegrityError(
+            f"Record key for {local_path} expects {expected} bytes, but NEMAR "
+            f"manifest {getattr(manifest, 'manifest_url', 'latest')} has {manifest_size}; "
+            "verify the deposit and re-digest the record before downloading.",
+            record={"dataset": dataset_id, "bids_relpath": relpath},
+            issues=["Record key disagrees with NEMAR manifest"],
+        )
     # One thread at a time per destination, to deduplicate rather than to
     # protect: 86 records of nm000183 resolve one sub-012_electrodes.tsv, and
     # only the first pays for the transfer. Correctness comes from the unique
@@ -538,10 +581,8 @@ def _download_via_nemar(dataset_id: str, relpath: str, local_path: Path) -> bool
         # A peer may have finished this transfer while we waited for the lock.
         # The pre-lock exists() above is an optimisation, not a guarantee:
         # ``download_one`` and ``S3Client.get_file`` do publish with an atomic
-        # rename, but the GitHub-raw fallback below writes the destination
-        # directly, so exists() can still observe a half-written file from that
-        # writer. Giving every writer a unique staging name is the real fix.
-        if local_path.exists():
+        # rename, and so does the GitHub-raw fallback below (``_write_staged``).
+        if _cached_complete(local_path, annex_key):
             return True
         # Stage under a caller-unique name. nemar derives its staging path from
         # the target (``<target>.part``), so handing it the destination makes
@@ -554,7 +595,7 @@ def _download_via_nemar(dataset_id: str, relpath: str, local_path: Path) -> bool
         staging = local_path.with_name(f"{local_path.name}.{uuid.uuid4().hex}")
         try:
             local_path.parent.mkdir(parents=True, exist_ok=True)
-            result = nemar.download_one(manifest.file(target), staging)
+            result = nemar.download_one(entry, staging)
             # download_one *returns* its verdict rather than raising: MISSING,
             # SIZE_MISMATCH, HASH_MISMATCH and the ERROR_SENTINEL body all come
             # back as a value. Dropping it publishes corruption as success.
@@ -568,7 +609,18 @@ def _download_via_nemar(dataset_id: str, relpath: str, local_path: Path) -> bool
                     result,
                 )
                 return False
+            if annex_key:
+                try:
+                    downloader.verify_file(staging, annex_key, display_path=local_path)
+                except downloader.DownloadIntegrityError as exc:
+                    raise DataIntegrityError(
+                        f"{exc} NEMAR manifest and record disagree; re-digest the record.",
+                        record={"dataset": dataset_id, "bids_relpath": relpath},
+                        issues=[str(exc)],
+                    ) from exc
             os.replace(staging, local_path)
+        except DataIntegrityError:
+            raise
         except Exception as exc:
             logger.warning(
                 "NEMAR download failed for %s/%s: %s", dataset_id, relpath, exc
@@ -600,7 +652,8 @@ def _resolve_one_nemar_entry(
     and we return ``None`` to signal "no remote URI needed". Both fast
     paths are populated only at digest time and are never set together
     for the same relpath. When neither is present we fall back to the
-    original ``_resolve_nemar_pointer`` GitHub-raw path.
+    original ``_resolve_nemar_pointer`` GitHub-raw path, whose inline content
+    is written through a staging file, never straight to *dest*.
     """
     if stored_key:
         return f"{base}/objects/{stored_key}"
@@ -608,10 +661,7 @@ def _resolve_one_nemar_entry(
     if stored_sidecar is not None:
         if not dest.exists():
             dest.parent.mkdir(parents=True, exist_ok=True)
-            # Atomic write so concurrent loaders never see a partial file.
-            tmp = dest.with_suffix(dest.suffix + ".tmp")
-            tmp.write_text(stored_sidecar, encoding="utf-8", newline="")
-            tmp.replace(dest)
+            _write_staged(dest, stored_sidecar.encode("utf-8"))
         return None
 
     # No digest-time fast path: fetch from data.nemar.org via nemar-py
@@ -647,7 +697,7 @@ def _resolve_one_nemar_entry(
 
     dest.parent.mkdir(parents=True, exist_ok=True)
     if not dest.exists():
-        dest.write_bytes(payload)
+        _write_staged(dest, payload)
     return None
 
 
@@ -921,6 +971,54 @@ class EEGDashRaw(RawDataset):
         bids_filename = PurePosixPath(self.record["bids_relpath"]).name
         return uri.rsplit("/", 1)[0] + "/" + bids_filename
 
+    def _annex_key_for(self, path: Path) -> str | None:
+        """The record's git-annex key for *path* (raw file or sidecar), if any.
+
+        An OpenNeuro twin serves BIDS-named URIs that carry no key, while the
+        record still names one (ds004840, 2026-10-21): the key must flow from
+        the record for its size, and hash, to govern.
+        """
+        storage = self.record.get("storage") or {}
+        keys = storage.get("annex_keys") or {}
+        if not keys:
+            return None
+        if path == self.filecache and storage.get("raw_key") in keys:
+            return keys[storage["raw_key"]]
+        try:
+            return keys.get(Path(path).relative_to(self.bids_root).as_posix())
+        except ValueError:
+            return None
+
+    def _cached_files_complete(self) -> bool:
+        """Whether the raw file and every dependency are cached at their key's size.
+
+        Existence alone kept a truncated or pointer-text file forever.
+        """
+        storage = self.record.get("storage") or {}
+        pins = {
+            self.bids_root / key: pin
+            for key, pin in (storage.get("version_ids") or {}).items()
+        }
+        if storage.get("version_id"):
+            pins[self.filecache] = storage["version_id"]
+        uris = {dest: uri for uri, dest in self._dep_downloads}
+        uris[self.filecache] = self._raw_uri
+        for path in (self.filecache, *self._dep_paths):
+            if not _cached_complete(path, self._annex_key_for(path)):
+                return False
+            marker = path.with_name(path.name + ".s3-version.json")
+            pin = pins.get(path)
+            if pin:
+                try:
+                    identity = json.loads(marker.read_text())
+                except (OSError, ValueError):
+                    return False
+                if identity != {"uri": uris.get(path), "version_id": pin}:
+                    return False
+            elif marker.exists():
+                return False
+        return True
+
     @property
     def _is_remote(self) -> bool:
         """Whether the recording must be fetched from a remote source.
@@ -933,6 +1031,17 @@ class EEGDashRaw(RawDataset):
         return self._raw_uri is not None or self._storage_backend == "nemar"
 
     def _download_required_files(self) -> None:
+        """Download a record, translating byte-integrity errors with its context."""
+        try:
+            self._download_required_files_impl()
+        except downloader.DownloadIntegrityError as exc:
+            if self._reroute_twin_to_nemar():
+                return self._download_required_files()
+            raise DataIntegrityError(
+                str(exc), record=self.record, issues=[str(exc)]
+            ) from exc
+
+    def _download_required_files_impl(self) -> None:
         # NEMAR records carry a logical ``s3://nemar/<id>/<bids_relpath>``
         # base, but actual fetching has to go through the SHA-keyed
         # object name under ``s3://nemar/<id>/objects/<KEY>``. Resolve
@@ -943,10 +1052,18 @@ class EEGDashRaw(RawDataset):
         deferred_nemar_deps = (
             self._storage_backend == "nemar" and self.filecache.suffix.lower() == ".set"
         )
+        storage = self.record.get("storage") or {}
+        raw_annex_key, _ = _nemar_fast_paths(storage, storage.get("raw_key", ""))
         if (
             self._raw_uri is None
             and self._storage_backend == "nemar"
-            and not self.filecache.exists()
+            and (
+                not _cached_complete(self.filecache, raw_annex_key)
+                or any(
+                    not _cached_complete(path, self._annex_key_for(path))
+                    for path in self._dep_paths
+                )
+            )
         ):
             self._raw_uri, self._dep_downloads = _resolve_nemar_uris(
                 self.record,
@@ -955,7 +1072,7 @@ class EEGDashRaw(RawDataset):
                 dep_dests=[] if deferred_nemar_deps else list(self._dep_paths),
             )
 
-        if self._raw_uri is not None or deferred_nemar_deps:
+        if self._raw_uri is not None or self._dep_downloads or deferred_nemar_deps:
             filesystem = downloader.get_s3_filesystem(
                 max_concurrency=self._max_concurrency
             )
@@ -975,6 +1092,7 @@ class EEGDashRaw(RawDataset):
                             self._raw_uri, self.filecache, filesystem=filesystem
                         )
                 elif self._raw_uri is not None:
+                    raw_annex_key = self._annex_key_for(self.filecache)
                     downloader.download_s3_file(
                         self._raw_uri,
                         self.filecache,
@@ -984,6 +1102,7 @@ class EEGDashRaw(RawDataset):
                             if (self.record.get("storage") or {}).get("version_id")
                             else {}
                         ),
+                        **({"annex_key": raw_annex_key} if raw_annex_key else {}),
                     )
             except FileNotFoundError:
                 if self._reroute_twin_to_nemar():
@@ -1001,11 +1120,13 @@ class EEGDashRaw(RawDataset):
                         self._raw_uri,
                         resolved_uri,
                     )
+                    raw_annex_key = self._annex_key_for(self.filecache)
                     try:
                         downloader.download_s3_file(
                             resolved_uri,
                             self.filecache,
                             filesystem=filesystem,
+                            **({"annex_key": raw_annex_key} if raw_annex_key else {}),
                         )
                     except FileNotFoundError:
                         raise DataIntegrityError(
@@ -1072,7 +1193,7 @@ class EEGDashRaw(RawDataset):
                 selected = [
                     (key, dest)
                     for key, dest in zip(dep_keys, self._dep_paths, strict=True)
-                    if not dest.exists()
+                    if not _cached_complete(dest, self._annex_key_for(dest))
                     and not (embedded_samples and dest.suffix.lower() == ".fdt")
                 ]
                 _, self._dep_downloads = _resolve_nemar_uris(
@@ -1090,16 +1211,30 @@ class EEGDashRaw(RawDataset):
             pinned = {
                 self.bids_root / key: version for key, version in version_ids.items()
             }
+            dep_annex_keys = {
+                dest: key
+                for _, dest in dependencies
+                if (key := self._annex_key_for(dest))
+            }
             for uri, dest in dependencies:
                 if dest in pinned:
                     downloader.download_s3_file(
-                        uri, dest, filesystem=filesystem, version_id=pinned[dest]
+                        uri,
+                        dest,
+                        filesystem=filesystem,
+                        version_id=pinned[dest],
+                        **(
+                            {"annex_key": dep_annex_keys[dest]}
+                            if dest in dep_annex_keys
+                            else {}
+                        ),
                     )
             downloader.download_files(
                 [(uri, dest) for uri, dest in dependencies if dest not in pinned],
                 filesystem=filesystem,
                 skip_existing=True,
                 skip_missing=True,
+                **({"annex_keys": dep_annex_keys} if dep_annex_keys else {}),
             )
 
             # Auto-discover and download companion files (.fdt, .eeg, .vmrk)
@@ -1148,13 +1283,17 @@ class EEGDashRaw(RawDataset):
                 ]
             for sidecar in position_sidecars(relpath, files):
                 dest = self.bids_root / sidecar
-                if dest.exists():
+                annex_key = self._annex_key_for(dest)
+                if _cached_complete(dest, annex_key):
                     continue
                 if self._storage_backend == "nemar":
                     self._fetch_nemar_companion(dest, sidecar, filesystem)
                 else:
                     downloader.download_s3_file(
-                        f"{base}/{sidecar}", dest, filesystem=filesystem
+                        f"{base}/{sidecar}",
+                        dest,
+                        filesystem=filesystem,
+                        **({"annex_key": annex_key} if annex_key else {}),
                     )
         except Exception as exc:  # positions are optional; the recording reads
             logger.warning(
@@ -1165,7 +1304,8 @@ class EEGDashRaw(RawDataset):
         """Point an ``on*`` record back at NEMAR when its OpenNeuro twin fails.
 
         ``correct_storage_inplace`` serves ``on*`` from the OpenNeuro twin,
-        which can be deleted, private or renamed (404/403). NEMAR still has it.
+        which can be unavailable or disagree with the record key. Retry the
+        exact recorded NEMAR object instead; never silently substitute latest.
         """
         storage = self.record.get("storage") or {}
         if storage.get("version_id") or storage.get("version_ids"):
@@ -1173,7 +1313,9 @@ class EEGDashRaw(RawDataset):
         dataset_id = self.record.get("dataset", "")
         if self._storage_backend != "s3" or openneuro_twin_of(dataset_id) is None:
             return False
-        logger.warning("OpenNeuro twin of %s unavailable; using NEMAR.", dataset_id)
+        logger.warning(
+            "OpenNeuro twin of %s unavailable or mismatched; using NEMAR.", dataset_id
+        )
         self.record["storage"]["backend"] = self._storage_backend = "nemar"
         self.record["storage"]["base"] = (
             f"{STORAGE_CONFIGS['nemar']['base']}/{dataset_id}"
@@ -1187,9 +1329,13 @@ class EEGDashRaw(RawDataset):
         Safety net for records whose pre-computed ``annex_keys`` don't
         cover *relpath*. Delegates to :func:`_download_via_nemar`, which
         handles ID/version resolution, the BIDS-path → file mapping, and
-        the transfer (retries + checksum verification).
+        the transfer (retries + checksum verification). A cached file counts
+        only at the size of the record's annex key for *relpath*, if any.
         """
-        return _download_via_nemar(self.record.get("dataset", ""), relpath, local_path)
+        annex_key, _ = _nemar_fast_paths(self.record.get("storage") or {}, relpath)
+        return _download_via_nemar(
+            self.record.get("dataset", ""), relpath, local_path, annex_key
+        )
 
     # BIDS root files not enumerated in dep_keys but expected by mne-bids /
     # braindecode. All are direct-git on NEMAR (excluded from annex).
@@ -1292,7 +1438,8 @@ class EEGDashRaw(RawDataset):
 
         for ext in companions:
             local_path = self.filecache.with_suffix(ext)
-            if local_path.exists():
+            annex_key = self._annex_key_for(local_path)
+            if _cached_complete(local_path, annex_key):
                 continue
 
             # Skip companions already declared at digest time — they were
@@ -1318,7 +1465,10 @@ class EEGDashRaw(RawDataset):
 
             try:
                 downloader.download_s3_file(
-                    companion_uri, local_path, filesystem=filesystem
+                    companion_uri,
+                    local_path,
+                    filesystem=filesystem,
+                    **({"annex_key": annex_key} if annex_key else {}),
                 )
             except FileNotFoundError:
                 # For .set files, the .fdt may have a non-BIDS name embedded
@@ -1539,6 +1689,25 @@ class EEGDashRaw(RawDataset):
                 issues=[f"Missing required CTF file(s): {', '.join(still_missing)}"],
             )
 
+    def _repair_current_channels_tsv(self) -> bool:
+        """Never rewrite siblings absent from this record's sparse key map."""
+        current = self.filecache.with_name(
+            self.filecache.stem.rsplit("_", 1)[0] + "_channels.tsv"
+        )
+        eligible = {current} | {
+            path for path in self._dep_paths if path.name.endswith("_channels.tsv")
+        }
+        return _repair_channels_tsv(
+            self.filecache.parent,
+            protected=self._protected_cache_paths(),
+            eligible=eligible,
+        )
+
+    def _protected_cache_paths(self) -> set[Path]:
+        """Files described by annex keys must never be rewritten by read repairs."""
+        keys = (self.record.get("storage") or {}).get("annex_keys") or {}
+        return {self.bids_root / key for key in keys}
+
     def _ensure_raw(self) -> None:
         """Ensure the raw data file and its dependencies are cached locally.
 
@@ -1552,14 +1721,20 @@ class EEGDashRaw(RawDataset):
 
         # Helper: Fix participants.tsv ID padding to match sub-* folder names
         if self.bids_root and self.bids_root.exists():
-            _repair_participants_tsv_ids(self.bids_root)
+            _repair_participants_tsv_ids(
+                self.bids_root, protected=self._protected_cache_paths()
+            )
 
         if self.filecache and self.filecache.parent.exists():
             _warn_no_coordsystem(self.bidspath, self.record.get("dataset"))
-            _repair_channels_tsv(self.filecache.parent)
+            self._repair_current_channels_tsv()
 
         # Helper: Handle VHDR files - generate if missing, repair if broken
-        if self.filecache and self.filecache.suffix == ".vhdr":
+        if (
+            self.filecache
+            and self.filecache.suffix == ".vhdr"
+            and not self._annex_key_for(self.filecache)
+        ):
             # Early exit: when the data file (.eeg) is a git-annex
             # placeholder (content never fetched), no header repair can
             # help — the binary data is simply not available.
@@ -2031,7 +2206,7 @@ class EEGDashRaw(RawDataset):
 
                 # Malformed channels.tsv (empty or missing 'name' column)
                 if isinstance(first_error, KeyError) and first_error.args == ("name",):
-                    if self.filecache and _repair_channels_tsv(self.filecache.parent):
+                    if self.filecache and self._repair_current_channels_tsv():
                         logger.info("Repaired malformed channels.tsv, retrying load...")
                         try:
                             return self._read_raw_bids()
@@ -2137,7 +2312,9 @@ class EEGDashRaw(RawDataset):
 
                 # Subject/session ID mismatch between folders and participants.tsv
                 if "is not in list" in msg and self.bids_root:
-                    if _repair_participants_tsv_ids(self.bids_root):
+                    if _repair_participants_tsv_ids(
+                        self.bids_root, protected=self._protected_cache_paths()
+                    ):
                         logger.info(
                             "Repaired participants.tsv ID padding, retrying load..."
                         )

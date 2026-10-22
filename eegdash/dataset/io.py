@@ -523,7 +523,12 @@ def _repair_snirf_bids_metadata(snirf_path: Path, record: dict[str, Any]) -> boo
     return repairs_made
 
 
-def _repair_channels_tsv(data_dir: Path) -> bool:
+def _repair_channels_tsv(
+    data_dir: Path,
+    *,
+    protected: set[Path] | None = None,
+    eligible: set[Path] | None = None,
+) -> bool:
     r"""Repair empty or malformed ``*_channels.tsv`` files in *data_dir*.
 
     MNE-BIDS skips channel metadata when ``channels.tsv`` is absent but
@@ -535,6 +540,8 @@ def _repair_channels_tsv(data_dir: Path) -> bool:
     * **Has content but no ``name`` column** → the first column header is
       renamed to ``name`` (per BIDS spec the first column must be ``name``).
 
+    With ``eligible``, inspect only explicitly owned current-record paths;
+    sparse key maps cannot certify that sibling files are safe to rewrite.
     Returns ``True`` if any file was repaired.
     """
     if not data_dir.is_dir():
@@ -548,6 +555,10 @@ def _repair_channels_tsv(data_dir: Path) -> bool:
         return False
 
     for tsv_path in tsv_files:
+        if eligible is not None and tsv_path not in eligible:
+            continue
+        if tsv_path in (protected or set()):
+            continue
         try:
             content = tsv_path.read_text(encoding=tsv_encoding(tsv_path))
             stripped = content.strip()
@@ -617,7 +628,9 @@ def _deduplicate_channel_names(ch_names: list[str]) -> list[str]:
     return result
 
 
-def _repair_participants_tsv_ids(bids_root: Path) -> bool:
+def _repair_participants_tsv_ids(
+    bids_root: Path, *, protected: set[Path] | None = None
+) -> bool:
     """Align ``participant_id`` values in ``participants.tsv`` with ``sub-*`` folders.
 
     Some BIDS datasets have mismatches between folder names and
@@ -644,7 +657,7 @@ def _repair_participants_tsv_ids(bids_root: Path) -> bool:
     from .bids_dataset import _match_subject_fallback
 
     participants_tsv = bids_root / "participants.tsv"
-    if not participants_tsv.exists():
+    if participants_tsv in (protected or set()) or not participants_tsv.exists():
         return False
 
     # Collect actual sub-* folder names

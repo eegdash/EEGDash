@@ -114,6 +114,7 @@ def test_nemar_download_required_files_uses_annex_object_uri(tmp_path):
         f"s3://nemar/nm000104/objects/{annex_key}",
         tmp_path / "nm000104" / bids_relpath,
         filesystem=mock_deps.call_args.kwargs["filesystem"],
+        annex_key=annex_key,
     )
 
 
@@ -238,7 +239,7 @@ def test_nemar_download_required_files_falls_back_to_data_portal(tmp_path):
     from eegdash.dataset.base import EEGDashRaw
     from eegdash.schemas import create_record
 
-    annex_key = "MD5E-s117384448--3f1620cf0484cce641d500a406630b89.edf"
+    annex_key = "MD5E-s4--8d777f385d3dfec8815d20f7496026dc.edf"
     bids_relpath = "sub-70495563/emg/sub-70495563_task-typing_emg.edf"
     record = create_record(
         dataset="nm000104",
@@ -256,14 +257,14 @@ def test_nemar_download_required_files_falls_back_to_data_portal(tmp_path):
 
     ds = EEGDashRaw(record=record, cache_dir=tmp_path)
 
-    fake_file = MagicMock(path=bids_relpath, size=117384448)
+    fake_file = MagicMock(path=bids_relpath, size=4)
     fake_manifest = MagicMock()
     fake_manifest.__contains__ = lambda self, key: key == bids_relpath
     fake_manifest.file = MagicMock(return_value=fake_file)
 
     def _ok_download(entry, target):
         """Model download_one: leave the file at *target*, return the verdict."""
-        target.write_bytes(b"")
+        target.write_bytes(b"data")
         return SimpleNamespace(name="OK")
 
     with (

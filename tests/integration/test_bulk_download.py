@@ -5,6 +5,7 @@ import pytest
 import eegdash.dataset.dataset as dataset_mod
 from eegdash import EEGDash
 from eegdash.dataset.dataset import EEGDashDataset
+from eegdash.downloader import annex_key_info
 
 OPENNEURO_DATASET = "ds000248"
 
@@ -51,11 +52,19 @@ def test_download_all_only_missing_files(tmp_path, ds000248_records):
     for p in all_paths_1:
         p.unlink(missing_ok=True)
 
-    # Cache ALL files for dataset[0]: main file + every dependency
+    # Cache ALL files for dataset[0]: main file + every dependency. A cached
+    # file counts as complete only when its size matches the record's
+    # git-annex key (a short file is refetched, 2026-10-22), so a placeholder
+    # takes the key's size as a sparse file; a file without a key only exists.
     all_paths_0 = [ds0.filecache] + list(ds0._dep_paths)
     for p in all_paths_0:
         p.parent.mkdir(parents=True, exist_ok=True)
-        p.write_text("cached")
+        size = annex_key_info(ds0._annex_key_for(p) or "")[0]
+        if size:
+            with open(p, "wb") as fh:
+                fh.truncate(size)
+        else:
+            p.write_text("cached")
 
     with patch.object(
         dataset_mod.EEGDashRaw, "_download_required_files", autospec=True

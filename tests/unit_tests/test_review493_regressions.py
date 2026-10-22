@@ -260,7 +260,9 @@ def test_record_repair_does_not_mutate_keyed_sibling_channels(tmp_path, monkeypa
     payload = b"channel\ttype\nCz\tEEG\n"
     sibling.write_bytes(payload)
     monkeypatch.setattr(first, "_download_required_files", Mock())
-    monkeypatch.setattr(first, "_load_raw", Mock())
+    monkeypatch.setattr(
+        first, "_load_raw", Mock(return_value=SimpleNamespace(annotations=None))
+    )
     monkeypatch.setattr(base, "_warn_no_coordsystem", Mock())
     first._ensure_raw()
     assert sibling.read_bytes() == payload

@@ -124,7 +124,7 @@ class StorageModel(BaseModel):
     )
     annex_keys: dict[str, str] | None = Field(
         default=None,
-        description="Sparse map relpath -> SHA-key (NEMAR digest fast path).",
+        description="Sparse map relpath -> git-annex key (NEMAR and OpenNeuro clones).",
     )
     sidecar_inline: dict[str, str] | None = Field(
         default=None,

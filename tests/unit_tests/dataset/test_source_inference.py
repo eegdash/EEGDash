@@ -99,6 +99,28 @@ def test_native_nemar_datasets_stay_non_fetchable():
     assert expected_backend("nm000281") == "nemar"
 
 
+@pytest.mark.parametrize(
+    "dataset_id, base",
+    [
+        ("EEG2025r1", "s3://nmdatasets/NeurIPS25/R1_L100_bdf"),
+        ("EEG2025r11mini", "s3://nmdatasets/NeurIPS25/R11_mini_L100_bdf"),
+    ],
+)
+def test_competition_releases_route_to_the_public_competition_bucket(dataset_id, base):
+    """EEG2025 sets are plain objects in the public competition bucket.
+
+    They are not in git-annex, so the NEMAR pointer route 404s, and
+    ``s3://nemar/<id>`` refuses anonymous reads.
+    """
+    rec = {
+        "dataset": dataset_id,
+        "storage": {"backend": "s3", "base": f"s3://nemar/{dataset_id}"},
+    }
+    assert correct_storage_inplace(rec) == (True, f"s3://nemar/{dataset_id}")
+    assert rec["storage"] == {"backend": "s3", "base": base}
+    assert correct_storage_inplace(rec) == (False, None)
+
+
 def test_correct_storage_fixes_stale_backend_on_canonical_nemar_base():
     # Records ingested between PR #327 and the nemar-backend split sit in
     # the DB with the right base but the wrong backend tag. Self-heal

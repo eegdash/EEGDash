@@ -33,6 +33,8 @@ ingest-side SourceAdapter Module that consumes this table.
 
 from __future__ import annotations
 
+import re
+
 # Source -> remote storage prefix. Canonical home; ingestion imports
 # from here (was previously duplicated in 3_digest.py).
 STORAGE_CONFIGS: dict[str, dict[str, str]] = {
@@ -100,6 +102,18 @@ def nemar_twin_of(dataset_id: str) -> str | None:
     return None
 
 
+def _competition_base(dataset_id: str) -> str | None:
+    """Public bucket of an HBN ``EEG2025r<n>[mini]`` competition release.
+
+    These are plain objects outside git-annex, so the NEMAR pointer route
+    cannot resolve them; ``s3://nemar/<id>`` refuses anonymous reads.
+    """
+    m = re.fullmatch(r"EEG2025r(\d+)(mini)?", dataset_id)
+    if m is None:
+        return None
+    return f"s3://nmdatasets/NeurIPS25/R{m[1]}{'_mini' if m[2] else ''}_L100_bdf"
+
+
 def expected_storage_base(dataset_id: str) -> str | None:
     """Return the canonical ``storage.base`` for ``dataset_id``.
 
@@ -114,6 +128,8 @@ def expected_storage_base(dataset_id: str) -> str | None:
         # OpenNeuro's bucket is world-readable while NEMAR's is not. Serve
         # it from OpenNeuro under the OpenNeuro id so the data is reachable.
         return f"{STORAGE_CONFIGS['openneuro']['base']}/{twin}"
+    if base := _competition_base(dataset_id):
+        return base
     source = infer_source_from_dataset_id(dataset_id)
     if source not in {"openneuro", "nemar"}:
         return None
@@ -122,8 +138,8 @@ def expected_storage_base(dataset_id: str) -> str | None:
 
 def expected_backend(dataset_id: str) -> str | None:
     """Return the canonical ``storage.backend`` for ``dataset_id``."""
-    if openneuro_twin_of(dataset_id) is not None:
-        # Fetchable via OpenNeuro S3 -- see expected_storage_base.
+    if openneuro_twin_of(dataset_id) is not None or _competition_base(dataset_id):
+        # Fetchable via public S3 -- see expected_storage_base.
         return STORAGE_CONFIGS["openneuro"]["backend"]
     source = infer_source_from_dataset_id(dataset_id)
     if source is None:

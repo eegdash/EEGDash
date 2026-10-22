@@ -74,11 +74,59 @@ class SourceAdapter(ABC):
         return {}, {}
 
 
-class OpenNeuroAdapter(SourceAdapter):
+class _GitAnnexAdapter(SourceAdapter):
+    """Source cloned from a git-annex repository: records carry the annex keys.
+
+    The key (``MD5E-s<size>--<hash>.<ext>``, ``SHA256E-…``) is the final
+    segment of the annex symlink target or pointer file in the shallow clone.
+    It gives every file's size and hash, which a bucket listing does not.
+    """
+
+    def _annex_relpath(self, path: Path) -> str:
+        """BIDS-relative key for *path* (annex keys are stored by relpath)."""
+        if self.bids_root is not None:
+            try:
+                return str(path.relative_to(self.bids_root))
+            except ValueError:
+                pass
+        return str(path)
+
+    def resolve_storage_extensions(
+        self,
+        record_path: Path,
+        dep_paths: list[Path],
+    ) -> tuple[dict[str, str], dict[str, str]]:
+        """Resolve git-annex keys for one Record (no sidecar inlining).
+
+        A directory recording (CTF ``.ds``, MEF ``.mefd``) has no key of its
+        own: the keys of its annexed member files are recorded instead.
+        """
+        annex_keys: dict[str, str] = {}
+
+        members = (
+            sorted(p for p in record_path.rglob("*") if not p.is_dir())
+            if record_path.is_dir()
+            else [record_path]
+        )
+        for member in members:
+            raw_key = get_annex_file_key(member)
+            if raw_key is not None:
+                annex_keys[self._annex_relpath(member)] = raw_key
+
+        for dep_path in dep_paths:
+            dep_key = get_annex_file_key(dep_path)
+            if dep_key is not None:
+                annex_keys[self._annex_relpath(dep_path)] = dep_key
+
+        return annex_keys, {}
+
+
+class OpenNeuroAdapter(_GitAnnexAdapter):
     """OpenNeuro Source — direct S3 addressing.
 
     All file URIs follow ``s3://openneuro.org/<dataset_id>/<rel_path>``.
-    No git-annex resolution required; no sidecar prefetch needed.
+    The annex keys come from the clone of github.com/OpenNeuroDatasets/<id>
+    (the bucket listing has none); no sidecar prefetch needed.
     """
 
     @property
@@ -90,7 +138,7 @@ class OpenNeuroAdapter(SourceAdapter):
         return f"https://openneuro.org/datasets/{self.dataset_id}"
 
 
-class NEMARAdapter(SourceAdapter):
+class NEMARAdapter(_GitAnnexAdapter):
     """NEMAR Source — git-annex SHA addressing.
 
     NEMAR's S3 bucket has ``s3:ListBucket`` closed by design; all file
@@ -114,34 +162,6 @@ class NEMARAdapter(SourceAdapter):
     def dataset_url(self) -> str | None:
         """NEMAR DataExplorer landing page."""
         return f"https://nemar.org/dataexplorer/detail/{self.dataset_id}"
-
-    def _annex_relpath(self, path: Path) -> str:
-        """BIDS-relative key for *path* (annex keys are stored by relpath)."""
-        if self.bids_root is not None:
-            try:
-                return str(path.relative_to(self.bids_root))
-            except ValueError:
-                pass
-        return str(path)
-
-    def resolve_storage_extensions(
-        self,
-        record_path: Path,
-        dep_paths: list[Path],
-    ) -> tuple[dict[str, str], dict[str, str]]:
-        """Resolve git-annex SHA keys for one Record (no sidecar inlining)."""
-        annex_keys: dict[str, str] = {}
-
-        raw_key = get_annex_file_key(record_path)
-        if raw_key is not None:
-            annex_keys[self._annex_relpath(record_path)] = raw_key
-
-        for dep_path in dep_paths:
-            dep_key = get_annex_file_key(dep_path)
-            if dep_key is not None:
-                annex_keys[self._annex_relpath(dep_path)] = dep_key
-
-        return annex_keys, {}
 
 
 class DefaultAdapter(SourceAdapter):

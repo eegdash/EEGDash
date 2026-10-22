@@ -51,6 +51,7 @@ from .exceptions import DataIntegrityError, StorageAccessError
 from .io import (
     _ANNEX_KEY_RE,
     _convert_time_with_numeric_dash,
+    _eeglab_fdt_path,
     _eeglab_load_first_eeg,
     _fix_negative_annotation_durations,
     _generate_coordsystem_json,
@@ -1427,6 +1428,54 @@ class EEGDashRaw(RawDataset):
                         base_uri,
                     )
                 continue
+
+        self._require_data_file(filesystem)
+
+    def _require_data_file(self, filesystem) -> None:
+        """Fetch the file holding the samples by the name its header gives, or raise.
+
+        Dependencies download with ``skip_missing=True``: a missing sidecar is
+        skipped with a warning, and so was a missing BrainVision ``DataFile=``
+        or EEGLAB ``.fdt``, which left the record half downloaded (#427).
+        """
+        folder = self.filecache.parent
+        if self.filecache.suffix.lower() == ".vhdr":
+            names = brainvision.companion_names(self.filecache)[0]
+        else:
+            eeg = _eeglab_load_first_eeg(self.filecache)
+            fdt = eeg and _eeglab_fdt_path(self.filecache, eeg)
+            if not fdt or fdt.suffix.lower() != ".fdt":
+                return  # the samples are in the .set
+            names = (fdt.name,)
+        if any((folder / name).is_file() for name in names):
+            return
+        relpath = PurePosixPath(self.record["bids_relpath"]).parent
+        tried = set((self.record.get("storage") or {}).get("dep_keys") or [])
+        for name in names:
+            dest = folder / name
+            if str(relpath / name) in tried or dest == self.filecache.with_suffix(
+                dest.suffix
+            ):
+                continue  # already requested as a dependency or a companion
+            if self._storage_backend == "nemar":
+                self._fetch_nemar_companion(dest, str(relpath / name), filesystem)
+            elif self._raw_uri:
+                uri = f"{self._raw_uri.rsplit('/', 1)[0]}/{name}"
+                try:
+                    downloader.download_s3_file(uri, dest, filesystem=filesystem)
+                except (FileNotFoundError, PermissionError):
+                    pass
+            if dest.is_file():
+                return
+        missing = relpath / names[0]
+        raise DataIntegrityError(
+            message=(
+                f"Required data file missing: {missing}, named by "
+                f"{self.filecache.name}, is not available from the source"
+            ),
+            record=self.record,
+            issues=[f"Missing required file: {missing}"],
+        )
 
     def _fetch_nemar_companion(
         self, local_path: Path, companion_relpath: str, filesystem

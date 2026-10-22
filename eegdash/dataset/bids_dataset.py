@@ -27,7 +27,7 @@ from mne_bids.path import _find_best_candidates
 # These files must be downloaded together with the primary file
 _COMPANION_FILES = {
     ".set": [".fdt"],  # EEGLAB: data file
-    ".vhdr": [".eeg", ".vmrk", ".dat"],  # BrainVision: data + marker files
+    ".vhdr": [".eeg", ".vmrk"],  # BrainVision: data + marker files
 }
 
 # Modality directory aliases - different sources use different naming conventions

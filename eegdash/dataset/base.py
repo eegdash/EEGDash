@@ -444,10 +444,10 @@ def _resolve_nemar_uris(
         return None, []
 
     raw_uri = None
+    stored_key, stored_sidecar = _nemar_fast_paths(storage, raw_key)
     if not raw_dest.exists() and raw_dest.suffix.lower() in _DIRECTORY_SUFFIXES:
         raw_uri = f"{base}/{raw_key}"  # listed and fetched per file at download
-    elif not raw_dest.exists():
-        stored_key, stored_sidecar = _nemar_fast_paths(storage, raw_key)
+    elif not _cached_complete(raw_dest, stored_key):  # short copy: refetch
         raw_uri = _resolve_one_nemar_entry(
             dataset_id=dataset_id,
             relpath=raw_key,
@@ -509,19 +509,48 @@ def _destination_lock(dest: Path) -> threading.Lock:
         return _DESTINATION_LOCKS.setdefault(key, threading.Lock())
 
 
-def _download_via_nemar(dataset_id: str, relpath: str, local_path: Path) -> bool:
+def _cached_complete(local_path: Path, annex_key: str | None) -> bool:
+    """Whether *local_path* exists and, when *annex_key* gives a size, has it.
+
+    Existence alone let a truncated I-CARE object (nm000289, 2026-10-16) pass.
+    """
+    try:
+        downloader.verify_file(local_path, annex_key or "")
+    except OSError:  # missing (FileNotFoundError) or of the wrong size
+        return False
+    return True
+
+
+def _write_staged(dest: Path, payload: bytes) -> None:
+    """Write *payload* to *dest* through a caller-unique ``.part`` sibling.
+
+    A failed or concurrent write never leaves a partial file under *dest*.
+    """
+    tmp = dest.with_name(f"{dest.name}.{uuid.uuid4().hex}.part")
+    try:
+        with open(tmp, "wb") as fh:
+            fh.write(payload)
+        tmp.replace(dest)
+    finally:
+        tmp.unlink(missing_ok=True)
+
+
+def _download_via_nemar(
+    dataset_id: str, relpath: str, local_path: Path, annex_key: str | None = None
+) -> bool:
     """Download *relpath* from data.nemar.org via ``nemar-py``.
 
     nemar-py resolves the dataset index → version manifest → file mapping
     and streams the bytes (version-pinned, with retries and checksum
     verification), so this is the canonical NEMAR sidecar/companion path.
-    Returns ``True`` once the file is on disk (including already-present),
-    ``False`` when the dataset/file isn't served by data.nemar.org (callers
-    then fall back to the GitHub-raw pointer).
+    Returns ``True`` once the file is on disk (including already-present, and
+    of the size *annex_key* gives when one is known), ``False`` when the
+    dataset/file isn't served by data.nemar.org (callers then fall back to the
+    GitHub-raw pointer).
     """
     if not (dataset_id and relpath):
         return False
-    if local_path.exists():
+    if _cached_complete(local_path, annex_key):
         return True
     manifest = _fetch_nemar_manifest(dataset_id)
     if manifest is None:
@@ -537,10 +566,8 @@ def _download_via_nemar(dataset_id: str, relpath: str, local_path: Path) -> bool
         # A peer may have finished this transfer while we waited for the lock.
         # The pre-lock exists() above is an optimisation, not a guarantee:
         # ``download_one`` and ``S3Client.get_file`` do publish with an atomic
-        # rename, but the GitHub-raw fallback below writes the destination
-        # directly, so exists() can still observe a half-written file from that
-        # writer. Giving every writer a unique staging name is the real fix.
-        if local_path.exists():
+        # rename, and so does the GitHub-raw fallback below (``_write_staged``).
+        if _cached_complete(local_path, annex_key):
             return True
         # Stage under a caller-unique name. nemar derives its staging path from
         # the target (``<target>.part``), so handing it the destination makes
@@ -599,7 +626,8 @@ def _resolve_one_nemar_entry(
     and we return ``None`` to signal "no remote URI needed". Both fast
     paths are populated only at digest time and are never set together
     for the same relpath. When neither is present we fall back to the
-    original ``_resolve_nemar_pointer`` GitHub-raw path.
+    original ``_resolve_nemar_pointer`` GitHub-raw path, whose inline content
+    is written through a staging file, never straight to *dest*.
     """
     if stored_key:
         return f"{base}/objects/{stored_key}"
@@ -607,10 +635,7 @@ def _resolve_one_nemar_entry(
     if stored_sidecar is not None:
         if not dest.exists():
             dest.parent.mkdir(parents=True, exist_ok=True)
-            # Atomic write so concurrent loaders never see a partial file.
-            tmp = dest.with_suffix(dest.suffix + ".tmp")
-            tmp.write_text(stored_sidecar, encoding="utf-8", newline="")
-            tmp.replace(dest)
+            _write_staged(dest, stored_sidecar.encode("utf-8"))
         return None
 
     # No digest-time fast path: fetch from data.nemar.org via nemar-py
@@ -646,7 +671,7 @@ def _resolve_one_nemar_entry(
 
     dest.parent.mkdir(parents=True, exist_ok=True)
     if not dest.exists():
-        dest.write_bytes(payload)
+        _write_staged(dest, payload)
     return None
 
 
@@ -942,10 +967,12 @@ class EEGDashRaw(RawDataset):
         deferred_nemar_deps = (
             self._storage_backend == "nemar" and self.filecache.suffix.lower() == ".set"
         )
+        storage = self.record.get("storage") or {}
+        raw_annex_key, _ = _nemar_fast_paths(storage, storage.get("raw_key", ""))
         if (
             self._raw_uri is None
             and self._storage_backend == "nemar"
-            and not self.filecache.exists()
+            and not _cached_complete(self.filecache, raw_annex_key)
         ):
             self._raw_uri, self._dep_downloads = _resolve_nemar_uris(
                 self.record,
@@ -1186,9 +1213,13 @@ class EEGDashRaw(RawDataset):
         Safety net for records whose pre-computed ``annex_keys`` don't
         cover *relpath*. Delegates to :func:`_download_via_nemar`, which
         handles ID/version resolution, the BIDS-path → file mapping, and
-        the transfer (retries + checksum verification).
+        the transfer (retries + checksum verification). A cached file counts
+        only at the size of the record's annex key for *relpath*, if any.
         """
-        return _download_via_nemar(self.record.get("dataset", ""), relpath, local_path)
+        annex_key, _ = _nemar_fast_paths(self.record.get("storage") or {}, relpath)
+        return _download_via_nemar(
+            self.record.get("dataset", ""), relpath, local_path, annex_key
+        )
 
     # BIDS root files not enumerated in dep_keys but expected by mne-bids /
     # braindecode. All are direct-git on NEMAR (excluded from annex).

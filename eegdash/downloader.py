@@ -114,48 +114,16 @@ def _annex_key_of(uri: str) -> str | None:
     return name if annex_key_info(name) != (None, None, None) else None
 
 
-def _accept_stale_key(
-    path: Path,
-    got: int,
-    annex_key: str | None,
-    s3_uri: str,
-    *,
-    s3_size: int | None = None,
-    filesystem: "S3Client | None" = None,
-    version_id: str | None = None,
-) -> bool:
-    """Whether a file that disagrees with *annex_key* is still what S3 serves.
-
-    A record's key comes from NEMAR's copy of an OpenNeuro dataset, while an
-    ``openneuro.org`` URI serves OpenNeuro's latest snapshot: *got* bytes equal
-    to S3's own size mean the record is stale, not the file bad. Never when
-    the key names the object (NEMAR ``…/objects/<key>``), where a mismatch is
-    a bad object (nm000289, 2026-10-16). Logs a warning when it accepts.
-    """
-    if not annex_key or _annex_key_of(s3_uri) == annex_key:
-        return False
-    if s3_size is None:
-        s3_size = _remote_size(
-            filesystem or get_s3_filesystem(),
-            s3_uri,
-            **({"version_id": version_id} if version_id else {}),
-        )
-    if s3_size is None or got != s3_size:
-        return False
-    logger.warning(
-        "%s: record key %s says %s bytes, %s serves %s: the record is stale, "
-        "file accepted",
-        path,
-        annex_key,
-        annex_key_info(annex_key)[0],
-        _split_s3_uri(s3_uri)[0],
-        s3_size,
-    )
-    return True
+class DownloadIntegrityError(OSError):
+    """The acquired bytes disagree with their authoritative download identity."""
 
 
 def verify_file(
-    path: Path, key_or_expected: str | int, *, verify_hash: bool = False
+    path: Path,
+    key_or_expected: str | int,
+    *,
+    verify_hash: bool = False,
+    display_path: Path | None = None,
 ) -> Path:
     """Check *path* against an annex key (or a byte count); raise ``OSError``.
 
@@ -170,8 +138,8 @@ def verify_file(
         size, algorithm, digest = annex_key_info(key_or_expected)
     got = path.stat().st_size
     if size is not None and got != size:
-        raise OSError(
-            f"Incomplete download for {path}: expected {size} bytes, got {got}."
+        raise DownloadIntegrityError(
+            f"Incomplete download for {display_path or path}: expected {size} bytes, got {got}."
         )
     if verify_hash and algorithm is not None:
         h = hashlib.new(algorithm)
@@ -179,15 +147,15 @@ def verify_file(
             while chunk := fh.read(1024 * 1024):
                 h.update(chunk)
         if h.hexdigest() != digest:
-            raise OSError(
-                f"Checksum mismatch for {path}: expected {algorithm} {digest}, "
+            raise DownloadIntegrityError(
+                f"Checksum mismatch for {display_path or path}: expected {algorithm} {digest}, "
                 f"got {h.hexdigest()}."
             )
     return path
 
 
 class S3Client:
-    """Minimal, anonymous S3 accessor with an ``s3fs``-compatible surface.
+    """Minimal anonymous S3 accessor with EEGDash integrity extensions.
 
     Exposes just the operations EEGDash needs — :meth:`info`, :meth:`get_file`,
     :meth:`ls`, :meth:`du` — backed by a synchronous ``boto3`` client configured
@@ -321,16 +289,22 @@ class S3Client:
                         callback(len(chunk))
             length = resp.get("ContentLength")
             if length is not None and tmp.stat().st_size != length:
-                raise OSError(f"Incomplete download for {rpath} -> {lpath}.")
+                raise DownloadIntegrityError(
+                    f"Incomplete download for {lpath}: expected transport length "
+                    f"{length} bytes, got {tmp.stat().st_size} ({rpath}, version_id={version_id})."
+                )
+            annex_key = _annex_key_of(rpath) or annex_key
             if annex_key:
                 try:
-                    verify_file(tmp, annex_key, verify_hash=verify_hash)
-                except OSError as e:
-                    # length is S3's own size of the object (checked above)
-                    if not _accept_stale_key(
-                        lpath, tmp.stat().st_size, annex_key, rpath, s3_size=length
-                    ):
-                        raise OSError(f"{e} ({rpath} -> {lpath})") from e
+                    verify_file(
+                        tmp, annex_key, verify_hash=verify_hash, display_path=lpath
+                    )
+                except DownloadIntegrityError as exc:
+                    pin = f", version_id={version_id}" if version_id else ""
+                    raise DownloadIntegrityError(
+                        f"{exc} ({rpath}{pin}). Stored object disagrees with "
+                        "the record; verify the deposit and re-digest the record."
+                    ) from exc
             tmp.replace(lpath)
         except BaseException:
             # Interruption / mid-stream error: drop the partial so the next run
@@ -392,7 +366,7 @@ def get_s3_filesystem(
     Returns
     -------
     S3Client
-        An anonymous S3 accessor with an ``s3fs``-compatible surface.
+        An anonymous synchronous S3 accessor for EEGDash.
 
     """
     if max_concurrency < 1:
@@ -434,8 +408,8 @@ def download_s3_file(
 
     Handles the download of a raw EEG data file from an S3 bucket, caching it
     at the specified local path. Creates parent directories if they do not exist.
-    The size in a git-annex key beats the HEAD, which NEMAR denies: a truncated
-    object (nm000289, 2026-10-16) was otherwise accepted as complete.
+    The git-annex key is authoritative, including for twins and version pins.
+    HEAD and GET lengths describe the stored object, which can itself be short.
 
     Parameters
     ----------
@@ -464,11 +438,8 @@ def download_s3_file(
     """
     filesystem = filesystem or get_s3_filesystem()
     local_path.parent.mkdir(parents=True, exist_ok=True)
-    annex_key = annex_key or _annex_key_of(s3_path)
+    annex_key = _annex_key_of(s3_path) or annex_key
     key_size = annex_key_info(annex_key)[0] if annex_key else None
-    # The key does not name the object (an OpenNeuro twin): S3's size may win.
-    stale_ok = bool(annex_key) and _annex_key_of(s3_path) != annex_key
-
     # A size match alone cannot identify a version (HEAD may have equal size).
     marker = local_path.with_name(local_path.name + ".s3-version.json")
     identity = {"uri": s3_path, "version_id": version_id}
@@ -497,15 +468,6 @@ def download_s3_file(
                     return verify_file(local_path, annex_key, verify_hash=True)
                 except OSError as e:
                     logger.warning("Refetching %s: %s", s3_path, e)
-            elif stale_ok and _accept_stale_key(
-                local_path,
-                local_size,
-                annex_key,
-                s3_path,
-                filesystem=filesystem,
-                version_id=version_id,
-            ):
-                return local_path
 
     # Invalidate before replacing the data, so a failed transfer cannot certify
     # an object downloaded for another pin. get_file replaces data atomically.
@@ -519,9 +481,8 @@ def download_s3_file(
         **({"annex_key": annex_key, "verify_hash": verify_hash} if annex_key else {}),
     )
     got = local_path.stat().st_size
-    # get_file has checked a stale-key download against S3's own size.
-    if remote_size is not None and got != remote_size and not stale_ok:
-        raise OSError(
+    if remote_size is not None and got != remote_size:
+        raise DownloadIntegrityError(
             f"Incomplete download for {s3_path} -> {local_path} "
             f"(expected {remote_size} bytes, got {got})."
         )
@@ -563,8 +524,8 @@ def download_files(
 ) -> list[Path]:
     """Download multiple S3 URIs to local destinations.
 
-    Sizes come from the git-annex key a URI ends in, else from a HEAD, so
-    NEMAR objects (no anonymous HEAD) are size-checked too.
+    Sizes come from the URI or supplied git-annex key when available, else
+    from HEAD. A known key beats the stored object's own transport length.
 
     Parameters
     ----------
@@ -586,7 +547,7 @@ def download_files(
     for uri, dest in files:
         dest = Path(dest)
         dest.parent.mkdir(parents=True, exist_ok=True)
-        key = (annex_keys or {}).get(dest) or _annex_key_of(uri)
+        key = _annex_key_of(uri) or (annex_keys or {}).get(dest)
         remote_size = annex_key_info(key)[0] if key else None
         if remote_size is None:
             remote_size = _remote_size(filesystem, uri)
@@ -598,8 +559,6 @@ def download_files(
                 pass
             else:
                 if remote_size is None or local_size == remote_size:
-                    continue
-                if _accept_stale_key(dest, local_size, key, uri, filesystem=filesystem):
                     continue
 
         # Never unlink a shared destination: get_file validates its own staging
@@ -619,14 +578,9 @@ def download_files(
                 continue
             raise
 
-        stale_ok = bool(key) and _annex_key_of(uri) != key
-        if (
-            remote_size is not None
-            and dest.stat().st_size != remote_size
-            and not stale_ok
-        ):
+        if remote_size is not None and dest.stat().st_size != remote_size:
             got = dest.stat().st_size
-            raise OSError(
+            raise DownloadIntegrityError(
                 f"Incomplete download for {uri} -> {dest} "
                 f"(expected {remote_size} bytes, got {got})."
             )

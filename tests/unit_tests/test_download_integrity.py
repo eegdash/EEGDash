@@ -1,8 +1,7 @@
 """Size and hash checks of downloads against git-annex keys (no network).
 
 A truncated NEMAR object (nm000289, 2026-10-16) used to be accepted: the
-bucket denies anonymous HEAD, so no size was known and an existing file was
-trusted.
+stored object itself can be short, even when HEAD and GET agree.
 """
 
 import hashlib
@@ -235,26 +234,29 @@ def test_download_all_refetches_a_damaged_cached_file(tmp_path, monkeypatch, dam
     assert client._client.gets == 1
 
 
-def test_openneuro_uri_gets_the_record_key(tmp_path, monkeypatch, caplog):
-    """A BIDS-named URI carries no key: the record's must reach the size check."""
+def test_openneuro_uri_gets_the_record_key(tmp_path, monkeypatch):
+    """The record key governs even when GET reports a self-consistent short body."""
+    from eegdash.dataset.exceptions import DataIntegrityError
+
     rec = base.EEGDashRaw(_openneuro_record(), cache_dir=str(tmp_path))
-    assert rec._raw_uri == f"s3://openneuro.org/ds001234/{RAW}"
     monkeypatch.setattr(downloader, "get_s3_filesystem", lambda **_: _client(DATA[:10]))
-    with caplog.at_level("WARNING", logger="eegdash"):
+    with pytest.raises(DataIntegrityError, match="expected 20 bytes, got 10") as caught:
         rec._download_required_files()
-    assert f"{KEY} says 20 bytes, openneuro.org serves 10" in caplog.text
+    assert caught.value.record == rec.record
+    assert not rec.filecache.exists()
 
 
-def test_openneuro_sidecar_gets_the_record_key(tmp_path, monkeypatch, caplog):
-    """A dependency's key in the record reaches its size check as well."""
+def test_openneuro_sidecar_gets_the_record_key(tmp_path, monkeypatch):
+    """Dependency keys are strict too."""
+    from eegdash.dataset.exceptions import DataIntegrityError
+
     dep_key = f"SHA256E-s5--{'c' * 64}.tsv"
     record = _openneuro_record(dep_keys=[DEP], annex_keys={RAW: KEY, DEP: dep_key})
     rec = base.EEGDashRaw(record, cache_dir=str(tmp_path))
     monkeypatch.setattr(downloader, "get_s3_filesystem", lambda **_: _client(DATA))
-    with caplog.at_level("WARNING", logger="eegdash"):
+    with pytest.raises(DataIntegrityError, match="expected 5 bytes, got 20"):
         rec._download_required_files()
-    assert f"{dep_key} says 5 bytes, openneuro.org serves 20" in caplog.text
-    assert (tmp_path / "ds001234" / DEP).read_bytes() == DATA
+    assert not (tmp_path / "ds001234" / DEP).exists()
 
 
 OPENNEURO_URI = f"s3://openneuro.org/ds001234/{RAW}"
@@ -280,29 +282,25 @@ def _served(data, size):
     return client
 
 
-def test_stale_record_key_accepts_what_openneuro_serves(tmp_path, caplog):
-    """Key says 20, OpenNeuro serves 30 and 30 arrive: the record is stale, not the file."""
+def test_twin_mismatch_is_refused(tmp_path):
     dest = tmp_path / "sub-01_eeg.edf"
-    served = DATA + b"0123456789"
-    with caplog.at_level("WARNING", logger="eegdash"):
+    with pytest.raises(OSError, match="expected 20 bytes, got 30"):
         downloader.download_s3_file(
-            OPENNEURO_URI, dest, filesystem=_served(served, 30), annex_key=KEY
+            OPENNEURO_URI,
+            dest,
+            filesystem=_served(DATA + b"0123456789", 30),
+            annex_key=KEY,
         )
-    assert dest.read_bytes() == served
-    assert "says 20 bytes, openneuro.org serves 30: the record is stale" in caplog.text
+    assert not dest.exists()
 
 
-def test_stale_record_key_accepts_a_cached_copy_without_a_transfer(tmp_path, caplog):
-    """A cached file of S3's size (not the key's) is complete on that route."""
+def test_wrong_cached_twin_is_refetched_not_certified(tmp_path):
     dest = tmp_path / "sub-01_eeg.edf"
     dest.write_bytes(DATA + b"0123456789")
-    client = _served(b"", 30)
-    with caplog.at_level("WARNING", logger="eegdash"):
-        downloader.download_s3_file(
-            OPENNEURO_URI, dest, filesystem=client, annex_key=KEY
-        )
-    assert client._client.gets == 0
-    assert "the record is stale, file accepted" in caplog.text
+    client = _served(DATA, 20)
+    downloader.download_s3_file(OPENNEURO_URI, dest, filesystem=client, annex_key=KEY)
+    assert client._client.gets == 1
+    assert dest.read_bytes() == DATA
 
 
 def test_size_matching_neither_key_nor_s3_is_refused(tmp_path):

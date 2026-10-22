@@ -30,10 +30,20 @@ from ..schemas import validate_record
 from ._source_inference import correct_storage_inplace
 from .base import EEGDashRaw, _cached_complete
 from .bids_dataset import EEGBIDSDataset
+from .exceptions import DataIntegrityError
 from .registry import register_openneuro_datasets
 
 # Records whose extension EEGDash can read (eegdash.io.READERS)
 _VALID_DATA_EXTENSIONS = frozenset(READERS)
+
+
+def _download_record_catching(ds):
+    """Keep per-record failures while allowing a bulk download to finish."""
+    try:
+        ds._download_required_files()
+    except Exception as exc:
+        return ds.record, exc
+    return None
 
 
 def _warn_if_competition_dataset(dataset_id: str) -> None:
@@ -625,13 +635,14 @@ class EEGDashDataset(BaseConcatDataset, metaclass=NumpyDocstringInheritanceInitM
         if not targets:
             self._download_dataset_files()
         else:
-            if n_jobs == 1:
-                for ds in targets:
-                    ds._download_required_files()
-            else:
-                Parallel(n_jobs=n_jobs, prefer="threads")(
-                    delayed(EEGDashRaw._download_required_files)(ds) for ds in targets
+            results = (
+                [_download_record_catching(ds) for ds in targets]
+                if n_jobs == 1
+                else Parallel(n_jobs=n_jobs, prefer="threads")(
+                    delayed(_download_record_catching)(ds) for ds in targets
                 )
+            )
+            failures = [result for result in results if result is not None]
 
             # Download global dataset files (participants.tsv, etc.)
             self._download_dataset_files()
@@ -651,6 +662,20 @@ class EEGDashDataset(BaseConcatDataset, metaclass=NumpyDocstringInheritanceInitM
             seen_scans: set[Path] = set()
             for ds in nemar:
                 ds._fetch_nemar_session_metadata(filesystem, seen_scans)
+
+        if targets and failures:
+            issues = [
+                f"{record.get('dataset')}/{record.get('bids_relpath')}: {exc}"
+                for record, exc in failures
+            ]
+            error = DataIntegrityError(
+                f"{len(failures)} of {len(targets)} recording downloads failed; "
+                "other recordings were attempted.\n" + "\n".join(issues),
+                record=failures[0][0],
+                issues=issues,
+            )
+            error.failures = failures
+            raise error from failures[0][1]
 
     def _download_dataset_files(self) -> None:
         """Download global dataset files defined in dataset metadata."""

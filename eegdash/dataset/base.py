@@ -513,20 +513,15 @@ def _destination_lock(dest: Path) -> threading.Lock:
 def _cached_complete(
     local_path: Path, annex_key: str | None, s3_uri: str | None = None
 ) -> bool:
-    """Whether *local_path* exists and, when *annex_key* gives a size, has it.
+    """Offline cache size check; never probe S3 during the bulk pre-scan.
 
-    Existence alone let a truncated I-CARE object (nm000289, 2026-10-16) pass.
-    With *s3_uri*, a key that does not name that object may be stale: S3's
-    own size then counts as complete too.
+    Cached directory contents are not revalidated here. ``s3_uri`` is retained
+    for compatibility but cannot override the authoritative key.
     """
     try:
         downloader.verify_file(local_path, annex_key or "")
-    except FileNotFoundError:
+    except OSError:
         return False
-    except OSError:  # of the wrong size
-        return bool(s3_uri) and downloader._accept_stale_key(
-            local_path, local_path.stat().st_size, annex_key, s3_uri
-        )
     return True
 
 
@@ -567,6 +562,17 @@ def _download_via_nemar(
     target = relpath.lstrip("/")
     if target not in manifest:
         return False
+    entry = manifest.file(target)
+    expected = downloader.annex_key_info(annex_key)[0] if annex_key else None
+    manifest_size = getattr(entry, "size", None)
+    if expected is not None and manifest_size is not None and expected != manifest_size:
+        raise DataIntegrityError(
+            f"Record key for {local_path} expects {expected} bytes, but NEMAR "
+            f"manifest {getattr(manifest, 'manifest_url', 'latest')} has {manifest_size}; "
+            "verify the deposit and re-digest the record before downloading.",
+            record={"dataset": dataset_id, "bids_relpath": relpath},
+            issues=["Record key disagrees with NEMAR manifest"],
+        )
     # One thread at a time per destination, to deduplicate rather than to
     # protect: 86 records of nm000183 resolve one sub-012_electrodes.tsv, and
     # only the first pays for the transfer. Correctness comes from the unique
@@ -589,7 +595,7 @@ def _download_via_nemar(
         staging = local_path.with_name(f"{local_path.name}.{uuid.uuid4().hex}")
         try:
             local_path.parent.mkdir(parents=True, exist_ok=True)
-            result = nemar.download_one(manifest.file(target), staging)
+            result = nemar.download_one(entry, staging)
             # download_one *returns* its verdict rather than raising: MISSING,
             # SIZE_MISMATCH, HASH_MISMATCH and the ERROR_SENTINEL body all come
             # back as a value. Dropping it publishes corruption as success.
@@ -603,7 +609,18 @@ def _download_via_nemar(
                     result,
                 )
                 return False
+            if annex_key:
+                try:
+                    downloader.verify_file(staging, annex_key, display_path=local_path)
+                except downloader.DownloadIntegrityError as exc:
+                    raise DataIntegrityError(
+                        f"{exc} NEMAR manifest and record disagree; re-digest the record.",
+                        record={"dataset": dataset_id, "bids_relpath": relpath},
+                        issues=[str(exc)],
+                    ) from exc
             os.replace(staging, local_path)
+        except DataIntegrityError:
+            raise
         except Exception as exc:
             logger.warning(
                 "NEMAR download failed for %s/%s: %s", dataset_id, relpath, exc
@@ -977,13 +994,30 @@ class EEGDashRaw(RawDataset):
 
         Existence alone kept a truncated or pointer-text file forever.
         """
+        storage = self.record.get("storage") or {}
+        pins = {
+            self.bids_root / key: pin
+            for key, pin in (storage.get("version_ids") or {}).items()
+        }
+        if storage.get("version_id"):
+            pins[self.filecache] = storage["version_id"]
         uris = {dest: uri for uri, dest in self._dep_downloads}
-        if self._raw_uri:
-            uris[self.filecache] = self._raw_uri
-        return all(
-            _cached_complete(path, self._annex_key_for(path), uris.get(path))
-            for path in (self.filecache, *self._dep_paths)
-        )
+        uris[self.filecache] = self._raw_uri
+        for path in (self.filecache, *self._dep_paths):
+            if not _cached_complete(path, self._annex_key_for(path)):
+                return False
+            marker = path.with_name(path.name + ".s3-version.json")
+            pin = pins.get(path)
+            if pin:
+                try:
+                    identity = json.loads(marker.read_text())
+                except (OSError, ValueError):
+                    return False
+                if identity != {"uri": uris.get(path), "version_id": pin}:
+                    return False
+            elif marker.exists():
+                return False
+        return True
 
     @property
     def _is_remote(self) -> bool:
@@ -997,6 +1031,15 @@ class EEGDashRaw(RawDataset):
         return self._raw_uri is not None or self._storage_backend == "nemar"
 
     def _download_required_files(self) -> None:
+        """Download a record, translating byte-integrity errors with its context."""
+        try:
+            self._download_required_files_impl()
+        except downloader.DownloadIntegrityError as exc:
+            raise DataIntegrityError(
+                str(exc), record=self.record, issues=[str(exc)]
+            ) from exc
+
+    def _download_required_files_impl(self) -> None:
         # NEMAR records carry a logical ``s3://nemar/<id>/<bids_relpath>``
         # base, but actual fetching has to go through the SHA-keyed
         # object name under ``s3://nemar/<id>/objects/<KEY>``. Resolve
@@ -1635,6 +1678,11 @@ class EEGDashRaw(RawDataset):
                 issues=[f"Missing required CTF file(s): {', '.join(still_missing)}"],
             )
 
+    def _protected_cache_paths(self) -> set[Path]:
+        """Files described by annex keys must never be rewritten by read repairs."""
+        keys = (self.record.get("storage") or {}).get("annex_keys") or {}
+        return {self.bids_root / key for key in keys}
+
     def _ensure_raw(self) -> None:
         """Ensure the raw data file and its dependencies are cached locally.
 
@@ -1648,14 +1696,22 @@ class EEGDashRaw(RawDataset):
 
         # Helper: Fix participants.tsv ID padding to match sub-* folder names
         if self.bids_root and self.bids_root.exists():
-            _repair_participants_tsv_ids(self.bids_root)
+            _repair_participants_tsv_ids(
+                self.bids_root, protected=self._protected_cache_paths()
+            )
 
         if self.filecache and self.filecache.parent.exists():
             _warn_no_coordsystem(self.bidspath, self.record.get("dataset"))
-            _repair_channels_tsv(self.filecache.parent)
+            _repair_channels_tsv(
+                self.filecache.parent, protected=self._protected_cache_paths()
+            )
 
         # Helper: Handle VHDR files - generate if missing, repair if broken
-        if self.filecache and self.filecache.suffix == ".vhdr":
+        if (
+            self.filecache
+            and self.filecache.suffix == ".vhdr"
+            and not self._annex_key_for(self.filecache)
+        ):
             # Early exit: when the data file (.eeg) is a git-annex
             # placeholder (content never fetched), no header repair can
             # help — the binary data is simply not available.
@@ -2127,7 +2183,9 @@ class EEGDashRaw(RawDataset):
 
                 # Malformed channels.tsv (empty or missing 'name' column)
                 if isinstance(first_error, KeyError) and first_error.args == ("name",):
-                    if self.filecache and _repair_channels_tsv(self.filecache.parent):
+                    if self.filecache and _repair_channels_tsv(
+                        self.filecache.parent, protected=self._protected_cache_paths()
+                    ):
                         logger.info("Repaired malformed channels.tsv, retrying load...")
                         try:
                             return self._read_raw_bids()
@@ -2233,7 +2291,9 @@ class EEGDashRaw(RawDataset):
 
                 # Subject/session ID mismatch between folders and participants.tsv
                 if "is not in list" in msg and self.bids_root:
-                    if _repair_participants_tsv_ids(self.bids_root):
+                    if _repair_participants_tsv_ids(
+                        self.bids_root, protected=self._protected_cache_paths()
+                    ):
                         logger.info(
                             "Repaired participants.tsv ID padding, retrying load..."
                         )

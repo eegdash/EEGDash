@@ -711,11 +711,14 @@ def list_datarn_files(source_url: str) -> list[dict]:
 
 
 _ANNEX_SIZE_RE = re.compile(r"-s(\d+)--")
-# Anchored to the start of the basename. The trailing ``\.`` is enough to
-# reject garbage like ``garbage-not-a-key.set`` because the regex demands
-# the SHA-key shape *before* the extension dot.
+# A whole git-annex key of any hashing backend (``SHA512E`` since nm000289
+# v1.0.1), with or without the extension: git-annex keeps none for a file
+# without one or with one longer than annex.maxextensionlength (``.snirf``,
+# CTF ``BadChannels``). ``garbage-not-a-key.set`` has no key shape.
 _ANNEX_KEY_BASENAME_RE = re.compile(
-    r"^(?:SHA256E|MD5E)-s\d+--[0-9a-f]+\.", flags=re.IGNORECASE
+    r"^(?:MD5|SHA1|SHA224|SHA256|SHA384|SHA512|SHA3_(?:224|256|384|512)"
+    r"|SKEIN(?:256|512)|BLAKE2[A-Z]{1,3}\d{3})E?-s\d+--[0-9a-f]+(?:\.[^/\s]+)?$",
+    flags=re.IGNORECASE,
 )
 _ANNEX_POINTER_MAX_SIZE = 256
 

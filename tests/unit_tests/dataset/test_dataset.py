@@ -880,6 +880,11 @@ def test_dataset_download_all_coverage(tmp_path):
         # 397: no targets
         ds.datasets = []
         EEGDashDataset.download_all(ds)
+        ds._download_dataset_files.assert_called_once()
+        ds._download_dataset_files.side_effect = OSError("global metadata unavailable")
+        with pytest.raises(OSError, match="global metadata unavailable"):
+            EEGDashDataset.download_all(ds)
+        ds._download_dataset_files.side_effect = None
 
         # 385: default n_jobs (implicitly handled if targets present)
         mock_raw = MagicMock()

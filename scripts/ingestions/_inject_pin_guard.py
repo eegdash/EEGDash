@@ -8,6 +8,7 @@ import time
 import httpx
 
 from _http import request_json
+from _inject_plan import prune_cutoffs
 
 _PAGE_SIZE = 100
 _READ_ATTEMPTS = 3
@@ -224,7 +225,6 @@ def guard_live_pins(records, dataset_ids, api_url, database):
     Dry-run and collection-only invocations retain their existing semantics.
     """
     by_dataset = {}
-    cutoffs = {}
     for record in records:
         # Match gateway /records/upsert normalization exactly. Both canonical
         # and legacy rows may address one row; neither may bypass admission.
@@ -240,9 +240,7 @@ def guard_live_pins(records, dataset_ids, api_url, database):
                 "Incoming record has no unambiguous effective writer identity"
             )
         by_dataset.setdefault(dataset, {}).setdefault(path, []).append(record)
-        stamp = record.get("digested_at")
-        if isinstance(stamp, str) and stamp:
-            cutoffs[dataset] = min(stamp, cutoffs.get(dataset, stamp))
+    cutoffs = prune_cutoffs(records)
     # Deliberately not _http.get_client(): its optional cache can hide live pins.
     with httpx.Client(timeout=60, transport=httpx.HTTPTransport(retries=0)) as client:
         for dataset_id in sorted(set(dataset_ids)):

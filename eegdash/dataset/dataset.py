@@ -634,9 +634,7 @@ class EEGDashDataset(BaseConcatDataset, metaclass=NumpyDocstringInheritanceInitM
 
         failures = []
         metadata_failures = []
-        if not targets:
-            self._download_dataset_files()
-        else:
+        if targets:
             results = (
                 [_download_record_catching(ds) for ds in targets]
                 if n_jobs == 1
@@ -646,13 +644,13 @@ class EEGDashDataset(BaseConcatDataset, metaclass=NumpyDocstringInheritanceInitM
             )
             failures = [result for result in results if result is not None]
 
-            # Do not let a metadata failure hide already-collected record errors.
-            try:
-                self._download_dataset_files()
-            except Exception as exc:
-                if not failures:
-                    raise
-                metadata_failures.append(("global dataset files", exc))
+        # Do not let a metadata failure hide already-collected record errors.
+        try:
+            self._download_dataset_files()
+        except Exception as exc:
+            if not failures:
+                raise
+            metadata_failures.append(("global dataset files", exc))
         nemar = [
             ds
             for ds in self.datasets
@@ -681,7 +679,7 @@ class EEGDashDataset(BaseConcatDataset, metaclass=NumpyDocstringInheritanceInitM
                             raise
                         metadata_failures.append((ds.record.get("bids_relpath"), exc))
 
-        if targets and failures:
+        if failures:
             issues = [
                 f"{record.get('dataset')}/{record.get('bids_relpath')}: {exc}"
                 for record, exc in failures

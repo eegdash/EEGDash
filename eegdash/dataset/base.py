@@ -510,13 +510,10 @@ def _destination_lock(dest: Path) -> threading.Lock:
         return _DESTINATION_LOCKS.setdefault(key, threading.Lock())
 
 
-def _cached_complete(
-    local_path: Path, annex_key: str | None, s3_uri: str | None = None
-) -> bool:
+def _cached_complete(local_path: Path, annex_key: str | None) -> bool:
     """Offline cache size check; never probe S3 during the bulk pre-scan.
 
-    Cached directory contents are not revalidated here. ``s3_uri`` is retained
-    for compatibility but cannot override the authoritative key.
+    Cached directory contents are not revalidated here.
     """
     try:
         downloader.verify_file(local_path, annex_key or "")

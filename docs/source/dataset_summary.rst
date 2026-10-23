@@ -153,6 +153,10 @@ EEG-DaSh is a data-sharing archive for MEEG (EEG, MEG) recordings contributed by
 
          .. dataset-figure:: bubble
 
+      .. tab-item:: Sampling Depth
+
+         .. dataset-figure:: isohour
+
       .. tab-item:: Subject Distribution
 
          .. dataset-figure:: moabb

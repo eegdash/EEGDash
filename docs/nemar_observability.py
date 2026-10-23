@@ -9,7 +9,7 @@ https://dashboard.nemar.org/observability (JSON:
 
 ``HOURS_VIEW`` reproduces one shareable view of that page,
 ``#hours=<modality>:<min_channels>``, with the page's own arithmetic
-(``atLeast`` in the dashboard script): hours and recordings are the sum of the
+(the dashboard script's ``at-least`` view): hours and recordings are the sum of the
 bins with at least ``min_channels`` channels; datasets are counted from the
 dataset peaks, so a dataset is counted once.
 """

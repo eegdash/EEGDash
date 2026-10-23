@@ -13,6 +13,7 @@ from functools import partial
 import httpx
 import pytest
 import respx
+from _helpers import load_inject
 
 from .test_pin_guard import API, DB, RAW, mock_live, pinned_record, setup_main
 
@@ -53,8 +54,6 @@ def delete_matching_strings(state, request):
 
 def contract_writers(monkeypatch, mod, state, writes):
     """Only in-memory $set writes; retain the production prune implementation."""
-    from _helpers import load_inject
-
     real_prune = load_inject().prune_stale_records
 
     monkeypatch.setattr(mod, "inject_records", partial(in_memory_upsert, state, writes))
@@ -216,7 +215,7 @@ def test_real_contract_controls_demonstrate_inherited_prune_and_alias_overwrite(
 
 
 @pytest.mark.parametrize(
-    "value, matches",
+    ("value", "matches"),
     [
         (["2026-10-19"], True),
         ([20261019, "2026-10-19"], True),

@@ -2,9 +2,12 @@
 
 from __future__ import annotations
 
+import ast
 import contextlib
 import copy
 import json
+from functools import partial
+from pathlib import Path
 from types import SimpleNamespace
 from unittest.mock import Mock
 
@@ -45,6 +48,11 @@ def pinned_record():
     }
 
 
+def record_writer_call(writes, name, *args, **kwargs):
+    writes.append(name)
+    return {"errors": [], "deleted": {}}
+
+
 def setup_main(monkeypatch, tmp_path, incoming, *, dry_run=False):
     mod = load_inject()
     args = SimpleNamespace(
@@ -82,12 +90,7 @@ def setup_main(monkeypatch, tmp_path, incoming, *, dry_run=False):
         "prune_stale_records",
     ):
         monkeypatch.setattr(
-            mod,
-            name,
-            Mock(
-                side_effect=lambda *a, _name=name, **kw: writes.append(_name)
-                or {"errors": [], "deleted": {}}
-            ),
+            mod, name, Mock(side_effect=partial(record_writer_call, writes, name))
         )
     monkeypatch.setattr(
         mod, "make_authed_client", lambda _: contextlib.nullcontext(object())
@@ -366,3 +369,10 @@ def test_invalid_storage_fails_closed(monkeypatch, tmp_path):
         mock_live(router, [live])
         assert mod.main() == 1
     assert not writes
+
+
+def test_guard_module_is_in_installed_distribution():
+    """The numbered CLI imports a bare module; it must be shipped in wheels."""
+    config = (Path(__file__).resolve().parents[2] / "pyproject.toml").read_text()
+    block = config.split("py-modules = ", 1)[1].split("\n]", 1)[0] + "\n]"
+    assert "_inject_pin_guard" in ast.literal_eval(block)

@@ -92,3 +92,75 @@ def test_lists_dataset_documents_without_records(mod):
     client = httpx.Client(transport=httpx.MockTransport(_Api()))
     ids = mod.list_dataset_ids(client, "http://api", "eegdash", page_size=2)
     assert ids == ["ds007813", "nm000001", "on007813"]
+
+
+class _PairApi:
+    """Docs, record owners and exact ($eq) record counts for twin selection."""
+
+    def __init__(self, counts, docs, total=True):
+        self.counts, self.docs, self.total = counts, docs, total
+
+    def __call__(self, request):
+        import json  # noqa: PLC0415
+
+        import httpx  # noqa: PLC0415
+
+        path = request.url.path
+        if path.endswith("/datasets/names"):
+            return httpx.Response(
+                200, json={"data": [k for k, v in self.counts.items() if v]}
+            )
+        if path.endswith("/datasets/summary"):
+            body = {"data": [{"dataset_id": d} for d in self.docs]}
+            if self.total:
+                body["total"] = len(self.docs)
+            return httpx.Response(200, json=body)
+        if path.endswith("/count"):
+            flt = json.loads(request.url.params["filter"])
+            ds = flt["dataset"]
+            assert isinstance(ds, dict) and set(ds) == {"$eq"}, (
+                "count must be exact ($eq)"
+            )
+            return httpx.Response(200, json={"count": self.counts.get(ds["$eq"], 0)})
+        ds_id = path.rsplit("/", 1)[-1]
+        if ds_id not in self.docs:
+            return httpx.Response(404, json={})
+        return httpx.Response(
+            200,
+            json={
+                "data": {
+                    "dataset_id": ds_id,
+                    "source": "openneuro" if ds_id.startswith("ds") else "nemar",
+                }
+            },
+        )
+
+
+def _select(mod, api):
+    import httpx  # noqa: PLC0415
+
+    client = httpx.Client(transport=httpx.MockTransport(api))
+    return mod.select_twins(client, "http://api", "eegdash")
+
+
+def test_retires_recordless_ds_doc_when_on_holds_the_records(mod):
+    # Current 6 pairs: ds doc with 0 records, on twin owns them.
+    sel = _select(
+        mod, _PairApi({"on007813": 4, "ds007813": 0}, ["ds007813", "on007813"])
+    )
+    assert [(on, ds) for on, ds, _ in sel.twins] == [("on007813", "ds007813")]
+
+
+def test_never_retires_ds_when_on_replacement_has_no_records(mod):
+    # The union also lists record-less on docs; deleting their ds twin would
+    # delete the only copy of the recordings.
+    sel = _select(
+        mod, _PairApi({"on000001": 0, "ds000001": 12}, ["ds000001", "on000001"])
+    )
+    assert sel.twins == []
+    assert sel.replacement_without_records == ["on000001"]
+
+
+def test_summary_without_total_fails_closed(mod):
+    with pytest.raises(RuntimeError, match="total"):
+        _select(mod, _PairApi({"on007813": 4}, ["ds007813", "on007813"], total=False))

@@ -173,6 +173,12 @@ def _check_record(live, incoming, cutoff):
     # Gateway $set retains omitted fields. Prove the resulting timestamp is not
     # selected by the real pruner's string $lt cutoff, not just that P exists.
     stamp = new.get("digested_at", live.get("digested_at"))
+    # Mongo's scalar string range also matches older string array elements.
+    # Reject arrays under an active cutoff rather than emulate query semantics.
+    if cutoff is not None and isinstance(stamp, list):
+        raise PinConflictError(
+            f"{label}: array-valued post-upsert digested_at is unsafe under stale-record prune"
+        )
     if cutoff is not None and isinstance(stamp, str) and stamp < cutoff:
         raise PinConflictError(
             f"{label}: post-upsert digested_at would be deleted by stale-record prune"

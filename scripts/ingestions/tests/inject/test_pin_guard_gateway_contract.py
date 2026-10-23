@@ -26,6 +26,16 @@ def apply_gateway_set(state, records):
         state.setdefault(identity, {}).update(record)
 
 
+def string_lt_query_matches(value, cutoff):
+    """Relevant Mongo range semantics: strings or string elements of an array.
+
+    This is a targeted model, not a complete Mongo query engine. Scalar
+    numbers/null do not match the string bound; array string elements may.
+    """
+    values = value if isinstance(value, list) else [value]
+    return any(isinstance(item, str) and item < cutoff for item in values)
+
+
 def delete_matching_strings(state, request):
     """Evaluate the actual pruner's dataset + Mongo string $lt predicate."""
     flt = json.loads(request.url.params["filter"])
@@ -34,8 +44,7 @@ def delete_matching_strings(state, request):
         key
         for key, row in state.items()
         if row.get("dataset") == flt["dataset"]
-        and isinstance(row.get("digested_at"), str)
-        and row["digested_at"] < cutoff
+        and string_lt_query_matches(row.get("digested_at"), cutoff)
     ]
     for key in removed:
         del state[key]
@@ -66,27 +75,46 @@ def in_memory_upsert(state, writes, records, *args, **kwargs):
 
 
 @pytest.mark.parametrize(
-    "stamp", ["omitted", "retained_old", "fresh", "no_prune", "non_string"]
+    "stamp",
+    [
+        "omitted",
+        "retained_old",
+        "fresh",
+        "no_prune",
+        "non_string",
+        "numeric",
+        "explicit_array",
+        "inherited_array",
+        "array_no_cutoff",
+    ],
 )
 def test_post_set_pinned_record_survives_real_prune(monkeypatch, tmp_path, stamp):
     live = pinned_record()
+    if stamp == "inherited_array":
+        live["digested_at"] = ["2026-10-19"]
     incoming = copy.deepcopy(live)
     other = {
         "dataset": live["dataset"],
         "bids_relpath": "other.edf",
         "digested_at": "2026-10-23",
     }
-    if stamp in ("omitted", "no_prune"):
+    if stamp in ("omitted", "no_prune", "inherited_array"):
         incoming.pop("digested_at")
     elif stamp == "fresh":
         incoming["digested_at"] = "2026-10-23"
     elif stamp == "non_string":
         incoming["digested_at"] = None
-    records = [incoming] if stamp == "no_prune" else [incoming, other]
+    elif stamp == "numeric":
+        incoming["digested_at"] = 20261019
+    elif stamp in ("explicit_array", "array_no_cutoff"):
+        incoming["digested_at"] = ["2026-10-19"]
+    records = (
+        [incoming] if stamp in ("no_prune", "array_no_cutoff") else [incoming, other]
+    )
     state = {(live["dataset"], RAW): copy.deepcopy(live)}
     mod, writes = setup_main(monkeypatch, tmp_path, records)
     contract_writers(monkeypatch, mod, state, writes)
-    should_refuse = stamp == "omitted"
+    should_refuse = stamp in ("omitted", "explicit_array", "inherited_array")
     with respx.mock(assert_all_called=False) as router:
         mock_live(router, [live])
         router.delete(f"{API}/admin/{DB}/records").mock(
@@ -185,3 +213,18 @@ def test_real_contract_controls_demonstrate_inherited_prune_and_alias_overwrite(
     legacy["storage"].pop("version_ids")
     apply_gateway_set(state, [copy.deepcopy(live), legacy])
     assert "version_ids" not in state[(live["dataset"], RAW)]["storage"]
+
+
+@pytest.mark.parametrize(
+    "value, matches",
+    [
+        (["2026-10-19"], True),
+        ([20261019, "2026-10-19"], True),
+        (["2026-10-24"], False),
+        ([], False),
+        (None, False),
+        (20261019, False),
+    ],
+)
+def test_mongo_string_array_contract_control(value, matches):
+    assert string_lt_query_matches(value, "2026-10-23") is matches

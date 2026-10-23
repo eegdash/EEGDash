@@ -93,6 +93,9 @@ def _must_not_prune(*_args, **_kwargs):
 
 def test_lost_batch_fails_the_run(inject_mod, monkeypatch, tmp_path, capsys):
     monkeypatch.setattr(inject_mod, "_bulk_upsert_batch", _always_fails)
+    # This test isolates the post-preflight batch-retry contract. Pin preflight
+    # refusal and the before-every-writer ordering have dedicated tests.
+    monkeypatch.setattr(inject_mod, "guard_live_pins", lambda *a: None)
     monkeypatch.setattr(inject_mod, "make_authed_client", _no_client)
     monkeypatch.setattr(inject_mod, "prune_stale_records", _must_not_prune)
     monkeypatch.setattr(

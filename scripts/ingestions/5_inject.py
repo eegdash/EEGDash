@@ -57,6 +57,7 @@ from _http import (
     request_json,
 )
 from _inject_config import load_inject_config_from_argv
+from _inject_pin_guard import PinConflictError, guard_live_pins
 from _inject_plan import (
     EXCLUDED_DATASETS,
     _ensure_fingerprint,
@@ -529,6 +530,15 @@ def main():
         if not plan.changed_ids and not all_montages:
             print("No updated datasets detected. Skipping injection.")
             return 0
+
+    # Preflight the exact target before dataset, record, or montage writes.
+    # --force and --skip-validation cannot discard explicit historical pins.
+    if want_records and not args.dry_run:
+        try:
+            guard_live_pins(all_records, plan.changed_ids, args.api_url, args.database)
+        except PinConflictError as exc:
+            print(f"Live pin safety check FAILED: {exc}", file=sys.stderr)
+            return 1
 
     # Stats tracking
     stats = {

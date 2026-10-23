@@ -106,9 +106,23 @@ def _maybe_fill_ntimes_from_fdt(
 def _h5_scalar(group: Any, name: str) -> float | None:
     """A 1x1 MATLAB scalar dataset as float, ``None`` when absent or not scalar."""
     try:
-        return float(group[name][()].ravel()[0]) if name in group else None
+        if name not in group or group[name].size != 1:
+            return None
+        return float(group[name][()].ravel()[0])
     except (TypeError, ValueError, IndexError, KeyError, AttributeError):
         return None
+
+
+def _continuous_only(result: dict[str, Any]) -> dict[str, Any]:
+    """Drop the recording length of an epoched ``.set`` (trials > 1).
+
+    ``pnts`` is one epoch's length there, not the recording's; rate and
+    channels stay. Applied to every return of :func:`parse_set_metadata`.
+    """
+    if (result.get("trials") or 1) > 1:
+        for key in ("n_samples", "n_times", "duration"):
+            result.pop(key, None)
+    return result
 
 
 def set_fields_from_h5(f: Any) -> dict[str, Any]:
@@ -312,7 +326,7 @@ def parse_set_metadata(set_path: Path | str) -> dict[str, Any] | None:
                     result.get("nchans"),
                     result.get("has_fdt"),
                 )
-                return result
+                return _continuous_only(result)
 
     except ImportError:
         logger.debug("scipy not available for .set parsing")
@@ -347,7 +361,7 @@ def parse_set_metadata(set_path: Path | str) -> dict[str, Any] | None:
                 _maybe_fill_ntimes_from_fdt(result, set_path, trials_h5)
 
                 if result:
-                    return result
+                    return _continuous_only(result)
 
     except ImportError:
         logger.debug("h5py not available for .set parsing")

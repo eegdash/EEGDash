@@ -19,6 +19,7 @@ from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any, Protocol
 
+import numpy as np
 import pandas as pd
 
 # Imported as modules (not symbols) so the cheap-tier helpers stay
@@ -602,6 +603,9 @@ class BinaryParserStep:
         md = parser(ctx.bids_file_path)
         if not md:
             return
+        if (md.get("trials") or 1) > 1:
+            # Epoched: n_samples is one epoch, not the recording (QA of #501).
+            md = {k: v for k, v in md.items() if k not in ("n_samples", "n_times")}
 
         sf_before = result.sampling_frequency
         n_before = result.nchans
@@ -936,25 +940,25 @@ class RemoteHeaderStep:
             result.stamp(PROV_REMOTE_HEADER, "sampling_frequency", None, sfreq)
 
     def _fill_ctf(self, ctx: CascadeContext, result: CascadeResult) -> None:
-        """Size an annexed CTF ``.ds`` from its ``.res4`` (on002761).
+        """Size an annexed CTF ``.ds`` exactly as ``mne.io.read_raw_ctf`` does (on002761).
 
-        Only the ~3 MB ``.res4`` is fetched. ``nsamp x trials`` is accepted when
-        every ``.meg4`` annex size holds a whole number of trials, the check
-        ``mne.io.read_raw_ctf`` makes; otherwise MNE cannot read the recording
-        either (on004398, on002001) and it stays unsized.
+        Fetches the ~3 MB ``.res4`` and, per ``.meg4`` file, the SCLK01 clock
+        samples MNE's default ``system_clock='truncate'`` inspects: the count
+        stops at the clock's first zero (``_get_sample_info``). Files are taken in
+        MNE's order (``.meg4``, ``.1_meg4``, ...), stopping at the first missing
+        or empty one. Byte divisibility alone is not enough (QA of #501). Any
+        failed check, no valid sample, or a clock read over
+        ``_CTF_CLOCK_MAX_BYTES`` leaves the recording unsized.
         """
         d = ctx.bids_file_path
-        names = sorted(p.name for p in d.iterdir()) if d.is_dir() else []
-        res4 = next((d / n for n in names if n.endswith(".res4")), None)
-        meg4 = [d / n for n in names if n.endswith("meg4")]
-        if res4 is None or not meg4:
+        if not d.is_dir():
             return
-        relpath = str(res4.relative_to(ctx.bids_root))
-        _size, url = _remote_header.locate(
-            {"dataset": ctx.dataset_id, "bids_relpath": relpath}
-        )
-        url = url or _nemar_object_url(ctx, res4)
-        size = _file_utils.parse_annex_size(_file_utils.get_annex_file_key(res4) or "")
+        stem = d.name[: -len(".ds")]
+        res4 = d / f"{stem}.res4"
+        if not (res4.exists() or res4.is_symlink()):
+            return
+        url = self._object_url(ctx, res4)
+        size = _annex_size(res4)
         if not url or not size or size > _CTF_RES4_MAX_BYTES:
             return
         data = _parser_utils.fetch_bytes_from_s3(url, max_bytes=size, timeout=120.0)
@@ -962,18 +966,26 @@ class RemoteHeaderStep:
             return
         info = _ctf_res4_from_bytes(data, d.name)
         nsamp, nchan = int(info["nsamp"]), int(info["nchan"])
-        trial_bytes = 4 * nsamp * nchan
-        sizes = [
-            _file_utils.parse_annex_size(_file_utils.get_annex_file_key(m) or "")
-            for m in meg4
-        ]
-        if not trial_bytes or any(not s or (s - 8) % trial_bytes for s in sizes):
+        if nsamp <= 0 or nchan <= 0:
             return
-        n_times = sum((s - 8) // (4 * nchan) for s in sizes)
-        if n_times and result.ntimes is None:
-            result.ntimes = int(n_times)
+        clock = _ctf_clock_index(info)
+        total, budget = 0, _CTF_CLOCK_MAX_BYTES
+        for k in range(1000):
+            meg4 = d / (f"{stem}.meg4" if k == 0 else f"{stem}.{k}_meg4")
+            if not (meg4.exists() or meg4.is_symlink()):
+                break
+            n_samp, budget = self._ctf_file_samples(
+                ctx, meg4, nsamp, nchan, clock, budget
+            )
+            if n_samp is None:
+                return  # not provable: leave unsized
+            if n_samp == 0:
+                break
+            total += n_samp
+        if total and result.ntimes is None:
+            result.ntimes = int(total)
             result.stamp(PROV_REMOTE_HEADER, "ntimes", None, result.ntimes)
-        if info.get("sfreq") and result.sampling_frequency is None:
+        if total and info.get("sfreq") and result.sampling_frequency is None:
             result.sampling_frequency = float(info["sfreq"])
             result.stamp(
                 PROV_REMOTE_HEADER,
@@ -981,6 +993,70 @@ class RemoteHeaderStep:
                 None,
                 result.sampling_frequency,
             )
+
+    def _object_url(self, ctx: CascadeContext, path: Path) -> str | None:
+        relpath = str(path.relative_to(ctx.bids_root))
+        _size, url = _remote_header.locate(
+            {"dataset": ctx.dataset_id, "bids_relpath": relpath}
+        )
+        return url or _nemar_object_url(ctx, path)
+
+    def _ctf_file_samples(
+        self,
+        ctx: CascadeContext,
+        meg4: Path,
+        nsamp: int,
+        nchan: int,
+        clock: int | None,
+        budget: int,
+    ) -> tuple[int | None, int]:
+        """``n_samp`` of one ``.meg4`` per MNE's truncate rule, and the budget left."""
+        size = _annex_size(meg4)
+        trial_bytes = 4 * nsamp * nchan
+        if not size or (size - _CTF_HEADER) % trial_bytes:
+            return None, budget  # MNE raises: not a whole number of trials
+        n_samp_tot = (size - _CTF_HEADER) // (4 * nchan)
+        if clock is None:
+            return n_samp_tot, budget
+        url = self._object_url(ctx, meg4)
+        if not url:
+            return None, budget
+        for trial in range(n_samp_tot // nsamp):
+            budget -= 4 * nsamp
+            if budget < 0:
+                return None, budget
+            offset = _CTF_HEADER + (trial * nsamp * nchan + clock * nsamp) * 4
+            raw = _parser_utils.fetch_bytes_from_s3(
+                url, start=offset, max_bytes=4 * nsamp, timeout=120.0
+            )
+            if not raw or len(raw) != 4 * nsamp:
+                return None, budget
+            zeros = np.flatnonzero(np.frombuffer(raw, ">i4") == 0)
+            if zeros.size:
+                return trial * nsamp + int(zeros[0]), budget
+        return n_samp_tot, budget
+
+
+#: CTF ``.meg4`` files start with an 8-byte header (``CTF.HEADER_SIZE``).
+_CTF_HEADER = 8
+#: Clock bytes read per recording for the truncate check (on002761: 2.2 MB).
+_CTF_CLOCK_MAX_BYTES = 16 * 1024 * 1024
+
+
+def _annex_size(path: Path) -> int | None:
+    return _file_utils.parse_annex_size(_file_utils.get_annex_file_key(path) or "")
+
+
+def _ctf_clock_index(info: dict[str, Any]) -> int | None:
+    """Index of the SCLK01 system-clock channel, as ``_get_sample_info`` finds it."""
+    from mne.io.ctf.constants import CTF  # noqa: PLC0415
+
+    names = list(info.get("ch_names") or [])
+    clock = names.index(CTF.SYSTEM_CLOCK_CH) if CTF.SYSTEM_CLOCK_CH in names else None
+    for k, ch in enumerate(info.get("chs") or []):
+        if ch.get("ch_name") == CTF.SYSTEM_CLOCK_CH:
+            return k
+    return clock
 
 
 #: A CTF ``.res4`` is ~3 MB (on002761: 3,341,749 B); refuse anything far larger.

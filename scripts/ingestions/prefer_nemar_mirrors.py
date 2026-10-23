@@ -22,9 +22,11 @@ Dry run by default; pass ``--apply`` to perform deletions.
 from __future__ import annotations
 
 import argparse
+import json
 import os
 import sys
 import time
+from dataclasses import dataclass, field
 
 import httpx
 
@@ -77,13 +79,42 @@ def _request_with_retry(
     raise RuntimeError(f"{method} {url} failed after {retries} attempts: {last_exc}")
 
 
-def list_dataset_ids(client: httpx.Client, api_url: str, database: str) -> list[str]:
+def list_dataset_ids(
+    client: httpx.Client, api_url: str, database: str, *, page_size: int = 100
+) -> list[str]:
+    """Every dataset document id, plus every id that owns records.
+
+    ``/datasets/names`` lists the record collection's owners only, so a ``ds``
+    twin whose records are stored under its ``on`` id (ds007813, ds007822,
+    ds007827, ds007864, ds007865 on 2026-10-23) never appeared and was never
+    retired. Page ``/datasets/summary`` for the documents themselves.
+    """
+    ids: set[str] = set()
+    skip = 0
+    while True:
+        resp = _request_with_retry(
+            client,
+            "GET",
+            f"{api_url}/api/{database}/datasets/summary",
+            params={"limit": page_size, "skip": skip},
+        )
+        resp.raise_for_status()
+        payload = resp.json()
+        rows = payload.get("data") or []
+        if "total" not in payload:
+            raise RuntimeError(
+                "datasets/summary page without 'total': listing not provable"
+            )
+        ids.update(str(r["dataset_id"]) for r in rows if r.get("dataset_id"))
+        skip += page_size
+        if not rows or skip >= int(payload["total"]):
+            break
     resp = _request_with_retry(
         client, "GET", f"{api_url}/api/{database}/datasets/names"
     )
     resp.raise_for_status()
-    payload = resp.json()
-    return sorted(payload.get("data") or [])
+    ids.update(resp.json().get("data") or [])
+    return sorted(ids)
 
 
 # Curated fields that only exist on the dataset document (ingestion never
@@ -181,6 +212,67 @@ def delete_twin(
     return n_records, n_datasets
 
 
+def exact_record_count(
+    client: httpx.Client, api_url: str, database: str, dataset_id: str
+) -> int:
+    """Records stored under exactly ``dataset_id``.
+
+    ``{"dataset": {"$eq": id}}`` is not rewritten by the server's ds->on twin
+    alias, which a plain ``{"dataset": id}`` is (ds007813 counted 4 = on007813's).
+    """
+    resp = _request_with_retry(
+        client,
+        "GET",
+        f"{api_url}/api/{database}/count",
+        params={"filter": json.dumps({"dataset": {"$eq": dataset_id}})},
+    )
+    if resp.status_code != 200:
+        raise RuntimeError(f"record count for {dataset_id}: HTTP {resp.status_code}")
+    value = resp.json().get("count")
+    # Fail closed: True, "4", 4.0 or -1 are not proof that records exist.
+    if type(value) is not int or value < 0:
+        raise RuntimeError(f"malformed record count for {dataset_id}: {value!r}")
+    return value
+
+
+@dataclass
+class TwinSelection:
+    twins: list[tuple[str, str, dict]] = field(default_factory=list)
+    nemar_ids: list[str] = field(default_factory=list)
+    missing_twins: int = 0
+    non_openneuro_twins: list[str] = field(default_factory=list)
+    replacement_without_records: list[str] = field(default_factory=list)
+
+
+def select_twins(client: httpx.Client, api_url: str, database: str) -> TwinSelection:
+    """``ds`` twins safe to retire: only when their ``on`` replacement holds records.
+
+    Twins are looked up among dataset documents (a record-less ``ds`` doc must be
+    found), but the replacement must own records under its exact id: an ``on``
+    doc with zero records never replaces a ``ds`` dataset, whatever the ``ds``
+    holds. Any failed count raises (fail closed).
+    """
+    sel = TwinSelection()
+    ids = list_dataset_ids(client, api_url, database)
+    id_set = set(ids)
+    sel.nemar_ids = [i for i in ids if _openneuro_twin_of(i)]
+    for on_id in sel.nemar_ids:
+        ds_id = _openneuro_twin_of(on_id)
+        if ds_id not in id_set:
+            sel.missing_twins += 1
+            continue
+        ds_doc = fetch_dataset(client, api_url, database, ds_id)
+        if not dataset_is_openneuro(ds_doc):
+            sel.non_openneuro_twins.append(ds_id)
+            continue
+        if exact_record_count(client, api_url, database, on_id) <= 0:
+            sel.replacement_without_records.append(on_id)
+            continue
+        on_doc = fetch_dataset(client, api_url, database, on_id)
+        sel.twins.append((on_id, ds_id, curated_carry_over(ds_doc, on_doc)))
+    return sel
+
+
 def main(argv: list[str] | None = None) -> int:
     args = _parse_args(argv)
     token = args.token or os.environ.get("EEGDASH_ADMIN_TOKEN")
@@ -200,24 +292,12 @@ def main(argv: list[str] | None = None) -> int:
 
     try:
         with httpx.Client(timeout=args.timeout) as client:
-            ids = list_dataset_ids(client, args.api_url, args.database)
-            nemar_ids = [i for i in ids if _openneuro_twin_of(i)]
-            id_set = set(ids)
-
-            twins: list[tuple[str, str, dict]] = []
-            missing_twins = 0
-            non_openneuro_twins: list[str] = []
-            for on_id in nemar_ids:
-                ds_id = _openneuro_twin_of(on_id)
-                if ds_id not in id_set:
-                    missing_twins += 1
-                    continue
-                ds_doc = fetch_dataset(client, args.api_url, args.database, ds_id)
-                if dataset_is_openneuro(ds_doc):
-                    on_doc = fetch_dataset(client, args.api_url, args.database, on_id)
-                    twins.append((on_id, ds_id, curated_carry_over(ds_doc, on_doc)))
-                else:
-                    non_openneuro_twins.append(ds_id)
+            sel = select_twins(client, args.api_url, args.database)
+            twins, nemar_ids = sel.twins, sel.nemar_ids
+            missing_twins, non_openneuro_twins = (
+                sel.missing_twins,
+                sel.non_openneuro_twins,
+            )
 
             print("\nMirror audit")
             print(f"  NEMAR on* datasets in DB : {len(nemar_ids)}")
@@ -226,6 +306,11 @@ def main(argv: list[str] | None = None) -> int:
                 print(
                     f"  twin not openneuro source: {len(non_openneuro_twins)} "
                     f"(skipped: {', '.join(non_openneuro_twins[:10])})"
+                )
+            if sel.replacement_without_records:
+                print(
+                    f"  on* without own records  : {len(sel.replacement_without_records)} "
+                    f"(twin kept: {', '.join(sel.replacement_without_records[:10])})"
                 )
             print(f"  OpenNeuro twins to retire: {len(twins)}")
             n_carry = sum(1 for *_, update in twins if update)

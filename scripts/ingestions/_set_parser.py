@@ -14,6 +14,7 @@ from __future__ import annotations
 
 import logging
 from pathlib import Path
+from types import SimpleNamespace
 from typing import Any
 
 from _parser_utils import validate_file_path
@@ -24,6 +25,9 @@ logger = logging.getLogger(__name__)
 # would materialize the whole EEG.data array. The sidecar-arithmetic tier
 # supplies n_times for those instead. Bounds worst-case memory/time.
 _SET_EMBEDDED_LOADMAT_CEILING = 50 * 1024 * 1024  # 50 MB
+
+#: EEG fields an EEGLAB "onefile" save stores as top-level MAT variables.
+_ROOT_FIELDS = ("srate", "nbchan", "pnts", "trials", "chanlocs", "datfile")
 
 
 def _set_exceeds_embedded_ceiling(set_path: Path) -> bool:
@@ -99,6 +103,39 @@ def _maybe_fill_ntimes_from_fdt(
         logger.debug("_maybe_fill_ntimes_from_fdt failed: %s", e)
 
 
+def _h5_scalar(group: Any, name: str) -> float | None:
+    """A 1x1 MATLAB scalar dataset as float, ``None`` when absent or not scalar."""
+    try:
+        return float(group[name][()].ravel()[0]) if name in group else None
+    except (TypeError, ValueError, IndexError, KeyError, AttributeError):
+        return None
+
+
+def set_fields_from_h5(f: Any) -> dict[str, Any]:
+    """``sampling_frequency``/``nchans``/``n_samples``/``trials`` of a MAT-v7.3 ``.set``.
+
+    EEGLAB writes the EEG fields either under an ``EEG`` group or, for its own
+    v7.3 "onefile" saves, at the file root (on004105: ``/srate``, ``/pnts``,
+    ``/data``). Reads only the 1x1 scalars, never ``data``; works on any
+    h5py-openable file-like, so a ranged remote reader fetches metadata only.
+    """
+    eeg = f["EEG"] if "EEG" in f else f
+    out: dict[str, Any] = {}
+    srate, nbchan = _h5_scalar(eeg, "srate"), _h5_scalar(eeg, "nbchan")
+    pnts, trials = _h5_scalar(eeg, "pnts"), _h5_scalar(eeg, "trials")
+    if srate:
+        out["sampling_frequency"] = srate
+    if nbchan:
+        out["nchans"] = int(nbchan)
+    if pnts:
+        out["n_samples"] = int(pnts)
+    if trials:
+        out["trials"] = int(trials)
+    if srate and pnts and srate > 0:
+        out["duration"] = pnts / srate
+    return out
+
+
 def parse_set_metadata(set_path: Path | str) -> dict[str, Any] | None:
     """Parse metadata from EEGLAB .set file.
 
@@ -163,6 +200,21 @@ def parse_set_metadata(set_path: Path | str) -> dict[str, Any] | None:
                 squeeze_me=True,
                 variable_names=["EEG"],
             )
+            if "EEG" not in mat:
+                # EEGLAB "onefile" saves put the fields at the file root
+                # (on007822); load the scalars only, never ``data``.
+                root = scipy.io.loadmat(
+                    str(set_path),
+                    struct_as_record=False,
+                    squeeze_me=True,
+                    variable_names=list(_ROOT_FIELDS),
+                )
+                if "srate" in root:
+                    mat = {
+                        "EEG": SimpleNamespace(
+                            **{k: root[k] for k in _ROOT_FIELDS if k in root}
+                        )
+                    }
 
         if "EEG" in mat:
             eeg = mat["EEG"]
@@ -250,6 +302,7 @@ def parse_set_metadata(set_path: Path | str) -> dict[str, Any] | None:
 
             # External-.fdt zero-fetch n_times: only when n_times/n_samples is
             # still absent and the data is continuous (trials <= 1 or unknown).
+            result["trials"] = trials
             _maybe_fill_ntimes_from_fdt(result, set_path, trials)
 
             if result:
@@ -287,40 +340,10 @@ def parse_set_metadata(set_path: Path | str) -> dict[str, Any] | None:
         import h5py
 
         with h5py.File(str(set_path), "r") as f:
-            # Navigate to EEG structure
-            if "EEG" in f:
-                eeg = f["EEG"]
-
-                # Extract sampling rate
-                if "srate" in eeg:
-                    srate = eeg["srate"][0, 0]
-                    result["sampling_frequency"] = float(srate)
-
-                # Extract number of channels
-                if "nbchan" in eeg:
-                    nbchan = eeg["nbchan"][0, 0]
-                    result["nchans"] = int(nbchan)
-
-                # Extract number of points
-                if "pnts" in eeg:
-                    pnts = eeg["pnts"][0, 0]
-                    result["n_samples"] = int(pnts)
-
-                # Calculate duration
-                if "sampling_frequency" in result and "n_samples" in result:
-                    if result["sampling_frequency"] > 0:
-                        result["duration"] = (
-                            result["n_samples"] / result["sampling_frequency"]
-                        )
-
-                # Epoched-vs-continuous gate for the external-.fdt arithmetic.
-                trials_h5: int | None = None
-                if "trials" in eeg:
-                    try:
-                        trials_h5 = int(eeg["trials"][0, 0])
-                    except (TypeError, ValueError, IndexError, KeyError):
-                        trials_h5 = None
-
+            fields = set_fields_from_h5(f)
+            if fields:
+                result.update(fields)
+                trials_h5 = fields.get("trials")
                 _maybe_fill_ntimes_from_fdt(result, set_path, trials_h5)
 
                 if result:

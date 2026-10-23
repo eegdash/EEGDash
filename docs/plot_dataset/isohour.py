@@ -23,8 +23,10 @@ can be audited:
     ``total_duration_s`` missing or zero.
 ``duplicate``
     Dropped only with proof that the entry holds recordings of another kept
-    entry: identical raw payload keys (git-annex hashes) for every recording
-    (a mirror, or a strict subset), or a listed verified re-encoding
+    entry: identical git-annex keys of every signal-bearing file (the ``.eeg``
+    of a BrainVision header, the ``.fdt`` of an EEGLAB header, every member of
+    a CTF/MEF directory) for every recording (a mirror, or a strict subset), or
+    a listed verified re-encoding
     (:data:`HBN_REENCODINGS`) checked record by record (path, duration within
     1 s). Every fetched record must have a path, a duration and a unique path,
     or nothing is proven. ``duplicate_of`` and ``evidence`` record the proof.
@@ -342,10 +344,49 @@ HBN_REENCODINGS: Mapping[str, str] = {
 }
 
 
+#: Signal-bearing companions of multi-file formats: the entry file alone (a
+#: BrainVision or EEGLAB header) does not identify the samples.
+_SIGNAL_COMPANIONS = {".vhdr": (".eeg",), ".set": (".fdt",)}
+_DIRECTORY_FORMATS = (".ds", ".mefd")
+
+
+def _payload_key(record: dict[str, Any]) -> tuple | None:
+    """Annex keys of every file holding the recording's samples, or ``None``.
+
+    Single-file formats (EDF, BDF, FIF, ...): the raw file's key. BrainVision:
+    the ``.vhdr`` and its ``.eeg`` (required). EEGLAB: the ``.set`` and its
+    ``.fdt`` when one is referenced. CTF ``.ds`` / MEF ``.mefd`` directories:
+    every member. A referenced signal file without a key -> ``None`` (unproven):
+    on003421/on002833 share all 80 ``.vhdr`` hashes but 2 ``.eeg`` payloads
+    differ in size and hash.
+    """
+    storage = record.get("storage") or {}
+    keys = storage.get("annex_keys") or {}
+    raw = str(storage.get("raw_key") or "")
+    deps = [str(d) for d in storage.get("dep_keys") or []]
+    ext = "." + raw.rsplit(".", 1)[-1].lower() if "." in raw else ""
+    if ext in _DIRECTORY_FORMATS:
+        members = sorted(m for m in {*deps, *keys} if m.startswith(raw + "/"))
+        if not members or any(m not in keys for m in members):
+            return None
+        return tuple((m[len(raw) :], keys[m]) for m in members)
+    if raw not in keys:
+        return None
+    files = [raw]
+    for comp in _SIGNAL_COMPANIONS.get(ext, ()):
+        found = sorted({f for f in (*deps, *keys) if f.lower().endswith(comp)})
+        if ext == ".vhdr" and not found:
+            return None  # BrainVision samples live in the .eeg
+        files += found
+    if any(f not in keys for f in files):
+        return None
+    return tuple((f.rsplit(".", 1)[-1].lower(), keys[f]) for f in files)
+
+
 def _signature(
     recs: list[dict[str, Any]],
-) -> dict[str, tuple[float, str | None]] | None:
-    """``path without extension -> (duration s, raw payload key)`` of every record.
+) -> dict[str, tuple[float, tuple | None]] | None:
+    """``path without extension -> (duration s, signal payload keys)`` of every record.
 
     ``None`` when any record lacks a path or a duration, or two records share a
     path without extension: then "every recording" cannot be checked.
@@ -358,14 +399,12 @@ def _signature(
         path = str(r.get("bids_relpath") or "").rsplit(".", 1)[0]
         if not path or not dur or path in out:
             return None
-        storage = r.get("storage") or {}
-        key = (storage.get("annex_keys") or {}).get(storage.get("raw_key"))
-        out[path] = (float(dur), key)
+        out[path] = (float(dur), _payload_key(r))
     return out or None
 
 
 def _covers(small: dict, big: dict, *, same_payload: bool) -> bool:
-    """Every recording of ``small`` is in ``big``: same raw payload key, or same duration."""
+    """Every recording of ``small`` is in ``big``: same signal payload keys, or same duration."""
     for k, (dur, key) in small.items():
         if k not in big:
             return False
@@ -454,14 +493,14 @@ def _proof(df: pd.DataFrame, a: int, b: int, sa: dict | None, sb: dict | None):
             return None
     if sa.keys() == sb.keys() and _covers(sa, sb, same_payload=True):
         keep, drop = sorted((a, b), key=lambda i: _keep_order(df, i))
-        return keep, drop, f"same {len(sa)} raw files (path and payload key)"
+        return keep, drop, f"same {len(sa)} recordings (path, every signal file's key)"
     for small, big, s_small, s_big in ((a, b, sa, sb), (b, a, sb, sa)):
         if len(s_small) < len(s_big) and _covers(s_small, s_big, same_payload=True):
             return (
                 big,
                 small,
                 (
-                    f"subset: {len(s_small)} of {len(s_big)} raw files (path and payload key)"
+                    f"subset: {len(s_small)} of {len(s_big)} recordings (path, every signal file's key)"
                 ),
             )
     del ida, idb
@@ -471,8 +510,8 @@ def _proof(df: pd.DataFrame, a: int, b: int, sa: dict | None, sb: dict | None):
 def _resolve_duplicates(df: pd.DataFrame, records: RecordFetcher | None) -> None:
     """Drop proven duplicates; flag unproven candidates as ``possible_duplicate``.
 
-    Proof is identical raw payload keys for every recording (a mirror or a
-    subset), or a listed verified re-encoding checked record by record. Equal
+    Proof is identical annex keys of every signal-bearing file of every
+    recording (:func:`_payload_key`; a mirror or a subset), or a listed verified re-encoding checked record by record. Equal
     paths and durations alone are not proof: separately collected experiments
     share BIDS paths and fixed trial lengths (WRCC2023 MI-A/MI-B: 720 of 810
     payloads differ).

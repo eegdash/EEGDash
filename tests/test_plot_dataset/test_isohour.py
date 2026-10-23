@@ -137,7 +137,7 @@ def test_duplicates_need_payload_or_listed_reencoding(evidence_docs):
     # Byte-identical mirror.
     assert status["on000021"] == "duplicate"
     assert t.at["on000021", "duplicate_of"] == "on000020"
-    assert "same 70 raw files" in t.at["on000021", "evidence"]
+    assert "same 70 recordings" in t.at["on000021", "evidence"]
     # Same paths and durations, other payloads: kept (WRCC MI-A/MI-B case).
     assert status["on000022"] == "kept"
     assert flag["on000022"] == "possible_duplicate"
@@ -316,3 +316,105 @@ def test_listed_reencoding_with_a_longer_recording_is_not_dropped(docs):
     ).set_index("dataset_id")
     assert t.at["EEG2025r1", "status"] == "kept"
     assert t.at["EEG2025r1", "flag"] == "possible_duplicate"
+
+
+def _multi(
+    prefix, n, header_key, signal, signal_ext=".eeg", ext=".vhdr", missing=False
+):
+    """Multi-file recordings: header key shared, signal keys from ``signal(k)``."""
+    out = []
+    for k in range(n):
+        base = f"sub-{prefix}{k:02d}/eeg/sub-{prefix}{k:02d}_task-x_eeg"
+        keys = {base + ext: f"MD5E-hdr-{header_key}-{k}{ext}"}
+        if not missing:
+            keys[base + signal_ext] = f"MD5E-sig-{signal(k)}{signal_ext}"
+        out.append(
+            {
+                "bids_relpath": base + ext,
+                "ntimes": 1000 + 500 * k,
+                "sampling_frequency": 500.0,
+                "storage": {
+                    "raw_key": base + ext,
+                    "dep_keys": [base + signal_ext],
+                    "annex_keys": keys,
+                },
+            }
+        )
+    return out
+
+
+def _pair(recs_a, recs_b):
+    docs = [
+        _doc("on100001", "Naming A", 3, 3 * 7200.0, sfreq=((500.0, 3),)),
+        _doc("on100002", "Naming B", 3, 3 * 7200.0, sfreq=((500.0, 3),)),
+    ]
+    recs = {"on100001": recs_a, "on100002": recs_b}
+    t = isohour.build_isohour_table(docs, records=lambda ds: recs.get(ds, []))
+    return t.set_index("dataset_id")
+
+
+def test_same_header_different_eeg_is_not_a_duplicate():
+    # on003421/on002833: all .vhdr hashes equal, 2 of 80 .eeg payloads differ.
+    a = _multi("n", 3, "h", lambda k: f"a{k}")
+    b = _multi("n", 3, "h", lambda k: f"a{k}" if k else "other")
+    t = _pair(a, b)
+    assert set(t["status"]) == {"kept"}
+    assert t.at["on100002", "flag"] == "possible_duplicate"
+
+
+def test_same_header_and_eeg_is_a_duplicate():
+    a = _multi("n", 3, "h", lambda k: f"a{k}")
+    t = _pair(a, _multi("n", 3, "h", lambda k: f"a{k}"))
+    assert "duplicate" in set(t["status"])
+
+
+def test_missing_signal_key_proves_nothing():
+    a = _multi("n", 3, "h", lambda k: f"a{k}", missing=True)
+    t = _pair(a, _multi("n", 3, "h", lambda k: f"a{k}", missing=True))
+    assert set(t["status"]) == {"kept"}
+
+
+def test_set_with_different_fdt_is_not_a_duplicate():
+    a = _multi("s", 3, "h", lambda k: f"a{k}", signal_ext=".fdt", ext=".set")
+    b = _multi("s", 3, "h", lambda k: "x", signal_ext=".fdt", ext=".set")
+    assert set(_pair(a, b)["status"]) == {"kept"}
+
+
+def _ctf(prefix, meg4):
+    base = f"sub-{prefix}/meg/sub-{prefix}_task-x_meg.ds"
+    return [
+        {
+            "bids_relpath": base,
+            "ntimes": 6000,
+            "sampling_frequency": 600.0,
+            "storage": {
+                "raw_key": base,
+                "dep_keys": [f"{base}/x.res4", f"{base}/x.meg4"],
+                "annex_keys": {f"{base}/x.res4": "MD5E-res4", f"{base}/x.meg4": meg4},
+            },
+        }
+    ]
+
+
+def test_ctf_directory_needs_every_member_key():
+    assert set(_pair(_ctf("c", "MD5E-a"), _ctf("c", "MD5E-b"))["status"]) == {"kept"}
+    assert "duplicate" in set(_pair(_ctf("c", "MD5E-a"), _ctf("c", "MD5E-a"))["status"])
+
+
+def test_vhdr_without_any_eeg_reference_proves_nothing():
+    def bare(recs):
+        for r in recs:
+            r["storage"]["dep_keys"] = []
+        return recs
+
+    a = bare(_multi("n", 3, "h", lambda k: f"a{k}", missing=True))
+    b = bare(_multi("n", 3, "h", lambda k: f"a{k}", missing=True))
+    assert set(_pair(a, b)["status"]) == {"kept"}
+
+
+def test_ctf_member_listed_without_key_proves_nothing():
+    a, b = _ctf("c", "MD5E-a"), _ctf("c", "MD5E-a")
+    for recs in (a, b):
+        base = recs[0]["storage"]["raw_key"]
+        recs[0]["storage"]["dep_keys"].append(f"{base}/x.1_meg4")
+    assert set(_pair(a, b)["status"]) == {"kept"}

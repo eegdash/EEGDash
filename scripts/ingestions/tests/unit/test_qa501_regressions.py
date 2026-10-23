@@ -293,13 +293,15 @@ class _NoRateBids:
         return 6.0 if name == "duration" else None
 
 
-def _full_cascade(tmp_path, writer, trials, monkeypatch):
+def _full_cascade(tmp_path, writer, trials, monkeypatch, fdt=False):
     monkeypatch.delenv("EEGDASH_REMOTE_HEADERS", raising=False)
     root = tmp_path / "localds"
     eeg = root / "sub-1" / "eeg"
     eeg.mkdir(parents=True)
     p = eeg / "sub-1_task-x_eeg.set"
     writer(p, trials=trials)
+    if fdt:
+        _annexed_fdt(p, 2 * 1500 * trials * 4)
     (eeg / "sub-1_task-x_eeg.json").write_text(
         '{"RecordingType": "%s", "RecordingDuration": 6}'
         % ("epoched" if trials > 1 else "continuous")
@@ -307,16 +309,21 @@ def _full_cascade(tmp_path, writer, trials, monkeypatch):
     return mc.MetadataCascade().run(CascadeContext(_NoRateBids(root), str(p)))
 
 
+@pytest.mark.parametrize("fdt", [False, True])
 @pytest.mark.parametrize("writer", [_v73_root, _v5_root])
-def test_full_cascade_epoched_set_gets_no_sidecar_ntimes(tmp_path, writer, monkeypatch):
-    # Rate only from the root .set (250 Hz), duration-only sidecar: no ntimes.
-    result = _full_cascade(tmp_path, writer, 40, monkeypatch)
+def test_full_cascade_epoched_set_gets_no_sidecar_ntimes(
+    tmp_path, writer, fdt, monkeypatch
+):
+    # Rate only from the root .set (250 Hz), duration-only sidecar, with and
+    # without an annex-sized .fdt: every length step leaves ntimes unknown.
+    result = _full_cascade(tmp_path, writer, 40, monkeypatch, fdt=fdt)
     assert result.ntimes is None
     assert result.sampling_frequency == 250.0
     assert result.recording_duration == 6.0  # sidecar metadata kept as is
 
 
+@pytest.mark.parametrize("fdt", [False, True])
 @pytest.mark.parametrize("writer", [_v73_root, _v5_root])
-def test_full_cascade_continuous_set_still_sized(tmp_path, writer, monkeypatch):
-    result = _full_cascade(tmp_path, writer, 1, monkeypatch)
+def test_full_cascade_continuous_set_still_sized(tmp_path, writer, fdt, monkeypatch):
+    result = _full_cascade(tmp_path, writer, 1, monkeypatch, fdt=fdt)
     assert result.ntimes == 1500

@@ -53,7 +53,7 @@ except ImportError:  # pragma: no cover - direct-script execution
         summarise_isohour,
     )
 
-X_LIM = (1 / 60, 400.0)  # one minute to 400 h per subject
+X_LIM = (1 / 3600, 400.0)  # one second to 400 h per subject
 Y_LIM = (0.75, 4500.0)
 INK = "#222222"
 MUTED = "#6b7280"
@@ -128,9 +128,9 @@ def _hour_fmt(h: float) -> str:
 def _log_hours_axis(ax: plt.Axes) -> None:
     ax.set_xscale("log")
     ax.set_xlim(*X_LIM)
-    ticks = [1 / 60, 10 / 60, 1, 10, 100]
+    ticks = [1 / 3600, 1 / 60, 1, 10, 100]
     ax.set_xticks(ticks)
-    ax.set_xticklabels(["1 min", "10 min", "1 h", "10 h", "100 h"])
+    ax.set_xticklabels(["1 s", "1 min", "1 h", "10 h", "100 h"])
     ax.xaxis.set_minor_locator(mpl.ticker.NullLocator())
 
 

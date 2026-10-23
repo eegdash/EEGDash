@@ -22,28 +22,22 @@ can be audited:
 ``no_duration``
     ``total_duration_s`` missing or zero.
 ``duplicate``
-    Dropped only with record-level evidence of shared recordings: every
-    recording of the dropped entry has the same path (without extension) in
-    the kept entry, with a duration equal within 1 s. Equal sets mean a mirror,
-    a format re-encoding or a resampled copy (the HBN ``EEG2025r*`` BDF copies
-    at 100 Hz of the 500 Hz releases); a strict subset means a sample of the
-    other entry (the ``EEG2025r*mini`` sets).
-    ``duplicate_of`` names the kept entry and ``evidence`` the record counts.
-``epoched_duration``
-    Under one minute per subject AND at least half of the records are
-    ``recording_type == "epoched"``: the catalogue length is one epoch, not
-    the recording.
+    Dropped only with proof that the entry holds recordings of another kept
+    entry: identical raw payload keys (git-annex hashes) for every recording
+    (a mirror, or a strict subset), or a listed verified re-encoding
+    (:data:`HBN_REENCODINGS`) checked record by record (path, duration within
+    1 s). Every fetched record must have a path, a duration and a unique path,
+    or nothing is proven. ``duplicate_of`` and ``evidence`` record the proof.
 
 Rows that stay in the figure can carry a ``flag``:
 
 ``possible_duplicate``
-    Same OpenNeuro accession, a DOI naming the other entry's accession, the
-    same normalised name, or the same subject count, sampling-rate profile
-    and total duration (within 1 s), but no record-level proof. Kept and
-    counted.
-``short_duration``
-    Under one minute per subject without epoched records. Kept: short
-    recordings are legitimate.
+    Same accession, DOI, normalised name, or same subjects, sampling rates and
+    duration, but the same recordings are not proven. Equal paths and
+    durations are not proof (WRCC2023 MI-A/MI-B: 720 of 810 payloads differ).
+``short_duration`` / ``epoched_short_duration``
+    Under one minute per subject; the second when most records are stored
+    epoched. Kept: the label does not show that one epoch was counted.
 
 ``duration_source`` is ``"records"`` when the dataset-level aggregate was
 replaced by the sum of record-level ``duration_seconds`` (see
@@ -330,24 +324,57 @@ def _name_key(name: str) -> str:
 #: < 1 s (HBN EEG2025r1 vs on005505: at most 0.998 s over 1,342 recordings).
 _SAME_RECORDING_TOL_S = 1.0
 
+#: Verified re-encodings whose bytes necessarily differ from the original, so
+#: payload hashes cannot match. Each is still checked record by record (same
+#: path, duration within 1 s). Source: the EEG2025 competition release of
+#: HBN-EEG: BDF at 100 Hz of the 500 Hz releases ds005505-ds005516 (dataset_doi
+#: of r1-r9 and their minis names the ds release; r10/r11 by release number),
+#: and the 20-subject "mini" subset of each release.
+HBN_REENCODINGS: Mapping[str, str] = {
+    **{
+        f"EEG2025r{n}{suffix}": f"on0055{acc}"
+        for n, acc in zip(
+            range(1, 12),
+            ("05", "06", "07", "08", "09", "10", "11", "12", "14", "15", "16"),
+        )
+        for suffix in ("", "mini")
+    }
+}
 
-def _signature(recs: list[dict[str, Any]]) -> dict[str, float]:
-    """``path without extension -> duration (s)`` of every sized record."""
-    out: dict[str, float] = {}
+
+def _signature(
+    recs: list[dict[str, Any]],
+) -> dict[str, tuple[float, str | None]] | None:
+    """``path without extension -> (duration s, raw payload key)`` of every record.
+
+    ``None`` when any record lacks a path or a duration, or two records share a
+    path without extension: then "every recording" cannot be checked.
+    """
+    out: dict[str, tuple[float, str | None]] = {}
     for r in recs:
         dur = r.get("duration_seconds")
         if not dur and r.get("ntimes") and r.get("sampling_frequency"):
             dur = r["ntimes"] / r["sampling_frequency"]
-        if r.get("bids_relpath") and dur:
-            out[str(r["bids_relpath"]).rsplit(".", 1)[0]] = float(dur)
-    return out
+        path = str(r.get("bids_relpath") or "").rsplit(".", 1)[0]
+        if not path or not dur or path in out:
+            return None
+        storage = r.get("storage") or {}
+        key = (storage.get("annex_keys") or {}).get(storage.get("raw_key"))
+        out[path] = (float(dur), key)
+    return out or None
 
 
-def _same_recordings(small: dict[str, float], big: dict[str, float]) -> bool:
-    """Every recording of ``small`` is in ``big`` with the same duration (within 1 s)."""
-    return bool(small) and all(
-        k in big and abs(v - big[k]) <= _SAME_RECORDING_TOL_S for k, v in small.items()
-    )
+def _covers(small: dict, big: dict, *, same_payload: bool) -> bool:
+    """Every recording of ``small`` is in ``big``: same raw payload key, or same duration."""
+    for k, (dur, key) in small.items():
+        if k not in big:
+            return False
+        other_dur, other_key = big[k]
+        if same_payload and not (key and key == other_key):
+            return False
+        if abs(dur - other_dur) > _SAME_RECORDING_TOL_S:
+            return False
+    return True
 
 
 def _pairs_within(groups: Iterable[list[int]], why: str) -> list[tuple[int, int, str]]:
@@ -386,6 +413,16 @@ def _candidate_pairs(df: pd.DataFrame) -> list[tuple[int, int, str]]:
         )
         if abs(df.at[a, "duration_s"] - df.at[b, "duration_s"]) < 1.0
     ]
+    row_of = {df.at[i, "dataset_id"]: i for i in kept.index}
+    found += [
+        (
+            min(row_of[c], row_of[o]),
+            max(row_of[c], row_of[o]),
+            "verified HBN re-encoding",
+        )
+        for c, o in HBN_REENCODINGS.items()
+        if c in row_of and o in row_of
+    ]
     first: dict[tuple[int, int], str] = {}
     for a, b, why in found:
         first.setdefault((a, b), why)
@@ -398,9 +435,49 @@ def _keep_order(df: pd.DataFrame, idx: int) -> tuple:
     return (bool(_HBN_COPY.match(ds)), -df.at[idx, "n_subjects"], ds)
 
 
+def _proof(df: pd.DataFrame, a: int, b: int, sa: dict | None, sb: dict | None):
+    """``(keep, drop, evidence)`` when a and b provably hold the same recordings."""
+    if not sa or not sb:
+        return None
+    ida, idb = df.at[a, "dataset_id"], df.at[b, "dataset_id"]
+    for copy, orig, sc, so in ((a, b, sa, sb), (b, a, sb, sa)):
+        if HBN_REENCODINGS.get(df.at[copy, "dataset_id"]) == df.at[orig, "dataset_id"]:
+            if _covers(sc, so, same_payload=False):
+                return (
+                    orig,
+                    copy,
+                    (
+                        f"verified HBN re-encoding; {len(sc)} of {len(so)} recordings "
+                        "matched (path, duration within 1 s)"
+                    ),
+                )
+            return None
+    if sa.keys() == sb.keys() and _covers(sa, sb, same_payload=True):
+        keep, drop = sorted((a, b), key=lambda i: _keep_order(df, i))
+        return keep, drop, f"same {len(sa)} raw files (path and payload key)"
+    for small, big, s_small, s_big in ((a, b, sa, sb), (b, a, sb, sa)):
+        if len(s_small) < len(s_big) and _covers(s_small, s_big, same_payload=True):
+            return (
+                big,
+                small,
+                (
+                    f"subset: {len(s_small)} of {len(s_big)} raw files (path and payload key)"
+                ),
+            )
+    del ida, idb
+    return None
+
+
 def _resolve_duplicates(df: pd.DataFrame, records: RecordFetcher | None) -> None:
-    """Drop proven duplicates; flag unproven candidates as ``possible_duplicate``."""
-    cache: dict[str, dict[str, float]] = {}
+    """Drop proven duplicates; flag unproven candidates as ``possible_duplicate``.
+
+    Proof is identical raw payload keys for every recording (a mirror or a
+    subset), or a listed verified re-encoding checked record by record. Equal
+    paths and durations alone are not proof: separately collected experiments
+    share BIDS paths and fixed trial lengths (WRCC2023 MI-A/MI-B: 720 of 810
+    payloads differ).
+    """
+    cache: dict[str, dict | None] = {}
     for a, b, why in _candidate_pairs(df):
         if "kept" not in (df.at[a, "status"], df.at[b, "status"]):
             continue
@@ -409,29 +486,19 @@ def _resolve_duplicates(df: pd.DataFrame, records: RecordFetcher | None) -> None
             ds = df.at[i, "dataset_id"]
             if ds not in cache:
                 try:
-                    cache[ds] = _signature(records(ds)) if records else {}
+                    cache[ds] = _signature(records(ds)) if records else None
                 except OSError:
-                    cache[ds] = {}
+                    cache[ds] = None
             sigs.append(cache[ds])
-        sa, sb = sigs
-        if sa.keys() == sb.keys() and _same_recordings(sa, sb):
-            keep, drop = sorted((a, b), key=lambda i: _keep_order(df, i))
-            evidence = f"same {len(sa)} recordings (path, duration within 1 s)"
-        elif len(sa) != len(sb) and (
-            _same_recordings(sa, sb) or _same_recordings(sb, sa)
-        ):
-            keep, drop = (b, a) if len(sa) < len(sb) else (a, b)
-            small, big = sorted((len(sa), len(sb)))
-            evidence = (
-                f"subset: {small} of {big} recordings (path, duration within 1 s)"
-            )
-        else:
+        proof = _proof(df, a, b, *sigs)
+        if proof is None:
             other, flagged = sorted((a, b), key=lambda i: _keep_order(df, i))
-            if df.at[flagged, "status"] == "kept":
+            if df.at[flagged, "status"] == "kept" and pd.isna(df.at[flagged, "flag"]):
                 df.at[flagged, "flag"] = "possible_duplicate"
                 df.at[flagged, "duplicate_of"] = df.at[other, "dataset_id"]
-                df.at[flagged, "evidence"] = f"{why}; recordings not shown identical"
+                df.at[flagged, "evidence"] = f"{why}; same recordings not proven"
             continue
+        keep, drop, evidence = proof
         if df.at[drop, "status"] != "kept":
             continue
         df.at[drop, "status"] = "duplicate"
@@ -508,12 +575,19 @@ def _finalise(df: pd.DataFrame) -> pd.DataFrame:
         )
     short = (df["status"] == "kept") & (df["hours_per_subject"] * 60 < 1.0)
     df.loc[short & df["flag"].isna(), "flag"] = "short_duration"
-    df.loc[~short & (df["flag"] == "short_duration"), "flag"] = None
+    df.loc[
+        ~short & df["flag"].isin(["short_duration", "epoched_short_duration"]), "flag"
+    ] = None
     return df
 
 
 def _classify_short(df: pd.DataFrame, records: RecordFetcher | None) -> pd.DataFrame:
-    """Drop a short dataset only when its records are epoched (one epoch counted)."""
+    """Flag short datasets whose records are mostly epoched; nothing is dropped.
+
+    ``RecordingType: epoched`` describes how the data are stored, not that the
+    catalogue length counts one epoch (nm000355: 26 epochs back to back, 33.8 s,
+    all counted), so these stay in the figure with ``epoched_short_duration``.
+    """
     if records is None:
         return df
     for idx in df.index[(df["status"] == "kept") & (df["flag"] == "short_duration")]:
@@ -523,8 +597,7 @@ def _classify_short(df: pd.DataFrame, records: RecordFetcher | None) -> pd.DataF
             continue
         n_ep = sum(1 for r in recs if r.get("recording_type") == "epoched")
         if recs and 2 * n_ep >= len(recs):
-            df.at[idx, "status"] = "epoched_duration"
-            df.at[idx, "flag"] = None
+            df.at[idx, "flag"] = "epoched_short_duration"
             df.at[idx, "evidence"] = f"{n_ep}/{len(recs)} records epoched"
     return df
 
@@ -548,7 +621,7 @@ def correct_durations_from_records(
     """
     record_sum = record_sum or _record_duration_sum
     df = df.copy()
-    candidates = df["status"].isin(["kept", "epoched_duration"]) & (
+    candidates = (df["status"] == "kept") & (
         df["hours_per_subject"] * 60 < max_minutes_per_subject
     )
     for idx in df.index[candidates]:
@@ -559,7 +632,6 @@ def correct_durations_from_records(
         if total >= min_ratio * df.at[idx, "duration_s"]:
             df.at[idx, "duration_s"] = total
             df.at[idx, "duration_source"] = "records"
-    df.loc[df["status"] == "epoched_duration", "status"] = "kept"
     return _classify_short(_finalise(df), records)
 
 
@@ -624,7 +696,7 @@ def generate_isohour_landscape(
     kept = table[table["status"] == "kept"]
     stats = summarise_isohour(table)
 
-    x_range = (1 / 60, 400.0)
+    x_range = (1 / 3600, 400.0)
     y_range = (0.75, 4500.0)
     fig = go.Figure()
 
@@ -736,8 +808,8 @@ def generate_isohour_landscape(
         type="log",
         range=[np.log10(x_range[0]), np.log10(x_range[1])],
         title_text="Recorded hours per subject",
-        tickvals=[1 / 60, 10 / 60, 1, 10, 100],
-        ticktext=["1 min", "10 min", "1 h", "10 h", "100 h"],
+        tickvals=[1 / 3600, 1 / 60, 1, 10, 100],
+        ticktext=["1 s", "1 min", "1 h", "10 h", "100 h"],
         showgrid=False,
         ticks="outside",
     )

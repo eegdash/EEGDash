@@ -61,39 +61,46 @@ def docs():
     ]
 
 
-def _recs(prefix, n, ext=".set", ntimes=1000, rtype="continuous", sfreq=500.0):
-    return [
-        {
-            "bids_relpath": f"sub-{prefix}{k:02d}/eeg/sub-{prefix}{k:02d}_task-x_eeg{ext}",
-            "ntimes": ntimes + k * int(sfreq),
-            "sampling_frequency": sfreq,
-            "recording_type": rtype,
-        }
-        for k in range(n)
-    ]
+def _recs(prefix, n, ext=".set", ntimes=1000, rtype="continuous", sfreq=500.0, key="k"):
+    """Records with BIDS paths, durations and a raw payload key per recording."""
+    out = []
+    for k in range(n):
+        rel = f"sub-{prefix}{k:02d}/eeg/sub-{prefix}{k:02d}_task-x_eeg{ext}"
+        out.append(
+            {
+                "bids_relpath": rel,
+                "ntimes": ntimes + k * int(sfreq),
+                "sampling_frequency": sfreq,
+                "recording_type": rtype,
+                "storage": {
+                    "raw_key": rel,
+                    "annex_keys": {rel: f"SHA256E-{key}{prefix}{k}"},
+                },
+            }
+        )
+    return out
 
 
-#: Record sets: equal for a mirror / re-encoding, subset for a sample,
-#: different for studies that only share a name or aggregates.
 RECORDS = {
-    "on005505": _recs("a", 136),
-    # BDF copy resampled to 100 Hz: same paths, same durations, other sample counts.
-    "EEG2025r1": _recs("a", 136, ext=".bdf", ntimes=200, sfreq=100.0),
-    "EEG2025r1mini": _recs("a", 20, ext=".bdf", ntimes=200, sfreq=100.0),  # 20 of 136
+    "on005505": _recs("a", 136, key="orig"),
+    # Verified re-encoding: other bytes (keys) at 100 Hz, same paths and durations.
+    "EEG2025r1": _recs("a", 136, ext=".bdf", ntimes=200, sfreq=100.0, key="bdf"),
+    "EEG2025r1mini": _recs("a", 20, ext=".bdf", ntimes=200, sfreq=100.0, key="mini"),
+    # Same name, other recordings.
     "on000010": _recs("b", 106),
-    "ds000010": _recs("c", 119),  # same name, other recordings
-    "on000020": _recs("d", 70),
-    "on000021": _recs("d", 70),  # same aggregates AND same recordings
-    "on000022": _recs("e", 70),  # same aggregates, other recordings
-    # Same paths but one recording 5 s longer: not the same recordings.
-    "on000023": _recs("d", 69)
-    + [
-        {
-            "bids_relpath": "sub-d69/eeg/sub-d69_task-x_eeg.set",
-            "ntimes": 1000 + 69 * 500 + 2500,
-            "sampling_frequency": 500.0,
-        }
-    ],
+    "ds000010": _recs("c", 119),
+    # Byte-identical mirror: same paths, same payload keys.
+    "on000020": _recs("d", 70, key="same"),
+    "on000021": _recs("d", 70, key="same"),
+    # WRCC-like: same paths and durations, different payloads (separate experiment).
+    "on000022": _recs("d", 70, key="other"),
+    # Unlisted resampled copy: same paths/durations, other bytes -> not proven.
+    "on000024": _recs("d", 70, ext=".bdf", ntimes=200, sfreq=100.0, key="bdf"),
+    # One matching record plus one unsized extra: "every recording" not checkable.
+    "on000025": _recs("d", 1, key="same")
+    + [{"bids_relpath": "sub-zz/eeg/sub-zz_task-x_eeg.set", "ntimes": None}],
+    # Two records collapsing onto one path without extension.
+    "on000026": _recs("d", 1, key="same") + _recs("d", 1, ext=".fdt", key="same"),
     "on000060": _recs("f", 40, ntimes=1500, rtype="epoched"),
     "on000061": _recs("g", 10, ntimes=500),
 }
@@ -105,57 +112,106 @@ def _records(ds):
 
 @pytest.fixture
 def evidence_docs(docs):
+    agg = {"sfreq": ((512.0, 70),)}
     return docs + [
-        _doc("on000022", "Flicker C", 69, 190083.2, sfreq=((512.0, 70),)),
+        _doc("on000022", "Flicker C", 69, 190083.2, **agg),
+        _doc("on000024", "Flicker A resampled", 69, 190083.1, **agg),
+        _doc("on000025", "Flicker A partial", 69, 190083.3, **agg),
+        _doc("on000026", "Flicker A collided", 69, 190083.5, **agg),
         _doc("on000061", "Short continuous", 10, 300.0),
-        _doc("on000023", "Flicker A", 69, 191000.0, sfreq=((512.0, 70),)),
     ]
 
 
-def test_duplicates_need_record_evidence(evidence_docs):
+def test_duplicates_need_payload_or_listed_reencoding(evidence_docs):
     t = isohour.build_isohour_table(evidence_docs, records=_records).set_index(
         "dataset_id"
     )
     status, flag = t["status"].to_dict(), t["flag"].to_dict()
-    # Proven: same recordings (re-encoding) and a strict subset.
+    # Listed verified re-encoding (and its mini subset), checked record by record.
     assert status["on005505"] == "kept"
-    assert (
-        status["EEG2025r1"] == "duplicate"
-        and t.at["EEG2025r1", "duplicate_of"] == "on005505"
-    )
-    assert (
-        "same 136 recordings (path, duration within 1 s)"
-        in t.at["EEG2025r1", "evidence"]
-    )
+    assert status["EEG2025r1"] == "duplicate"
+    assert t.at["EEG2025r1", "duplicate_of"] == "on005505"
+    assert "verified HBN re-encoding; 136 of 136" in t.at["EEG2025r1", "evidence"]
     assert status["EEG2025r1mini"] == "duplicate"
-    assert "subset: 20 of 136" in t.at["EEG2025r1mini", "evidence"]
-    assert (
-        status["on000021"] == "duplicate"
-        and t.at["on000021", "duplicate_of"] == "on000020"
-    )
-    # Unproven: same name, or same aggregates with other recordings -> kept and flagged.
-    assert status["on000010"] == "kept" and flag["on000010"] == "possible_duplicate"
-    assert t.at["on000010", "duplicate_of"] == "ds000010"
-    assert status["ds000010"] == "kept" and pd.isna(flag["ds000010"])
-    assert status["on000022"] == "kept" and flag["on000022"] == "possible_duplicate"
-    assert status["on000030"] == "kept" and pd.isna(flag["on000030"])
-    assert status["on000023"] == "kept" and flag["on000023"] == "possible_duplicate"
+    assert t.at["EEG2025r1mini", "duplicate_of"] == "on005505"
+    # Byte-identical mirror.
+    assert status["on000021"] == "duplicate"
+    assert t.at["on000021", "duplicate_of"] == "on000020"
+    assert "same 70 raw files" in t.at["on000021", "evidence"]
+    # Same paths and durations, other payloads: kept (WRCC MI-A/MI-B case).
+    assert status["on000022"] == "kept"
+    assert flag["on000022"] == "possible_duplicate"
+    # Unlisted resampled copy: kept.
+    assert status["on000024"] == "kept"
+    assert flag["on000024"] == "possible_duplicate"
+    # Incomplete or ambiguous record sets prove nothing.
+    assert status["on000025"] == "kept"
+    assert status["on000026"] == "kept"
+    # Same name, other recordings.
+    assert status["on000010"] == "kept"
+    assert flag["on000010"] == "possible_duplicate"
+    assert status["ds000010"] == "kept"
+    assert status["on000030"] == "kept"
+    assert pd.isna(flag["on000030"])
 
 
-def test_short_duration_dropped_only_when_epoched(evidence_docs):
+def test_short_and_epoched_short_are_kept(evidence_docs):
     t = isohour.build_isohour_table(evidence_docs, records=_records).set_index(
         "dataset_id"
     )
-    assert t.at["on000060", "status"] == "epoched_duration"
+    assert t.at["on000060", "status"] == "kept"
+    assert t.at["on000060", "flag"] == "epoched_short_duration"
     assert t.at["on000060", "evidence"] == "40/40 records epoched"
     assert t.at["on000061", "status"] == "kept"
     assert t.at["on000061", "flag"] == "short_duration"
 
 
+def test_epoched_with_all_epochs_counted_is_kept():
+    # nm000355: 26 epochs of 6502 samples back to back at 5 kHz = 33.8104 s, 1 subject.
+    docs = [_doc("nm000355", "Epochs back to back", 1, 26 * 6502 / 5000)]
+    recs = {
+        "nm000355": [
+            {
+                "bids_relpath": "sub-1/ieeg/sub-1_ieeg.vhdr",
+                "ntimes": 26 * 6502,
+                "sampling_frequency": 5000.0,
+                "recording_type": "epoched",
+            }
+        ]
+    }
+    t = isohour.build_isohour_table(docs, records=lambda ds: recs.get(ds, []))
+    assert t.at[0, "status"] == "kept"
+    assert t.at[0, "flag"] == "epoched_short_duration"
+
+
+@pytest.mark.parametrize("n_epoched", [1, 2])
+def test_mixed_epoched_short_datasets_kept(n_epoched):
+    docs = [_doc("on000090", "Mixed", 3, 90.0)]
+    recs = [
+        {
+            "bids_relpath": f"sub-{k}/eeg/x.set",
+            "ntimes": 7500,
+            "sampling_frequency": 250.0,
+            "recording_type": "epoched" if k < n_epoched else "continuous",
+        }
+        for k in range(3)
+    ]
+    t = isohour.build_isohour_table(docs, records=lambda _ds: recs)
+    assert t.at[0, "status"] == "kept"
+    expected = "epoched_short_duration" if 2 * n_epoched >= 3 else "short_duration"
+    assert t.at[0, "flag"] == expected
+
+
+def test_kept_short_points_inside_both_axes(evidence_docs, tmp_path):
+    t = isohour.build_isohour_table(evidence_docs, records=_records)
+    kept = t[t["status"] == "kept"]
+    assert kept["hours_per_subject"].min() >= isohour_static.X_LIM[0]
+    assert 10 / 3600 >= isohour_static.X_LIM[0]  # a 10 s/subject study is drawn
+
+
 def test_offline_build_drops_nothing_on_heuristics(evidence_docs):
     t = isohour.build_isohour_table(evidence_docs).set_index("dataset_id")
     assert "duplicate" not in set(t["status"])
-    assert "epoched_duration" not in set(t["status"])
     assert t.at["EEG2025r1", "flag"] == "possible_duplicate"
     assert t.at["on000060", "flag"] == "short_duration"
 
@@ -177,19 +233,13 @@ def test_cleaning_rules(docs):
 def test_every_catalogue_row_is_accounted_for(evidence_docs):
     t = isohour.build_isohour_table(evidence_docs, records=_records)
     assert len(t) == len(evidence_docs)
-    allowed = {
-        "kept",
-        "duplicate",
-        "non_human",
-        "not_a_recording",
-        "no_duration",
-        "epoched_duration",
-    }
+    allowed = {"kept", "duplicate", "non_human", "not_a_recording", "no_duration"}
     assert set(t["status"]) <= allowed
     dropped_dup = t["status"] == "duplicate"
     assert t.loc[dropped_dup, "duplicate_of"].notna().all()
-    assert t.loc[dropped_dup, "evidence"].str.contains("recordings").all()
-    assert set(t["flag"].dropna()) <= {"possible_duplicate", "short_duration"}
+    assert t.loc[dropped_dup, "evidence"].notna().all()
+    flags = {"possible_duplicate", "short_duration", "epoched_short_duration"}
+    assert set(t["flag"].dropna()) <= flags
 
 
 def test_record_correction_only_raises_short_durations(docs):
@@ -253,3 +303,16 @@ def test_static_figure_writes_files(docs, tmp_path):
         assert (tmp_path / f"fig.{ext}").stat().st_size > 0
     assert stats["n_kept"] == int((t["status"] == "kept").sum())
     assert isinstance(pd.DataFrame(stats["dense"]), pd.DataFrame)
+
+
+def test_listed_reencoding_with_a_longer_recording_is_not_dropped(docs):
+    # A listed HBN pair still needs every recording to match within 1 s.
+    recs = dict(RECORDS)
+    bad = _recs("a", 136, ext=".bdf", ntimes=200, sfreq=100.0, key="bdf")
+    bad[0] = {**bad[0], "ntimes": bad[0]["ntimes"] + 500}  # +5 s
+    recs["EEG2025r1"] = bad
+    t = isohour.build_isohour_table(
+        docs, records=lambda ds: recs.get(ds, [])
+    ).set_index("dataset_id")
+    assert t.at["EEG2025r1", "status"] == "kept"
+    assert t.at["EEG2025r1", "flag"] == "possible_duplicate"

@@ -9,8 +9,19 @@ import httpx
 import respx
 from _helpers import load_inject
 
+from _inject_plan import prune_cutoffs
+
 API = "https://api.example.com"
 URL = f"{API}/admin/eegdash_dev/records"
+
+
+def test_prune_cutoffs_ignore_non_timestamp_values():
+    records = [
+        {"dataset": "d", "digested_at": stamp}
+        for stamp in (None, "", 20261019, ["2026-10-01"], "2026-10-23", "2026-10-19")
+    ]
+    records.append({"digested_at": "2026-10-01"})
+    assert prune_cutoffs(records) == {"d": "2026-10-19"}
 
 
 def _filters(route) -> list[dict]:

@@ -30,6 +30,16 @@ class InjectionPlan:
     duplicate_montage_sightings: int = 0
 
 
+def prune_cutoffs(records: list[dict]) -> dict[str, str]:
+    """Oldest nonempty string timestamp per dataset, used by prune and admission."""
+    cutoffs: dict[str, str] = {}
+    for record in records:
+        dataset, stamp = record.get("dataset"), record.get("digested_at")
+        if dataset and isinstance(stamp, str) and stamp:
+            cutoffs[dataset] = min(stamp, cutoffs.get(dataset, stamp))
+    return cutoffs
+
+
 def _dataset_source(dataset_dir: Path, dataset_id: str) -> str | None:
     """Return the source of a digested dataset dir.
 

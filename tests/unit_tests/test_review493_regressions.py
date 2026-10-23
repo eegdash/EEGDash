@@ -47,7 +47,7 @@ def test_prescan_is_offline(tmp_path, monkeypatch):
         pytest.fail("cache prescan must not access S3")
 
     monkeypatch.setattr(dl, "get_s3_filesystem", network)
-    assert not base._cached_complete(dest, KEY, OPENNEURO_URI)
+    assert not base._cached_complete(dest, KEY)
 
 
 def test_nemar_manifest_disagrees_refuse_before_transfer(tmp_path, monkeypatch):

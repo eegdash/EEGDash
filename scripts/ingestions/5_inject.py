@@ -71,6 +71,7 @@ from _inject_plan import (
     load_montages,
     load_records,
     load_validator_status,
+    prune_cutoffs,
 )
 from _validate import validate_digestion_output
 
@@ -304,11 +305,7 @@ def prune_stale_records(
     ``digested_at``; once all of it is upserted, a record of the same dataset
     with an older ``digested_at`` is not in the source any more.
     """
-    oldest: dict[str, str] = {}
-    for rec in records:
-        ds, ts = rec.get("dataset"), rec.get("digested_at")
-        if ds and isinstance(ts, str) and ts:
-            oldest[ds] = min(ts, oldest.get(ds, ts))
+    oldest = prune_cutoffs(records)
 
     session = client or make_authed_client(admin_token)
     deleted: dict[str, int] = {}

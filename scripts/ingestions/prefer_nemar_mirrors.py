@@ -226,8 +226,13 @@ def exact_record_count(
         f"{api_url}/api/{database}/count",
         params={"filter": json.dumps({"dataset": {"$eq": dataset_id}})},
     )
-    resp.raise_for_status()
-    return int(resp.json()["count"])
+    if resp.status_code != 200:
+        raise RuntimeError(f"record count for {dataset_id}: HTTP {resp.status_code}")
+    value = resp.json().get("count")
+    # Fail closed: True, "4", 4.0 or -1 are not proof that records exist.
+    if type(value) is not int or value < 0:
+        raise RuntimeError(f"malformed record count for {dataset_id}: {value!r}")
+    return value
 
 
 @dataclass

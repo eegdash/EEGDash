@@ -164,3 +164,42 @@ def test_never_retires_ds_when_on_replacement_has_no_records(mod):
 def test_summary_without_total_fails_closed(mod):
     with pytest.raises(RuntimeError, match="total"):
         _select(mod, _PairApi({"on007813": 4}, ["ds007813", "on007813"], total=False))
+
+
+class _BadCountApi(_PairApi):
+    def __init__(self, bad):
+        super().__init__({"on007813": 4}, ["ds007813", "on007813"])
+        self.bad = bad
+
+    def __call__(self, request):
+        import httpx  # noqa: PLC0415
+
+        if request.url.path.endswith("/count"):
+            if self.bad == "http500":
+                return httpx.Response(500, json={})
+            return httpx.Response(200, json={"count": self.bad})
+        return super().__call__(request)
+
+
+@pytest.mark.parametrize("bad", [True, "4", 4.0, 0.5, -1, None, "http500"])
+def test_malformed_count_fails_closed(mod, bad):
+    with pytest.raises(RuntimeError, match="record count"):
+        _select(mod, _BadCountApi(bad))
+
+
+@pytest.mark.parametrize("bad", [True, "4", -1, "http500"])
+def test_malformed_count_reaches_no_writer(mod, monkeypatch, bad):
+    import httpx  # noqa: PLC0415
+
+    real_client = httpx.Client
+    writes = []
+    monkeypatch.setattr(mod, "delete_twin", lambda *a, **_k: writes.append(a))
+    monkeypatch.setattr(mod, "carry_over", lambda *a, **_k: writes.append(a))
+    monkeypatch.setattr(
+        mod.httpx,
+        "Client",
+        lambda **_k: real_client(transport=httpx.MockTransport(_BadCountApi(bad))),
+    )
+    rc = mod.main(["--apply", "--token", "t", "--api-url", "http://api"])
+    assert rc != 0
+    assert writes == []

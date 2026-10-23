@@ -96,7 +96,7 @@ def _pins(record):
 def _live_pinned_records(client, api_url, database, dataset_id):
     """Read only pin-bearing rows from the exact target, without twin aliases."""
     query = {
-        "dataset": dataset_id,
+        "dataset": {"$eq": dataset_id},
         "$or": [
             {"storage.version_id": {"$exists": True}},
             {"storage.version_ids": {"$exists": True}},
@@ -159,7 +159,7 @@ def _identity(storage, path):
     )
 
 
-def _check_record(live, incoming):
+def _check_record(live, incoming, cutoff):
     dataset, path = live["dataset"], live["bids_relpath"]
     old_pin, old_pins = _pins(live)
     if not old_pin and not old_pins:
@@ -170,6 +170,13 @@ def _check_record(live, incoming):
             f"{label}: live pinned record is absent or duplicated in incoming digest"
         )
     new = incoming[0]
+    # Gateway $set retains omitted fields. Prove the resulting timestamp is not
+    # selected by the real pruner's string $lt cutoff, not just that P exists.
+    stamp = new.get("digested_at", live.get("digested_at"))
+    if cutoff is not None and isinstance(stamp, str) and stamp < cutoff:
+        raise PinConflictError(
+            f"{label}: post-upsert digested_at would be deleted by stale-record prune"
+        )
     new_pin, new_pins = _pins(new)
     old_st, new_st = live["storage"], new.get("storage") or {}
     if (old_pin, old_pins) != (new_pin, new_pins):
@@ -211,10 +218,25 @@ def guard_live_pins(records, dataset_ids, api_url, database):
     Dry-run and collection-only invocations retain their existing semantics.
     """
     by_dataset = {}
+    cutoffs = {}
     for record in records:
-        by_dataset.setdefault(record.get("dataset"), {}).setdefault(
-            record.get("bids_relpath"), []
-        ).append(record)
+        # Match gateway /records/upsert normalization exactly. Both canonical
+        # and legacy rows may address one row; neither may bypass admission.
+        dataset = record.get("dataset")
+        path = record.get("bids_relpath") or record.get("bidspath")
+        if (
+            not isinstance(dataset, str)
+            or not dataset
+            or not isinstance(path, str)
+            or not path
+        ):
+            raise PinConflictError(
+                "Incoming record has no unambiguous effective writer identity"
+            )
+        by_dataset.setdefault(dataset, {}).setdefault(path, []).append(record)
+        stamp = record.get("digested_at")
+        if isinstance(stamp, str) and stamp:
+            cutoffs[dataset] = min(stamp, cutoffs.get(dataset, stamp))
     # Deliberately not _http.get_client(): its optional cache can hide live pins.
     with httpx.Client(timeout=60, transport=httpx.HTTPTransport(retries=0)) as client:
         for dataset_id in sorted(set(dataset_ids)):
@@ -222,7 +244,11 @@ def guard_live_pins(records, dataset_ids, api_url, database):
                 live = _live_pinned_records(client, api_url, database, dataset_id)
                 incoming = by_dataset.get(dataset_id, {})
                 for record in live:
-                    _check_record(record, incoming.get(record["bids_relpath"], []))
+                    _check_record(
+                        record,
+                        incoming.get(record["bids_relpath"], []),
+                        cutoffs.get(dataset_id),
+                    )
             except PinConflictError as exc:
                 raise PinConflictError(
                     f"{dataset_id}: pin preflight refused: {exc}. "

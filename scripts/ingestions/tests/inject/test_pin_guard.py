@@ -277,7 +277,7 @@ def test_live_pagination_checks_exact_target_and_all_pages(monkeypatch, tmp_path
             assert call.request.method == "GET"
             assert call.request.headers["cache-control"] == "no-cache"
             query = json.loads(call.request.url.params["filter"])
-            assert query["dataset"] == "on003768"
+            assert query["dataset"] == {"$eq": "on003768"}
             assert "storage.version_id" in query["$or"][0]
     assert writes
 

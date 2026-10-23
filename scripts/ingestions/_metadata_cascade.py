@@ -381,6 +381,8 @@ class CascadeResult:
     # NEMAR records.json ntimes, held back until no exact source produced one.
     nemar_ntimes: int | None = None
     fif_is_split: bool = False
+    # A parser reported trials > 1: no length source may flatten the epochs.
+    epoched: bool = False
     fif_continuations_ok: bool = True
     provenance: dict[str, str | None] = field(
         default_factory=lambda: {f: None for f in _METADATA_FIELDS}
@@ -605,6 +607,7 @@ class BinaryParserStep:
             return
         if (md.get("trials") or 1) > 1:
             # Epoched: n_samples is one epoch, not the recording (QA of #501).
+            result.epoched = True
             md = {k: v for k, v in md.items() if k not in ("n_samples", "n_times")}
 
         sf_before = result.sampling_frequency
@@ -651,7 +654,9 @@ class SizeArithmeticStep:
     """
 
     def fill(self, ctx: CascadeContext, result: CascadeResult) -> None:
-        if result.ntimes is not None:
+        if result.ntimes is not None or result.epoched:
+            # Epoched: the .fdt holds all trials; size / (nchans x 4) would
+            # flatten them into a continuous length (QA round 2 of #501).
             return
         if ctx.ext != ".set":
             return
@@ -970,10 +975,12 @@ class RemoteHeaderStep:
             return
         clock = _ctf_clock_index(info)
         total, budget = 0, _CTF_CLOCK_MAX_BYTES
-        for k in range(1000):
+        for k in range(_CTF_MAX_SPLITS + 1):
             meg4 = d / (f"{stem}.meg4" if k == 0 else f"{stem}.{k}_meg4")
             if not (meg4.exists() or meg4.is_symlink()):
                 break
+            if k == _CTF_MAX_SPLITS:
+                return  # more split files than the cap: length not proven
             n_samp, budget = self._ctf_file_samples(
                 ctx, meg4, nsamp, nchan, clock, budget
             )
@@ -1037,6 +1044,8 @@ class RemoteHeaderStep:
         return n_samp_tot, budget
 
 
+#: Split ``.meg4`` files read per recording; more leaves it unsized.
+_CTF_MAX_SPLITS = 1000
 #: CTF ``.meg4`` files start with an 8-byte header (``CTF.HEADER_SIZE``).
 _CTF_HEADER = 8
 #: Clock bytes read per recording for the truncate check (on002761: 2.2 MB).

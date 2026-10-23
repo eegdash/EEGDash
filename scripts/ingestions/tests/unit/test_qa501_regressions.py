@@ -27,6 +27,7 @@ from _metadata_cascade import (
     CascadeContext,
     CascadeResult,
     RemoteHeaderStep,
+    SizeArithmeticStep,
     derive_duration_seconds,
 )
 from mne.io.ctf.constants import CTF
@@ -225,3 +226,55 @@ def test_ctf_clock_check_over_budget_stays_unsized(monkeypatch, tmp_path):
     monkeypatch.setattr(mc, "_CTF_CLOCK_MAX_BYTES", 8)
     payload = _meg4_bytes(5, [[1, 2, 3, 4, 5]])
     assert _remote_ntimes(monkeypatch, tmp_path, 5, [payload]) is None
+
+
+# ---- 3. epoched .set with an external .fdt (QA round 2) --------------------
+
+
+def _annexed_fdt(set_path, size):
+    key = f"MD5E-s{size}--" + "f" * 32 + ".fdt"
+    os.symlink(f".git/annex/objects/x/y/{key}/{key}", set_path.with_suffix(".fdt"))
+
+
+def _parser_then_size_arithmetic(path):
+    """The two adjacent production steps, then duration derivation."""
+    ctx = CascadeContext(SimpleNamespace(bidsdir=str(path.parent)), str(path))
+    result = CascadeResult()
+    BinaryParserStep().fill(ctx, result)
+    SizeArithmeticStep().fill(ctx, result)
+    derive_duration_seconds(result)
+    return result
+
+
+@pytest.mark.parametrize("writer", [_v73_root, _v5_root])
+def test_epoched_set_not_resized_from_fdt(tmp_path, writer):
+    # 2 ch x 1500 pnts x 40 epochs x 4 B: the flat divide would give 60,000 / 240 s.
+    p = tmp_path / "sub-1_task-x_eeg.set"
+    writer(p, trials=40)
+    _annexed_fdt(p, 2 * 1500 * 40 * 4)
+    result = _parser_then_size_arithmetic(p)
+    assert result.ntimes is None
+    assert result.duration_seconds is None
+    assert result.sampling_frequency == 250.0
+    assert result.nchans == 2
+
+
+def test_continuous_fdt_arithmetic_unchanged(monkeypatch, tmp_path):
+    # Continuous file whose parser gives rate/channels but no length: .fdt sizes it.
+    monkeypatch.setattr(
+        mc,
+        "get_parser_for_extension",
+        lambda _e: lambda _p: {"sampling_frequency": 250.0, "nchans": 2, "trials": 1},
+    )
+    p = tmp_path / "sub-1_task-x_eeg.set"
+    p.write_bytes(b"")
+    _annexed_fdt(p, 2 * 6000 * 4)
+    result = _parser_then_size_arithmetic(p)
+    assert result.ntimes == 6000
+    assert result.duration_seconds == 24.0
+
+
+def test_ctf_split_cap_exhaustion_stays_unsized(monkeypatch, tmp_path):
+    monkeypatch.setattr(mc, "_CTF_MAX_SPLITS", 1)
+    payloads = [_meg4_bytes(5, [[1, 2, 3, 4, 5]]), _meg4_bytes(5, [[6, 7, 8, 9, 10]])]
+    assert _remote_ntimes(monkeypatch, tmp_path, 5, payloads) is None

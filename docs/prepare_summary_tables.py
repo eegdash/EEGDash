@@ -21,6 +21,7 @@ from shutil import copyfile as _copyfile
 from typing import Any, Callable
 
 import pandas as pd
+from nemar_observability import hours_counter as _nemar_hours_counter
 from plot_dataset import (
     generate_api_study_explorer,
     generate_clinical_stacked_bar,
@@ -355,7 +356,11 @@ def process_chart_results(results: list[tuple[str, Path | None, str | None]]) ->
 # =============================================================================
 
 
-def save_summary_stats(df_raw: pd.DataFrame, aggregations: dict | None = None) -> None:
+def save_summary_stats(
+    df_raw: pd.DataFrame,
+    aggregations: dict | None = None,
+    nemar_hours: dict | None | bool = True,
+) -> None:
     """Calculate and save summary stats for the documentation cards.
 
     Prefers the pre-computed ``aggregations`` block returned by the
@@ -365,7 +370,12 @@ def save_summary_stats(df_raw: pd.DataFrame, aggregations: dict | None = None) -
     client recomputation that used to live here produced identical
     numbers (verified via parity check) but added a second source of
     truth. ``duration_hours`` is not exposed in the server ``totals``
-    block today, so it is still summed client-side from the dataframe.
+    block today. The hours card shows NEMAR's measured hours for the
+    observability view ``nemar_observability.HOURS_VIEW`` (EEG recorded
+    with at least 16 channels); the client-side sum of ``total_duration_s``
+    is the fallback when the snapshot is unavailable. Pass
+    ``nemar_hours=None`` to skip the fetch (tests, offline builds), or a
+    pre-computed counter dict.
 
     When ``aggregations`` is missing keys (e.g. the chart-data endpoint
     fell back to ``/datasets/summary`` and returned ``{}``), the
@@ -401,9 +411,14 @@ def save_summary_stats(df_raw: pd.DataFrame, aggregations: dict | None = None) -
             pd.to_numeric(df_raw.get(n_rec_col, 0), errors="coerce").sum()
         )
 
-    # duration_hours: not in server totals; keep client-side. May appear
-    # as total_duration_s (seconds) or duration_hours_total (hours).
-    if "duration_hours_total" in df_raw.columns:
+    # duration_hours: NEMAR's measured hours first (see nemar_observability).
+    # Fallback: the catalog sum, as total_duration_s (seconds) or
+    # duration_hours_total (hours).
+    if nemar_hours is True:
+        nemar_hours = _nemar_hours_counter()
+    if nemar_hours:
+        duration_hours = int(round(nemar_hours["hours"]))
+    elif "duration_hours_total" in df_raw.columns:
         duration_hours = int(
             pd.to_numeric(df_raw["duration_hours_total"], errors="coerce").sum()
         )
@@ -450,6 +465,19 @@ def save_summary_stats(df_raw: pd.DataFrame, aggregations: dict | None = None) -
         "modalities_total": int(modalities_total),
         "sources_total": int(sources_total),
     }
+    if nemar_hours:
+        summary_stats.update(
+            {
+                "duration_hours_source": nemar_hours["source"],
+                "duration_hours_label": nemar_hours["label"],
+                "duration_hours_url": nemar_hours["url"],
+                "duration_hours_recordings": int(nemar_hours["recordings"]),
+                "duration_hours_datasets": int(nemar_hours["datasets"]),
+                "duration_hours_generated_at": nemar_hours.get("generated_at"),
+            }
+        )
+    else:
+        summary_stats["duration_hours_source"] = "eegdash-catalog"
 
     stats_path = STATIC_DATASET_DIR / "summary_stats.json"
     with open(stats_path, "w") as f:

@@ -46,6 +46,8 @@ def _compute_dataset_counter_defaults() -> dict[str, int]:
                 "subjects": data.get("subjects_total", 0),
                 "recording": data.get("recording_total", 0),
                 "duration_hours": data.get("duration_hours", 0),
+                "duration_hours_label": data.get("duration_hours_label"),
+                "duration_hours_url": data.get("duration_hours_url"),
                 "modalities": data.get("modalities_total", 0),
                 "sources": data.get("sources_total", 0),
             }
@@ -105,7 +107,19 @@ def _format_counter(key: str) -> str:
     return str(value)
 
 
+# The hours card: NEMAR's measured view when the build fetched it (see
+# docs/nemar_observability.py), else the catalog sum under its old title.
+_HOURS_LABEL = (
+    _DATASET_COUNTER_DEFAULTS.get("duration_hours_label") or "Duration (hours)"
+)
+_HOURS_URL = (
+    _DATASET_COUNTER_DEFAULTS.get("duration_hours_url")
+    or "https://dashboard.nemar.org/observability"
+)
+
 _DATASET_COUNTER_PLACEHOLDERS = {
+    "|duration_hours_label|": _HOURS_LABEL,
+    "|duration_hours_url|": _HOURS_URL,
     "|datasets_total|": _format_counter("datasets"),
     "|subjects_total|": _format_counter("subjects"),
     "|recording_total|": _format_counter("recording"),

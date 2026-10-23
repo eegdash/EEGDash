@@ -69,9 +69,10 @@ EEG-DaSh is a data-sharing archive for MEEG (EEG, MEG) recordings contributed by
 
         **|subjects_total|**
 
-    .. grid-item-card::  Duration (hours)
+    .. grid-item-card::  |duration_hours_label|
         :class-card: dataset-counter-card
         :text-align: center
+        :link: |duration_hours_url|
 
         :octicon:`clock;2em;sd-text-info`
 

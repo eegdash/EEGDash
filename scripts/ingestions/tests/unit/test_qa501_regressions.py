@@ -74,10 +74,13 @@ def test_epoched_root_set_keeps_rate_but_no_ntimes(tmp_path, writer):
     writer(p, trials=40)
     md = _set_parser.parse_set_metadata(p)
     assert md["trials"] == 40
-    assert "n_samples" not in md and "duration" not in md
+    assert "n_samples" not in md
+    assert "duration" not in md
     result = _local_cascade(p)
-    assert result.ntimes is None and result.duration_seconds is None
-    assert result.sampling_frequency == 250.0 and result.nchans == 2
+    assert result.ntimes is None
+    assert result.duration_seconds is None
+    assert result.sampling_frequency == 250.0
+    assert result.nchans == 2
 
 
 @pytest.mark.parametrize("writer", [_v73_root, _v5_root])
@@ -85,7 +88,8 @@ def test_continuous_root_set_still_sized(tmp_path, writer):
     p = tmp_path / "sub-1_task-x_eeg.set"
     writer(p, trials=1)
     result = _local_cascade(p)
-    assert result.ntimes == 1500 and result.duration_seconds == 6.0
+    assert result.ntimes == 1500
+    assert result.duration_seconds == 6.0
 
 
 def test_binary_step_ignores_n_samples_of_epoched_parser_output(monkeypatch, tmp_path):
@@ -93,15 +97,18 @@ def test_binary_step_ignores_n_samples_of_epoched_parser_output(monkeypatch, tmp
     monkeypatch.setattr(
         mc,
         "get_parser_for_extension",
-        lambda _e: lambda _p: {
-            "sampling_frequency": 250.0,
-            "nchans": 2,
-            "n_samples": 1500,
-            "trials": 40,
-        },
+        lambda _e: (
+            lambda _p: {
+                "sampling_frequency": 250.0,
+                "nchans": 2,
+                "n_samples": 1500,
+                "trials": 40,
+            }
+        ),
     )
     result = _local_cascade(tmp_path / "x.set")
-    assert result.ntimes is None and result.sampling_frequency == 250.0
+    assert result.ntimes is None
+    assert result.sampling_frequency == 250.0
 
 
 # ---- 2. CTF system-clock truncation, compared with MNE ---------------------
@@ -138,7 +145,7 @@ def _ctf_dataset(tmp_path, payloads):
         for i in range(len(payloads))
     ]
     sizes = [3000] + [len(p) for p in payloads]
-    for name, size, data in zip(names, sizes, [b""] + payloads, strict=True):
+    for name, size, data in zip(names, sizes, [b"", *payloads], strict=True):
         key = (
             f"MD5E-s{size}--"
             + format(len(store), "032x")

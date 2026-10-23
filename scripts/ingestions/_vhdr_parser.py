@@ -71,6 +71,10 @@ def _vhdr_n_times(content: str, vhdr_path: Path, nchans: int | None) -> int | No
     refs = extract_vhdr_references(vhdr_path)
     datafile = refs.get("datafile") or vhdr_path.with_suffix(".eeg").name
     size = data_file_size(vhdr_path.parent / datafile)
+    if not size:
+        # DataFile= still names the pre-BIDS file (on007471: IBS_0001.eeg): size
+        # the BIDS sibling, the file eegdash.io.brainvision makes MNE read.
+        size = data_file_size(vhdr_path.with_suffix(".eeg"))
     if not size or size % dtype_bytes != 0:
         return None
     total_samples = size // dtype_bytes

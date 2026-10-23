@@ -13,11 +13,13 @@ from __future__ import annotations
 
 import json
 import os
+import tempfile
 import warnings
 from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any, Protocol
 
+import numpy as np
 import pandas as pd
 
 # Imported as modules (not symbols) so the cheap-tier helpers stay
@@ -379,6 +381,8 @@ class CascadeResult:
     # NEMAR records.json ntimes, held back until no exact source produced one.
     nemar_ntimes: int | None = None
     fif_is_split: bool = False
+    # A parser reported trials > 1: no length source may flatten the epochs.
+    epoched: bool = False
     fif_continuations_ok: bool = True
     provenance: dict[str, str | None] = field(
         default_factory=lambda: {f: None for f in _METADATA_FIELDS}
@@ -601,6 +605,10 @@ class BinaryParserStep:
         md = parser(ctx.bids_file_path)
         if not md:
             return
+        if (md.get("trials") or 1) > 1:
+            # Epoched: n_samples is one epoch, not the recording (QA of #501).
+            result.epoched = True
+            md = {k: v for k, v in md.items() if k not in ("n_samples", "n_times")}
 
         sf_before = result.sampling_frequency
         n_before = result.nchans
@@ -646,7 +654,9 @@ class SizeArithmeticStep:
     """
 
     def fill(self, ctx: CascadeContext, result: CascadeResult) -> None:
-        if result.ntimes is not None:
+        if result.ntimes is not None or result.epoched:
+            # Epoched: the .fdt holds all trials; size / (nchans x 4) would
+            # flatten them into a continuous length (QA round 2 of #501).
             return
         if ctx.ext != ".set":
             return
@@ -755,7 +765,8 @@ class RemoteHeaderStep:
         mode = os.environ.get("EEGDASH_REMOTE_HEADERS")
         edf = ctx.ext in (".edf", ".bdf")
         if self.last_resort:
-            if mode != "missing" or not edf:
+            # MEF3 has no exact local source on a shallow clone (on004624).
+            if mode != "missing" or not (edf or ctx.ext in (".mefd", ".set", ".ds")):
                 return
         elif mode != "1" and not (mode == "missing" and (edf or ctx.ext == ".snirf")):
             # opt-in only; default OFF keeps snapshots byte-identical. ``missing``
@@ -771,6 +782,10 @@ class RemoteHeaderStep:
                 self._fill_edf(ctx, result)
             elif ctx.ext == ".mefd":
                 self._fill_mefd(ctx, result)
+            elif ctx.ext == ".set" and self.last_resort:
+                self._fill_set(ctx, result)
+            elif ctx.ext == ".ds" and self.last_resort:
+                self._fill_ctf(ctx, result)
             elif ctx.ext == ".snirf":
                 self._fill_snirf(ctx, result)
         except Exception:  # noqa: BLE001
@@ -843,7 +858,9 @@ class RemoteHeaderStep:
             {"dataset": ctx.dataset_id, "bids_relpath": str(relpath)}
         )
         if not url:
-            return  # NEMAR S3 closed / no derivable URL → drop to T3
+            url = _nemar_object_url(ctx, tmet)
+        if not url:
+            return  # no derivable URL → drop to T3
         # The ``.tmet`` header is ~16 KB; one ranged GET of 20 KB covers it.
         data = _parser_utils.fetch_bytes_from_s3(url, max_bytes=20000)
         if not data:
@@ -880,8 +897,193 @@ class RemoteHeaderStep:
             result.sampling_frequency = sfreq
             result.provenance["sampling_frequency"] = PROV_REMOTE_HEADER
 
+    def _fill_set(self, ctx: CascadeContext, result: CascadeResult) -> None:
+        """Size an annexed EEGLAB ``.set`` from its public object (continuous only).
 
-def _nemar_object_url(ctx: CascadeContext) -> str | None:
+        MAT-v7.3 (HDF5) is read by range, scalars only (on004105: ~0.4 MB of
+        674 MB). MAT-v5 cannot be range-read, so it is fetched whole, and only
+        under the loadmat ceiling (on007822: 4.1 MB). An epoched ``.set``
+        (trials > 1) is skipped: its ``pnts`` is one epoch.
+        """
+        _size, url = _remote_header.locate(
+            {"dataset": ctx.dataset_id, "bids_relpath": ctx.bids_relpath}
+        )
+        url = url or _nemar_object_url(ctx)
+        if not url:
+            return
+        reader = _remote_header.RangeReader(url, budget=_SNIRF_RANGE_BUDGET)
+        magic = reader.read(10)
+        reader.seek(0)
+        # MAT-v7.3 is HDF5 behind a 512-byte "MATLAB 7.3 MAT-file" text block.
+        if magic.startswith((b"MATLAB 7.3", b"\x89HDF")):
+            import h5py  # noqa: PLC0415 — optional, as in _set_parser
+
+            with h5py.File(reader, "r") as f:
+                fields = _set_parser.set_fields_from_h5(f)
+        else:
+            size = _file_utils.parse_annex_size(
+                _file_utils.get_annex_file_key(ctx.bids_file_path) or ""
+            )
+            if not size or size > _set_parser._SET_EMBEDDED_LOADMAT_CEILING:
+                return
+            data = _parser_utils.fetch_bytes_from_s3(url, max_bytes=size, timeout=120.0)
+            if not data:
+                return
+            with tempfile.TemporaryDirectory() as tmp:
+                local = Path(tmp) / ctx.bids_file_path.name
+                local.write_bytes(data)
+                fields = _set_parser.parse_set_metadata(local) or {}
+        if (fields.get("trials") or 1) > 1:
+            return
+        n_times = fields.get("n_samples")
+        if n_times and result.ntimes is None:
+            result.ntimes = int(n_times)
+            result.stamp(PROV_REMOTE_HEADER, "ntimes", None, result.ntimes)
+        sfreq = fields.get("sampling_frequency")
+        if sfreq and result.sampling_frequency is None:
+            result.sampling_frequency = float(sfreq)
+            result.stamp(PROV_REMOTE_HEADER, "sampling_frequency", None, sfreq)
+
+    def _fill_ctf(self, ctx: CascadeContext, result: CascadeResult) -> None:
+        """Size an annexed CTF ``.ds`` exactly as ``mne.io.read_raw_ctf`` does (on002761).
+
+        Fetches the ~3 MB ``.res4`` and, per ``.meg4`` file, the SCLK01 clock
+        samples MNE's default ``system_clock='truncate'`` inspects: the count
+        stops at the clock's first zero (``_get_sample_info``). Files are taken in
+        MNE's order (``.meg4``, ``.1_meg4``, ...), stopping at the first missing
+        or empty one. Byte divisibility alone is not enough (QA of #501). Any
+        failed check, no valid sample, or a clock read over
+        ``_CTF_CLOCK_MAX_BYTES`` leaves the recording unsized.
+        """
+        d = ctx.bids_file_path
+        if not d.is_dir():
+            return
+        stem = d.name[: -len(".ds")]
+        res4 = d / f"{stem}.res4"
+        if not (res4.exists() or res4.is_symlink()):
+            return
+        url = self._object_url(ctx, res4)
+        size = _annex_size(res4)
+        if not url or not size or size > _CTF_RES4_MAX_BYTES:
+            return
+        data = _parser_utils.fetch_bytes_from_s3(url, max_bytes=size, timeout=120.0)
+        if not data:
+            return
+        info = _ctf_res4_from_bytes(data, d.name)
+        nsamp, nchan = int(info["nsamp"]), int(info["nchan"])
+        if nsamp <= 0 or nchan <= 0:
+            return
+        clock = _ctf_clock_index(info)
+        total, budget = 0, _CTF_CLOCK_MAX_BYTES
+        for k in range(_CTF_MAX_SPLITS + 1):
+            meg4 = d / (f"{stem}.meg4" if k == 0 else f"{stem}.{k}_meg4")
+            if not (meg4.exists() or meg4.is_symlink()):
+                break
+            if k == _CTF_MAX_SPLITS:
+                return  # more split files than the cap: length not proven
+            n_samp, budget = self._ctf_file_samples(
+                ctx, meg4, nsamp, nchan, clock, budget
+            )
+            if n_samp is None:
+                return  # not provable: leave unsized
+            if n_samp == 0:
+                break
+            total += n_samp
+        if total and result.ntimes is None:
+            result.ntimes = int(total)
+            result.stamp(PROV_REMOTE_HEADER, "ntimes", None, result.ntimes)
+        if total and info.get("sfreq") and result.sampling_frequency is None:
+            result.sampling_frequency = float(info["sfreq"])
+            result.stamp(
+                PROV_REMOTE_HEADER,
+                "sampling_frequency",
+                None,
+                result.sampling_frequency,
+            )
+
+    def _object_url(self, ctx: CascadeContext, path: Path) -> str | None:
+        relpath = str(path.relative_to(ctx.bids_root))
+        _size, url = _remote_header.locate(
+            {"dataset": ctx.dataset_id, "bids_relpath": relpath}
+        )
+        return url or _nemar_object_url(ctx, path)
+
+    def _ctf_file_samples(
+        self,
+        ctx: CascadeContext,
+        meg4: Path,
+        nsamp: int,
+        nchan: int,
+        clock: int | None,
+        budget: int,
+    ) -> tuple[int | None, int]:
+        """``n_samp`` of one ``.meg4`` per MNE's truncate rule, and the budget left."""
+        size = _annex_size(meg4)
+        trial_bytes = 4 * nsamp * nchan
+        if not size or (size - _CTF_HEADER) % trial_bytes:
+            return None, budget  # MNE raises: not a whole number of trials
+        n_samp_tot = (size - _CTF_HEADER) // (4 * nchan)
+        if clock is None:
+            return n_samp_tot, budget
+        url = self._object_url(ctx, meg4)
+        if not url:
+            return None, budget
+        for trial in range(n_samp_tot // nsamp):
+            budget -= 4 * nsamp
+            if budget < 0:
+                return None, budget
+            offset = _CTF_HEADER + (trial * nsamp * nchan + clock * nsamp) * 4
+            raw = _parser_utils.fetch_bytes_from_s3(
+                url, start=offset, max_bytes=4 * nsamp, timeout=120.0
+            )
+            if not raw or len(raw) != 4 * nsamp:
+                return None, budget
+            zeros = np.flatnonzero(np.frombuffer(raw, ">i4") == 0)
+            if zeros.size:
+                return trial * nsamp + int(zeros[0]), budget
+        return n_samp_tot, budget
+
+
+#: Split ``.meg4`` files read per recording; more leaves it unsized.
+_CTF_MAX_SPLITS = 1000
+#: CTF ``.meg4`` files start with an 8-byte header (``CTF.HEADER_SIZE``).
+_CTF_HEADER = 8
+#: Clock bytes read per recording for the truncate check (on002761: 2.2 MB).
+_CTF_CLOCK_MAX_BYTES = 16 * 1024 * 1024
+
+
+def _annex_size(path: Path) -> int | None:
+    return _file_utils.parse_annex_size(_file_utils.get_annex_file_key(path) or "")
+
+
+def _ctf_clock_index(info: dict[str, Any]) -> int | None:
+    """Index of the SCLK01 system-clock channel, as ``_get_sample_info`` finds it."""
+    from mne.io.ctf.constants import CTF  # noqa: PLC0415
+
+    names = list(info.get("ch_names") or [])
+    clock = names.index(CTF.SYSTEM_CLOCK_CH) if CTF.SYSTEM_CLOCK_CH in names else None
+    for k, ch in enumerate(info.get("chs") or []):
+        if ch.get("ch_name") == CTF.SYSTEM_CLOCK_CH:
+            return k
+    return clock
+
+
+#: A CTF ``.res4`` is ~3 MB (on002761: 3,341,749 B); refuse anything far larger.
+_CTF_RES4_MAX_BYTES = 16 * 1024 * 1024
+
+
+def _ctf_res4_from_bytes(data: bytes, ds_name: str) -> dict[str, Any]:
+    """``nsamp``/``nchan``/``sfreq`` of a ``.res4`` held in memory, via MNE's reader."""
+    from mne.io.ctf.res4 import _read_res4  # noqa: PLC0415 — private, header only
+
+    with tempfile.TemporaryDirectory() as tmp:
+        ds = Path(tmp) / ds_name
+        ds.mkdir()
+        (ds / (ds_name[: -len(".ds")] + ".res4")).write_bytes(data)
+        return _read_res4(str(ds))
+
+
+def _nemar_object_url(ctx: CascadeContext, path: Path | None = None) -> str | None:
     """Public NEMAR object URL of a clone's git-annex file, or ``None``.
 
     NEMAR serves public objects by annex key only, on the virtual-hosted
@@ -890,7 +1092,7 @@ def _nemar_object_url(ctx: CascadeContext) -> str | None:
     """
     if _source_from_dataset_id(ctx.dataset_id) != "nemar":
         return None
-    key = _file_utils.get_annex_file_key(ctx.bids_file_path)
+    key = _file_utils.get_annex_file_key(path or ctx.bids_file_path)
     if not key:
         return None
     return f"https://nemar.s3.amazonaws.com/{ctx.dataset_id}/objects/{key}"
@@ -916,7 +1118,9 @@ class SidecarArithmeticStep:
             result.recording_duration = extract_recording_duration_from_sidecar(
                 ctx.bids_file_path, ctx.bids_root
             )
-        if result.ntimes is not None:
+        if result.ntimes is not None or result.epoched:
+            # Epoched: rate x RecordingDuration (or NEMAR's same product) is not a
+            # recording sample count. recording_duration above stays as metadata.
             return
         sfreq = float(result.sampling_frequency or 0.0)
         if result.nemar_ntimes:

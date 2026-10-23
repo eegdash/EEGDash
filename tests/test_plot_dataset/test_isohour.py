@@ -418,3 +418,39 @@ def test_ctf_member_listed_without_key_proves_nothing():
         base = recs[0]["storage"]["raw_key"]
         recs[0]["storage"]["dep_keys"].append(f"{base}/x.1_meg4")
     assert set(_pair(a, b)["status"]) == {"kept"}
+
+
+def _fif(cont_key, *, declared=True, keyed=True):
+    first = "sub-01/meg/sub-01_task-x_meg.fif"
+    cont = "sub-01/meg/sub-01_task-x_meg-1.fif"
+    keys = {first: "SHA256E-first.fif"}
+    if keyed:
+        keys[cont] = cont_key
+    return [
+        {
+            "bids_relpath": first,
+            "ntimes": 600000,
+            "sampling_frequency": 1000.0,
+            "storage": {
+                "raw_key": first,
+                "dep_keys": [cont] if declared else [],
+                "annex_keys": keys,
+            },
+        }
+    ]
+
+
+def test_split_fif_with_different_continuation_is_not_a_duplicate():
+    t = _pair(_fif("SHA256E-cont-a.fif"), _fif("SHA256E-cont-b.fif"))
+    assert set(t["status"]) == {"kept"}
+
+
+def test_split_fif_with_unkeyed_continuation_proves_nothing():
+    a = _fif("x", keyed=False)
+    b = _fif("x", keyed=False)
+    assert set(_pair(a, b)["status"]) == {"kept"}
+
+
+def test_split_fif_with_equal_continuations_is_a_duplicate():
+    t = _pair(_fif("SHA256E-cont-a.fif"), _fif("SHA256E-cont-a.fif"))
+    assert "duplicate" in set(t["status"])

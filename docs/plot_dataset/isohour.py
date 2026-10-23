@@ -346,7 +346,7 @@ HBN_REENCODINGS: Mapping[str, str] = {
 
 #: Signal-bearing companions of multi-file formats: the entry file alone (a
 #: BrainVision or EEGLAB header) does not identify the samples.
-_SIGNAL_COMPANIONS = {".vhdr": (".eeg",), ".set": (".fdt",)}
+_SIGNAL_COMPANIONS = {".vhdr": (".eeg",), ".set": (".fdt",), ".fif": (".fif",)}
 _DIRECTORY_FORMATS = (".ds", ".mefd")
 
 
@@ -355,7 +355,8 @@ def _payload_key(record: dict[str, Any]) -> tuple | None:
 
     Single-file formats (EDF, BDF, FIF, ...): the raw file's key. BrainVision:
     the ``.vhdr`` and its ``.eeg`` (required). EEGLAB: the ``.set`` and its
-    ``.fdt`` when one is referenced. CTF ``.ds`` / MEF ``.mefd`` directories:
+    ``.fdt`` when one is referenced. Split FIF: the first file and every
+    ``stem-N.fif`` continuation declared in ``dep_keys``. CTF ``.ds`` / MEF ``.mefd`` directories:
     every member. A referenced signal file without a key -> ``None`` (unproven):
     on003421/on002833 share all 80 ``.vhdr`` hashes but 2 ``.eeg`` payloads
     differ in size and hash.
@@ -374,7 +375,9 @@ def _payload_key(record: dict[str, Any]) -> tuple | None:
         return None
     files = [raw]
     for comp in _SIGNAL_COMPANIONS.get(ext, ()):
-        found = sorted({f for f in (*deps, *keys) if f.lower().endswith(comp)})
+        found = sorted(
+            {f for f in (*deps, *keys) if f.lower().endswith(comp) and f != raw}
+        )
         if ext == ".vhdr" and not found:
             return None  # BrainVision samples live in the .eeg
         files += found

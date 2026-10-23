@@ -77,13 +77,38 @@ def _request_with_retry(
     raise RuntimeError(f"{method} {url} failed after {retries} attempts: {last_exc}")
 
 
-def list_dataset_ids(client: httpx.Client, api_url: str, database: str) -> list[str]:
+def list_dataset_ids(
+    client: httpx.Client, api_url: str, database: str, *, page_size: int = 100
+) -> list[str]:
+    """Every dataset document id, plus every id that owns records.
+
+    ``/datasets/names`` lists the record collection's owners only, so a ``ds``
+    twin whose records are stored under its ``on`` id (ds007813, ds007822,
+    ds007827, ds007864, ds007865 on 2026-10-23) never appeared and was never
+    retired. Page ``/datasets/summary`` for the documents themselves.
+    """
+    ids: set[str] = set()
+    skip = 0
+    while True:
+        resp = _request_with_retry(
+            client,
+            "GET",
+            f"{api_url}/api/{database}/datasets/summary",
+            params={"limit": page_size, "skip": skip},
+        )
+        resp.raise_for_status()
+        payload = resp.json()
+        rows = payload.get("data") or []
+        ids.update(str(r["dataset_id"]) for r in rows if r.get("dataset_id"))
+        skip += page_size
+        if not rows or skip >= int(payload.get("total") or 0):
+            break
     resp = _request_with_retry(
         client, "GET", f"{api_url}/api/{database}/datasets/names"
     )
     resp.raise_for_status()
-    payload = resp.json()
-    return sorted(payload.get("data") or [])
+    ids.update(resp.json().get("data") or [])
+    return sorted(ids)
 
 
 # Curated fields that only exist on the dataset document (ingestion never

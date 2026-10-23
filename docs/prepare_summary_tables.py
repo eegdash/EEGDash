@@ -28,6 +28,7 @@ from plot_dataset import (
     generate_dataset_growth,
     generate_dataset_sankey,
     generate_dataset_treemap,
+    generate_isohour_landscape,
     generate_moabb_bubble,
     generate_modality_ridgeline,
 )
@@ -295,6 +296,13 @@ def generate_charts_parallel(
             generate_dataset_growth,
             df_raw,
             target_dir / "dataset_growth.html",
+            {},
+        ),
+        (
+            "Iso-hour",
+            generate_isohour_landscape,
+            df_raw,
+            target_dir / "dataset_isohour.html",
             {},
         ),
         (

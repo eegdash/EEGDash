@@ -61,50 +61,142 @@ def docs():
     ]
 
 
-def test_cleaning_rules(docs):
-    t = isohour.build_isohour_table(docs).set_index("dataset_id")
-    status = t["status"].to_dict()
+def _recs(prefix, n, ext=".set", ntimes=1000, rtype="continuous", sfreq=500.0):
+    return [
+        {
+            "bids_relpath": f"sub-{prefix}{k:02d}/eeg/sub-{prefix}{k:02d}_task-x_eeg{ext}",
+            "ntimes": ntimes + k * int(sfreq),
+            "sampling_frequency": sfreq,
+            "recording_type": rtype,
+        }
+        for k in range(n)
+    ]
 
+
+#: Record sets: equal for a mirror / re-encoding, subset for a sample,
+#: different for studies that only share a name or aggregates.
+RECORDS = {
+    "on005505": _recs("a", 136),
+    # BDF copy resampled to 100 Hz: same paths, same durations, other sample counts.
+    "EEG2025r1": _recs("a", 136, ext=".bdf", ntimes=200, sfreq=100.0),
+    "EEG2025r1mini": _recs("a", 20, ext=".bdf", ntimes=200, sfreq=100.0),  # 20 of 136
+    "on000010": _recs("b", 106),
+    "ds000010": _recs("c", 119),  # same name, other recordings
+    "on000020": _recs("d", 70),
+    "on000021": _recs("d", 70),  # same aggregates AND same recordings
+    "on000022": _recs("e", 70),  # same aggregates, other recordings
+    # Same paths but one recording 5 s longer: not the same recordings.
+    "on000023": _recs("d", 69)
+    + [
+        {
+            "bids_relpath": "sub-d69/eeg/sub-d69_task-x_eeg.set",
+            "ntimes": 1000 + 69 * 500 + 2500,
+            "sampling_frequency": 500.0,
+        }
+    ],
+    "on000060": _recs("f", 40, ntimes=1500, rtype="epoched"),
+    "on000061": _recs("g", 10, ntimes=500),
+}
+
+
+def _records(ds):
+    return RECORDS.get(ds, [])
+
+
+@pytest.fixture
+def evidence_docs(docs):
+    return docs + [
+        _doc("on000022", "Flicker C", 69, 190083.2, sfreq=((512.0, 70),)),
+        _doc("on000061", "Short continuous", 10, 300.0),
+        _doc("on000023", "Flicker A", 69, 191000.0, sfreq=((512.0, 70),)),
+    ]
+
+
+def test_duplicates_need_record_evidence(evidence_docs):
+    t = isohour.build_isohour_table(evidence_docs, records=_records).set_index(
+        "dataset_id"
+    )
+    status, flag = t["status"].to_dict(), t["flag"].to_dict()
+    # Proven: same recordings (re-encoding) and a strict subset.
+    assert status["on005505"] == "kept"
+    assert (
+        status["EEG2025r1"] == "duplicate"
+        and t.at["EEG2025r1", "duplicate_of"] == "on005505"
+    )
+    assert (
+        "same 136 recordings (path, duration within 1 s)"
+        in t.at["EEG2025r1", "evidence"]
+    )
+    assert status["EEG2025r1mini"] == "duplicate"
+    assert "subset: 20 of 136" in t.at["EEG2025r1mini", "evidence"]
+    assert (
+        status["on000021"] == "duplicate"
+        and t.at["on000021", "duplicate_of"] == "on000020"
+    )
+    # Unproven: same name, or same aggregates with other recordings -> kept and flagged.
+    assert status["on000010"] == "kept" and flag["on000010"] == "possible_duplicate"
+    assert t.at["on000010", "duplicate_of"] == "ds000010"
+    assert status["ds000010"] == "kept" and pd.isna(flag["ds000010"])
+    assert status["on000022"] == "kept" and flag["on000022"] == "possible_duplicate"
+    assert status["on000030"] == "kept" and pd.isna(flag["on000030"])
+    assert status["on000023"] == "kept" and flag["on000023"] == "possible_duplicate"
+
+
+def test_short_duration_dropped_only_when_epoched(evidence_docs):
+    t = isohour.build_isohour_table(evidence_docs, records=_records).set_index(
+        "dataset_id"
+    )
+    assert t.at["on000060", "status"] == "epoched_duration"
+    assert t.at["on000060", "evidence"] == "40/40 records epoched"
+    assert t.at["on000061", "status"] == "kept"
+    assert t.at["on000061", "flag"] == "short_duration"
+
+
+def test_offline_build_drops_nothing_on_heuristics(evidence_docs):
+    t = isohour.build_isohour_table(evidence_docs).set_index("dataset_id")
+    assert "duplicate" not in set(t["status"])
+    assert "epoched_duration" not in set(t["status"])
+    assert t.at["EEG2025r1", "flag"] == "possible_duplicate"
+    assert t.at["on000060", "flag"] == "short_duration"
+
+
+def test_cleaning_rules(docs):
+    t = isohour.build_isohour_table(docs, records=_records).set_index("dataset_id")
+    status = t["status"].to_dict()
     assert status["on000001"] == "kept"
     assert status["on000002"] == "kept"
-    assert status["on005505"] == "kept"
-    assert status["EEG2025r1"] == "duplicate"
-    assert status["EEG2025r1mini"] == "duplicate"
-    assert status["ds000010"] == "kept" and status["on000010"] == "duplicate"
-    assert t.at["on000010", "duplicate_of"] == "ds000010"
-    assert status["on000020"] == "kept" and status["on000021"] == "duplicate"
-    assert t.at["on000021", "duplicate_of"] == "on000020"
-    assert status["on000030"] == "kept"
     assert status["on006366"] == "non_human"
     assert status["on000040"] == "non_human"
     assert status["on004849"] == "not_a_recording"
     assert status["on000050"] == "no_duration"
-    assert status["on000060"] == "duration_unreliable"
     assert t.at["on000070", "modality"] == "eeg"
     assert t.at["on000001", "hours_per_subject"] == pytest.approx(12.0)
     assert t.at["on000001", "hours_total"] == pytest.approx(1200.0)
 
 
-def test_every_catalogue_row_is_accounted_for(docs):
-    t = isohour.build_isohour_table(docs)
-    assert len(t) == len(docs)
+def test_every_catalogue_row_is_accounted_for(evidence_docs):
+    t = isohour.build_isohour_table(evidence_docs, records=_records)
+    assert len(t) == len(evidence_docs)
     allowed = {
         "kept",
         "duplicate",
         "non_human",
         "not_a_recording",
         "no_duration",
-        "duration_unreliable",
+        "epoched_duration",
     }
     assert set(t["status"]) <= allowed
-    assert t.loc[t["status"] == "duplicate", "duplicate_of"].notna().all()
+    dropped_dup = t["status"] == "duplicate"
+    assert t.loc[dropped_dup, "duplicate_of"].notna().all()
+    assert t.loc[dropped_dup, "evidence"].str.contains("recordings").all()
+    assert set(t["flag"].dropna()) <= {"possible_duplicate", "short_duration"}
 
 
 def test_record_correction_only_raises_short_durations(docs):
     t = isohour.build_isohour_table(docs)
     sums = {"on000060": 40 * 600.0, "on000002": 1.0, "on000080": 100.0}
     fixed = isohour.correct_durations_from_records(
-        t, record_sum=lambda ds: sums.get(ds, 0.0)
+        t, record_sum=lambda ds: sums.get(ds, 0.0), records=_records
     )
     fixed = fixed.set_index("dataset_id")
     assert fixed.at["on000060", "status"] == "kept"

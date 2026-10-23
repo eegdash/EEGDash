@@ -22,18 +22,28 @@ can be audited:
 ``no_duration``
     ``total_duration_s`` missing or zero.
 ``duplicate``
-    One study present more than once. Three rules, applied in order:
-    (1) the ``EEG2025r*`` entries are BDF re-encodings (and 20-subject
-    ``mini`` subsets) of the HBN releases ``on005505``-``on005516``;
-    (2) entries with the same normalised name are versions or mirrors of one
-    study, and the most complete one (most subjects, then most hours) is kept;
-    (3) entries with the same subject count, the same sampling-rate profile
-    and a total duration equal to within one second hold the same recordings.
-    ``duplicate_of`` names the entry that was kept.
-``duration_unreliable``
-    Under one minute per subject after correction. Most are epoched EEGLAB
-    files whose ``ntimes`` counts one epoch, so the catalogue duration is the
-    length of a single trial.
+    Dropped only with record-level evidence of shared recordings: every
+    recording of the dropped entry has the same path (without extension) in
+    the kept entry, with a duration equal within 1 s. Equal sets mean a mirror,
+    a format re-encoding or a resampled copy (the HBN ``EEG2025r*`` BDF copies
+    at 100 Hz of the 500 Hz releases); a strict subset means a sample of the
+    other entry (the ``EEG2025r*mini`` sets).
+    ``duplicate_of`` names the kept entry and ``evidence`` the record counts.
+``epoched_duration``
+    Under one minute per subject AND at least half of the records are
+    ``recording_type == "epoched"``: the catalogue length is one epoch, not
+    the recording.
+
+Rows that stay in the figure can carry a ``flag``:
+
+``possible_duplicate``
+    Same OpenNeuro accession, a DOI naming the other entry's accession, the
+    same normalised name, or the same subject count, sampling-rate profile
+    and total duration (within 1 s), but no record-level proof. Kept and
+    counted.
+``short_duration``
+    Under one minute per subject without epoched records. Kept: short
+    recordings are legitimate.
 
 ``duration_source`` is ``"records"`` when the dataset-level aggregate was
 replaced by the sum of record-level ``duration_seconds`` (see
@@ -71,6 +81,7 @@ __all__ = [
     "build_isohour_table",
     "correct_durations_from_records",
     "fetch_catalogue",
+    "fetch_records",
     "generate_isohour_landscape",
     "summarise_isohour",
 ]
@@ -212,6 +223,26 @@ def fetch_catalogue(
             return out
 
 
+def fetch_records(
+    dataset_id: str, api_base: str | None = None, database: str | None = None
+) -> list[dict[str, Any]]:
+    """Every record of one dataset from ``/records`` (cached on disk)."""
+    api_base = (
+        api_base or os.environ.get("EEGDASH_API_BASE", _DEFAULT_API_BASE)
+    ).rstrip("/")
+    database = database or os.environ.get("EEGDASH_DATABASE", _DEFAULT_DATABASE)
+    flt = urllib.parse.quote(json.dumps({"dataset": dataset_id}))
+    out: list[dict[str, Any]] = []
+    skip = 0
+    while True:
+        url = f"{api_base}/{database}/records?filter={flt}&limit=1000&skip={skip}"
+        rows = _cached_get_json(url).get("data") or []
+        out.extend(rows)
+        if len(rows) < 1000:
+            return out
+        skip += 1000
+
+
 def _record_duration_sum(
     dataset_id: str, api_base: str | None = None, database: str | None = None
 ) -> float:
@@ -278,16 +309,152 @@ def _species_is_non_human(doc: Mapping[str, Any]) -> bool:
     return any(str(v).strip().lower() not in _HUMAN_SPECIES for v in values)
 
 
+#: ``records(dataset_id)`` -> record dicts with at least ``bids_relpath``,
+#: ``ntimes`` and ``recording_type`` (see :func:`fetch_records`).
+RecordFetcher = Callable[[str], list[dict[str, Any]]]
+
+_ACCESSION = re.compile(r"(?:^|[^a-z0-9])(?:ds|on)(\d{6})(?![0-9])")
+_NAME_SUFFIX = re.compile(r"\(bdf converted\)|\bmini\b")
+
+
+def _accession(text: str) -> str | None:
+    m = _ACCESSION.search(str(text or "").lower())
+    return m.group(1) if m else None
+
+
+def _name_key(name: str) -> str:
+    return _norm_name(_NAME_SUFFIX.sub("", str(name or "").lower()))
+
+
+#: Per-recording duration tolerance: a whole-second BDF re-encoding trims
+#: < 1 s (HBN EEG2025r1 vs on005505: at most 0.998 s over 1,342 recordings).
+_SAME_RECORDING_TOL_S = 1.0
+
+
+def _signature(recs: list[dict[str, Any]]) -> dict[str, float]:
+    """``path without extension -> duration (s)`` of every sized record."""
+    out: dict[str, float] = {}
+    for r in recs:
+        dur = r.get("duration_seconds")
+        if not dur and r.get("ntimes") and r.get("sampling_frequency"):
+            dur = r["ntimes"] / r["sampling_frequency"]
+        if r.get("bids_relpath") and dur:
+            out[str(r["bids_relpath"]).rsplit(".", 1)[0]] = float(dur)
+    return out
+
+
+def _same_recordings(small: dict[str, float], big: dict[str, float]) -> bool:
+    """Every recording of ``small`` is in ``big`` with the same duration (within 1 s)."""
+    return bool(small) and all(
+        k in big and abs(v - big[k]) <= _SAME_RECORDING_TOL_S for k, v in small.items()
+    )
+
+
+def _pairs_within(groups: Iterable[list[int]], why: str) -> list[tuple[int, int, str]]:
+    return [(a, b, why) for g in groups for a in g for b in g if a < b]
+
+
+def _candidate_pairs(df: pd.DataFrame) -> list[tuple[int, int, str]]:
+    """Pairs of kept rows that may hold the same recordings, with the first reason."""
+    kept = df[df["status"] == "kept"]
+    by_acc: dict[str, list[int]] = {}
+    by_name: dict[str, list[int]] = {}
+    by_agg: dict[tuple, list[int]] = {}
+    for idx, row in kept.iterrows():
+        acc = _accession(row["dataset_id"])
+        if acc:
+            by_acc.setdefault(acc, []).append(idx)
+        key = _name_key(row["name"])
+        if len(key) >= 8:
+            by_name.setdefault(key, []).append(idx)
+        if row["_sfreq"] and row["duration_s"] > 0:
+            by_agg.setdefault((row["n_subjects"], row["_sfreq"]), []).append(idx)
+    found: list[tuple[int, int, str]] = []
+    for idx, row in kept.iterrows():
+        acc = _accession(row["_doi"])
+        found += [
+            (min(idx, o), max(idx, o), f"dataset_doi names {acc}")
+            for o in by_acc.get(acc or "", [])
+            if o != idx
+        ]
+    found += _pairs_within(by_acc.values(), "same accession number")
+    found += _pairs_within(by_name.values(), "same normalised name")
+    found += [
+        (a, b, why)
+        for a, b, why in _pairs_within(
+            by_agg.values(), "same subjects, sampling rates and duration"
+        )
+        if abs(df.at[a, "duration_s"] - df.at[b, "duration_s"]) < 1.0
+    ]
+    first: dict[tuple[int, int], str] = {}
+    for a, b, why in found:
+        first.setdefault((a, b), why)
+    return [(a, b, why) for (a, b), why in sorted(first.items())]
+
+
+def _keep_order(df: pd.DataFrame, idx: int) -> tuple:
+    """Sort key: originals before HBN re-encodings, then most subjects, then id."""
+    ds = df.at[idx, "dataset_id"]
+    return (bool(_HBN_COPY.match(ds)), -df.at[idx, "n_subjects"], ds)
+
+
+def _resolve_duplicates(df: pd.DataFrame, records: RecordFetcher | None) -> None:
+    """Drop proven duplicates; flag unproven candidates as ``possible_duplicate``."""
+    cache: dict[str, dict[str, float]] = {}
+    for a, b, why in _candidate_pairs(df):
+        if "kept" not in (df.at[a, "status"], df.at[b, "status"]):
+            continue
+        sigs = []
+        for i in (a, b):
+            ds = df.at[i, "dataset_id"]
+            if ds not in cache:
+                try:
+                    cache[ds] = _signature(records(ds)) if records else {}
+                except OSError:
+                    cache[ds] = {}
+            sigs.append(cache[ds])
+        sa, sb = sigs
+        if sa.keys() == sb.keys() and _same_recordings(sa, sb):
+            keep, drop = sorted((a, b), key=lambda i: _keep_order(df, i))
+            evidence = f"same {len(sa)} recordings (path, duration within 1 s)"
+        elif len(sa) != len(sb) and (
+            _same_recordings(sa, sb) or _same_recordings(sb, sa)
+        ):
+            keep, drop = (b, a) if len(sa) < len(sb) else (a, b)
+            small, big = sorted((len(sa), len(sb)))
+            evidence = (
+                f"subset: {small} of {big} recordings (path, duration within 1 s)"
+            )
+        else:
+            other, flagged = sorted((a, b), key=lambda i: _keep_order(df, i))
+            if df.at[flagged, "status"] == "kept":
+                df.at[flagged, "flag"] = "possible_duplicate"
+                df.at[flagged, "duplicate_of"] = df.at[other, "dataset_id"]
+                df.at[flagged, "evidence"] = f"{why}; recordings not shown identical"
+            continue
+        if df.at[drop, "status"] != "kept":
+            continue
+        df.at[drop, "status"] = "duplicate"
+        df.at[drop, "duplicate_of"] = df.at[keep, "dataset_id"]
+        df.at[drop, "flag"] = None
+        df.at[drop, "evidence"] = f"{why}; {evidence}"
+
+
 def _drop(df: pd.DataFrame, mask: pd.Series, reason: str) -> None:
     """Mark still-kept rows selected by ``mask`` as dropped for ``reason``."""
     df.loc[mask & (df["status"] == "kept"), "status"] = reason
 
 
-def build_isohour_table(docs: Iterable[Mapping[str, Any]]) -> pd.DataFrame:
+def build_isohour_table(
+    docs: Iterable[Mapping[str, Any]],
+    records: RecordFetcher | None = None,
+) -> pd.DataFrame:
     """Turn ``/datasets/summary`` documents into the cleaned landscape table.
 
     Returns one row per catalogue dataset. ``status == "kept"`` marks the
-    rows to plot; every other row carries the reason it was dropped.
+    rows to plot; every other row carries the reason it was dropped. Without
+    ``records`` (offline), no row is dropped as a duplicate or as epoched:
+    candidates are only flagged.
     """
     rows: list[dict[str, Any]] = []
     for doc in docs:
@@ -311,6 +478,9 @@ def build_isohour_table(docs: Iterable[Mapping[str, Any]]) -> pd.DataFrame:
                 "_non_human_species": _species_is_non_human(doc),
                 "status": "kept",
                 "duplicate_of": None,
+                "flag": None,
+                "evidence": None,
+                "_doi": str(doc.get("dataset_doi") or "").lower(),
                 "duration_source": "dataset",
             }
         )
@@ -322,42 +492,10 @@ def build_isohour_table(docs: Iterable[Mapping[str, Any]]) -> pd.DataFrame:
     _drop(df, df["dataset_id"].isin(NOT_RECORDINGS), "not_a_recording")
     _drop(df, (df["duration_s"] <= 0) | (df["n_subjects"] <= 0), "no_duration")
 
-    # Rule 1: HBN BDF re-encodings and their mini subsets.
-    hbn = df["dataset_id"].str.match(_HBN_COPY)
-    _drop(df, hbn, "duplicate")
-    df.loc[hbn & (df["status"] == "duplicate"), "duplicate_of"] = "on005505-on005516"
+    _resolve_duplicates(df, records)
 
-    # Rule 2: same normalised name -> keep the most complete entry.
-    kept = df[df["status"] == "kept"].copy()
-    kept["_key"] = kept["name"].map(_norm_name)
-    for key, group in kept[kept["_key"].str.len() >= 4].groupby("_key"):
-        if len(group) < 2:
-            continue
-        order = group.sort_values(
-            ["n_subjects", "duration_s", "dataset_id"], ascending=[False, False, True]
-        )
-        winner = order.index[0]
-        losers = order.index[1:]
-        df.loc[losers, "status"] = "duplicate"
-        df.loc[losers, "duplicate_of"] = df.at[winner, "dataset_id"]
-
-    # Rule 3: same subjects, same sampling-rate profile, same duration (+-1 s).
-    kept = df[df["status"] == "kept"].sort_values("dataset_id")
-    seen: dict[tuple, list[tuple[float, str]]] = {}
-    for idx, row in kept.iterrows():
-        key = (row["n_subjects"], row["_sfreq"])
-        match = next(
-            (ds for dur, ds in seen.get(key, []) if abs(dur - row["duration_s"]) < 1.0),
-            None,
-        )
-        if match is not None and row["_sfreq"]:
-            df.at[idx, "status"] = "duplicate"
-            df.at[idx, "duplicate_of"] = match
-        else:
-            seen.setdefault(key, []).append((row["duration_s"], row["dataset_id"]))
-
-    df = df.drop(columns=["_sfreq", "_non_human_species"])
-    return _finalise(df)
+    df = df.drop(columns=["_sfreq", "_non_human_species", "_doi"])
+    return _classify_short(_finalise(df), records)
 
 
 def _finalise(df: pd.DataFrame) -> pd.DataFrame:
@@ -369,7 +507,25 @@ def _finalise(df: pd.DataFrame) -> pd.DataFrame:
             np.nan,
         )
     short = (df["status"] == "kept") & (df["hours_per_subject"] * 60 < 1.0)
-    df.loc[short, "status"] = "duration_unreliable"
+    df.loc[short & df["flag"].isna(), "flag"] = "short_duration"
+    df.loc[~short & (df["flag"] == "short_duration"), "flag"] = None
+    return df
+
+
+def _classify_short(df: pd.DataFrame, records: RecordFetcher | None) -> pd.DataFrame:
+    """Drop a short dataset only when its records are epoched (one epoch counted)."""
+    if records is None:
+        return df
+    for idx in df.index[(df["status"] == "kept") & (df["flag"] == "short_duration")]:
+        try:
+            recs = records(df.at[idx, "dataset_id"])
+        except OSError:
+            continue
+        n_ep = sum(1 for r in recs if r.get("recording_type") == "epoched")
+        if recs and 2 * n_ep >= len(recs):
+            df.at[idx, "status"] = "epoched_duration"
+            df.at[idx, "flag"] = None
+            df.at[idx, "evidence"] = f"{n_ep}/{len(recs)} records epoched"
     return df
 
 
@@ -379,6 +535,7 @@ def correct_durations_from_records(
     *,
     max_minutes_per_subject: float = 5.0,
     min_ratio: float = 1.5,
+    records: RecordFetcher | None = None,
 ) -> pd.DataFrame:
     """Replace implausibly short dataset durations by the record-level sum.
 
@@ -391,7 +548,7 @@ def correct_durations_from_records(
     """
     record_sum = record_sum or _record_duration_sum
     df = df.copy()
-    candidates = df["status"].isin(["kept", "duration_unreliable"]) & (
+    candidates = df["status"].isin(["kept", "epoched_duration"]) & (
         df["hours_per_subject"] * 60 < max_minutes_per_subject
     )
     for idx in df.index[candidates]:
@@ -402,8 +559,8 @@ def correct_durations_from_records(
         if total >= min_ratio * df.at[idx, "duration_s"]:
             df.at[idx, "duration_s"] = total
             df.at[idx, "duration_source"] = "records"
-    df.loc[df["status"] == "duration_unreliable", "status"] = "kept"
-    return _finalise(df)
+    df.loc[df["status"] == "epoched_duration", "status"] = "kept"
+    return _classify_short(_finalise(df), records)
 
 
 def summarise_isohour(df: pd.DataFrame) -> dict[str, Any]:
@@ -418,6 +575,7 @@ def summarise_isohour(df: pd.DataFrame) -> dict[str, Any]:
         "n_catalogue": int(len(df)),
         "n_kept": int(len(kept)),
         "dropped": df.loc[df["status"] != "kept", "status"].value_counts().to_dict(),
+        "flagged": kept["flag"].value_counts().to_dict(),
         "hours_total": float(hours.sum()),
         "subjects_total": int(kept["n_subjects"].sum()),
         "median_subjects": float(kept["n_subjects"].median()),
@@ -460,9 +618,9 @@ def generate_isohour_landscape(
     """Render the interactive iso-hour landscape for the docs."""
     del df  # signature parity with the other dataset-summary charts
     if table is None:
-        table = build_isohour_table(fetch_catalogue())
+        table = build_isohour_table(fetch_catalogue(), records=fetch_records)
         if correct_from_records:
-            table = correct_durations_from_records(table)
+            table = correct_durations_from_records(table, records=fetch_records)
     kept = table[table["status"] == "kept"]
     stats = summarise_isohour(table)
 

@@ -38,6 +38,7 @@ try:
         build_isohour_table,
         correct_durations_from_records,
         fetch_catalogue,
+        fetch_records,
         summarise_isohour,
     )
 except ImportError:  # pragma: no cover - direct-script execution
@@ -48,6 +49,7 @@ except ImportError:  # pragma: no cover - direct-script execution
         build_isohour_table,
         correct_durations_from_records,
         fetch_catalogue,
+        fetch_records,
         summarise_isohour,
     )
 
@@ -512,9 +514,9 @@ def main() -> None:  # pragma: no cover - CLI
     parser.add_argument("--no-record-correction", action="store_true")
     args = parser.parse_args()
 
-    table = build_isohour_table(fetch_catalogue())
+    table = build_isohour_table(fetch_catalogue(), records=fetch_records)
     if not args.no_record_correction:
-        table = correct_durations_from_records(table)
+        table = correct_durations_from_records(table, records=fetch_records)
     stats = make_isohour_figure(table, args.out)
     if args.table_csv:
         table.to_csv(args.table_csv, index=False)

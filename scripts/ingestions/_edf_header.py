@@ -53,17 +53,29 @@ _LEN_N_SIGNALS = 4
 _BYTES_PER_SAMPLE = {".edf": 2, ".bdf": 3}
 
 
+def _field_text(raw: bytes) -> str:
+    r"""Decode a fixed-width EDF ASCII field, dropping its padding.
+
+    The spec pads with spaces; some clinical exporters also end the number with
+    a C-style NUL (on006914: ``b"551\x00    "``), which MNE reads. Only padding
+    is dropped, so a NUL between digits still fails the number parse.
+    Raises ``UnicodeDecodeError`` on non-ASCII bytes.
+    """
+    return raw.decode("ascii").strip(" \x00")
+
+
 def _read_ascii_int(buf: bytes, offset: int, length: int) -> int | None:
     """Parse a fixed-width ASCII integer field; return ``None`` on any failure.
 
-    EDF header fields are ASCII, left-justified, space-padded. A blank field,
-    a non-ASCII byte, or a truncated buffer all yield ``None`` rather than
-    raising — upholding the ``FormatParser`` recoverable-failure contract.
+    EDF header fields are ASCII, left-justified, space-padded (or NUL-ended, see
+    :func:`_field_text`). A blank field, a non-ASCII byte, or a truncated buffer
+    all yield ``None`` rather than raising — upholding the ``FormatParser``
+    recoverable-failure contract.
     """
     if offset + length > len(buf):
         return None
     try:
-        text = buf[offset : offset + length].decode("ascii").strip()
+        text = _field_text(buf[offset : offset + length])
     except (UnicodeDecodeError, ValueError):
         return None
     if not text:
@@ -148,9 +160,7 @@ def edf_raw_shape(main: bytes, signals: bytes) -> tuple[float, int, int] | None:
         n_signals = edf_n_signals(main)
         n_records = _read_ascii_int(main, _OFF_N_RECORDS, _LEN_N_RECORDS)
         duration = float(
-            main[_OFF_REC_DURATION : _OFF_REC_DURATION + _LEN_REC_DURATION].decode(
-                "ascii"
-            )
+            _field_text(main[_OFF_REC_DURATION : _OFF_REC_DURATION + _LEN_REC_DURATION])
         )
         if not n_signals or not n_records or n_records <= 0 or duration <= 0:
             return None
@@ -161,7 +171,7 @@ def edf_raw_shape(main: bytes, signals: bytes) -> tuple[float, int, int] | None:
             label = signals[16 * i : 16 * i + 16].decode("ascii", "replace").strip()
             off = 216 * n_signals + 8 * i
             if label not in ("EDF Annotations", "BDF Annotations"):
-                spr.append(int(signals[off : off + 8].decode("ascii").strip()))
+                spr.append(int(_field_text(signals[off : off + 8])))
         if not spr or max(spr) <= 0:
             return None
         return max(spr) / duration, n_records * max(spr), len(spr)

@@ -278,3 +278,45 @@ def test_ctf_split_cap_exhaustion_stays_unsized(monkeypatch, tmp_path):
     monkeypatch.setattr(mc, "_CTF_MAX_SPLITS", 1)
     payloads = [_meg4_bytes(5, [[1, 2, 3, 4, 5]]), _meg4_bytes(5, [[6, 7, 8, 9, 10]])]
     assert _remote_ntimes(monkeypatch, tmp_path, 5, payloads) is None
+
+
+# ---- 4. full cascade: late sidecar arithmetic (QA round 3) -----------------
+
+
+class _NoRateBids:
+    """EEGBIDSDataset stand-in: the sidecar gives RecordingDuration, no rate."""
+
+    def __init__(self, root):
+        self.bidsdir = str(root)
+
+    def get_bids_file_attribute(self, name, _file):
+        return 6.0 if name == "duration" else None
+
+
+def _full_cascade(tmp_path, writer, trials, monkeypatch):
+    monkeypatch.delenv("EEGDASH_REMOTE_HEADERS", raising=False)
+    root = tmp_path / "localds"
+    eeg = root / "sub-1" / "eeg"
+    eeg.mkdir(parents=True)
+    p = eeg / "sub-1_task-x_eeg.set"
+    writer(p, trials=trials)
+    (eeg / "sub-1_task-x_eeg.json").write_text(
+        '{"RecordingType": "%s", "RecordingDuration": 6}'
+        % ("epoched" if trials > 1 else "continuous")
+    )
+    return mc.MetadataCascade().run(CascadeContext(_NoRateBids(root), str(p)))
+
+
+@pytest.mark.parametrize("writer", [_v73_root, _v5_root])
+def test_full_cascade_epoched_set_gets_no_sidecar_ntimes(tmp_path, writer, monkeypatch):
+    # Rate only from the root .set (250 Hz), duration-only sidecar: no ntimes.
+    result = _full_cascade(tmp_path, writer, 40, monkeypatch)
+    assert result.ntimes is None
+    assert result.sampling_frequency == 250.0
+    assert result.recording_duration == 6.0  # sidecar metadata kept as is
+
+
+@pytest.mark.parametrize("writer", [_v73_root, _v5_root])
+def test_full_cascade_continuous_set_still_sized(tmp_path, writer, monkeypatch):
+    result = _full_cascade(tmp_path, writer, 1, monkeypatch)
+    assert result.ntimes == 1500

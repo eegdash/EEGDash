@@ -1118,7 +1118,9 @@ class SidecarArithmeticStep:
             result.recording_duration = extract_recording_duration_from_sidecar(
                 ctx.bids_file_path, ctx.bids_root
             )
-        if result.ntimes is not None:
+        if result.ntimes is not None or result.epoched:
+            # Epoched: rate x RecordingDuration (or NEMAR's same product) is not a
+            # recording sample count. recording_duration above stays as metadata.
             return
         sfreq = float(result.sampling_frequency or 0.0)
         if result.nemar_ntimes:

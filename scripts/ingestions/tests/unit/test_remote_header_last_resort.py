@@ -52,6 +52,7 @@ def _nemar_bdf(tmp_path) -> CascadeContext:
 def _reader_returning(header: bytes, urls: list[str]):
     reader = Mock()
     reader.read.return_value = header
+    reader.read_once.return_value = b""
     return lambda url, **_k: urls.append(url) or reader
 
 
@@ -143,6 +144,7 @@ def test_fills_nchans_from_labels_without_annotations(monkeypatch, tmp_path):
     reader.read.side_effect = lambda off, n: (
         _bdf_main_header(90) if off == 0 else labels[:n]
     )
+    reader.read_once.side_effect = lambda off, n: labels[:n]
     monkeypatch.setattr(mc._remote_header, "RangeReader", lambda url, **_k: reader)
     rel = "sub-021/eeg/sub-021_task-signalvr_eeg.bdf"
     result = CascadeResult(sampling_frequency=512.0, ntimes=46080)

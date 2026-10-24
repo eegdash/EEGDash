@@ -810,8 +810,11 @@ class RemoteHeaderStep:
         if not buf:
             return
         n_signals = _edf_header.edf_n_signals(buf)
+        # One ranged request for all signal headers: a 256-byte block made this
+        # n_signals round trips (nm000108: 12,625 requests for 100 headers,
+        # past the 1800 s per-dataset digest limit).
         sig = (
-            reader.read(_edf_header.EDF_HEADER_LEN, 256 * n_signals)
+            reader.read_once(_edf_header.EDF_HEADER_LEN, 256 * n_signals)
             if n_signals
             else b""
         ) or b""

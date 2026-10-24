@@ -180,6 +180,7 @@ def test_edf_header_beats_sidecar_arithmetic(monkeypatch, tmp_path, seed):
     reader.read.side_effect = lambda off, n: (
         _edf_main_header(131, 6, 22) if off == 0 else b"EEG Fp1         " * 22
     )
+    reader.read_once.side_effect = lambda off, n: b"EEG Fp1         " * 22
     monkeypatch.setattr(mc._remote_header, "RangeReader", lambda url, **_k: reader)
     ctx = _annexed_edf(tmp_path, "on008082")
     result = CascadeResult(sampling_frequency=200.0, nchans=22, **seed)

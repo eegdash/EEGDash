@@ -61,10 +61,10 @@ def test_pinned_failed_head_never_trusts_existing_cache(tmp_path):
     assert dest.read_bytes() == b"head"
 
 
-def test_record_pin_only_applies_to_raw_and_never_reroutes(tmp_path, monkeypatch):
+def test_record_pin_only_applies_to_raw(tmp_path, monkeypatch):
     rel = "sub-01/eeg/sub-01_task-rest_eeg.edf"
     record = create_record(
-        dataset="on003574",
+        dataset="ds003574",
         bids_relpath=rel,
         storage_base="s3://openneuro.org/ds003574",
         dep_keys=["dataset_description.json"],
@@ -78,7 +78,6 @@ def test_record_pin_only_applies_to_raw_and_never_reroutes(tmp_path, monkeypatch
     raw._download_required_files()
     assert download.call_args_list[0].kwargs["version_id"] == "past"
     assert all("versionId" not in uri for uri in raw._dep_uris)
-    assert raw._reroute_twin_to_nemar() is False
 
 
 def test_dependency_pin_does_not_pin_header_or_other_sidecars(tmp_path, monkeypatch):
@@ -112,7 +111,7 @@ def test_dependency_pin_does_not_pin_header_or_other_sidecars(tmp_path, monkeypa
 def test_missing_pin_never_reads_head(tmp_path, monkeypatch, failure):
     rel = "sub-01/eeg/sub-01_task-rest_eeg.edf"
     record = create_record(
-        dataset="on003574", bids_relpath=rel, storage_base="s3://openneuro.org/ds003574"
+        dataset="ds003574", bids_relpath=rel, storage_base="s3://openneuro.org/ds003574"
     )
     record["storage"]["version_id"] = "missing"
     raw = EEGDashRaw(record=record, cache_dir=tmp_path)

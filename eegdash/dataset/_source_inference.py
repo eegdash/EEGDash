@@ -17,12 +17,11 @@ never directly fetchable. EEGDash treats ``backend="nemar"`` as a marker
 that means "do not attempt a public S3 fetch; surface an actionable
 ``StorageAccessError`` if the file is not already in cache."
 
-That marker applies to NEMAR-*native* ``nm*`` datasets only. An ``on*``
-dataset is a re-host of an OpenNeuro dataset — same bytes, same relative
-paths — so it is routed to OpenNeuro's public bucket under the OpenNeuro
-id (``on005863`` -> ``s3://openneuro.org/ds005863``) and stays fetchable.
-Without this, retiring the ``ds*`` twin in favour of ``on*`` would leave
-the data unreachable.
+An ``on*`` dataset is NEMAR's re-host of an OpenNeuro dataset and is read from
+NEMAR first, like ``nm*``: NEMAR's copy can carry fixes the OpenNeuro copy
+lacks (``on003810`` has ``events.tsv`` files that ``ds003810`` on OpenNeuro's
+bucket does not). OpenNeuro ``ds*`` ids without a NEMAR mirror stay on
+OpenNeuro.
 
 **Single source of truth** for ``STORAGE_CONFIGS``. The ingestion
 pipeline (``scripts/ingestions/3_digest.py``) imports from here rather
@@ -83,18 +82,6 @@ def infer_source_from_dataset_id(dataset_id: str) -> str | None:
     return None
 
 
-def openneuro_twin_of(dataset_id: str) -> str | None:
-    """Return the OpenNeuro id a NEMAR re-host mirrors, else ``None``.
-
-    NEMAR re-hosts OpenNeuro datasets keeping the numeric body and swapping
-    the prefix (``on005863`` mirrors ``ds005863``). ``nm*`` ids are
-    NEMAR-native and have no OpenNeuro counterpart.
-    """
-    if dataset_id.startswith("on") and dataset_id[2:].isdigit():
-        return "ds" + dataset_id[2:]
-    return None
-
-
 def nemar_twin_of(dataset_id: str) -> str | None:
     """Return the NEMAR re-host id for an OpenNeuro id, else ``None``."""
     if dataset_id.startswith("ds") and dataset_id[2:].isdigit():
@@ -122,12 +109,6 @@ def expected_storage_base(dataset_id: str) -> str | None:
     need extra metadata to build the URL (figshare/zenodo/osf use per-
     record IDs that aren't derivable from ``dataset_id``).
     """
-    twin = openneuro_twin_of(dataset_id)
-    if twin is not None:
-        # An on* dataset IS the OpenNeuro dataset, byte-identical, and
-        # OpenNeuro's bucket is world-readable while NEMAR's is not. Serve
-        # it from OpenNeuro under the OpenNeuro id so the data is reachable.
-        return f"{STORAGE_CONFIGS['openneuro']['base']}/{twin}"
     if base := _competition_base(dataset_id):
         return base
     source = infer_source_from_dataset_id(dataset_id)
@@ -138,7 +119,7 @@ def expected_storage_base(dataset_id: str) -> str | None:
 
 def expected_backend(dataset_id: str) -> str | None:
     """Return the canonical ``storage.backend`` for ``dataset_id``."""
-    if openneuro_twin_of(dataset_id) is not None or _competition_base(dataset_id):
+    if _competition_base(dataset_id):
         # Fetchable via public S3 -- see expected_storage_base.
         return STORAGE_CONFIGS["openneuro"]["backend"]
     source = infer_source_from_dataset_id(dataset_id)

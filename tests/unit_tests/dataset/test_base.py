@@ -2385,9 +2385,8 @@ def test_resolve_annex_key_uri_md5e(tmp_path):
     )
 
 
-@pytest.mark.parametrize("error", [FileNotFoundError, PermissionError])
-def test_download_required_files_on_twin_missing_falls_back_to_nemar(tmp_path, error):
-    """on008062: OpenNeuro twin deleted (404) or private (403) -> NEMAR."""
+def test_on_record_reads_nemar_not_the_openneuro_twin(tmp_path):
+    """on008062's OpenNeuro twin was deleted; NEMAR is read first anyway."""
     relpath = "sub-17/eeg/sub-17_task-soundscape_eeg.edf"
     key = "SHA256E-s425668--b366ad.edf"
     record = {
@@ -2402,24 +2401,8 @@ def test_download_required_files_on_twin_missing_falls_back_to_nemar(tmp_path, e
     }
     with patch("eegdash.dataset.base.validate_record", return_value=None):
         ds = EEGDashRaw(record, cache_dir=str(tmp_path))
-    twin_uri = f"s3://openneuro.org/ds008062/{relpath}"
-    assert ds._raw_uri == twin_uri
-
-    with (
-        patch("eegdash.dataset.base.downloader.get_s3_filesystem"),
-        patch(
-            "eegdash.dataset.base.downloader.download_s3_file",
-            side_effect=[error(twin_uri), None],
-        ) as mock_dl,
-        patch("eegdash.dataset.base.downloader.download_files"),
-        patch.object(EEGDashRaw, "_fetch_nemar_root_metadata"),
-    ):
-        ds._download_required_files()
-
-    assert [c.args[0] for c in mock_dl.call_args_list] == [
-        twin_uri,
-        f"s3://nemar/on008062/objects/{key}",
-    ]
+    assert ds._storage_backend == "nemar"
+    assert ds.record["storage"]["base"] == "s3://nemar/on008062"
 
 
 def test_resolve_annex_key_uri_sha256e(tmp_path):

@@ -21,8 +21,6 @@ from shutil import copyfile as _copyfile
 from typing import Any, Callable
 
 import pandas as pd
-from nemar_hours import combined_hours as _combined_hours
-from nemar_hours import fetch_catalog_hours as _fetch_nemar_hours
 from plot_dataset import (
     generate_api_study_explorer,
     generate_clinical_stacked_bar,
@@ -45,8 +43,10 @@ from table_tag_utils import (
 
 # Ensure eegdash package is importable (this script lives in docs/)
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+from eegdash.dataset._source_inference import nemar_twin_of
 from eegdash.dataset.snapshot import DatasetSnapshot
 from eegdash.http_api_client import DEFAULT_API_URL
+from eegdash.nemar_backend import NemarMetadataClient
 
 # Directories
 DOCS_DIR = Path(__file__).resolve().parent
@@ -357,11 +357,30 @@ def process_chart_results(results: list[tuple[str, Path | None, str | None]]) ->
 # =============================================================================
 
 
-def save_summary_stats(
-    df_raw: pd.DataFrame,
-    aggregations: dict | None = None,
-    nemar_hours: dict[str, float] | None | bool = True,
-) -> None:
+def _nemar_measured_hours() -> dict[str, float]:
+    """Hours NEMAR measured per dataset, only where every recording is measured.
+
+    NEMAR's ``total_recording_duration`` covers only the recordings it has
+    measured, so a dataset with unavailable recordings keeps its EEGDash value
+    (nm000276: 850 h measured by NEMAR, 6,672 h in the raw headers).
+    """
+    try:
+        # ponytail: the client caps listings at 1000 datasets; any beyond keep EEGDash hours.
+        rows = NemarMetadataClient().find_datasets(limit=1000)
+    except Exception as exc:  # never fail the docs build over a counter
+        print(f"  NEMAR catalog unavailable ({exc}); using EEGDash hours")
+        return {}
+    hours = {}
+    for row in rows:
+        catalog = row["nemar_catalog"]
+        seconds = catalog.get("total_recording_duration")
+        if isinstance(seconds, (int, float)) and seconds > 0:
+            if not catalog.get("recordings_unavailable"):
+                hours[row["dataset_id"]] = seconds / 3600
+    return hours
+
+
+def save_summary_stats(df_raw: pd.DataFrame, aggregations: dict | None = None) -> None:
     """Calculate and save summary stats for the documentation cards.
 
     Prefers the pre-computed ``aggregations`` block returned by the
@@ -371,11 +390,9 @@ def save_summary_stats(
     client recomputation that used to live here produced identical
     numbers (verified via parity check) but added a second source of
     truth. ``duration_hours`` is not exposed in the server ``totals``
-    block today. It sums every EEGDash dataset, using the hours NEMAR
-    measured from the recordings where NEMAR serves the dataset and the
-    EEGDash catalog value otherwise (see ``nemar_hours``). Pass
-    ``nemar_hours=None`` to skip the NEMAR fetch (tests, offline builds), or
-    a pre-fetched ``{dataset_id: hours}`` map.
+    block today, so it is summed client-side over every dataset, using the
+    hours NEMAR measured where it measured every recording
+    (:func:`_nemar_measured_hours`) and the EEGDash value otherwise.
 
     When ``aggregations`` is missing keys (e.g. the chart-data endpoint
     fell back to ``/datasets/summary`` and returned ``{}``), the
@@ -411,18 +428,19 @@ def save_summary_stats(
             pd.to_numeric(df_raw.get(n_rec_col, 0), errors="coerce").sum()
         )
 
-    # duration_hours: every EEGDash dataset; NEMAR-measured hours where
-    # NEMAR serves the dataset, the EEGDash catalog value otherwise.
-    if nemar_hours is True:
-        nemar_hours = _fetch_nemar_hours()
-    hours_info = _combined_hours(df_raw, nemar_hours)
-    duration_hours = hours_info["hours"]
-    print(
-        "  duration_hours: "
-        f"{hours_info['datasets_from_nemar']} datasets from NEMAR, "
-        f"{hours_info['datasets_from_eegdash']} from EEGDash, "
-        f"{hours_info['datasets_without_hours']} without hours"
-    )
+    # duration_hours: not in server totals; keep client-side. May appear
+    # as total_duration_s (seconds) or duration_hours_total (hours).
+    if "duration_hours_total" in df_raw.columns:
+        own_hours = pd.to_numeric(df_raw["duration_hours_total"], errors="coerce")
+    elif "total_duration_s" in df_raw.columns:
+        own_hours = pd.to_numeric(df_raw["total_duration_s"], errors="coerce") / 3600
+    else:
+        own_hours = pd.Series(0.0, index=df_raw.index)
+    nemar_hours = _nemar_measured_hours()
+    ids = df_raw.get("dataset", pd.Series("", index=df_raw.index)).astype(str)
+    measured = ids.map(lambda i: nemar_hours.get(nemar_twin_of(i) or i))
+    duration_hours = int(round(measured.fillna(own_hours).fillna(0).sum()))
+    print(f"  duration_hours: {int(measured.notna().sum())} datasets from NEMAR")
 
     # modalities_total: prefer server (one canonical bucket per recording
     # modality, e.g. EEG/MEG/IEEG/FNIRS/EMG). The client fallback
@@ -456,19 +474,10 @@ def save_summary_stats(
         "datasets_total": int(datasets_total),
         "subjects_total": int(subjects_total),
         "recording_total": int(recording_total),
-        "duration_hours": int(round(duration_hours)),
+        "duration_hours": int(duration_hours),
         "modalities_total": int(modalities_total),
         "sources_total": int(sources_total),
     }
-    summary_stats.update(
-        {
-            "duration_hours_datasets_from_nemar": hours_info["datasets_from_nemar"],
-            "duration_hours_datasets_from_eegdash": hours_info["datasets_from_eegdash"],
-            "duration_hours_datasets_without_hours": hours_info[
-                "datasets_without_hours"
-            ],
-        }
-    )
 
     stats_path = STATIC_DATASET_DIR / "summary_stats.json"
     with open(stats_path, "w") as f:

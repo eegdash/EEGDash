@@ -186,6 +186,26 @@ class ValidationResult:
         return "\n".join(lines)
 
 
+def _is_approved_openneuro_pin(dataset_id: str, source: str, storage: dict) -> bool:
+    """A NEMAR ``onNNNNNN`` record pinned to its own OpenNeuro object version.
+
+    Historical source pins (listings a242cf7: on003574, on003768, on004346,
+    on005815) keep a record on the exact OpenNeuro object the catalogue was
+    checked against: ``backend`` s3, ``base`` ``s3://openneuro.org/dsNNNNNN``
+    with the same number as the ``on`` id, and a ``version_id`` (or per-file
+    ``version_ids``, as on003768 and on005815 store it). Anything else
+    under an OpenNeuro base stays invalid for NEMAR.
+    """
+    m = re.fullmatch(r"on(\d+)", str(dataset_id))
+    return bool(
+        source == "nemar"
+        and m
+        and storage.get("backend") == "s3"
+        and (storage.get("version_id") or storage.get("version_ids"))
+        and storage.get("base") == f"s3://openneuro.org/ds{m.group(1)}"
+    )
+
+
 def validate_storage_url(source: str, storage_base: str) -> tuple[bool, str]:
     """Validate that storage URL matches the source."""
     if source not in VALID_STORAGE_PATTERNS:
@@ -235,6 +255,8 @@ def validate_record(
     if storage:
         storage_base = storage.get("base", "")
         is_valid, error_msg = validate_storage_url(source, storage_base)
+        if not is_valid and _is_approved_openneuro_pin(dataset_id, source, storage):
+            is_valid = True
         if not is_valid:
             result.add_error(dataset_id, error_msg, field="storage.base")
             result.stats["storage_errors"] += 1

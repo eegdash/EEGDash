@@ -81,6 +81,8 @@ class _BlobReader:
     def read(self, offset, length):
         return self.blob[offset : offset + length]
 
+    read_once = read
+
 
 def _serve(monkeypatch, blob: bytes):
     monkeypatch.setattr(_BlobReader, "blob", blob)

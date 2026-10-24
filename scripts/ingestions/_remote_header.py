@@ -142,6 +142,31 @@ class RangeReader:
 
     # ── explicit ranged read ────────────────────────────────────────────────
 
+    def read_once(self, offset: int, length: int) -> bytes:
+        """``length`` bytes at ``offset`` in ONE ranged request (budget-checked).
+
+        :meth:`read` fetches whole ``block``-sized blocks, so a long run after a
+        small block costs one round trip per block (EDF signal headers: one per
+        signal). Not cached; returns ``b""`` on a transport miss.
+        """
+        if length <= 0:
+            return b""
+        if self.bytes_fetched + length > self.budget:
+            raise ByteBudgetExceededError(
+                f"reading {length} B at {offset} would exceed budget {self.budget} B "
+                f"(already fetched {self.bytes_fetched} B)"
+            )
+        data = self._fetcher(self.url, start=offset, max_bytes=length, timeout=30.0)
+        if data is None:
+            return b""
+        if len(data) > length:
+            raise RangeUnsupportedError(
+                f"server returned {len(data)} B for a {length} B Range request "
+                f"on {self.url} (Range ignored)"
+            )
+        self.bytes_fetched += length
+        return data
+
     def read(self, offset: int | None = None, length: int | None = None) -> bytes:
         """Read bytes.
 

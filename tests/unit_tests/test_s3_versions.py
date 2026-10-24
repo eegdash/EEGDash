@@ -61,10 +61,10 @@ def test_pinned_failed_head_never_trusts_existing_cache(tmp_path):
     assert dest.read_bytes() == b"head"
 
 
-def test_record_pin_only_applies_to_raw_and_never_reroutes(tmp_path, monkeypatch):
+def test_record_pin_only_applies_to_raw(tmp_path, monkeypatch):
     rel = "sub-01/eeg/sub-01_task-rest_eeg.edf"
     record = create_record(
-        dataset="on003574",
+        dataset="ds003574",
         bids_relpath=rel,
         storage_base="s3://openneuro.org/ds003574",
         dep_keys=["dataset_description.json"],
@@ -78,7 +78,6 @@ def test_record_pin_only_applies_to_raw_and_never_reroutes(tmp_path, monkeypatch
     raw._download_required_files()
     assert download.call_args_list[0].kwargs["version_id"] == "past"
     assert all("versionId" not in uri for uri in raw._dep_uris)
-    assert raw._reroute_twin_to_nemar() is False
 
 
 def test_dependency_pin_does_not_pin_header_or_other_sidecars(tmp_path, monkeypatch):
@@ -112,7 +111,7 @@ def test_dependency_pin_does_not_pin_header_or_other_sidecars(tmp_path, monkeypa
 def test_missing_pin_never_reads_head(tmp_path, monkeypatch, failure):
     rel = "sub-01/eeg/sub-01_task-rest_eeg.edf"
     record = create_record(
-        dataset="on003574", bids_relpath=rel, storage_base="s3://openneuro.org/ds003574"
+        dataset="ds003574", bids_relpath=rel, storage_base="s3://openneuro.org/ds003574"
     )
     record["storage"]["version_id"] = "missing"
     raw = EEGDashRaw(record=record, cache_dir=tmp_path)
@@ -123,36 +122,3 @@ def test_missing_pin_never_reads_head(tmp_path, monkeypatch, failure):
         raw._download_required_files()
     assert download.call_count == 1
     assert raw._storage_backend == "s3"
-
-
-@pytest.mark.parametrize("twin_has_sidecar", [True, False])
-def test_sidecar_missing_on_twin_takes_record_from_nemar(
-    tmp_path, monkeypatch, twin_has_sidecar
-):
-    """ds003810's OpenNeuro copy lacks events.tsv; NEMAR has it (#503 docs CI)."""
-    rel = "sub-02/eeg/sub-02_task-MIvsRest_run-1_eeg.edf"
-    events = rel.replace("_eeg.edf", "_events.tsv")
-    record = create_record(
-        dataset="on003810",
-        bids_relpath=rel,
-        storage_base="s3://openneuro.org/ds003810",
-        dep_keys=[events],
-    )
-    raw = EEGDashRaw(record=record, cache_dir=tmp_path)
-
-    def fetch_deps(pairs, **kwargs):
-        if twin_has_sidecar:
-            for _, dest in pairs:
-                dest.parent.mkdir(parents=True, exist_ok=True)
-                dest.write_text("onset\tduration\n")
-
-    monkeypatch.setattr(downloader, "download_s3_file", Mock())
-    monkeypatch.setattr(downloader, "get_s3_filesystem", Mock())
-    monkeypatch.setattr(downloader, "download_files", fetch_deps)
-    monkeypatch.setattr(raw, "_download_companion_files", Mock())
-    monkeypatch.setattr(raw, "_download_position_sidecars", Mock())
-    retry = Mock()
-    monkeypatch.setattr(raw, "_download_required_files", retry)
-    raw._download_required_files_impl()
-    assert retry.called is not twin_has_sidecar
-    assert raw._storage_backend == ("s3" if twin_has_sidecar else "nemar")

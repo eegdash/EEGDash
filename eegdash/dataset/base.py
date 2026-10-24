@@ -42,9 +42,7 @@ from ..io.fif import crop_unreadable_tail
 from ..logging import logger
 from ..schemas import NEMAR_ROOT_METADATA_FILES, validate_record
 from ._source_inference import (
-    STORAGE_CONFIGS,
     correct_storage_inplace,
-    openneuro_twin_of,
 )
 from .bids_dataset import _COMPANION_FILES, position_sidecars
 from .exceptions import DataIntegrityError, StorageAccessError
@@ -1032,8 +1030,6 @@ class EEGDashRaw(RawDataset):
         try:
             self._download_required_files_impl()
         except downloader.DownloadIntegrityError as exc:
-            if self._reroute_twin_to_nemar():
-                return self._download_required_files()
             raise DataIntegrityError(
                 str(exc), record=self.record, issues=[str(exc)]
             ) from exc
@@ -1102,8 +1098,6 @@ class EEGDashRaw(RawDataset):
                         **({"annex_key": raw_annex_key} if raw_annex_key else {}),
                     )
             except FileNotFoundError:
-                if self._reroute_twin_to_nemar():
-                    return self._download_required_files()
                 raw_key = (self.record.get("storage") or {}).get("raw_key", "")
                 if self._storage_backend == "nemar" and self._download_nemar_data_file(
                     raw_key, self.filecache
@@ -1145,8 +1139,6 @@ class EEGDashRaw(RawDataset):
                         issues=[f"Missing S3 file: {self._raw_uri}"],
                     )
             except PermissionError as exc:
-                if self._reroute_twin_to_nemar():
-                    return self._download_required_files()
                 raw_key = (self.record.get("storage") or {}).get("raw_key", "")
                 if self._storage_backend == "nemar" and self._download_nemar_data_file(
                     raw_key, self.filecache
@@ -1226,22 +1218,13 @@ class EEGDashRaw(RawDataset):
                             else {}
                         ),
                     )
-            unpinned = [(uri, dest) for uri, dest in dependencies if dest not in pinned]
             downloader.download_files(
-                unpinned,
+                [(uri, dest) for uri, dest in dependencies if dest not in pinned],
                 filesystem=filesystem,
                 skip_existing=True,
                 skip_missing=True,
                 **({"annex_keys": dep_annex_keys} if dep_annex_keys else {}),
             )
-            # A sidecar the OpenNeuro twin lacks (ds003810 has no events.tsv
-            # there) would make this run read differently from runs NEMAR
-            # served; take the whole record from NEMAR instead.
-            if (
-                any(not dest.exists() for _, dest in unpinned)
-                and self._reroute_twin_to_nemar()
-            ):
-                return self._download_required_files()
 
             # Auto-discover and download companion files (.fdt, .eeg, .vmrk)
             # that may not have been included in dep_keys.
@@ -1305,29 +1288,6 @@ class EEGDashRaw(RawDataset):
             logger.warning(
                 "Could not fetch the electrode sidecars of %s: %s", relpath, exc
             )
-
-    def _reroute_twin_to_nemar(self) -> bool:
-        """Point an ``on*`` record back at NEMAR when its OpenNeuro twin fails.
-
-        ``correct_storage_inplace`` serves ``on*`` from the OpenNeuro twin,
-        which can be unavailable or disagree with the record key. Retry the
-        exact recorded NEMAR object instead; never silently substitute latest.
-        """
-        storage = self.record.get("storage") or {}
-        if storage.get("version_id") or storage.get("version_ids"):
-            return False  # A failed pin must never silently fall back to HEAD.
-        dataset_id = self.record.get("dataset", "")
-        if self._storage_backend != "s3" or openneuro_twin_of(dataset_id) is None:
-            return False
-        logger.warning(
-            "OpenNeuro twin of %s unavailable or mismatched; using NEMAR.", dataset_id
-        )
-        self.record["storage"]["backend"] = self._storage_backend = "nemar"
-        self.record["storage"]["base"] = (
-            f"{STORAGE_CONFIGS['nemar']['base']}/{dataset_id}"
-        )
-        self._raw_uri, self._dep_downloads = None, []
-        return True
 
     def _download_nemar_data_file(self, relpath: str, local_path: Path) -> bool:
         """Resolve *relpath* via ``nemar-py`` (data.nemar.org) and stream it.

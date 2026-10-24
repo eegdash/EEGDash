@@ -8,8 +8,7 @@ Adapt the published REVE-Base checkpoint to a motor-imagery-vs-rest task from
 OpenNeuro dataset ``ds003810``, served through EEGDash and trained with
 Braindecode's ``EEGClassifier``. The checkpoint is
 https://huggingface.co/brain-bzh/reve-base (documented by Braindecode's ``REVE``
-model). It is gated: accepting the authors' terms once and logging in to the
-Hugging Face Hub is part of this tutorial. It downloads about 280 MB of weights
+model), public on the Hugging Face Hub. It downloads about 280 MB of weights
 and 7 MB of EEG (one participant, four runs).
 
 Two ways to adapt a pretrained encoder are shown with the same code path:
@@ -33,11 +32,8 @@ Keywords: foundation-model, fine-tuning, linear-probe, REVE, motor-imagery, tran
 # straight into a model pretrained mostly on 19- to 128-channel data, with no
 # common-channel subset to pick.
 #
-# The weights are published under a gated license (the electrode position table,
-# ``brain-bzh/reve-positions``, is public). One-time setup:
-#
-# 1. Open https://huggingface.co/brain-bzh/reve-base and accept the terms.
-# 2. Log in once from a terminal: ``hf auth login`` (or set ``HF_TOKEN``).
+# The weights (https://huggingface.co/brain-bzh/reve-base) and the electrode
+# position table (``brain-bzh/reve-positions``) are public; no login is needed.
 #
 import matplotlib.pyplot as plt
 import numpy as np
@@ -73,8 +69,7 @@ PROBE_EPOCHS, FT_EPOCHS = 5, 2  # small workflow budget, not converged performan
 PROBE_LR, FINETUNE_LR = 1e-4, 1e-5
 torch.manual_seed(0)
 print(f"device={DEVICE}; probe epochs={PROBE_EPOCHS}; fine-tune={RUN_FINETUNE}")
-# from_pretrained reports gated access/download errors directly. Complete the
-# one-time login above before running; no exception is silently treated as offline.
+# from_pretrained reports download errors directly; none is treated as offline.
 
 # %%
 # Match the real signal to the encoder input

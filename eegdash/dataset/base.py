@@ -1226,13 +1226,22 @@ class EEGDashRaw(RawDataset):
                             else {}
                         ),
                     )
+            unpinned = [(uri, dest) for uri, dest in dependencies if dest not in pinned]
             downloader.download_files(
-                [(uri, dest) for uri, dest in dependencies if dest not in pinned],
+                unpinned,
                 filesystem=filesystem,
                 skip_existing=True,
                 skip_missing=True,
                 **({"annex_keys": dep_annex_keys} if dep_annex_keys else {}),
             )
+            # A sidecar the OpenNeuro twin lacks (ds003810 has no events.tsv
+            # there) would make this run read differently from runs NEMAR
+            # served; take the whole record from NEMAR instead.
+            if (
+                any(not dest.exists() for _, dest in unpinned)
+                and self._reroute_twin_to_nemar()
+            ):
+                return self._download_required_files()
 
             # Auto-discover and download companion files (.fdt, .eeg, .vmrk)
             # that may not have been included in dep_keys.

@@ -123,3 +123,36 @@ def test_missing_pin_never_reads_head(tmp_path, monkeypatch, failure):
         raw._download_required_files()
     assert download.call_count == 1
     assert raw._storage_backend == "s3"
+
+
+@pytest.mark.parametrize("twin_has_sidecar", [True, False])
+def test_sidecar_missing_on_twin_takes_record_from_nemar(
+    tmp_path, monkeypatch, twin_has_sidecar
+):
+    """ds003810's OpenNeuro copy lacks events.tsv; NEMAR has it (#503 docs CI)."""
+    rel = "sub-02/eeg/sub-02_task-MIvsRest_run-1_eeg.edf"
+    events = rel.replace("_eeg.edf", "_events.tsv")
+    record = create_record(
+        dataset="on003810",
+        bids_relpath=rel,
+        storage_base="s3://openneuro.org/ds003810",
+        dep_keys=[events],
+    )
+    raw = EEGDashRaw(record=record, cache_dir=tmp_path)
+
+    def fetch_deps(pairs, **kwargs):
+        if twin_has_sidecar:
+            for _, dest in pairs:
+                dest.parent.mkdir(parents=True, exist_ok=True)
+                dest.write_text("onset\tduration\n")
+
+    monkeypatch.setattr(downloader, "download_s3_file", Mock())
+    monkeypatch.setattr(downloader, "get_s3_filesystem", Mock())
+    monkeypatch.setattr(downloader, "download_files", fetch_deps)
+    monkeypatch.setattr(raw, "_download_companion_files", Mock())
+    monkeypatch.setattr(raw, "_download_position_sidecars", Mock())
+    retry = Mock()
+    monkeypatch.setattr(raw, "_download_required_files", retry)
+    raw._download_required_files_impl()
+    assert retry.called is not twin_has_sidecar
+    assert raw._storage_backend == ("s3" if twin_has_sidecar else "nemar")

@@ -88,9 +88,9 @@ print(f"device={DEVICE}; probe epochs={PROBE_EPOCHS}; fine-tune={RUN_FINETUNE}")
 # codes as the imagery runs -- so loading it would train on executed movement
 # labelled as imagery. We load runs 1-4 only.
 #
-# The recording software (OpenViBE) wrote its own cue codes: ``OVTK_GDF_Right``
-# is the imagery cue and ``OVTK_GDF_Tongue`` the rest cue (the dataset's
-# ``events.json`` documents this). Each cue is an instantaneous marker and the
+# The BIDS ``events.tsv`` codes each trial by ``value``: ``7`` is motor imagery
+# and ``9`` is rest (the dataset's ``events.json`` documents this; in the raw
+# EDF they are OpenViBE's ``OVTK_GDF_Right`` and ``OVTK_GDF_Tongue`` cues). The
 # trial runs 4 s from cue to feedback, so one 4 s window per cue fits exactly.
 #
 # REVE's input contract -- none of it enforced at runtime: 200 Hz, EEG channels
@@ -122,11 +122,14 @@ preprocess(
 chs_info = ds.datasets[0].raw.info["chs"]
 print(len(chs_info), "EEG channels:", [c["ch_name"] for c in chs_info])
 
-# The cue markers have zero duration, so the trial would be empty with the
-# default stop offset; extend each trial to exactly one window from the cue.
+# Event durations are about 4 s but some fall a sample short of a full window,
+# which would drop those trials. Make every cue instantaneous, then take exactly
+# one window from each cue.
+for recording in ds.datasets:
+    recording.raw.annotations.set_durations(0.0)
 windows = create_windows_from_events(
     ds,
-    mapping={"OVTK_GDF_Right": 0, "OVTK_GDF_Tongue": 1},  # 0 = motor imagery, 1 = rest
+    mapping={"7": 0, "9": 1},  # 0 = motor imagery, 1 = rest
     trial_start_offset_samples=0,
     trial_stop_offset_samples=WINDOW_S * SFREQ,
     window_size_samples=WINDOW_S * SFREQ,

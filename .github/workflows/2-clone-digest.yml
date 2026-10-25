@@ -29,6 +29,13 @@ on:
         # 7 datasets took longer than 120 s on 2026-10-17 (nm000281 ~190 s, or
         # ~600 s with its 2,785 BDF header reads; nm000359 over 900 s).
         default: 1800
+      n_jobs:
+        description: 'Per-dataset threads for the network-bound record header reads (1 = serial; output is identical)'
+        required: false
+        type: number
+        # nm000281 (25,253 BDF) on a GitHub runner, full digest: 1,220 s at 4,
+        # 614 s at 8, past the 1,800 s guard at 1 (2026-10-25).
+        default: 1
     secrets:
       DATASET_LISTINGS_TOKEN:
         required: true
@@ -129,6 +136,7 @@ jobs:
             ARGS="$ARGS --output eegdash-dataset-listings/digested"
             ARGS="$ARGS --workers ${{ inputs.workers }}"
             ARGS="$ARGS --dataset-timeout ${{ inputs.dataset_timeout }}"
+            ARGS="$ARGS --n-jobs ${{ inputs.n_jobs }}"
             
             python eegdash/scripts/ingestions/3_digest.py $ARGS
           else

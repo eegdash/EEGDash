@@ -11,7 +11,7 @@ so a whole dataset is checked without downloading its signals. The checks:
 MNE scales samples by the header unit and ignores ``channels.tsv``, so the
 first three flag channels that a reader gets at the wrong scale. Run::
 
-    python -m eegdash.header_check nm000281 [--local ROOT] [--per-subject N]
+    python -m eegdash.header_check nm000281 [--local ROOT] [--max-per-subject N]
 """
 
 from __future__ import annotations
@@ -156,13 +156,13 @@ def summarize(findings: list[Finding]) -> str:
     return "\n".join(lines)
 
 
-def _pick(paths: list[str], per_subject: int | None) -> list[str]:
-    if per_subject is None:
+def _pick(paths: list[str], max_per_subject: int | None) -> list[str]:
+    if max_per_subject is None:
         return paths
     kept, seen = [], Counter()
     for path in sorted(paths):
         subject = path.split("/", 1)[0]
-        if seen[subject] < per_subject:
+        if seen[subject] < max_per_subject:
             kept.append(path)
             seen[subject] += 1
     return kept
@@ -172,7 +172,7 @@ def _sidecar_path(path: str) -> str:
     return re.sub(r"_[a-z]+\.(bdf|edf)$", "_channels.tsv", path)
 
 
-def read_local(root: Path, per_subject: int | None = None):
+def read_local(root: Path, max_per_subject: int | None = None):
     """``path -> (channels, sidecar units)`` for the EDF/BDF files under *root*."""
     paths = _pick(
         [
@@ -180,7 +180,7 @@ def read_local(root: Path, per_subject: int | None = None):
             for p in root.rglob("sub-*/**/*")
             if p.suffix in EXTENSIONS
         ],
-        per_subject,
+        max_per_subject,
     )
     recordings = {}
     for path in paths:
@@ -223,7 +223,7 @@ def nemar_files(dataset_id: str) -> list[str]:
     return paths
 
 
-def read_nemar(dataset_id: str, per_subject: int | None = None, workers: int = 32):
+def read_nemar(dataset_id: str, max_per_subject: int | None = None, workers: int = 32):
     """Same as :func:`read_local` for a NEMAR dataset, from header byte ranges."""
     # Lazy: the local check does not need eegdash's reader stack.
     from eegdash.dataset.base import _resolve_nemar_pointer  # noqa: PLC0415
@@ -232,7 +232,7 @@ def read_nemar(dataset_id: str, per_subject: int | None = None, workers: int = 3
         "s3", config=Config(signature_version=UNSIGNED, max_pool_connections=workers)
     )
     files = nemar_files(dataset_id)
-    paths = _pick([p for p in files if p.endswith(EXTENSIONS)], per_subject)
+    paths = _pick([p for p in files if p.endswith(EXTENSIONS)], max_per_subject)
 
     def fetch(key, start, stop):
         rng = f"bytes={start}-{stop - 1}"
@@ -257,13 +257,15 @@ def main(argv=None):
     parser.add_argument("dataset", help="NEMAR dataset id, e.g. nm000281")
     parser.add_argument("--local", type=Path, help="BIDS root of a local copy")
     parser.add_argument(
-        "--per-subject", type=int, help="check at most N recordings per subject"
+        "--max-per-subject",
+        type=int,
+        help="check at most N recordings per subject (default: all)",
     )
     args = parser.parse_args(argv)
     recordings = (
-        read_local(args.local, args.per_subject)
+        read_local(args.local, args.max_per_subject)
         if args.local
-        else read_nemar(args.dataset, args.per_subject)
+        else read_nemar(args.dataset, args.max_per_subject)
     )
     findings = check(recordings)
     flagged = {p for f in findings if f.check != "prefix" for p in f.files}

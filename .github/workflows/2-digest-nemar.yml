@@ -15,5 +15,6 @@ jobs:
       source_name: "NEMAR"
       consolidated_file: "nemar_datasets.json"
       workers: 4
+      n_jobs: 8
     secrets:
       DATASET_LISTINGS_TOKEN: ${{ secrets.DATASET_LISTINGS_TOKEN }}

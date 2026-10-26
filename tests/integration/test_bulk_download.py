@@ -1,3 +1,4 @@
+import hashlib
 from unittest.mock import patch
 
 import pytest
@@ -53,18 +54,29 @@ def test_download_all_only_missing_files(tmp_path, ds000248_records):
         p.unlink(missing_ok=True)
 
     # Cache ALL files for dataset[0]: main file + every dependency. A cached
-    # file counts as complete only when its size matches the record's
-    # git-annex key (a short file is refetched, 2026-10-22), so a placeholder
-    # takes the key's size as a sparse file; a file without a key only exists.
+    # file counts as complete only when it matches the record's git-annex key:
+    # a short file is refetched (2026-10-22), and the raw file of an on* NEMAR
+    # record is also hash-checked, so equal-size wrong bytes are refetched too.
+    # Each keyed placeholder therefore gets real bytes and the record names
+    # their own key; a file without a key only has to exist.
     all_paths_0 = [ds0.filecache] + list(ds0._dep_paths)
+    keys = (ds0.record.get("storage") or {}).get("annex_keys") or {}
     for p in all_paths_0:
         p.parent.mkdir(parents=True, exist_ok=True)
-        size = annex_key_info(ds0._annex_key_for(p) or "")[0]
-        if size:
-            with open(p, "wb") as fh:
-                fh.truncate(size)
-        else:
+        key = ds0._annex_key_for(p)
+        if not annex_key_info(key or "")[0]:
             p.write_text("cached")
+            continue
+        payload = f"cached {p.name}".encode()
+        p.write_bytes(payload)
+        own_key = (
+            f"SHA256E-s{len(payload)}--{hashlib.sha256(payload).hexdigest()}"
+            f"{''.join(p.suffixes)}"
+        )
+        for relpath, value in list(keys.items()):
+            if value == key:
+                keys[relpath] = own_key
+        assert ds0._annex_key_for(p) == own_key
 
     with patch.object(
         dataset_mod.EEGDashRaw, "_download_required_files", autospec=True

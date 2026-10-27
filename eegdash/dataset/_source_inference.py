@@ -177,6 +177,16 @@ def correct_storage_inplace(
     current_base = (storage.get("base") or "").rstrip("/")
     current_backend = storage.get("backend")
 
+    # The validator explicitly permits an on* record pinned to its own
+    # OpenNeuro source. A version ID belongs to that bucket, not to NEMAR.
+    if (
+        re.fullmatch(r"on\d+", dsid)
+        and current_backend == "s3"
+        and storage.get("base") == f"s3://openneuro.org/ds{dsid[2:]}"
+        and (storage.get("version_id") or storage.get("version_ids"))
+    ):
+        return False, None
+
     if not current_base:
         # No base to reason about — don't flip backend in isolation.
         return False, None

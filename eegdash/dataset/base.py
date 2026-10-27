@@ -446,7 +446,9 @@ def _resolve_nemar_uris(
     stored_key, stored_sidecar = _nemar_fast_paths(storage, raw_key)
     if not raw_dest.exists() and raw_dest.suffix.lower() in _DIRECTORY_SUFFIXES:
         raw_uri = f"{base}/{raw_key}"  # listed and fetched per file at download
-    elif not _cached_complete(raw_dest, stored_key):  # short copy: refetch
+    elif not _cached_complete(
+        raw_dest, stored_key, verify_hash=_verify_nemar_raw_hash(record)
+    ):  # short or wrong-content copy: refetch
         raw_uri = _resolve_one_nemar_entry(
             dataset_id=dataset_id,
             relpath=raw_key,
@@ -508,13 +510,23 @@ def _destination_lock(dest: Path) -> threading.Lock:
         return _DESTINATION_LOCKS.setdefault(key, threading.Lock())
 
 
-def _cached_complete(local_path: Path, annex_key: str | None) -> bool:
-    """Offline cache size check; never probe S3 during the bulk pre-scan.
+def _verify_nemar_raw_hash(record: dict) -> bool:
+    """Legacy on* caches may hold equal-size bytes from their OpenNeuro twin."""
+    return bool(
+        str(record.get("dataset", "")).startswith("on")
+        and (record.get("storage") or {}).get("backend") == "nemar"
+    )
+
+
+def _cached_complete(
+    local_path: Path, annex_key: str | None, *, verify_hash: bool = False
+) -> bool:
+    """Offline key check; never probe S3 during the bulk pre-scan.
 
     Cached directory contents are not revalidated here.
     """
     try:
-        downloader.verify_file(local_path, annex_key or "")
+        downloader.verify_file(local_path, annex_key or "", verify_hash=verify_hash)
     except OSError:
         return False
     return True
@@ -535,7 +547,12 @@ def _write_staged(dest: Path, payload: bytes) -> None:
 
 
 def _download_via_nemar(
-    dataset_id: str, relpath: str, local_path: Path, annex_key: str | None = None
+    dataset_id: str,
+    relpath: str,
+    local_path: Path,
+    annex_key: str | None = None,
+    *,
+    verify_hash: bool = False,
 ) -> bool:
     """Download *relpath* from data.nemar.org via ``nemar-py``.
 
@@ -549,7 +566,7 @@ def _download_via_nemar(
     """
     if not (dataset_id and relpath):
         return False
-    if _cached_complete(local_path, annex_key):
+    if _cached_complete(local_path, annex_key, verify_hash=verify_hash):
         return True
     manifest = _fetch_nemar_manifest(dataset_id)
     if manifest is None:
@@ -577,7 +594,7 @@ def _download_via_nemar(
         # The pre-lock exists() above is an optimisation, not a guarantee:
         # ``download_one`` and ``S3Client.get_file`` do publish with an atomic
         # rename, and so does the GitHub-raw fallback below (``_write_staged``).
-        if _cached_complete(local_path, annex_key):
+        if _cached_complete(local_path, annex_key, verify_hash=verify_hash):
             return True
         # Stage under a caller-unique name. nemar derives its staging path from
         # the target (``<target>.part``), so handing it the destination makes
@@ -606,7 +623,12 @@ def _download_via_nemar(
                 return False
             if annex_key:
                 try:
-                    downloader.verify_file(staging, annex_key, display_path=local_path)
+                    downloader.verify_file(
+                        staging,
+                        annex_key,
+                        verify_hash=verify_hash,
+                        display_path=local_path,
+                    )
                 except downloader.DownloadIntegrityError as exc:
                     raise DataIntegrityError(
                         f"{exc} NEMAR manifest and record disagree; re-digest the record.",
@@ -999,7 +1021,12 @@ class EEGDashRaw(RawDataset):
         uris = {dest: uri for uri, dest in self._dep_downloads}
         uris[self.filecache] = self._raw_uri
         for path in (self.filecache, *self._dep_paths):
-            if not _cached_complete(path, self._annex_key_for(path)):
+            if not _cached_complete(
+                path,
+                self._annex_key_for(path),
+                verify_hash=path == self.filecache
+                and _verify_nemar_raw_hash(self.record),
+            ):
                 return False
             marker = path.with_name(path.name + ".s3-version.json")
             pin = pins.get(path)
@@ -1051,7 +1078,11 @@ class EEGDashRaw(RawDataset):
             self._raw_uri is None
             and self._storage_backend == "nemar"
             and (
-                not _cached_complete(self.filecache, raw_annex_key)
+                not _cached_complete(
+                    self.filecache,
+                    raw_annex_key,
+                    verify_hash=_verify_nemar_raw_hash(self.record),
+                )
                 or any(
                     not _cached_complete(path, self._annex_key_for(path))
                     for path in self._dep_paths
@@ -1096,6 +1127,11 @@ class EEGDashRaw(RawDataset):
                             else {}
                         ),
                         **({"annex_key": raw_annex_key} if raw_annex_key else {}),
+                        **(
+                            {"verify_hash": True}
+                            if raw_annex_key and _verify_nemar_raw_hash(self.record)
+                            else {}
+                        ),
                     )
             except FileNotFoundError:
                 raw_key = (self.record.get("storage") or {}).get("raw_key", "")
@@ -1118,6 +1154,11 @@ class EEGDashRaw(RawDataset):
                             self.filecache,
                             filesystem=filesystem,
                             **({"annex_key": raw_annex_key} if raw_annex_key else {}),
+                            **(
+                                {"verify_hash": True}
+                                if raw_annex_key and _verify_nemar_raw_hash(self.record)
+                                else {}
+                            ),
                         )
                     except FileNotFoundError:
                         raise DataIntegrityError(
@@ -1300,7 +1341,12 @@ class EEGDashRaw(RawDataset):
         """
         annex_key, _ = _nemar_fast_paths(self.record.get("storage") or {}, relpath)
         return _download_via_nemar(
-            self.record.get("dataset", ""), relpath, local_path, annex_key
+            self.record.get("dataset", ""),
+            relpath,
+            local_path,
+            annex_key,
+            verify_hash=local_path == self.filecache
+            and _verify_nemar_raw_hash(self.record),
         )
 
     # BIDS root files not enumerated in dep_keys but expected by mne-bids /

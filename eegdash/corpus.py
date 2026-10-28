@@ -65,6 +65,10 @@ from .paths import get_default_cache_dir
 _MANIFEST_DIR = ".eegdash"
 _DIRECTORY_SUFFIXES = (".ds", ".mefd")
 _PRESENT_STATES = ("done", "stale-record")
+# The record lists the file without a git-annex key and the archive answers "not found": a companion the
+# digest assumed (on002680 lists an .fdt beside every .set that embeds its data; nm000181 a README that is
+# README.md), 2026-10-27. Reported, not failed, as EEGDashDataset skips it; retried by the next download.
+_ABSENT = "absent"
 _RETRYABLE_ERRORS = ("network", "integrity", "unknown")
 _RETRY_ROUNDS = 3
 _RETRY_BACKOFF = (5.0, 20.0, 60.0)  # seconds before each retry round
@@ -199,9 +203,7 @@ class FileEntry:
     kind: str = "recording"  # dataset | recording | sidecar | directory
     size: int | None = None  # from the git-annex key, when the record has one
     key: str | None = None  # the git-annex key (size and hash)
-    state: str = (
-        "planned"  # planned | done | stale-record | failed | corrupt | missing | locked
-    )
+    state: str = "planned"  # planned | done | stale-record | absent | failed | corrupt | missing | locked
     bytes: int | None = None  # size seen on disk
     when: str | None = None
     error: str | None = None  # catalogue | network | integrity | storage | unknown
@@ -440,8 +442,10 @@ class DatasetReport:
             "failed": c["failed"],
             "corrupt": c["corrupt"],
             "locked": c["locked"],
+            "absent": c[_ABSENT],
             "missing": len(self.entries)
             - present
+            - c[_ABSENT]
             - c["failed"]
             - c["corrupt"]
             - c["locked"],
@@ -470,7 +474,11 @@ class DatasetReport:
     @property
     def ok(self) -> bool:
         c = self.counts
-        return not self.problems and c["files"] > 0 and c["present"] == c["files"]
+        return (
+            not self.problems
+            and c["files"] > 0
+            and c["present"] + c["absent"] == c["files"]
+        )
 
     def row(self) -> dict[str, Any]:
         c = self.counts
@@ -484,6 +492,7 @@ class DatasetReport:
             "failed": c["failed"],
             "corrupt": c["corrupt"],
             "stale": c["stale"],
+            "absent": c["absent"],
             "gb_present": round(self.bytes_present / 1e9, 2),
             "gb_expected": round((self.size_bytes or self.bytes_expected) / 1e9, 2),
             "subjects": self.subjects,
@@ -550,6 +559,7 @@ class CorpusReport:
             f"{self.action}: {len(self.datasets)} datasets "
             f"({', '.join(f'{v} {k}' for k, v in sorted(states.items()))}); "
             f"{c['present']} of {c['files']} files present, {gb:,.1f} GB; "
+            f"{c['absent']} listed but not on the archive; "
             f"{c['failed']} failed, {c['corrupt']} corrupt, {c['locked']} locked; "
             f"{len(self.problems)} problem(s); {self.seconds:.0f} s"
         )
@@ -1139,7 +1149,11 @@ class EEGDashCorpus:
                     if klass == "integrity" and self._accept_stale(t, filesystem):
                         moved = 1
                     else:
-                        e.state, e.error, e.message = "failed", klass, _short(exc)
+                        absent = (
+                            klass == "catalogue" and not e.key and e.kind != "recording"
+                        )
+                        e.state = _ABSENT if absent else "failed"
+                        e.error, e.message = klass, _short(exc)
                         e.bytes = None
                         logger.debug(
                             "%s/%s: %s %s", t.dataset_id, e.path, klass, e.message
@@ -1267,7 +1281,11 @@ class EEGDashCorpus:
     # -- verify and status --------------------------------------------------
 
     def verify(
-        self, *, level: str = "size", datasets: Sequence[str] | str | None = None
+        self,
+        *,
+        level: str = "size",
+        datasets: Sequence[str] | str | None = None,
+        n_jobs: int = 8,
     ) -> CorpusReport:
         """Check every expected file against its record, offline, and write ``COMPLETE``.
 
@@ -1275,6 +1293,9 @@ class EEGDashCorpus:
         every file whose record carries a git-annex hash. A mismatch marks the
         file ``corrupt`` and removes ``COMPLETE``; a dataset with every file
         present gets ``COMPLETE`` (the level, the time, the plan's fingerprint).
+        A file the archive does not hold (``absent``) does not block it. *n_jobs*
+        files are checked at a time: hashing reads every byte, and one reader
+        managed 19 MB/s on Lustre (46 GB in 40 min, 2026-10-27).
         """
         if level not in ("size", "hash"):
             raise ValueError(f"level must be 'size' or 'hash', got {level!r}")
@@ -1292,11 +1313,17 @@ class EEGDashCorpus:
                 report.datasets.append(rep)
                 continue
             ts = time.monotonic()
-            for e in entries.values():
-                self._verify_entry(self.cache_dir / folder / e.path, e, level)
+            root = self.cache_dir / folder
+            with ThreadPoolExecutor(max_workers=max(1, n_jobs)) as pool:
+                list(
+                    pool.map(
+                        lambda e: self._verify_entry(root / e.path, e, level),
+                        entries.values(),
+                    )
+                )
             manifest.write(header, entries)
             rep.entries = entries
-            if all(e.present for e in entries.values()):
+            if all(e.present or e.state == _ABSENT for e in entries.values()):
                 manifest.mark_complete(
                     {
                         "verified": _now(),
@@ -1314,10 +1341,11 @@ class EEGDashCorpus:
             rep.seconds = time.monotonic() - ts
             c = rep.counts
             logger.info(
-                "%s: %d files, %d present, %d missing, %d corrupt (%s)",
+                "%s: %d files, %d present, %d absent on the archive, %d missing, %d corrupt (%s)",
                 dsid,
                 c["files"],
                 c["present"],
+                c["absent"],
                 c["missing"],
                 c["corrupt"],
                 level,
@@ -1332,7 +1360,9 @@ class EEGDashCorpus:
         try:
             got = _size_on_disk(path)
         except FileNotFoundError:
-            e.state, e.bytes, e.when = "missing", None, _now()
+            if e.state != _ABSENT:
+                e.state = "missing"
+            e.bytes, e.when = None, _now()
             return
         e.bytes, e.when = got, _now()
         if e.kind == "directory":
@@ -1454,7 +1484,7 @@ def _dataset_state(manifest: _Manifest, entries: Mapping[str, FileEntry]) -> str
     if manifest.is_complete():
         return "complete"
     present = sum(e.present for e in entries.values())
-    if present == len(entries):
+    if present + sum(e.state == _ABSENT for e in entries.values()) == len(entries):
         return "fetched"
     return "partial" if present else "planned"
 
@@ -1513,6 +1543,9 @@ def main(argv: Sequence[str] | None = None) -> int:
         "--time-budget", type=float, help="seconds after which no new dataset starts"
     )
     parsers["verify"].add_argument("--level", choices=("size", "hash"), default="size")
+    parsers["verify"].add_argument(
+        "--n-jobs", type=int, default=8, help="files checked at a time (default 8)"
+    )
     parsers["status"].add_argument(
         "--online", action="store_true", help="re-plan and report catalogue drift"
     )
@@ -1531,7 +1564,9 @@ def main(argv: Sequence[str] | None = None) -> int:
             time_budget=args.time_budget,
         )
     elif args.command == "verify":
-        report = corpus.verify(level=args.level, datasets=args.datasets)
+        report = corpus.verify(
+            level=args.level, datasets=args.datasets, n_jobs=args.n_jobs
+        )
     else:
         report = corpus.status(online=args.online, datasets=args.datasets)
     print(report)

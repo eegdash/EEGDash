@@ -722,3 +722,45 @@ def test_retired_openneuro_id_follows_its_nemar_twin(tmp_path, archive, monkeypa
     status = offline.status().datasets[0]
     assert status.state == "complete" and status.served_as == "on000003"
     assert offline._folder("ds000003") == "on000003" and offline._folder("ds1") == "ds1"
+
+
+def test_a_keyless_companion_the_archive_lacks_is_absent_not_failed(
+    tmp_path, archive, monkeypatch
+):
+    """on002680 lists an .fdt the archive never had (2026-10-27): reported, the dataset still completes."""
+    rec = archive.records["ds1"][0]
+    ghost = "sub-01/eeg/sub-01_task-rest_eeg.fdt"
+    rec["storage"]["dep_keys"].append(ghost)  # no annex key, no object
+    corpus, boto = _corpus(tmp_path, archive, ids=("ds1",), monkeypatch=monkeypatch)
+    report = corpus.download(n_jobs=2)
+    ds = report.datasets[0]
+    assert report.ok, report.problems
+    assert (
+        ds.entries[ghost].state == "absent" and ds.entries[ghost].error == "catalogue"
+    )
+    assert (
+        ds.counts["absent"] == 1
+        and ds.counts["failed"] == 0
+        and ds.row()["absent"] == 1
+    )
+    assert "1 listed but not on the archive" in report.summary()
+    verified = corpus.verify(level="hash", n_jobs=4)
+    assert verified.ok and _Manifest(tmp_path / "ds1").is_complete()
+    assert (
+        EEGDashCorpus(["ds1"], cache_dir=tmp_path).status().datasets[0].state
+        == "complete"
+    )
+
+
+def test_a_keyed_file_the_archive_lacks_still_fails(tmp_path, archive, monkeypatch):
+    """A recording carries a key: if the archive does not serve it, the dataset is not whole."""
+    rec = archive.records["ds1"][0]
+    del archive.objects[f"openneuro.org/ds1/{rec['bids_relpath']}"]
+    corpus, boto = _corpus(tmp_path, archive, ids=("ds1",), monkeypatch=monkeypatch)
+    report = corpus.download(n_jobs=1)
+    e = report.datasets[0].entries[rec["bids_relpath"]]
+    assert (
+        not report.ok
+        and e.state == "failed"
+        and report.datasets[0].counts["absent"] == 0
+    )

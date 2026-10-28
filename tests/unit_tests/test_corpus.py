@@ -12,6 +12,7 @@ import hashlib
 import json
 import os
 import subprocess
+import sys
 import threading
 import time
 
@@ -427,6 +428,79 @@ def test_stale_lock_of_a_dead_process_is_broken(tmp_path, archive, monkeypatch):
     )
     assert corpus.download(n_jobs=1).ok
     assert not lock.exists()
+
+
+def _fake_squeue(tmp_path, monkeypatch) -> None:
+    """``squeue`` on PATH: job 111 has ended (forgotten by the controller), 222 runs."""
+    bin_dir = tmp_path / "bin"
+    bin_dir.mkdir()
+    script = bin_dir / "squeue"
+    script.write_text(
+        "#!/bin/sh\n"
+        'case "$*" in\n'
+        "  *222*) echo R ;;\n"
+        '  *) echo "slurm_load_jobs error: Invalid job id specified" >&2; exit 1 ;;\n'
+        "esac\n"
+    )
+    script.chmod(0o755)
+    monkeypatch.setenv("PATH", f"{bin_dir}{os.pathsep}{os.environ['PATH']}")
+    monkeypatch.delenv("SLURM_JOB_ID", raising=False)
+    monkeypatch.setattr(corpus_mod, "_slurm_checks", {})
+
+
+def test_lock_of_an_ended_slurm_job_on_another_node_is_broken(
+    tmp_path, archive, monkeypatch
+):
+    """A job killed at its time limit on node A must not block node B (55351583)."""
+    corpus, boto = _corpus(tmp_path, archive, ids=("ds1",), monkeypatch=monkeypatch)
+    _fake_squeue(tmp_path, monkeypatch)
+    raw = "sub-01/eeg/sub-01_task-rest_eeg.edf"
+    dest = tmp_path / "ds1" / raw
+    dest.parent.mkdir(parents=True)
+    lock = dest.with_name(dest.name + ".lock")
+    part = dest.with_name(f"{dest.name}.4242.7.part")
+    part.write_bytes(b"0123")
+    holder = {"host": "another-node", "pid": 4242, "time": "now"}
+    lock.write_text(json.dumps({**holder, "job": "222"}))
+    report = corpus.download(n_jobs=1)
+    assert report.datasets[0].entries[raw].state == "locked" and not report.ok
+    lock.write_text(json.dumps({**holder, "job": "111"}))
+    assert corpus.download(n_jobs=1).ok
+    assert not lock.exists() and not part.exists()
+    assert dest.read_bytes() == DATA
+
+
+def test_sigterm_releases_the_locks_of_the_cli(tmp_path):
+    """Slurm's SIGTERM at the time limit leaves no lock behind."""
+    dest = tmp_path / "f.edf"
+    code = (
+        "import os, signal, sys\n"
+        "import eegdash.corpus as c\n"
+        "c._release_locks_on_sigterm()\n"
+        f"lock = c._FileLock(c.Path({str(dest)!r}))\n"
+        "assert lock.acquire()\n"
+        f"open({str(dest)!r} + f'.{{os.getpid()}}.1.part', 'w').close()\n"
+        "os.kill(os.getpid(), signal.SIGTERM)\n"
+        "signal.pause()\n"
+    )
+    proc = subprocess.run(
+        [sys.executable, "-c", code], capture_output=True, timeout=120
+    )
+    assert proc.returncode == 143, proc.stderr.decode()
+    assert list(tmp_path.iterdir()) == []
+
+
+def test_verify_and_status_report_the_catalogue_numbers_offline(
+    tmp_path, archive, monkeypatch
+):
+    corpus, _ = _corpus(tmp_path, archive, monkeypatch=monkeypatch)
+    rows = {d.dataset_id: d.row() for d in corpus.download(n_jobs=1).datasets}
+    offline = EEGDashCorpus(["ds1", "nm2"], cache_dir=tmp_path)
+    for report in (offline.verify(), offline.status()):
+        for d in report.datasets:
+            assert d.row()["subjects"] == rows[d.dataset_id]["subjects"]
+            assert d.row()["gb_expected"] == rows[d.dataset_id]["gb_expected"]
+    assert rows["ds1"]["subjects"] == 2
 
 
 def _dead_pid() -> int:

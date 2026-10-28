@@ -40,7 +40,10 @@ import errno
 import json
 import os
 import re
+import shutil
+import signal
 import socket
+import subprocess
 import sys
 import threading
 import time
@@ -73,6 +76,10 @@ _RETRYABLE_ERRORS = ("network", "integrity", "unknown")
 _RETRY_ROUNDS = 3
 _RETRY_BACKOFF = (5.0, 20.0, 60.0)  # seconds before each retry round
 _LOCK_STALE_SECONDS = 24 * 3600  # a lock from another host older than this
+_SLURM_LIVE = frozenset(
+    {"PD", "CF", "R", "CG", "S", "RQ", "RS", "RH", "SI", "SO", "ST"}
+)
+_SLURM_RECHECK_SECONDS = 30.0  # how long one squeue answer about a live job holds
 _MANIFEST_LOCK_WAIT = 60.0  # seconds to wait for the manifest lock
 _PART_STALE_SECONDS = 3600  # a .part not written to for this long is dead
 _FLUSH_SECONDS = 5.0  # manifest rewrite cadence during a download
@@ -125,6 +132,66 @@ def _drop_stale_parts(dest: Path, stale_after: float = _PART_STALE_SECONDS) -> N
                 part.unlink()
         except OSError:
             pass
+
+
+_held_locks: set[Path] = set()  # lock files this process holds, for the SIGTERM handler
+_slurm_checks: dict[str, tuple[float, bool]] = {}  # job -> (asked at, ended)
+
+
+def _slurm_job_ended(job: object) -> bool:
+    """True when Slurm says *job* is over; False while it lives or when it cannot be asked.
+
+    A job killed on another node (time limit, eviction, SIGKILL) leaves its
+    locks behind, and the host/pid test cannot see across nodes: without this
+    they blocked their files for a day (job 55351583, 2026-10-28).
+    """
+    job = str(job or "")
+    squeue = shutil.which("squeue")
+    if not job.isdigit() or not squeue:
+        return False
+    asked = _slurm_checks.get(job)
+    if asked and (asked[1] or time.monotonic() - asked[0] < _SLURM_RECHECK_SECONDS):
+        return asked[1]
+    try:
+        out = subprocess.run(
+            [squeue, "-h", "-o", "%t", "-j", job],
+            capture_output=True,
+            text=True,
+            timeout=30,
+        )
+    except (OSError, subprocess.SubprocessError):
+        return False
+    if out.returncode != 0:  # the controller forgets a job minutes after it ends
+        ended = "invalid job id" in out.stderr.lower()
+    else:
+        ended = not set(out.stdout.split()) & _SLURM_LIVE
+    _slurm_checks[job] = (time.monotonic(), ended)
+    return ended
+
+
+def _drop_parts_of(dest: Path, pid: object) -> None:
+    """Remove the downloader's ``<name>.<pid>.*.part`` staging files of one process."""
+    if not isinstance(pid, int):
+        return
+    for part in dest.parent.glob(f"{dest.name}.{pid}.*.part"):
+        part.unlink(missing_ok=True)
+
+
+def _release_locks_on_sigterm() -> None:
+    """On SIGTERM drop this process's locks and staging files, then exit 143.
+
+    Slurm sends SIGTERM at the time limit, on scancel and on eviction, then
+    SIGKILL; a lock that outlives its job blocks the next one (55351583).
+    """
+
+    def handler(signum: int, frame: object) -> None:
+        for lock in list(_held_locks):
+            lock.unlink(missing_ok=True)
+            _drop_parts_of(lock.with_suffix(""), os.getpid())
+        sys.stderr.write("SIGTERM: locks released, exiting\n")
+        os._exit(128 + signum)
+
+    signal.signal(signal.SIGTERM, handler)
 
 
 def _short(exc: BaseException) -> str:
@@ -321,9 +388,10 @@ class _FileLock:
     """A lock file ``<target>.lock`` naming its holder (host, pid, Slurm job, time).
 
     Lets several jobs share one cache without fetching a file twice. A lock is
-    stale when its holder is a dead process of this host, or when it is older
-    than *stale_after* (a job on another host that died with it). ``acquire``
-    returns False when a live holder has it; with *wait* it polls that long.
+    stale when its holder is a dead process of this host, a Slurm job that has
+    ended, or older than *stale_after* (a job on another host that died with
+    it). ``acquire`` returns False when a live holder has it; with *wait* it
+    polls that long. Breaking a stale lock removes its holder's staging files.
     """
 
     def __init__(
@@ -360,6 +428,9 @@ class _FileLock:
             except PermissionError:
                 return False  # alive, another user
             return info["pid"] == os.getpid() and age > self.stale_after
+        job = info.get("job")
+        if job and job != os.environ.get("SLURM_JOB_ID") and _slurm_job_ended(job):
+            return True
         return age > self.stale_after
 
     def _try(self) -> bool:
@@ -380,6 +451,7 @@ class _FileLock:
                 )
             )
         self.held = True
+        _held_locks.add(self.path)
         return True
 
     def acquire(self) -> bool:
@@ -389,6 +461,9 @@ class _FileLock:
             if self._try():
                 return True
             if self._is_stale():
+                _drop_parts_of(
+                    self.path.with_suffix(""), (self.holder() or {}).get("pid")
+                )
                 self.path.unlink(missing_ok=True)
                 continue  # the next _try races fairly with any peer
             if time.monotonic() >= deadline:
@@ -398,6 +473,7 @@ class _FileLock:
     def release(self) -> None:
         if self.held:
             self.path.unlink(missing_ok=True)
+            _held_locks.discard(self.path)
             self.held = False
 
     def __enter__(self) -> _FileLock:
@@ -832,6 +908,8 @@ class EEGDashCorpus:
             "planned": _now(),
             "fingerprint": (doc or {}).get("ingestion_fingerprint"),
             "subjects": sorted(str(s) for s in subjects) if subjects else None,
+            "n_subjects": rep.subjects,
+            "size_bytes": rep.size_bytes,
         }
         _, old = manifest.read()
         new_paths = {t.entry.path for t in transfers}
@@ -1307,6 +1385,10 @@ class EEGDashCorpus:
             rep.served_as = folder if folder != dsid else None
             manifest = _Manifest(self.cache_dir / folder)
             header, entries = manifest.read()
+            rep.subjects, rep.size_bytes = (
+                header.get("n_subjects"),
+                header.get("size_bytes"),
+            )
             if not entries:
                 rep.problems.append("no manifest: run plan or download first")
                 rep.state = "unplanned"
@@ -1402,6 +1484,10 @@ class EEGDashCorpus:
             manifest = _Manifest(self.cache_dir / folder)
             header, entries = manifest.read()
             rep.entries = entries
+            rep.subjects, rep.size_bytes = (
+                header.get("n_subjects"),
+                header.get("size_bytes"),
+            )
             rep.state = _dataset_state(manifest, entries)
             if dsid in drift:
                 rep.drift = drift[dsid].drift
@@ -1550,6 +1636,8 @@ def main(argv: Sequence[str] | None = None) -> int:
         "--online", action="store_true", help="re-plan and report catalogue drift"
     )
     args = parser.parse_args(argv)
+    if threading.current_thread() is threading.main_thread():
+        _release_locks_on_sigterm()
 
     corpus = _corpus_from_arg(args.corpus, args.cache_dir)
     subjects = args.subjects.split(",") if getattr(args, "subjects", None) else None

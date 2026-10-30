@@ -398,6 +398,9 @@ def test_classify_errors():
     wrapped = RuntimeError("outer")
     wrapped.__cause__ = downloader.DownloadIntegrityError("inner")
     assert classify(wrapped) == "integrity"
+    # our own staging file removed under us (a peer broke the lock): retried, not a catalogue gap
+    gone = FileNotFoundError(errno.ENOENT, "gone", "/c/ds1/x.edf.4242.ab.part")
+    assert classify(gone) == "unknown"
 
 
 def test_lock_per_target_no_double_fetch(tmp_path, archive, monkeypatch):
@@ -445,7 +448,9 @@ def _fake_squeue(tmp_path, monkeypatch) -> None:
     script.chmod(0o755)
     monkeypatch.setenv("PATH", f"{bin_dir}{os.pathsep}{os.environ['PATH']}")
     monkeypatch.delenv("SLURM_JOB_ID", raising=False)
+    monkeypatch.delenv("SLURM_CLUSTER_NAME", raising=False)
     monkeypatch.setattr(corpus_mod, "_slurm_checks", {})
+    monkeypatch.setattr(corpus_mod, "_cluster_name", corpus_mod._UNSET)
 
 
 def test_lock_of_an_ended_slurm_job_on_another_node_is_broken(
@@ -697,7 +702,10 @@ def test_status_online_reports_catalogue_drift(tmp_path, archive, monkeypatch):
     moved = archive.records["ds1b"][0]
     moved["dataset"] = "ds1"
     archive.records["ds1"].append(moved)
+    folder = tmp_path / "ds1" / ".eegdash"
+    before = {f.name: f.read_bytes() for f in folder.iterdir()}
     report = corpus.status(online=True)
+    assert {f.name: f.read_bytes() for f in folder.iterdir()} == before  # read-only
     ds1 = report.datasets[0]
     assert ds1.drift["added"] == [
         "sub-09/eeg/sub-09_task-rest_channels.tsv",
@@ -707,9 +715,12 @@ def test_status_online_reports_catalogue_drift(tmp_path, archive, monkeypatch):
         "sub-02/eeg/sub-02_task-rest_channels.tsv",
         "sub-02/eeg/sub-02_task-rest_eeg.edf",
     ]
-    assert "catalogue drift: 2 added, 2 removed" in ds1.problems
-    assert ds1.state == "partial" and not report.ok  # COMPLETE withdrawn
+    assert "catalogue drift: 2 added, 2 removed" in ds1.problems and not report.ok
     assert ds1.entries["sub-01/eeg/sub-01_task-rest_eeg.edf"].state == "done"
+    assert (
+        ds1.state == "complete"
+    )  # status only reports; the next plan withdraws COMPLETE
+    assert corpus.plan().datasets[0].state == "partial"
 
 
 # ---------------------------------------------------------------- holding and CLI
@@ -838,3 +849,62 @@ def test_a_keyed_file_the_archive_lacks_still_fails(tmp_path, archive, monkeypat
         and e.state == "failed"
         and report.datasets[0].counts["absent"] == 0
     )
+
+
+# ---------------------------------------------------------------- review fixes
+
+
+def test_a_corrupt_file_of_the_right_size_is_refetched_not_relabelled(
+    tmp_path, archive, monkeypatch
+):
+    """verify(hash) marks it corrupt; download must replace it, not flip it back to done."""
+    corpus, boto = _corpus(tmp_path, archive, ids=("ds1",), monkeypatch=monkeypatch)
+    raw = "sub-01/eeg/sub-01_task-rest_eeg.edf"
+    assert corpus.download(n_jobs=1).ok and corpus.verify(level="hash").ok
+    (tmp_path / "ds1" / raw).write_bytes(DATA[:-1] + b"!")  # right size, wrong bytes
+    assert corpus.verify(level="hash").datasets[0].entries[raw].state == "corrupt"
+    assert corpus.download(n_jobs=1).ok
+    assert (tmp_path / "ds1" / raw).read_bytes() == DATA
+    assert boto.gets.count(f"openneuro.org/ds1/{raw}") == 2
+    assert corpus.verify(level="hash").ok
+
+
+def test_release_leaves_a_lock_that_a_peer_took_over(tmp_path):
+    path = tmp_path / "f.edf"
+    a = _FileLock(path)
+    assert a.acquire()
+    a.path.unlink()  # a peer judged it stale and broke it ...
+    b = _FileLock(path)
+    assert b.acquire()  # ... and holds it now
+    a.release()
+    assert b.path.exists() and b.holder()["token"] == b.token
+    b.release()
+    assert not b.path.exists()
+
+
+def test_a_lock_of_another_clusters_job_is_kept_until_it_is_old(
+    tmp_path, archive, monkeypatch
+):
+    """Delta and DeltaAI share a file system: Delta's squeue cannot see a DeltaAI job."""
+    corpus, boto = _corpus(tmp_path, archive, ids=("ds1",), monkeypatch=monkeypatch)
+    _fake_squeue(tmp_path, monkeypatch)
+    monkeypatch.setenv("SLURM_CLUSTER_NAME", "delta")
+    raw = "sub-01/eeg/sub-01_task-rest_eeg.edf"
+    dest = tmp_path / "ds1" / raw
+    dest.parent.mkdir(parents=True)
+    lock = dest.with_name(dest.name + ".lock")
+    holder = {"host": "gh001", "pid": 4242, "job": "111", "time": "now"}
+    lock.write_text(json.dumps({**holder, "cluster": "deltaai"}))  # 111 "invalid" here
+    assert corpus.download(n_jobs=1).datasets[0].entries[raw].state == "locked"
+    lock.write_text(json.dumps({**holder, "cluster": "delta"}))  # our cluster: ended
+    assert corpus.download(n_jobs=1).ok and not lock.exists()
+
+
+def test_a_live_pid_of_this_host_still_ages_out(tmp_path):
+    """A pid reused by an unrelated process must not block a file for ever."""
+    path = tmp_path / "f.edf.lock"
+    path.write_text(
+        json.dumps({"host": corpus_mod.socket.gethostname(), "pid": os.getppid()})
+    )
+    assert not _FileLock(path)._is_stale()
+    assert _FileLock(path, stale_after=0.0)._is_stale()

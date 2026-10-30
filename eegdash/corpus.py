@@ -134,8 +134,36 @@ def _drop_stale_parts(dest: Path, stale_after: float = _PART_STALE_SECONDS) -> N
             pass
 
 
-_held_locks: set[Path] = set()  # lock files this process holds, for the SIGTERM handler
+_held_locks: dict[
+    Path, str
+] = {}  # lock file -> token, the locks this process holds (SIGTERM handler)
 _slurm_checks: dict[str, tuple[float, bool]] = {}  # job -> (asked at, ended)
+
+
+def _local_cluster() -> str | None:
+    """Return the local Slurm cluster name (``SLURM_CLUSTER_NAME``, else ``scontrol``), cached.
+
+    Two clusters can share one file system (NCSA Delta and DeltaAI share
+    ``/work``): a job id is only meaningful to the cluster that issued it.
+    """
+    global _cluster_name
+    if _cluster_name is _UNSET:
+        name = os.environ.get("SLURM_CLUSTER_NAME")
+        scontrol = shutil.which("scontrol")
+        if not name and scontrol:
+            try:
+                out = subprocess.run(
+                    [scontrol, "show", "config"],
+                    capture_output=True,
+                    text=True,
+                    timeout=30,
+                ).stdout
+            except (OSError, subprocess.SubprocessError):
+                out = ""
+            found = re.search(r"^ClusterName\s*=\s*(\S+)", out, re.M)
+            name = found.group(1) if found else None
+        _cluster_name = name or None
+    return _cluster_name
 
 
 def _slurm_job_ended(job: object) -> bool:
@@ -169,6 +197,10 @@ def _slurm_job_ended(job: object) -> bool:
     return ended
 
 
+_UNSET = object()
+_cluster_name: Any = _UNSET
+
+
 def _drop_parts_of(dest: Path, pid: object) -> None:
     """Remove the downloader's ``<name>.<pid>.*.part`` staging files of one process."""
     if not isinstance(pid, int):
@@ -177,21 +209,23 @@ def _drop_parts_of(dest: Path, pid: object) -> None:
         part.unlink(missing_ok=True)
 
 
+def _sigterm_handler(signum: int, frame: object) -> None:
+    """Drop this process's locks and staging files, then exit 128 + *signum*."""
+    for lock, token in list(_held_locks.items()):
+        if (_FileLock(lock).holder() or {}).get("token") == token:
+            lock.unlink(missing_ok=True)
+        _drop_parts_of(lock.with_suffix(""), os.getpid())
+    sys.stderr.write("SIGTERM: locks released, exiting\n")
+    os._exit(128 + signum)
+
+
 def _release_locks_on_sigterm() -> None:
     """On SIGTERM drop this process's locks and staging files, then exit 143.
 
     Slurm sends SIGTERM at the time limit, on scancel and on eviction, then
     SIGKILL; a lock that outlives its job blocks the next one (55351583).
     """
-
-    def handler(signum: int, frame: object) -> None:
-        for lock in list(_held_locks):
-            lock.unlink(missing_ok=True)
-            _drop_parts_of(lock.with_suffix(""), os.getpid())
-        sys.stderr.write("SIGTERM: locks released, exiting\n")
-        os._exit(128 + signum)
-
-    signal.signal(signal.SIGTERM, handler)
+    signal.signal(signal.SIGTERM, _sigterm_handler)
 
 
 def _short(exc: BaseException) -> str:
@@ -223,6 +257,12 @@ def _classify(exc: BaseException) -> str:
             errno.EPERM,
         ):
             return "storage"
+        if isinstance(e, FileNotFoundError) and any(
+            str(f).endswith(".part") for f in (e.filename, e.filename2) if f
+        ):
+            return (
+                "unknown"  # our staging file vanished (a peer broke the lock): retried
+            )
         if isinstance(e, (FileNotFoundError, PermissionError)):
             return "catalogue"
         if isinstance(e, urllib.error.HTTPError):
@@ -403,6 +443,9 @@ class _FileLock:
         self.wait = wait
         self.stale_after = stale_after
         self.held = False
+        self.token = (
+            uuid.uuid4().hex
+        )  # release() removes the file only while it still names us
 
     def holder(self) -> dict[str, Any] | None:
         try:
@@ -418,8 +461,10 @@ class _FileLock:
             return False  # gone already
         if info is None:
             return age > self.stale_after
-        if info.get("host") == socket.gethostname() and isinstance(
-            info.get("pid"), int
+        if (
+            info.get("host") == socket.gethostname()
+            and isinstance(info.get("pid"), int)
+            and os.name != "nt"  # os.kill(pid, 0) terminates a process on Windows
         ):
             try:
                 os.kill(info["pid"], 0)
@@ -427,11 +472,16 @@ class _FileLock:
                 return True
             except PermissionError:
                 return False  # alive, another user
-            return info["pid"] == os.getpid() and age > self.stale_after
+            return age > self.stale_after  # alive, but the pid may have been reused
         job = info.get("job")
-        if job and job != os.environ.get("SLURM_JOB_ID") and _slurm_job_ended(job):
+        if (
+            job
+            and job != os.environ.get("SLURM_JOB_ID")
+            and info.get("cluster") == _local_cluster()
+            and _slurm_job_ended(job)
+        ):
             return True
-        return age > self.stale_after
+        return age > self.stale_after  # another cluster's job: squeue cannot see it
 
     def _try(self) -> bool:
         """Create the lock file exclusively; False when it exists."""
@@ -446,12 +496,14 @@ class _FileLock:
                         "host": socket.gethostname(),
                         "pid": os.getpid(),
                         "job": os.environ.get("SLURM_JOB_ID"),
+                        "cluster": _local_cluster(),
+                        "token": self.token,
                         "time": _now(),
                     }
                 )
             )
         self.held = True
-        _held_locks.add(self.path)
+        _held_locks[self.path] = self.token
         return True
 
     def acquire(self) -> bool:
@@ -471,17 +523,24 @@ class _FileLock:
             time.sleep(0.05)
 
     def release(self) -> None:
+        """Remove the lock file if it is still ours: a peer that broke it as stale may hold it now."""
         if self.held:
-            self.path.unlink(missing_ok=True)
-            _held_locks.discard(self.path)
+            if (self.holder() or {}).get("token") == self.token:
+                self.path.unlink(missing_ok=True)
+            _held_locks.pop(self.path, None)
             self.held = False
 
     def __enter__(self) -> _FileLock:
-        if not self.acquire():
-            # The manifest lock is never held longer than a rewrite takes: break it.
+        if self.acquire():
+            return self
+        # The manifest lock is never held longer than a rewrite takes: break it,
+        # and never go on without it (a merge written unlocked can be lost).
+        for _ in range(200):
             self.path.unlink(missing_ok=True)
-            self._try()
-        return self
+            if self._try():
+                return self
+            time.sleep(0.05)
+        raise TimeoutError(f"{self.path}: could not take the lock")
 
     def __exit__(self, *exc: object) -> None:
         self.release()
@@ -852,7 +911,10 @@ class EEGDashCorpus:
         self._write_corpus_file(report)
         return report
 
-    def _plan_dataset(self, dsid: str, subjects: Sequence[str] | None) -> _DatasetPlan:
+    def _plan_dataset(
+        self, dsid: str, subjects: Sequence[str] | None, *, write: bool = True
+    ) -> _DatasetPlan:
+        """Plan one dataset; with ``write=False`` (``status(online=True)``) nothing on disk changes."""
         t0 = time.monotonic()
         rep = DatasetReport(dsid, table_subjects=self._table_subjects(dsid))
         query = {
@@ -934,9 +996,10 @@ class EEGDashCorpus:
             rep.drift = {"added": added, "removed": removed}
         entries = {p: e for p, e in old.items() if subjects and p not in new_paths}
         entries.update((t.entry.path, t.entry) for t in transfers)
-        manifest.write(header, entries)
-        if added and manifest.is_complete():
-            manifest.clear_complete()
+        if write:
+            manifest.write(header, entries)
+            if added and manifest.is_complete():
+                manifest.clear_complete()
         rep.entries = entries
         rep.state = _dataset_state(manifest, entries)
         rep.seconds = time.monotonic() - t0
@@ -1124,8 +1187,12 @@ class EEGDashCorpus:
         manifest = _Manifest(self.cache_dir / (rep.served_as or rep.dataset_id))
         flusher = _Flusher(manifest, plan.header)
         todo: list[_Transfer] = []
-        for t in plan.transfers:
-            if self._already_there(t):
+        # One stat per file, on the dataset's workers: done one at a time this
+        # took most of a 5 h 51 min run over 282,290 files (2026-10-28).
+        with ThreadPoolExecutor(max_workers=workers) as pool:
+            there = list(pool.map(self._already_there, plan.transfers))
+        for t, is_there in zip(plan.transfers, there):
+            if is_there:
                 if not t.entry.present:
                     t.entry.state, t.entry.error, t.entry.message = "done", None, None
                     t.entry.bytes, t.entry.when = _size_on_disk(t.dest), _now()
@@ -1181,7 +1248,13 @@ class EEGDashCorpus:
 
     @staticmethod
     def _already_there(t: _Transfer) -> bool:
-        """Present at the expected size (no network); an unsized file only when the manifest says so."""
+        """Present at the expected size (no network); an unsized file only when the manifest says so.
+
+        A file verify found ``corrupt`` has the right size and the wrong bytes:
+        never there, whatever its size, so the next download replaces it.
+        """
+        if t.entry.state == "corrupt":
+            return False
         try:
             got = _size_on_disk(t.dest)
         except FileNotFoundError:
@@ -1215,6 +1288,8 @@ class EEGDashCorpus:
         moved = 0
         try:
             _drop_stale_parts(t.dest)
+            if e.state == "corrupt" and t.dest.is_file():
+                t.dest.unlink()  # the downloader keeps a file of the right size
             if self._already_there(t):  # a peer finished it while we waited
                 e.state = e.state if e.present else "done"
                 e.bytes, e.error, e.message = _size_on_disk(t.dest), None, None
@@ -1469,13 +1544,17 @@ class EEGDashCorpus:
     ) -> CorpusReport:
         """Per dataset, from the manifests and ``COMPLETE`` markers only.
 
-        With *online*, the plan runs first and each dataset's ``drift`` lists
-        the files the catalogue added or dropped since the manifest was written.
+        With *online*, the catalogue is queried first and each dataset's
+        ``drift`` lists the files it added or dropped since the manifest was
+        written; the manifests and ``COMPLETE`` markers are not touched.
         """
         t0 = time.monotonic()
         drift: dict[str, DatasetReport] = {}
         if online:
-            drift = {d.dataset_id: d for d in self.plan(datasets=datasets).datasets}
+            drift = {
+                d: self._plan_dataset(d, None, write=False).report
+                for d in self._select(datasets)
+            }
         report = CorpusReport("status")
         for dsid in self._select(datasets):
             rep = DatasetReport(dsid, table_subjects=self._table_subjects(dsid))

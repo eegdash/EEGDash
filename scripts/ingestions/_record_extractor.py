@@ -239,8 +239,9 @@ def _extract_technical_metadata(
     bool,
     dict[str, str | None],
     float | None,
+    list[str],
 ]:
-    """Delegate to MetadataCascade; returns (sfreq, nchans, ntimes, ch_names, fif_is_split, fif_continuations_ok, provenance, duration_seconds)."""
+    """Delegate to MetadataCascade; returns (sfreq, nchans, ntimes, ch_names, fif_is_split, fif_continuations_ok, provenance, duration_seconds, header_issues)."""
     ctx = CascadeContext(bids_dataset=bids_dataset, bids_file=bids_file)
     result = MetadataCascade().run(ctx)
     return (
@@ -252,6 +253,7 @@ def _extract_technical_metadata(
         result.fif_continuations_ok,
         result.provenance,
         result.duration_seconds,
+        result.header_issues,
     )
 
 
@@ -451,6 +453,7 @@ def extract_record(
         fif_continuations_ok,
         metadata_provenance,
         duration_seconds,
+        header_issues,
     ) = _extract_technical_metadata(bids_dataset, bids_file)
     bids_file_path = Path(bids_file)
 
@@ -548,6 +551,8 @@ def extract_record(
 
     if any(v is not None for v in metadata_provenance.values()):
         record["_metadata_provenance"] = metadata_provenance
+    if header_issues:
+        record["_header_issues"] = header_issues
 
     sidecar_extras = _extract_bids_sidecar_fields(bids_dataset, bids_file)
     record.update(sidecar_extras)

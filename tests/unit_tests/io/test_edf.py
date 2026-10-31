@@ -25,7 +25,9 @@ def _field(value, width):
     return str(value).ljust(width).encode("latin-1")[:width]
 
 
-def _write(path, *, time="10.47.59", recording="X", header_bytes=None):
+def _write(
+    path, *, time="10.47.59", recording="X", header_bytes=None, unit="uV", physical=3200
+):
     """Write a 2-channel EDF (or BDF, from the suffix) with start ``29.10.24 time``."""
     bdf = path.suffix == ".bdf"
     ns, nbytes = len(LABELS), 3 if bdf else 2
@@ -47,9 +49,9 @@ def _write(path, *, time="10.47.59", recording="X", header_bytes=None):
     header += b"".join(_field(label, 16) for label in LABELS)
     for width, value in [
         (80, ""),  # transducer
-        (8, "uV"),
-        (8, -3200),
-        (8, 3200),
+        (8, unit),
+        (8, -physical),
+        (8, physical),
         (8, -dmax - 1),
         (8, dmax),
         (80, ""),  # prefiltering
@@ -185,3 +187,27 @@ def test_header_size_mismatch_says_why(tmp_path, ext):
     match = "Bad EDF/BDF header: 2 signals take 768 bytes, but the header-size field says 512"
     with pytest.raises(ValueError, match=match):
         get_reader(ext)(fname)
+
+
+def test_nanovolt_header_is_scaled(tmp_path):
+    fname = _write(tmp_path / "nv.bdf", unit="nV")
+    as_volts = mne.io.read_raw_bdf(fname).get_data()  # MNE 1.13 reads nV as V
+    np.testing.assert_allclose(get_reader(".bdf")(fname).get_data(), as_volts * 1e-9)
+
+
+@pytest.mark.parametrize(
+    ("unit", "physical", "flagged"),
+    [
+        ("rad", 2_001_499, True),  # nm000281: rad x 1e6 under rad
+        ("rad", 2.001499, False),
+        ("uV", 3200, False),
+        ("mV", 2000, True),  # 2 V
+    ],
+)
+def test_implausible_header_range_is_reported(
+    tmp_path, caplog, unit, physical, flagged
+):
+    fname = _write(tmp_path / "x.bdf", unit=unit, physical=physical)
+    with caplog.at_level(logging.WARNING, logger="eegdash"):
+        get_reader(".bdf")(fname)
+    assert ("header range of Cz" in caplog.text) is flagged

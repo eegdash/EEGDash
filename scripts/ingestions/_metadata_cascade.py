@@ -244,6 +244,24 @@ def extract_sfreq_nchans_from_channels_tsv(
     return sampling_frequency, nchans
 
 
+def channels_tsv_units(bids_file_path: Path, bids_root: Path) -> dict[str, str]:
+    """``name -> units`` from the nearest ``*_channels.tsv`` (BIDS inheritance)."""
+    base_names, dirs = _build_bids_search_paths(bids_file_path, bids_root)
+    for search_dir in dirs:
+        for base_name in base_names:
+            path = search_dir / f"{base_name}_channels.tsv"
+            if not path.is_file():
+                continue
+            try:
+                df = pd.read_csv(path, sep="\t", dtype="string", keep_default_na=False)
+            except Exception:  # noqa: BLE001
+                return {}
+            if "name" not in df or "units" not in df:
+                return {}
+            return dict(zip(df["name"], df["units"], strict=True))
+    return {}
+
+
 def extract_recording_duration_from_sidecar(
     bids_file_path: Path,
     bids_root: Path,
@@ -384,6 +402,8 @@ class CascadeResult:
     # A parser reported trials > 1: no length source may flatten the epochs.
     epoched: bool = False
     fif_continuations_ok: bool = True
+    # Channels MNE reads at an implausible scale (EDF/BDF header range x unit).
+    header_issues: list[str] = field(default_factory=list)
     provenance: dict[str, str | None] = field(
         default_factory=lambda: {f: None for f in _METADATA_FIELDS}
     )
@@ -818,6 +838,12 @@ class RemoteHeaderStep:
             if n_signals
             else b""
         ) or b""
+        if n_signals and len(sig) >= 256 * n_signals:
+            result.header_issues = _edf_header.edf_scale_issues(
+                sig,
+                n_signals,
+                channels_tsv_units(ctx.bids_file_path, ctx.bids_root),
+            )
         # The signal headers give the rate, length and channels MNE reads; they
         # beat the sidecar (on006465: 1000 samples per 1 s record, sidecar 500 Hz).
         shape = _edf_header.edf_raw_shape(buf, sig)

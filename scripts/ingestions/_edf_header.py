@@ -224,3 +224,43 @@ def edf_size_arithmetic_n_times(file_size: int, nchans: int, ext: str) -> int | 
         return data_bytes // divisor
     except Exception:  # noqa: BLE001
         return None
+
+
+#: What MNE multiplies a header's physical values by; any other unit reads as 1.
+_MNE_SCALE = {"uV": 1e-6, "µV": 1e-6, "mV": 1e-3}
+#: Largest plausible |value| MNE returns, in V for any voltage unit, or rad.
+_MAX_ABS = {"V": 1.0, "rad": 100.0}
+
+
+def _signal_field(signals: bytes, n_signals: int, at: int, width: int, i: int) -> str:
+    """Field ``i`` of the per-signal header column at ``at`` (in units of ``n_signals``)."""
+    start = at * n_signals + width * i
+    return signals[start : start + width].decode("latin-1").strip(" \x00")
+
+
+def edf_scale_issues(signals: bytes, n_signals: int, tsv_units: dict) -> list[str]:
+    """Channels MNE reads at an implausible scale (nm000281: joints at ±2e6 rad).
+
+    ``signals`` is the ``256 x n_signals`` block after the main header. MNE
+    scales by the header unit and ignores channels.tsv, so the peak MNE returns
+    is the header's physical range times :data:`_MNE_SCALE`; it is judged in the
+    quantity channels.tsv declares (else the header's). Unknown quantities are
+    not judged. **Never raises** on an unparsable range: that channel is skipped.
+    """
+    issues = []
+    for i in range(n_signals):
+        name = _signal_field(signals, n_signals, 0, 16, i)
+        unit = _signal_field(signals, n_signals, 96, 8, i)
+        declared = tsv_units.get(name, unit)
+        quantity = "V" if declared.endswith("V") else declared
+        try:
+            peak = max(
+                abs(float(_signal_field(signals, n_signals, 104, 8, i))),
+                abs(float(_signal_field(signals, n_signals, 112, 8, i))),
+            )
+        except ValueError:
+            continue
+        peak *= _MNE_SCALE.get(unit, 1)
+        if peak > _MAX_ABS.get(quantity, float("inf")):
+            issues.append(f"{name}: reads up to {peak:g} {quantity} (header {unit!r})")
+    return issues

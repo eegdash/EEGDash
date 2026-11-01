@@ -20,6 +20,11 @@ on main as of 2026-10-18); the upstream PR is still to be written:
   mismatch is refused with a ``ValueError`` that says why ("Bad EDF/BDF
   header: ..."). Nothing is written; once the deposit has a correct header
   (nemarDatasets/on003343#3) this path is not taken.
+- MNE scales a channel by its header unit only for µV and mV; any other unit,
+  ``nV`` included, is read as is. ``nV`` and ``pV`` are scaled, and a channel
+  whose header range reads beyond 1 V (a voltage) or 100 rad is reported with
+  an eegdash warning: nm000281 stored joint angles as rad x 1e6 under ``rad``,
+  so MNE read them up to 2e6 rad. Nothing is changed for such a channel.
 """
 
 import io
@@ -32,6 +37,7 @@ from unittest import mock
 
 import mne
 import mne_bids.read
+import numpy as np
 from mne.io.edf import edf as _edf
 from mne.utils import warn
 
@@ -39,6 +45,10 @@ logger = logging.getLogger("eegdash")
 _orig_read_edf_header = _edf._read_edf_header
 # What datetime.replace raises for an hour, minute or second out of range.
 _BAD_TIME = re.compile(r"^(hour|minute|second) must be in")
+# Voltage units MNE 1.13 reads at 1 (it scales only µV and mV).
+_VOLT_PREFIX = {"nV": 1e-9, "pV": 1e-12}
+# Largest plausible |value| per quantity, in V or rad.
+_MAX_ABS = {"V": 1.0, "rad": 100.0}
 
 
 class _View(io.RawIOBase):
@@ -138,7 +148,27 @@ def _header_size_mismatch(fname):
     )
 
 
-def _read_edf_header(fname, exclude, infer_types, file_type, *args, **kwargs):
+def _read_edf_header(fname, *args, **kwargs):
+    edf_info, orig_units = _read_edf_header_fixed(fname, *args, **kwargs)
+    units = edf_info["units"]
+    peak = np.maximum(abs(edf_info["physical_min"]), abs(edf_info["physical_max"]))
+    implausible = []
+    for k, (name, unit) in enumerate(orig_units.items()):
+        units[k] = _VOLT_PREFIX.get(unit, units[k])
+        quantity = "V" if unit.endswith("V") else unit
+        if peak[k] * units[k] > _MAX_ABS.get(quantity, np.inf):
+            implausible.append(f"{name} ({peak[k] * units[k]:g} {quantity})")
+    if implausible:
+        logger.warning(  # an eegdash warning: read_raw_bids reads with MNE at verbose=ERROR
+            "%s: the header range of %s is implausible; its physical range or "
+            "unit is likely wrong.",
+            Path(fname).name if not _edf._file_like(fname) else "EDF/BDF",
+            ", ".join(implausible),
+        )
+    return edf_info, orig_units
+
+
+def _read_edf_header_fixed(fname, exclude, infer_types, file_type, *args, **kwargs):
     args = (exclude, infer_types, file_type, *args)
     try:
         return _orig_read_edf_header(fname, *args, **kwargs)

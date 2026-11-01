@@ -90,6 +90,7 @@ class ValidationResult:
             "zip_placeholders": 0,
             "missing_nchans": 0,
             "missing_sampling_frequency": 0,
+            "header_scale_issues": 0,
         }
         self.source_distribution = {}
         self.modality_distribution = {}
@@ -270,6 +271,18 @@ def validate_record(
                     field=field,
                 )
                 result.stats["missing_recommended"] += 1
+
+    # The digest flags EDF/BDF channels MNE reads at an implausible scale
+    # (nm000281: joint angles up to 2e6 rad).
+    if issues := record.get("_header_issues"):
+        result.add_warning(
+            dataset_id,
+            f"{record.get('bids_relpath')}: implausible channel scale: "
+            + "; ".join(issues[:3])
+            + (f" (+{len(issues) - 3} more)" if len(issues) > 3 else ""),
+            field="_header_issues",
+        )
+        result.stats["header_scale_issues"] += 1
 
     nchans = record.get("nchans")
     sampling_frequency = record.get("sampling_frequency")

@@ -185,14 +185,14 @@ def test_table_and_ids(tmp_path):
     table.write_text("dataset_id,n_subjects,note\nds1,2,x\nnm2,,\n")
     corpus = EEGDashCorpus(table, cache_dir=tmp_path)
     assert corpus.ids == ["ds1", "nm2"]
-    assert corpus._table_subjects("ds1") == 2 and corpus._table_subjects("nm2") is None
+    assert corpus.table.loc["ds1", "n_subjects"] == "2"
     (tmp_path / "bad.csv").write_text("id\nds1\n")
     with pytest.raises(ValueError, match="dataset_id"):
         EEGDashCorpus(tmp_path / "bad.csv")
     with pytest.raises(ValueError, match="duplicate"):
         EEGDashCorpus(["ds1", "ds1"])
-    with pytest.raises(ValueError, match="not in the corpus"):
-        corpus.plan(datasets="ds9")
+    with pytest.raises(ValueError, match="at least one"):
+        EEGDashCorpus([" ", ""])
 
 
 # ---------------------------------------------------------------- plan
@@ -236,7 +236,7 @@ def test_plan_reports_unserved_short_and_broken(tmp_path, archive, s3):
     broken = EEGDashCorpus(
         ["ds1"], cache_dir=tmp_path, eeg_dash_instance=Broken({}, {})
     )
-    assert "catalogue query failed" in broken.plan().problems[0]
+    assert "plan failed: ConnectionError" in broken.plan().problems[0]
 
 
 def test_catalogue_paths_cannot_escape_the_cache(tmp_path, archive, s3):
@@ -399,14 +399,16 @@ def test_status_is_offline(tmp_path, archive, s3):
     corpus = _corpus(tmp_path, archive)
     report = corpus.status()
     assert [d.state for d in report.datasets] == ["unplanned"] * 2 and not report.ok
-    corpus.download(n_jobs=1, datasets="nm2")
-    corpus.plan(datasets="ds1")
-    queries = corpus._client.queries
+    _corpus(tmp_path, archive, ids=("nm2",)).download(n_jobs=1)
+    corpus.plan()
+    for f in (tmp_path / "nm2").rglob("*.edf"):
+        f.unlink()  # status reads the manifests: it must not even stat the files
+    queries = corpus.client.queries
     by_id = {
         d.dataset_id: d
         for d in EEGDashCorpus(["ds1", "nm2"], cache_dir=tmp_path).status().datasets
     }
-    assert corpus._client.queries == queries
+    assert corpus.client.queries == queries
     assert by_id["nm2"].state == "complete" and by_id["ds1"].state == "planned"
     assert by_id["ds1"].row()["subjects"] == 2
 
@@ -421,10 +423,10 @@ def test_datasets_and_records_offline(tmp_path, archive, s3):
 
 
 def test_cli(tmp_path, archive, s3, monkeypatch, capsys):
+    import eegdash.api
+
     monkeypatch.setattr(
-        EEGDashCorpus,
-        "client",
-        property(lambda self: FakeCatalogue(archive.docs, archive.records)),
+        eegdash.api, "EEGDash", lambda: FakeCatalogue(archive.docs, archive.records)
     )
     cache = str(tmp_path / "cache")
     assert corpus_mod.main(["status", "ds1,nm2", "--cache-dir", cache]) == 1
@@ -445,9 +447,32 @@ def test_cli(tmp_path, archive, s3, monkeypatch, capsys):
     table.write_text("dataset_id\nds1\nds404\n")
     assert corpus_mod.main(["status", str(table), "--cache-dir", cache]) == 1
     assert "PROBLEM ds404" in capsys.readouterr().out
-    assert (
-        corpus_mod.main(
-            ["status", str(table), "--cache-dir", cache, "--datasets", "ds1"]
-        )
-        == 0
+    assert corpus_mod.main(["status", "ds1", "--cache-dir", cache]) == 0
+
+
+def test_relative_cache_dir(tmp_path, archive, s3, monkeypatch):
+    """EEGDASH_CACHE_DIR defaults to a relative ./.eegdash_cache."""
+    monkeypatch.chdir(tmp_path)
+    corpus = EEGDashCorpus(
+        ["ds1"],
+        cache_dir=".eegdash_cache",
+        eeg_dash_instance=FakeCatalogue(archive.docs, archive.records),
     )
+    report = corpus.download(n_jobs=1)
+    assert report.ok, report.problems
+    assert RAW.format(s="01") in report.datasets[0].entries
+    assert corpus.verify(level="hash").ok
+
+
+def test_catalogue_drift_withdraws_complete(tmp_path, archive, s3):
+    corpus = _corpus(tmp_path, archive, ids=("ds1",))
+    assert corpus.download(n_jobs=1).ok
+    assert corpus.plan().datasets[0].drift == {"added": [], "removed": []}
+    assert corpus.status().datasets[0].state == "complete"  # same plan: kept
+    archive.records["ds1"].pop()  # sub-02 retracted, sub-07 added
+    archive.recording("ds1", "07", DATA + b"!!")
+    drift = corpus.plan().datasets[0].drift
+    assert drift["added"] == [DEP.format(s="07"), RAW.format(s="07")]
+    assert drift["removed"] == [DEP.format(s="02"), RAW.format(s="02")]
+    assert corpus.status().datasets[0].state == "partial"
+    assert corpus.download(n_jobs=1).ok

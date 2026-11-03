@@ -88,8 +88,8 @@ def build_fragments(
     demographics=None,
     unplaced=None,
 ) -> dict[str, tuple[str, str]]:
-    """Key -> (fragment HTML, caption). Pure: no file is read or written. The counts, status charts and the full
-    table are over every row (the paper's datasets and the release card's entries); the v0 page over v0's rows.
+    """Key -> (fragment HTML, caption). Pure: no file is read or written. The counts, the licence chart and the
+    full table are over every row (the paper's datasets and the release card's entries); the v0 page over v0's rows.
     ``unplaced`` are the channel names the position bank lacks (not drawn, counted in the electrode captions).
     """
     recordings, demographics = recordings or [], demographics or []
@@ -99,11 +99,10 @@ def build_fragments(
     legend_all = legend_html([r["status"] for r in rows])
     out = _Fragments()
     add = out.add
-    # the universe: introduction and coverage
+    # the universe: landing page and introduction
     add("kpis", charts.kpis_universe(rows))
+    add("intro-kpis", charts.kpis_intro(rows))
     add("licences", charts.licences_chart(rows), legend_all)
-    add("status", charts.status_html(rows), legend_all)
-    add("flow", charts.flow_svg(rows))
     add(
         "table-all",
         (table_html(rows, "atlas.csv", columns=DISPLAY_ALL), table_all_caption(rows)),

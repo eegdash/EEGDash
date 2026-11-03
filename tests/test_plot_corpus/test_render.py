@@ -8,9 +8,7 @@ import re
 import pytest
 from plot_corpus import charts
 from plot_corpus.data import (
-    BLOCKED,
     CONVERTED,
-    EXCLUDED,
     GATED,
     SLUGS,
     STATUSES,
@@ -60,19 +58,13 @@ def test_fragments_are_offline_and_scoped(built):
         assert meta["caption"] and "<figcaption>" in text, key
 
 
-def test_kpis_flow_and_numbers_come_from_rows(rows, built):
+def test_kpis_and_numbers_come_from_rows(rows, built):
     manifest, out = built
     k = kpis(rows)
     assert (k["datasets"], k[CONVERTED], k["v0_datasets"], k["out"]) == (6, 2, 2, 3)
     assert k["v0_hours"] == pytest.approx(150.5)
-    flow = (out / "flow.html").read_text()
-    assert (
-        'data-step="v0" data-count="2"' in flow
-        and 'data-step="tracked" data-count="6"' in flow
-    )
-    assert manifest["fragments"]["flow"]["caption"].startswith(
-        "2 of the 6 datasets tracked are converted (150 h): 2 of the release card's 2 entries"
-    )
+    assert not {"status", "flow"} & set(manifest["fragments"])  # the status bar and the flow chart are gone
+    assert not (out / "status.html").exists() and not (out / "flow.html").exists()
     inc = (out / "numbers.inc").read_text()
     assert (
         ".. |v0_datasets| replace:: 2" in inc and ".. |v0_hours| replace:: 150" in inc
@@ -158,10 +150,11 @@ def test_status_colours_in_both_themes():
     dark = dark.split("}")[0]
     for slug in SLUGS.values():
         assert f"--corpus-st-{slug}:" in light and f"--corpus-st-{slug}:" in dark, slug
-        for kind in ("fill", "stroke", "bg", "bd"):
+        for kind in ("fill", "bg", "bd"):
             assert f".corpus-{kind}-{slug} " in css, (kind, slug)
     assert re.findall(r"--corpus-st-([\w-]+):", light) == list(SLUGS.values())
-    for gone in ("converted-v1", "to-convert", "to-ingest", "paper-only"):
+    for gone in ("converted-v1", "to-convert", "to-ingest", "paper-only",
+                 "corpus-psteps", "corpus-stroke-", "corpus-on-"):
         assert gone not in css, gone
 
 
@@ -288,28 +281,12 @@ def test_a_removed_view_is_not_left_behind(data_dir, built):
     assert not (out / "old-view.html").exists() and not (out / "atlas-old.csv").exists()
 
 
-def test_status_figure_kpis_and_summary(rows, buckets, electrodes):
-    """The status bar and its four boxes, the universe's KPI boxes and the one-sentence summary."""
+def test_kpis_and_summary(rows, buckets, electrodes):
+    """The universe's KPI boxes and the one-sentence summary, the full table's caption and the status legend."""
     frags = build_fragments(rows, buckets, electrodes, "x")
     summary = ("2 of the 6 datasets tracked are converted and released in v0; 3 cannot be redistributed "
                "(2 blocked by the licence, 1 gated by an access agreement) and 1 is excluded.")  # fmt: skip
-    assert frags["kpis"][1] == frags["status"][1] == summary
-    status = frags["status"][0]
-    assert re.findall(r'<g data-status="([^"]+)" data-count="(\d+)"', status) == [
-        (CONVERTED, "2"), (BLOCKED, "2"), (GATED, "1"), (EXCLUDED, "1")]  # fmt: skip
-    boxes = re.findall(r'<li class="corpus-bd-([\w-]+)"[^>]*><b>(\d+)</b><span>([^<]*)</span><small>([^<]*)</small>',
-                       status)  # fmt: skip
-    assert boxes == [
-        ("converted", "2", "converted and released (v0)", "150 h, 50 subjects"),
-        (
-            "blocked",
-            "2",
-            "blocked by the licence",
-            "1 No Derivatives and 1 with no licence",
-        ),
-        ("gated", "1", "gated by an access agreement", "X-GATED"),
-        ("excluded", "1", "excluded", "for other reasons (the table says why)"),
-    ]
+    assert frags["kpis"][1] == summary
     kpi = re.findall(r'<div class="corpus-kpi( corpus-bd-[\w-]+)?"><b>([^<]*)</b><span>([^<]*)</span>',
                      frags["kpis"][0])  # fmt: skip
     assert [(b, t, c.replace(" corpus-bd-", "")) for c, b, t in kpi] == [
@@ -325,7 +302,7 @@ def test_status_figure_kpis_and_summary(rows, buckets, electrodes):
         "All 6 datasets tracked (REVE's paper and its release card); the 4 not in the corpus say why"
     )
     legend = re.search(
-        r'<div class="corpus-legend">(.*?)</div>', frags["status"][0]
+        r'<div class="corpus-legend">(.*?)</div>', frags["licences"][0]
     ).group(1)
     assert re.findall(r"</i>([^<]+)</span>", legend) == [
         "converted (v0)", "blocked (ND licence)", "gated (distribution forbidden)", "excluded"]  # fmt: skip

@@ -1,5 +1,5 @@
 """The committed data copy and the pages: hashes match the manifest, row counts are the corpus's, the pages describe one
-release (v0) on three pages, every page key and substitution exists, nothing names an unreleased store.
+release (v0) on two pages under a landing page, every page key and substitution exists, nothing names an unreleased store.
 """
 
 from __future__ import annotations
@@ -37,7 +37,7 @@ from .conftest import DOCS, REPO_ROOT, source_rows, table_rows, write_csv
 
 DATA = DOCS / "plot_corpus" / "data"
 RST = DOCS / "source" / "corpus"
-PAGES = ["index", "introduction", "v0", "coverage"]
+PAGES = ["index", "introduction", "v0"]
 HF_URL = "https://huggingface.co/datasets/EEGDash/eegdash-corpus-v0"
 CODE_URL = "https://github.com/eegdash/eegdash-corpus"
 TABLE_LINK = ":download:`eegdash-corpus-v0.csv </_static/corpus_generated/eegdash-corpus-v0.csv>`"
@@ -236,18 +236,22 @@ def test_reason_on_exactly_the_sixteen_rows_out_of_the_corpus():
     }
 
 
-def test_three_pages_and_their_links():
-    """Introduction, EEGDash Corpus v0 and Coverage under the landing page; no page links a removed one."""
+def test_two_pages_and_their_links():
+    """Introduction and EEGDash Corpus v0 under the landing page; no page links a removed one (Coverage, whose table
+    moved into the Introduction).
+    """
     assert sorted(p.stem for p in RST.glob("*.rst")) == sorted(PAGES)
     index = (RST / "index.rst").read_text()
     toc = re.search(r"\.\. toctree::\n(?:\s+:\w+:.*\n)*\n((?:\s+.+\n?)+)", index).group(
         1
     )
     assert [line.strip() for line in toc.strip().splitlines()] == [
-        "Introduction <introduction>", "EEGDash Corpus v0 <v0>", "Coverage <coverage>"]  # fmt: skip
-    assert re.findall(r":link: (\w+)", index) == ["introduction", "v0", "coverage"]
+        "Introduction <introduction>", "EEGDash Corpus v0 <v0>"]  # fmt: skip
+    assert re.findall(r":link: (\w+)", index) == ["introduction", "v0"]
+    assert ".. grid:: 1 1 2 2" in index
     sources = list((DOCS / "source").rglob("*.rst")) + [DOCS / "source" / "conf.py"]
-    stale = [str(p) for p in sources if re.search(r"corpus/(v1|progress)\b|<progress>|corpus-progress|corpus-v1",
+    stale = [str(p) for p in sources if re.search(r"corpus/(v1|progress|coverage)\b|<(progress|coverage)>|"
+                                                     r"corpus-(progress|coverage)|corpus-v1",
                                                      p.read_text(encoding="utf-8"))]  # fmt: skip
     assert stale == []
 
@@ -270,11 +274,14 @@ def test_every_rst_key_and_substitution_exists():
         r"^\s*\.\. corpus-figure:: (\S+)", (RST / "v0.rst").read_text(), re.M
     )
     assert keys.index("scatter") < keys.index("lengths") < keys.index("table-v0")
-    assert {"status", "flow", "table-all"} <= set(
-        re.findall(
-            r"^\.\. corpus-figure:: (\S+)", (RST / "coverage.rst").read_text(), re.M
-        )
+    intro = re.findall(
+        r"^\.\. corpus-figure:: (\S+)", (RST / "introduction.rst").read_text(), re.M
     )
+    assert intro[-2:] == ["licences", "table-all"]  # the table of every dataset follows the licences
+    assert not {"status", "flow"} & set(frags)
+    # no page links the removed Coverage page ("electrode coverage" on the v0 page is prose, not a link)
+    links = r"<coverage>|:link: coverage|:doc:`[^`]*coverage|corpus-coverage|coverage\.rst"
+    assert [p.name for p in RST.glob("*.rst") if re.search(links, p.read_text())] == []
     known = set(numbers(rows, buckets, electrodes, "x", recordings)) | {"hf_corpus"}
     # every file a page offers with :download: from the generated folder is one the build writes
     targets = {t for p in RST.glob("*.rst")

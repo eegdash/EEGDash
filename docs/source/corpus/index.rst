@@ -25,7 +25,7 @@ agreements) and |excluded| are excluded.
 
 .. container:: corpus
 
-   .. grid:: 1 1 3 3
+   .. grid:: 1 1 2 2
       :gutter: 4
 
       .. grid-item-card:: Introduction
@@ -40,10 +40,11 @@ agreements) and |excluded| are excluded.
          - What the corpus is and why it exists
          - REVE's corpus as the starting point
          - How it was built, checked and licensed
+         - The |universe| datasets tracked: why |not_redistributable| cannot be redistributed and |excluded| are excluded
 
          .. rst-class:: corpus-card-find
 
-         What you will find: the definitions every page uses, the provenance of each number, the licences.
+         What you will find: the definitions every page uses, the provenance of each number, the licences, the table of every dataset tracked with the reason for each one not in the corpus.
 
       .. grid-item-card:: EEGDash Corpus v0
          :link: v0
@@ -63,26 +64,8 @@ agreements) and |excluded| are excluded.
 
          What you will find: the converted Zarr store measured, the electrode map in 2-D and 3-D, the download, the table of its datasets.
 
-      .. grid-item-card:: Coverage
-         :link: coverage
-         :link-type: doc
-         :class-card: corpus-card
-
-         .. rst-class:: corpus-card-label
-
-         The datasets tracked
-
-         - Where each of the |universe| datasets stands
-         - Why |not_redistributable| cannot be redistributed and |excluded| are excluded
-         - From REVE's paper and release card to v0
-
-         .. rst-class:: corpus-card-find
-
-         What you will find: the status chart and the table of every dataset tracked, with the reason for each one not in the corpus.
-
 .. toctree::
    :hidden:
 
    Introduction <introduction>
    EEGDash Corpus v0 <v0>
-   Coverage <coverage>

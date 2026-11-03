@@ -335,25 +335,6 @@ def kpis(rows: list[dict[str, str]]) -> dict:
     }
 
 
-def steps(rows: list[dict[str, str]]) -> list[dict]:
-    """The four statuses with counts, hours and a line each: converted, then what will not be converted and why."""
-    k = kpis(rows)
-    gat = of_status(rows, GATED)
-    blk = k[BLOCKED]
-    none = blk - k["blocked_nd"]
-    return [
-        dict(status=CONVERTED, title="converted and released (v0)", count=k[CONVERTED],
-             sub=f"{k['v0_hours']:,.0f} h, {k['v0_subjects']:,} subjects"),
-        dict(status=BLOCKED, title="blocked by the licence", count=blk,
-             sub=join_and([t for t in (f"{k['blocked_nd']} No Derivatives" if k["blocked_nd"] else "",
-                                       f"{none} with no licence" if none else "") if t]) or "none"),
-        dict(status=GATED, title="gated by an access agreement", count=k[GATED],
-             sub=", ".join(short_title(r) for r in gat) or "none"),
-        dict(status=EXCLUDED, title="excluded", count=k[EXCLUDED],
-             sub="for other reasons (the table says why)"),
-    ]  # fmt: skip
-
-
 def status_summary(rows: list[dict[str, str]]) -> str:
     """Where the datasets tracked stand, in one sentence: converted and released, cannot be redistributed (blocked by
     the licence, gated), excluded.
@@ -434,9 +415,6 @@ def numbers(
     """The substitutions of ``numbers.inc``: every figure the RST prose quotes, from the rows (the universe: the
     paper's datasets and the card's entries), the v0 store's buckets and electrodes and its recording table.
     """
-    card_only = [
-        r for r in rows if r["in_release_card"] == "yes" and r["in_reve_paper"] != "yes"
-    ]
     k = kpis(rows)
     v0 = v0_rows(rows)
     in_v0 = {r["dataset_id"] for r in v0}
@@ -449,7 +427,6 @@ def numbers(
         "paper_named": str(k["paper"]),
         "card_entries": str(k["card"]),
         "card_only": str(k["card_only"]),
-        "card_only_names": join_and([r["dataset_id"] for r in card_only]),
         "v0_datasets": str(k["v0_datasets"]),
         "v0_hours": f"{k['v0_hours']:,.0f}",
         "v0_subjects": f"{k['v0_subjects']:,}",

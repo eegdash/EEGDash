@@ -30,7 +30,6 @@ from .data import (
     montage_names,
     name_of,
     status_summary,
-    steps,
 )  # fmt: skip
 from .electrodes import view
 from .layout import sankey_flows, sankey_layout, squarify
@@ -66,7 +65,7 @@ def median(vals: list[float]) -> float:
     return s[len(s) // 2] if s else 0.0
 
 
-# ------------------------------------------------------------------------------------------------- numbers, steps
+# ------------------------------------------------------------------------------------------------------- numbers
 
 
 def kpi_html(boxes: list[tuple[str, str, str | None]]) -> str:
@@ -97,6 +96,21 @@ def kpis_universe(rows: list[dict[str, str]]) -> tuple[str, str]:
     return kpi_html(boxes), status_summary(rows)
 
 
+def kpis_intro(rows: list[dict[str, str]]) -> tuple[str, str]:
+    """The Introduction's row: what the release holds, in three numbers, against the datasets tracked; the landing
+    page breaks the rest down by status and the v0 page measures the store."""
+    k = kpis(rows)
+    boxes = [
+        (f"{k['v0_datasets']}", "datasets released (v0)", CONVERTED),
+        (f"{k['v0_hours']:,.0f}", "hours", CONVERTED),
+        (f"{k['v0_subjects']:,}", "subjects", CONVERTED),
+        (f"{k['datasets']}", "datasets tracked", None),
+    ]
+    cap = (f"EEGDash Corpus v0: {k['v0_datasets']} datasets, {k['v0_hours']:,.0f} h from {k['v0_subjects']:,} subjects, "
+           f"of the {k['datasets']} datasets tracked.")  # fmt: skip
+    return kpi_html(boxes), cap
+
+
 def store_kpis(
     rows: list[dict[str, str]],
     buckets: list[dict[str, str]],
@@ -120,78 +134,6 @@ def store_kpis(
     cap = (f"Measured in the converted Zarr store: {len(rows)} datasets, {hours:,.0f} h from {subjects:,} subjects, "
            f"in {len(buckets):,} channel sets.")  # fmt: skip
     return kpi_html(boxes), cap
-
-
-def flow_svg(rows: list[dict[str, str]]) -> tuple[str, str]:
-    """REVE's paper -> release card -> the datasets tracked (their union) -> v0, over every row."""
-    k = kpis(rows)
-    n = lambda col: sum(r[col] == "yes" for r in rows)  # noqa: E731
-    hrs = lambda col: hours_of([r for r in rows if r[col] == "yes"])  # noqa: E731
-    card_only = k["card_only"]
-    steps_ = [
-        dict(key="paper", title="REVE's paper", count=n("in_reve_paper"), sub="datasets named", status=None),
-        dict(key="card", title="Release card", count=n("in_release_card"),
-             sub=f"entries ({card_only} not in the paper)" if card_only else "entries", status=None),
-        dict(key="tracked", title="Tracked", count=k["datasets"], sub="the union of both", status=None),
-        dict(key="v0", title="eegdash-corpus-v0", count=n("in_v0"), sub=f"{hrs('in_v0'):,.0f} h", status=CONVERTED),
-    ]  # fmt: skip
-    bw, gap, h = 164, 45, 96
-    parts = [
-        svg_open(
-            len(steps_) * bw + (len(steps_) - 1) * gap,
-            h,
-            "flow from REVE's paper to EEGDash Corpus v0",
-        )
-    ]
-    for j, st in enumerate(steps_):
-        x = j * (bw + gap)
-        if st["status"]:
-            slug = SLUGS[st["status"]]
-            box = (f'<rect x="{x + 1}" y="8" width="{bw - 2}" height="{h - 16}" rx="8" class="corpus-fill-{slug} '
-                   f'corpus-stroke-{slug}" fill-opacity="0.14" stroke-width="1.5"/>')  # fmt: skip
-        else:
-            box = (f'<rect x="{x + 1}" y="8" width="{bw - 2}" height="{h - 16}" rx="8" fill="none" '
-                   f'stroke="currentColor" stroke-opacity="0.35" stroke-width="1.5"/>')  # fmt: skip
-        parts.append(f'<g data-step="{st["key"]}" data-count="{st["count"]}">{box}'
-                     f'<text x="{x + bw / 2}" y="30" text-anchor="middle" font-weight="600">{e(st["title"])}</text>'
-                     f'<text x="{x + bw / 2}" y="58" text-anchor="middle" font-size="24" font-weight="700">'
-                     f'{st["count"]}</text><text x="{x + bw / 2}" y="78" text-anchor="middle" opacity="0.7">'
-                     f'{e(st["sub"])}</text></g>')  # fmt: skip
-        if j < len(steps_) - 1:
-            ax = x + bw + 6
-            parts.append(f'<path d="M{ax} {h / 2}h{gap - 16}m-7 -6l7 6l-7 6" fill="none" stroke="currentColor" '
-                         f'stroke-opacity="0.5" stroke-width="1.5"/>')  # fmt: skip
-    parts.append("</svg>")
-    in_v0 = [r for r in rows if r["in_v0"] == "yes"]
-    of_card = sum(r["in_release_card"] == "yes" for r in in_v0)
-    of_paper = sum(r["in_reve_paper"] == "yes" for r in in_v0)
-    cap = (f"{len(in_v0)} of the {k['datasets']} datasets tracked are converted ({hrs('in_v0'):,.0f} h): {of_card} of "
-           f"the release card's {n('in_release_card')} entries and {of_paper} of the paper's {n('in_reve_paper')} "
-           f"datasets.")  # fmt: skip
-    return "".join(parts), cap
-
-
-def status_html(rows: list[dict[str, str]]) -> tuple[str, str]:
-    """Every dataset tracked in one stacked bar by status, then one box per status with its count and a line."""
-    k = kpis(rows)
-    W, H = 1000, 46
-    parts, x = [svg_open(W, H, "datasets by status")], 0.0
-    for s in STATUSES:
-        if not k[s]:
-            continue
-        w = k[s] / k["datasets"] * W
-        label = (f'<text x="{x + w / 2:.1f}" y="{H / 2 + 5}" text-anchor="middle" class="corpus-on-mark corpus-on-{SLUGS[s]}" '
-                 f'font-size="14" font-weight="700">{k[s]}</text>' if w > 22 else "")  # fmt: skip
-        parts.append(f'<g data-status="{e(s)}" data-count="{k[s]}" data-tip="{e(s)}: {k[s]} datasets">'
-                     f'<rect x="{x:.1f}" y="4" width="{w:.1f}" height="{H - 8}" class="{fill(s)}"/>{label}</g>')  # fmt: skip
-        x += w
-    parts.append("</svg>")
-    lis = "".join(f'<li class="corpus-bd-{SLUGS[st["status"]]}" data-status="{e(st["status"])}" '
-                  f'data-count="{st["count"]}"><b>{st["count"]}</b><span>{e(st["title"])}</span>'
-                  f'<small>{e(st["sub"])}</small></li>' for st in steps(rows))  # fmt: skip
-    return "".join(parts) + f'<ol class="corpus-psteps">{lis}</ol>', status_summary(
-        rows
-    )
 
 
 # ------------------------------------------------------------------------------------------- per-dataset bar lists

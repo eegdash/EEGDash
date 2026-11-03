@@ -65,14 +65,13 @@ def test_card_only_entries_count_everywhere(
         "<b>8</b><span>datasets tracked (REVE&#x27;s paper and release card)</span>"
         in frags["kpis"][0]
     )
-    assert frags["status"][1].startswith(
+    assert frags["kpis"][1].startswith(
         "3 of the 8 datasets tracked are converted and released in v0"
     )
-    assert (
-        'data-count="3"' in frags["status"][0]
-        and "Feedback (ds004262)" in frags["hours"][0]
-    )
-    assert "entries (2 not in the paper)" in frags["flow"][0]
+    intro = frags["intro-kpis"][0]   # the Introduction's short row: the release in three numbers, against the universe
+    assert intro.count("<b>") == 4 and "<b>3</b><span>datasets released (v0)</span>" in intro
+    assert "<b>8</b><span>datasets tracked</span>" in intro and frags["intro-kpis"][1].endswith("of the 8 datasets tracked.")
+    assert "Feedback (ds004262)" in frags["hours"][0]
     table = frags["table-all"][0]
     assert (
         table.count("<tr data-status=") == 8
@@ -87,7 +86,7 @@ def test_card_only_entries_count_everywhere(
         nums["card_entries"],
         nums["card_only"],
     ) == ("8", "6", "4", "2")
-    assert nums["card_only_names"] == "ds004262 and ds009999"
+    assert "card_only_names" not in nums  # its one page (Coverage) is gone
     assert nums["excluded_prose"] == ("Slow2016: recorded at 100 Hz, below REVE's 200 Hz input; "
                                       "ds009999: a release-card entry that names no dataset")  # fmt: skip
 

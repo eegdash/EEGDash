@@ -51,6 +51,14 @@ Every dataset keeps its own licence, and the release is gated: access needs a Hu
 Face account that accepted its terms. Later versions will add public datasets beyond
 REVE's, chosen by licence and usability.
 
+In numbers
+==========
+
+What the release holds, against the datasets tracked; the v0 page measures the store
+itself.
+
+.. corpus-figure:: intro-kpis
+
 How to get it
 =============
 
@@ -118,11 +126,6 @@ Every cell carries a provenance label: ``zarr`` (measured in the converted Zarr 
 one dataset in the Zarr store. Status vocabulary: Ingested and Converted (v0) · Blocked
 (ND Licence) · Gated (Distribution Forbidden) · Excluded.
 
-The corpus in numbers
-=====================
-
-.. corpus-figure:: kpis
-
 Licences
 ========
 
@@ -130,3 +133,20 @@ Every dataset tracked, by licence, coloured by status: the licence decides wheth
 converted copy may be redistributed, and under which terms.
 
 .. corpus-figure:: licences
+
+Every dataset tracked
+=====================
+
+REVE's paper names |paper_named| datasets and its release card lists |card_entries|
+entries, |card_only| of them not in the paper: |universe| datasets in all. |v0_datasets|
+are converted and released in v0. |not_redistributable| cannot be redistributed:
+|blocked| are blocked by their licences (|blocked_nd| No Derivatives, |blocked_none|
+with no licence stated) and |gated| are gated by access agreements (|gated_names|).
+|excluded| are excluded: |excluded_prose|. The table gives each dataset its status and,
+for each one not in the corpus, the reason; filter by text or by status.
+
+.. corpus-figure:: table-all
+
+.. only:: not html
+
+   The table is published as ``_static/corpus_generated/atlas.csv``.

@@ -147,6 +147,26 @@ def edf_data_channel_count(labels: bytes, n_signals: int) -> int | None:
     return sum(n not in ("EDF Annotations", "BDF Annotations") for n in names) or None
 
 
+def edf_channel_names(labels: bytes, n_signals: int) -> list[str] | None:
+    """Channel names exactly as MNE reads them; ``None`` if two collide.
+
+    ``labels`` starts with the 16-byte-per-signal label block that follows the
+    main header. Like ``mne.io.read_raw_edf``: each label is stripped as bytes
+    and decoded as latin-1, and EDF+/BDF+ annotation signals are not channels.
+    MNE renames colliding labels (``-0``, ``-1``); those are not the header's
+    names, so they give ``None``. **Never raises.**
+    """
+    if not n_signals or len(labels) < 16 * n_signals:
+        return None
+    names = [
+        labels[16 * i : 16 * i + 16].strip().decode("latin-1") for i in range(n_signals)
+    ]
+    names = [n for n in names if n not in ("EDF Annotations", "BDF Annotations")]
+    if not names or len(set(names)) != len(names):
+        return None
+    return names
+
+
 def edf_raw_shape(main: bytes, signals: bytes) -> tuple[float, int, int] | None:
     """``(sfreq, n_times, nchans)`` MNE reads, from the main + per-signal headers.
 

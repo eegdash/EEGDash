@@ -927,6 +927,14 @@ class MontageChannel(TypedDict, total=False):
     BIDS ``electrodes.tsv`` requires ``name, x, y, z`` (in the coordinate
     system declared by the sibling ``coordsystem.json``). The optional
     columns are preserved as-is when present.
+
+    A row of electrodes.tsv is measured and has no ``position_source``. An
+    iEEG channel that names contacts without being a row (``POL A3``,
+    ``A1-Ref``, bipolar ``A1-A2``) is derived from them by
+    :mod:`eegdash.dataset.channel_positions`: ``position_source`` is
+    ``"electrode_alias"`` or ``"bipolar_midpoint"``, ``contacts`` lists the
+    contact names and ``contact_distance`` (a pair only) is their distance,
+    in the coordinate units of the layout.
     """
 
     name: str
@@ -936,6 +944,9 @@ class MontageChannel(TypedDict, total=False):
     type: str
     material: str
     impedance: str
+    position_source: str
+    contacts: list[str]
+    contact_distance: float
 
 
 class Montage(TypedDict, total=False):

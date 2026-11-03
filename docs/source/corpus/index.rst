@@ -1,9 +1,9 @@
 :html_theme.sidebar_primary.remove: true
 :html_theme.sidebar_secondary.remove: true
-:og:description: EEGDash Corpus: an aggregated, training-ready collection of public EEG datasets for pretraining EEG foundation models, its versions, progress and licences.
+:og:description: EEGDash Corpus: a training-ready collection of public EEG datasets for pretraining EEG foundation models. Release v0, its datasets, licences and download.
 
 .. meta::
-   :description: EEGDash Corpus: an aggregated, training-ready collection of public EEG datasets for pretraining EEG foundation models, its versions, progress and licences.
+   :description: EEGDash Corpus: a training-ready collection of public EEG datasets for pretraining EEG foundation models. Release v0, its datasets, licences and download.
 
 .. include:: /_static/corpus_generated/numbers.inc
 
@@ -13,16 +13,19 @@
 EEGDash Corpus
 ##############
 
-EEGDash Corpus is an aggregated, training-ready collection of public EEG datasets
-for pretraining EEG foundation models, served through EEGDash as raw datasets and as
-converted Zarr stores. Version 0 holds |v0_datasets| datasets (|v0_hours| hours,
-converted); version 1 extends it to |v1_datasets| datasets (|v1_hours| hours, converted).
+EEGDash Corpus is a training-ready collection of public EEG datasets for pretraining
+EEG foundation models, served through EEGDash and converted once with one recipe. Its
+release, **EEGDash Corpus v0**, holds |v0_datasets| datasets (|v0_hours| hours,
+|v0_subjects| subjects): of the |universe| datasets REVE's paper and release card
+name, |v0_datasets| are converted and released, |not_redistributable| cannot be
+redistributed (|blocked| blocked by their licences, |gated| gated by access
+agreements) and |excluded| are excluded.
 
 .. corpus-figure:: kpis
 
 .. container:: corpus
 
-   .. grid:: 1 1 2 2
+   .. grid:: 1 1 3 3
       :gutter: 4
 
       .. grid-item-card:: Introduction
@@ -42,23 +45,6 @@ converted); version 1 extends it to |v1_datasets| datasets (|v1_hours| hours, co
 
          What you will find: the definitions every page uses, the provenance of each number, the licences.
 
-      .. grid-item-card:: Progress and Roadmap
-         :link: progress
-         :link-type: doc
-         :class-card: corpus-card
-
-         .. rst-class:: corpus-card-label
-
-         Status
-
-         - Where each of the |universe| datasets stands
-         - What comes next, in order
-         - From REVE's paper to the versions
-
-         .. rst-class:: corpus-card-find
-
-         What you will find: the progress strip, the roadmap, and the table of every dataset tracked.
-
       .. grid-item-card:: EEGDash Corpus v0
          :link: v0
          :link-type: doc
@@ -66,38 +52,37 @@ converted); version 1 extends it to |v1_datasets| datasets (|v1_hours| hours, co
 
          .. rst-class:: corpus-card-label
 
-         Converted
+         The release
 
          - |v0_datasets| datasets, |v0_hours| hours, |v0_subjects| subjects
          - |v0_positions| electrode positions in |v0_buckets| channel sets
-         - Hours, channels, subjects, rates, paradigms
-         - Recording lengths, subjects' ages and sex, licences, tokens, montages
+         - Hours, channels, subjects, rates, paradigms, recordings, ages and sex, tokens, montages
+         - How to download and load it
 
          .. rst-class:: corpus-card-find
 
-         What you will find: the converted Zarr store measured, the electrode map in 2-D and 3-D, the training budget, the table of v0.
+         What you will find: the converted Zarr store measured, the electrode map in 2-D and 3-D, the download, the table of its datasets.
 
-      .. grid-item-card:: EEGDash Corpus v1
-         :link: v1
+      .. grid-item-card:: Coverage
+         :link: coverage
          :link-type: doc
          :class-card: corpus-card
 
          .. rst-class:: corpus-card-label
 
-         Converted
+         The datasets tracked
 
-         - |v1_new| datasets added: |v1_added_short|
-         - |v1_datasets| datasets, |v1_hours| hours, |v1_positions| electrode positions in |v1_buckets| channel sets
-         - The same sections as v0, the added datasets in their own colour: training budget, montages
+         - Where each of the |universe| datasets stands
+         - Why |not_redistributable| cannot be redistributed and |excluded| are excluded
+         - From REVE's paper and release card to v0
 
          .. rst-class:: corpus-card-find
 
-         What you will find: what v1 adds, its numbers and caveats, the table of v1.
+         What you will find: the status chart and the table of every dataset tracked, with the reason for each one not in the corpus.
 
 .. toctree::
    :hidden:
 
    Introduction <introduction>
-   Progress and Roadmap <progress>
    EEGDash Corpus v0 <v0>
-   EEGDash Corpus v1 <v1>
+   Coverage <coverage>

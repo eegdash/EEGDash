@@ -1,7 +1,7 @@
 """The charts of the corpus pages. Each returns ``(html, caption)``; the caption is computed from the same rows.
 
-Every chart takes the rows it shows (``rows`` already filtered to a version
-or the universe), so the v0-only and v0+v1 variants share code.
+Every chart takes the rows it shows (``rows`` already filtered to v0 or the
+universe).
 """
 
 from __future__ import annotations
@@ -13,16 +13,13 @@ import re
 from .data import (
     BLOCKED,
     CONVERTED,
-    CONVERTED_ANY,
-    CONVERTED_V1,
+    EXCLUDED,
     GATED,
     MONTAGE_MIN,
     SHORT,
     SLUGS,
     STATUSES,
     TENTEN,
-    TO_CONVERT,
-    TO_INGEST,
     WORDS,
     by_id,
     electrode_sets,
@@ -32,10 +29,8 @@ from .data import (
     label_of,
     montage_names,
     name_of,
-    progress,
-    roadmap_items,
     status_summary,
-    v1_pending,
+    steps,
 )  # fmt: skip
 from .electrodes import view
 from .layout import sankey_flows, sankey_layout, squarify
@@ -86,23 +81,17 @@ def kpi_html(boxes: list[tuple[str, str, str | None]]) -> str:
 
 
 def kpis_universe(rows: list[dict[str, str]]) -> tuple[str, str]:
-    """The corpus in numbers, over every dataset tracked (REVE's paper and its release card): each converted
-    measure for v0 and, beside it, for v1 (v0's datasets and the ones v1 adds), then what will not be converted.
+    """The corpus in numbers, over every dataset tracked (REVE's paper and its release card): what v0 holds, then
+    what cannot be redistributed and what is excluded.
     """
     k = kpis(rows)
     boxes = [
-        (f"{k['v0_datasets']}", "datasets converted (v0)", CONVERTED),
-        (
-            f"{k['conv_datasets']}",
-            "datasets converted (v1)",
-            CONVERTED_V1,
-        ),
+        (f"{k['v0_datasets']}", "datasets converted and released (v0)", CONVERTED),
         (f"{k['v0_hours']:,.0f}", "hours (v0)", CONVERTED),
-        (f"{k['conv_hours']:,.0f}", "hours (v1)", CONVERTED_V1),
         (f"{k['v0_subjects']:,}", "subjects (v0)", CONVERTED),
-        (f"{k['conv_subjects']:,}", "subjects (v1)", CONVERTED_V1),
+        (f"{k[BLOCKED]}", "blocked (No Derivatives or no licence)", BLOCKED),
         (f"{k[GATED]}", "gated (distribution forbidden)", GATED),
-        (f"{k[BLOCKED]}", "blocked (No Derivative or no licence)", BLOCKED),
+        (f"{k[EXCLUDED]}", "excluded", EXCLUDED),
         (f"{k['datasets']}", "datasets tracked (REVE's paper and release card)", None),
     ]
     return kpi_html(boxes), status_summary(rows)
@@ -112,85 +101,49 @@ def store_kpis(
     rows: list[dict[str, str]],
     buckets: list[dict[str, str]],
     electrodes: list[dict],
-    *,
-    added: bool = False,
 ) -> tuple[str, str]:
-    """One store in numbers, the same boxes for v0 and v1: ``rows`` are the version's datasets, ``buckets`` its
-    channel sets (v1: v0's and those it adds), ``added`` counts the positions the added sets use.
-    """
-    conv = [r for r in rows if r["status"] in CONVERTED_ANY]
-    rates = {round(fnum(r["native_sfreq"])) for r in conv if fnum(r["native_sfreq"])}
-    paradigms = {r["paradigm"] for r in conv if r["paradigm"]}
-    positions = sum(view(e, added)[0] > 0 for e in electrodes)
-    status = CONVERTED_V1 if added else CONVERTED
-    hours, subjects = hours_of(conv), int(sum(fnum(r["n_subjects"]) or 0 for r in conv))
+    """The v0 store in numbers: ``rows`` are its datasets, ``buckets`` its channel sets."""
+    rates = {round(fnum(r["native_sfreq"])) for r in rows if fnum(r["native_sfreq"])}
+    paradigms = {r["paradigm"] for r in rows if r["paradigm"]}
+    positions = sum(view(e)[0] > 0 for e in electrodes)
+    hours, subjects = hours_of(rows), int(sum(fnum(r["n_subjects"]) or 0 for r in rows))
     boxes = [
-        (f"{len(conv)}", "datasets", status),
-        (f"{hours:,.0f}", "hours", status),
+        (f"{len(rows)}", "datasets", CONVERTED),
+        (f"{hours:,.0f}", "hours", CONVERTED),
         (f"{subjects:,}", "subjects", None),
-        (f"{int(sum(fnum(r['n_sessions']) or 0 for r in conv)):,}", "sessions", None),
+        (f"{int(sum(fnum(r['n_sessions']) or 0 for r in rows)):,}", "sessions", None),
         (f"{len(buckets):,}", "channel sets (buckets)", None),
         (f"{positions}", "electrode positions", None),
         (f"{len(rates)}", "native sampling rates", None),
         (f"{len(paradigms)}", "paradigms", None),
     ]
-    cap = (f"Measured in the converted Zarr store: {len(conv)} datasets, {hours:,.0f} h from {subjects:,} subjects, "
+    cap = (f"Measured in the converted Zarr store: {len(rows)} datasets, {hours:,.0f} h from {subjects:,} subjects, "
            f"in {len(buckets):,} channel sets.")  # fmt: skip
-    if len(conv) < len(rows):
-        n = len(rows) - len(conv)
-        cap += f" {n} more dataset{'s are' if n != 1 else ' is'} in this version but in no store yet."
     return kpi_html(boxes), cap
 
 
-def progress_html(rows: list[dict[str, str]]) -> tuple[str, str]:
-    steps = progress(rows)
-    bar = "".join(f'<i class="corpus-bg-{SLUGS[st["status"]]}" style="flex:{st["count"]}" '
-                  f'data-tip="{e(st["title"])}: {st["count"]} datasets"></i>' for st in steps if st["count"])  # fmt: skip
-    lis = "".join(f'<li class="corpus-bd-{SLUGS[st["status"]]}" data-status="{e(st["status"])}" '
-                  f'data-count="{st["count"]}"><b>{st["count"]}</b><span>{e(st["title"])}</span>'
-                  f'<small>{e(st["sub"])}</small></li>' for st in steps)  # fmt: skip
-    cap = status_summary(rows)
-    return (
-        f'<div class="corpus-pbar">{bar}</div><ol class="corpus-psteps">{lis}</ol>',
-        cap,
-    )
-
-
-def roadmap_html(rows: list[dict[str, str]], synced: str) -> tuple[str, str]:
-    items = roadmap_items(rows)
-    lis = "".join(f"<li>{e(t)}</li>" for t in items)
-    return (f'<ol class="corpus-roadmap">{lis}</ol>',
-            f"As of {synced}, the date of the data on this page; in order of what comes next.")  # fmt: skip
-
-
 def flow_svg(rows: list[dict[str, str]]) -> tuple[str, str]:
-    """REVE's paper -> release card -> v0 -> v1 (-> to be ingested, while any dataset is), over every row: the
-    paper's datasets, the card's entries (the ones the paper does not name counted beside), the versions.
-    """
+    """REVE's paper -> release card -> the datasets tracked (their union) -> v0, over every row."""
     k = kpis(rows)
     n = lambda col: sum(r[col] == "yes" for r in rows)  # noqa: E731
     hrs = lambda col: hours_of([r for r in rows if r[col] == "yes"])  # noqa: E731
     card_only = k["card_only"]
-    steps = [
+    steps_ = [
         dict(key="paper", title="REVE's paper", count=n("in_reve_paper"), sub="datasets named", status=None),
         dict(key="card", title="Release card", count=n("in_release_card"),
              sub=f"entries ({card_only} not in the paper)" if card_only else "entries", status=None),
+        dict(key="tracked", title="Tracked", count=k["datasets"], sub="the union of both", status=None),
         dict(key="v0", title="eegdash-corpus-v0", count=n("in_v0"), sub=f"{hrs('in_v0'):,.0f} h", status=CONVERTED),
-        dict(key="v1", title="eegdash-corpus-v1", count=n("in_v1"), sub=f"{hrs('in_v1'):,.0f} h",
-             status=TO_CONVERT if v1_pending(rows) else CONVERTED_V1),
     ]  # fmt: skip
-    if k[TO_INGEST]:
-        steps.append(dict(key="ingest", title="To be ingested", count=k[TO_INGEST], sub=f"+ {k[BLOCKED]} blocked",
-                          status=TO_INGEST))  # fmt: skip
     bw, gap, h = 164, 45, 96
     parts = [
         svg_open(
-            len(steps) * bw + (len(steps) - 1) * gap,
+            len(steps_) * bw + (len(steps_) - 1) * gap,
             h,
-            "flow from REVE's paper to the corpus versions",
+            "flow from REVE's paper to EEGDash Corpus v0",
         )
     ]
-    for j, st in enumerate(steps):
+    for j, st in enumerate(steps_):
         x = j * (bw + gap)
         if st["status"]:
             slug = SLUGS[st["status"]]
@@ -204,27 +157,22 @@ def flow_svg(rows: list[dict[str, str]]) -> tuple[str, str]:
                      f'<text x="{x + bw / 2}" y="58" text-anchor="middle" font-size="24" font-weight="700">'
                      f'{st["count"]}</text><text x="{x + bw / 2}" y="78" text-anchor="middle" opacity="0.7">'
                      f'{e(st["sub"])}</text></g>')  # fmt: skip
-        if j < len(steps) - 1:
+        if j < len(steps_) - 1:
             ax = x + bw + 6
             parts.append(f'<path d="M{ax} {h / 2}h{gap - 16}m-7 -6l7 6l-7 6" fill="none" stroke="currentColor" '
                          f'stroke-opacity="0.5" stroke-width="1.5"/>')  # fmt: skip
     parts.append("</svg>")
-    by = {st["key"]: st for st in steps}
-    v0h, v1h = hrs("in_v0"), hrs("in_v1")
-    ni = k[TO_INGEST]
-    wait = (
-        f", and {ni} open dataset{' waits' if ni == 1 else 's wait'} to be ingested"
-        if ni
-        else ""
-    )
-    cap = (f"{by['v0']['count']} of the release card's {by['card']['count']} entries are converted ({v0h:,.0f} h); "
-           f"v1 adds {by['v1']['count'] - by['v0']['count']} more of the paper's {by['paper']['count']} datasets "
-           f"({v1h - v0h:,.0f} h){wait}.")  # fmt: skip
+    in_v0 = [r for r in rows if r["in_v0"] == "yes"]
+    of_card = sum(r["in_release_card"] == "yes" for r in in_v0)
+    of_paper = sum(r["in_reve_paper"] == "yes" for r in in_v0)
+    cap = (f"{len(in_v0)} of the {k['datasets']} datasets tracked are converted ({hrs('in_v0'):,.0f} h): {of_card} of "
+           f"the release card's {n('in_release_card')} entries and {of_paper} of the paper's {n('in_reve_paper')} "
+           f"datasets.")  # fmt: skip
     return "".join(parts), cap
 
 
-def status_svg(rows: list[dict[str, str]]) -> tuple[str, str]:
-    """One stacked bar of every dataset tracked, per status."""
+def status_html(rows: list[dict[str, str]]) -> tuple[str, str]:
+    """Every dataset tracked in one stacked bar by status, then one box per status with its count and a line."""
     k = kpis(rows)
     W, H = 1000, 46
     parts, x = [svg_open(W, H, "datasets by status")], 0.0
@@ -238,8 +186,12 @@ def status_svg(rows: list[dict[str, str]]) -> tuple[str, str]:
                      f'<rect x="{x:.1f}" y="4" width="{w:.1f}" height="{H - 8}" class="{fill(s)}"/>{label}</g>')  # fmt: skip
         x += w
     parts.append("</svg>")
-    cap = status_summary(rows)
-    return "".join(parts), cap
+    lis = "".join(f'<li class="corpus-bd-{SLUGS[st["status"]]}" data-status="{e(st["status"])}" '
+                  f'data-count="{st["count"]}"><b>{st["count"]}</b><span>{e(st["title"])}</span>'
+                  f'<small>{e(st["sub"])}</small></li>' for st in steps(rows))  # fmt: skip
+    return "".join(parts) + f'<ol class="corpus-psteps">{lis}</ol>', status_summary(
+        rows
+    )
 
 
 # ------------------------------------------------------------------------------------------- per-dataset bar lists
@@ -296,9 +248,8 @@ def channels_chart(rows: list[dict[str, str]]) -> tuple[str, str]:
         items, log=False, unit="", label="mean channel count per dataset", step=32
     )
     vals = [it["value"] for it in items]
-    conv = [it["value"] for it in items if it["status"] in CONVERTED_ANY]
-    cap = (f"Median {median(vals):,.0f} channels; {pct(sum(v > 64 for v in conv), len(conv))} of the {len(conv)} "
-           f"converted datasets have more than 64 channels and {sum(v <= 32 for v in conv)} have 32 or fewer.")  # fmt: skip
+    cap = (f"Median {median(vals):,.0f} channels; {pct(sum(v > 64 for v in vals), len(vals))} of the {len(vals)} "
+           f"datasets have more than 64 channels and {sum(v <= 32 for v in vals)} have 32 or fewer.")  # fmt: skip
     return body, cap
 
 
@@ -344,52 +295,27 @@ def group_items(
     return items
 
 
-def channel_bands_buckets(
-    buckets: list[dict[str, str]], added: list[dict[str, str]] | None = None
-) -> tuple[str, str]:
+def channel_bands_buckets(buckets: list[dict[str, str]]) -> tuple[str, str]:
     """Hours of the converted Zarr store by channel-count band, measured per bucket (a dataset with several montages
-    counts in each band it uses); ``added`` (the buckets the v1 store adds to v0) stack in the v1 colour.
+    counts in each band it uses).
     """
-    every = [(CONVERTED, b) for b in buckets] + [(CONVERTED_V1, b) for b in added or []]
-    tot = sum(float(b["hours"]) for _, b in every)
+    tot = sum(float(b["hours"]) for b in buckets)
     items = []
     for k, (lo, hi) in enumerate(CHANNEL_BANDS):
         sub = [
-            (st, b)
-            for st, b in every
-            if band_index(float(b["n_chans"]), CHANNEL_BANDS) == k
+            b for b in buckets if band_index(float(b["n_chans"]), CHANNEL_BANDS) == k
         ]
-        hrs, nd = (
-            sum(float(b["hours"]) for _, b in sub),
-            len({b["dataset"] for _, b in sub}),
-        )
+        hrs, nd = sum(float(b["hours"]) for b in sub), len({b["dataset"] for b in sub})
         segs, tips = {}, {}
-        for st in (CONVERTED, CONVERTED_V1):
-            part = [b for s_, b in sub if s_ == st]
-            if part and (h := sum(float(b["hours"]) for b in part)):
-                segs[st] = h
-                tips[st] = (f"{len({b['dataset'] for b in part})} datasets, {len(part)} channel sets, {h:,.0f} h"
-                            + (" (v1 adds)" if st == CONVERTED_V1 else ""))  # fmt: skip
+        if sub and hrs:
+            segs[CONVERTED] = hrs
+            tips[CONVERTED] = f"{nd} datasets, {len(sub)} channel sets, {hrs:,.0f} h"
         items.append({"label": f"{band_label(lo, hi)} channels", "segs": segs, "tips": tips,
                       "text": f"{nd} datasets · {hrs:,.0f} h ({pct(hrs, tot)})", "hours": hrs, "n": nd})  # fmt: skip
     top = max(items, key=lambda it: it["hours"])
     cap = (f"{pct(top['hours'], tot)} of the {tot:,.0f} converted hours come from "
            f"{top['label'].replace(' channels', '')}-channel recordings ({top['n']} datasets); a dataset recorded "
            f"with several montages counts in each band it uses.")  # fmt: skip
-    return hbars_svg(items, "hours by channel-count band"), cap
-
-
-def channel_bands_rows(rows: list[dict[str, str]]) -> tuple[str, str]:
-    """Hours by the band of each dataset's mean channel count, stacked by status (v1: not every dataset has buckets)."""
-    data = [r for r in rows if fnum(r["mean_channels"])]
-    items = group_items(data, lambda r: band_index(float(r["mean_channels"]), CHANNEL_BANDS), "hours",
-                        order=list(range(len(CHANNEL_BANDS))))  # fmt: skip
-    for it in items:
-        it["label"] = f"{band_label(*CHANNEL_BANDS[it['key']])} channels"
-    tot = sum(it["hours"] for it in items)
-    top = max(items, key=lambda it: it["hours"])
-    cap = (f"{pct(top['hours'], tot)} of the {tot:,.0f} h are in datasets of {top['label']} ({top['n']} datasets), "
-           f"by each dataset's mean channel count.")  # fmt: skip
     return hbars_svg(items, "hours by channel-count band"), cap
 
 
@@ -416,7 +342,7 @@ def rates_chart(rows: list[dict[str, str]]) -> tuple[str, str]:
     )
     for it in items:
         it["label"] = f"{it['key']:,} Hz"
-    conv = [r for r in data if r["status"] in CONVERTED_ANY]
+    conv = [r for r in data if r["status"] == CONVERTED]
     res = [r for r in conv if round(float(r["native_sfreq"])) != 200]
     native = sorted({round(float(r["native_sfreq"])) for r in res})
     span = f", from {native[0]:,} to {native[-1]:,} Hz" if len(native) > 1 else ""
@@ -428,12 +354,13 @@ def rates_chart(rows: list[dict[str, str]]) -> tuple[str, str]:
 
 
 def paradigms_chart(rows: list[dict[str, str]]) -> tuple[str, str]:
+    """Hours per paradigm, most first: every paradigm the rows carry, read from the data (no fixed list)."""
     items = group_items(rows, lambda r: r["paradigm"] or "unspecified", "hours")
     for it in items:
-        it["label"] = label_of({"short_name": it["key"]}, 24)
+        it["label"] = it["key"]  # in full: the label column widens to fit
     tot = sum(it["hours"] for it in items)
     top, most = items[0], max(items, key=lambda it: (it["n"], -items.index(it)))
-    cap = (f"{top['key'].capitalize()} holds {pct(top['hours'], tot)} of the hours with {top['n']} "
+    cap = (f"{len(items)} paradigms; {top['key']} holds {pct(top['hours'], tot)} of the hours with {top['n']} "
            f"dataset{'s' if top['n'] != 1 else ''}; {most['key']} has the most datasets ({most['n']}).")  # fmt: skip
     return hbars_svg(items, "hours by paradigm"), cap
 
@@ -442,12 +369,14 @@ def licences_chart(rows: list[dict[str, str]]) -> tuple[str, str]:
     """Datasets by licence over the rows given, stacked by status (blocked licences show in the blocked colour)."""
     items = group_items(rows, lambda r: r["licence"] or "none stated", "datasets")
     top = items[0]
-    v1 = [r for r in rows if r["status"] in (*CONVERTED_ANY, TO_CONVERT)]
-    cond = [r for r in v1 if re.search(r"SA|NC|GPL", r["licence"] or "")]
+    v0 = [r for r in rows if r["status"] == CONVERTED]
+    cond = [r for r in v0 if re.search(r"SA|NC|GPL", r["licence"] or "")]
     blk = sum(r["status"] == BLOCKED for r in rows)
-    cap = (f"{top['n']} of the {len(rows)} datasets are {top['key']}; of the {len(v1)} in v1, {len(cond)} carry "
-           f"share-alike, non-commercial or copyleft terms, which a converted copy keeps, and {blk} "
-           f"dataset{'s are' if blk != 1 else ' is'} blocked by No Derivative terms or no licence.")  # fmt: skip
+    gat = sum(r["status"] == GATED for r in rows)
+    cap = (f"{top['n']} of the {len(rows)} datasets are {top['key']}; of the {len(v0)} in v0, {len(cond)} carry "
+           f"share-alike, non-commercial or copyleft terms, which a converted copy keeps; {blk} "
+           f"dataset{'s are' if blk != 1 else ' is'} blocked by No Derivatives terms or no licence, and {gat} "
+           f"{'are' if gat != 1 else 'is'} gated by an access agreement that forbids redistribution.")  # fmt: skip
     return hbars_svg(items, "datasets by licence"), cap
 
 
@@ -823,14 +752,23 @@ def share_legend(width: float) -> str:
     return "".join(parts) + "</svg>"
 
 
+def paradigm_key(order: list[str], tokens: dict[str, float], tot: float) -> str:
+    """Every paradigm group of the treemap with its share of the tokens, in the treemap's order (the small groups
+    have no room for a label inside the chart).
+    """
+    share = lambda v: f"{100 * v / tot:.1f} %" if 100 * v < tot else pct(v, tot)  # noqa: E731 (no "0 %" for a small group)
+    items = "".join(
+        f'<li data-group="{e(g)}"><b>{e(g)}</b> {share(tokens[g])}</li>' for g in order
+    )
+    return f'<ul class="corpus-key" aria-label="paradigms by share of the tokens">{items}</ul>'
+
+
 def tokens_chart(
-    rows: list[dict[str, str]],
-    recordings: list[dict[str, str]],
-    pending: list[dict[str, str]] | None = None,
+    rows: list[dict[str, str]], recordings: list[dict[str, str]]
 ) -> tuple[str, str]:
     """Tokens per epoch per dataset as a squarified treemap grouped by paradigm (group outlined, named when it has
-    room), each tile shaded by its share of the tokens on the green ramp (legend under the chart). Tokens exist only
-    for converted data: ``pending`` (the datasets v1 adds) are named in the caption, not drawn.
+    room), each tile shaded by its share of the tokens on the green ramp (legend under the chart), and every
+    paradigm listed with its share under it.
     """
     pairs = [
         (r, fnum(q["tokens"])) for r, q in joined(rows, recordings) if fnum(q["tokens"])
@@ -881,26 +819,22 @@ def tokens_chart(
     cap = (f"{fmt_tokens(tot)} tokens per epoch over {len(pairs)} datasets: {name_of(pairs[0][0], 40)} alone holds "
            f"{pct(pairs[0][1], tot)}, the three largest ({', '.join(name_of(r, 40) for r, _ in top3)}) "
            f"{pct(sum(t for _, t in top3), tot)}; areas are tokens, colour is each dataset's share of them (darker is "
-           f"larger, legend below), outlines group the datasets by paradigm.")  # fmt: skip
-    if pending:
-        n = len(pending)
-        cap += (f" Tokens exist only for converted data: the {n} dataset{'s' if n != 1 else ''} no store holds yet "
-                f"({hours_of(pending):,.0f} h measured so far) enter{'s' if n == 1 else ''} this budget when "
-                f"converted.")  # fmt: skip
-    return "".join(parts) + share_legend(W), cap
+           f"larger, legend below), outlines group the datasets by the {len(order)} paradigms listed below.")  # fmt: skip
+    group_tokens = {g: sum(t for _, t in groups[g]) for g in order}
+    return "".join(parts) + share_legend(W) + paradigm_key(
+        order, group_tokens, tot
+    ), cap
 
 
 def sankey_svg(rows: list[dict[str, str]], measure: str) -> tuple[str, list, dict]:
-    """Archive -> licence -> status, flows in hours or datasets; returns the SVG, the node values and the links."""
+    """Archive -> licence, flows in hours or datasets; returns the SVG, the node values and the links."""
     keys = [
         lambda r: r["archive"] or "unspecified",
         lambda r: r["licence"] or "none stated",
-        lambda r: r["status"],
     ]
     value = (lambda r: fnum(r["hours"]) or 0) if measure == "hours" else (lambda r: 1)
     nodes, links = sankey_flows(rows, keys, value)
-    orders = [sorted(c, key=lambda n, c=c: (-c[n], n)) for c in nodes[:2]]
-    orders.append([s for s in STATUSES if s in nodes[2]])
+    orders = [sorted(c, key=lambda n, c=c: (-c[n], n)) for c in nodes]
     count = [{} for _ in keys]
     for r in rows:
         if value(r):
@@ -908,37 +842,26 @@ def sankey_svg(rows: list[dict[str, str]], measure: str) -> tuple[str, list, dic
                 count[c][k(r)] = count[c].get(k(r), 0) + 1
     top, nw, height = 10, 12, 340
     spans, bands = sankey_layout(nodes, orders, links, height)
-    xs = [190, 470, 750]
-    W = xs[2] + nw + 210
+    xs = [190, 560]
+    W = xs[-1] + nw + 230
     H = (
         top + max(max(s[1] for s in sp.values()) for sp in spans) + 26
     )  # room for the column titles
-    parts = [svg_open(W, H, f"archive to licence to status, by {measure}")]
+    parts = [svg_open(W, H, f"archive to licence, by {measure}")]
     for (c, s, t), (ys0, ys1, yt0, yt1) in bands.items():
         x0, x1 = xs[c] + nw, xs[c + 1]
         xm = (x0 + x1) / 2
-        look = (
-            f'class="{fill(t)}" fill-opacity="0.45"'
-            if c == 1
-            else 'fill="currentColor" fill-opacity="0.16"'
-        )
-        name_t = SHORT[t] if c == 1 else t
+        look = 'class="corpus-fill-converted" fill-opacity="0.45"'
         v = links[(c, s, t)]
-        tip = f"{s} → {name_t}: " + (
-            f"{v:,.0f} h" if measure == "hours" else plural_ds(v)
-        )
+        tip = f"{s} → {t}: " + (f"{v:,.0f} h" if measure == "hours" else plural_ds(v))
         parts.append(f'<path d="M{x0} {top + ys0:.1f}C{xm} {top + ys0:.1f} {xm} {top + yt0:.1f} {x1} {top + yt0:.1f}'
                      f'L{x1} {top + yt1:.1f}C{xm} {top + yt1:.1f} {xm} {top + ys1:.1f} {x0} {top + ys1:.1f}Z" {look} '
                      f'data-from="{c}:{e(s)}" data-to="{c + 1}:{e(t)}" data-v="{v:g}" data-tip="{e(tip)}"/>')  # fmt: skip
     for c, sp in enumerate(spans):
         for n, (y0, y1) in sp.items():
             v, k = nodes[c][n], count[c][n]
-            name = SHORT[n] if c == 2 else n
-            look = (
-                f'class="{fill(n)}"'
-                if c == 2
-                else 'fill="currentColor" fill-opacity="0.6"'
-            )
+            name = n
+            look = 'fill="currentColor" fill-opacity="0.6"'
             amount = f"{v:,.0f} h" if measure == "hours" else f"{k}"
             tip = f"{name}: {plural_ds(k)}" + (
                 f", {v:,.0f} h" if measure == "hours" else ""
@@ -948,7 +871,7 @@ def sankey_svg(rows: list[dict[str, str]], measure: str) -> tuple[str, list, dic
                          f'<rect x="{xs[c]}" y="{top + y0:.1f}" width="{nw}" height="{y1 - y0:.1f}" {look}/>'
                          f'<text class="corpus-lab" x="{x}" y="{top + (y0 + y1) / 2 + 4:.1f}" text-anchor="{anchor}">'
                          f"{e(name)} · {amount}</text></g>")  # fmt: skip
-    for c, title in enumerate(("archive", "licence", "status")):
+    for c, title in enumerate(("archive", "licence")):
         parts.append(
             f'<text x="{xs[c] + nw / 2}" y="{H - 1}" text-anchor="middle" opacity="0.6">{title}</text>'
         )
@@ -976,10 +899,8 @@ def flow_licence_chart(rows: list[dict[str, str]]) -> tuple[str, str]:
     with_h = sum(1 for r in rows if fnum(r["hours"]))
     arch = max(hn[0], key=hn[0].get)
     lic = max(hn[1], key=hn[1].get)
-    cap = (f"{tot:,.0f} h over {with_h} of the {len(rows)} datasets: {arch} hosts {pct(hn[0][arch], tot)} and "
+    cap = (f"{hours_of(rows):,.0f} h over {with_h} of the {len(rows)} datasets: {arch} hosts {pct(hn[0][arch], tot)} and "
            f"{lic} covers {pct(hn[1][lic], tot)}")  # fmt: skip
-    if len(hn[2]) > 1:
-        cap += f"; {pct(sum(hn[2].get(s, 0) for s in CONVERTED_ANY), tot)} of the hours are converted"
     if with_h < len(rows):
         n = len(rows) - with_h
         cap += f"; {n} dataset{'s' if n != 1 else ''} without hours show{'s' if n == 1 else ''} in the datasets view only"

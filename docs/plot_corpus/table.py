@@ -1,5 +1,6 @@
 """The datasets table: sortable (numbers numerically, blanks last), filterable by text and status, header pinned,
-CSV download. One renderer; the pages differ by row filter, preset status filter and columns.
+CSV download. One renderer; the pages differ by row filter, preset status filter and columns (the full table adds
+the reason a dataset is not in the corpus).
 """
 
 from __future__ import annotations
@@ -13,6 +14,7 @@ from .data import (
     SHORT,
     SLUGS,
     STATUSES,
+    reason,
 )
 
 e = html.escape
@@ -23,20 +25,22 @@ DISPLAY = [("Dataset", "dataset_id", False), ("Name", "name", False), ("Status",
            ("Source", "source", False), ("Archive", "archive", False), ("Paradigm", "paradigm", False),
            ("Subjects", "n_subjects", True), ("Sessions", "n_sessions", True), ("Hours", "hours", True),
            ("Channels", "mean_channels", True), ("Rate (Hz)", "native_sfreq", True), ("Size (GB)", "raw_GB", True),
-           ("Licence", "licence", False), ("Redistributable", "redistributable", False), ("Listed in", None, False),
-           ("Note", "note", False)]  # fmt: skip
-COMPACT = [c for c in DISPLAY if c[1] in ("dataset_id", "name", "paradigm", "n_subjects", "n_sessions", "hours",
-                                          "mean_channels", "licence", "note")]  # fmt: skip
+           ("Licence", "licence", False), ("Redistributable", "redistributable", False), ("Listed in", None, False)]  # fmt: skip
+# The full table: the reason a dataset is not in the corpus beside its status (``reason`` is composed from the row).
+DISPLAY_ALL = DISPLAY[:3] + [("Reason", "reason", False)] + DISPLAY[3:]
 
 
 def cell(
     r: dict[str, str], col: str | None, numeric: bool, prov: dict[str, str]
 ) -> str:
     if col is None:
-        lists = [k for k, c in (("paper", "in_reve_paper"), ("card", "in_release_card"), ("v0", "in_v0"),
-                                ("v1", "in_v1")) if r[c] == "yes"]  # fmt: skip
+        lists = [k for k, c in (("paper", "in_reve_paper"), ("card", "in_release_card"), ("v0", "in_v0"))
+                 if r[c] == "yes"]  # fmt: skip
         txt = " · ".join(lists)
         return f'<td data-v="{e(txt)}">{e(txt)}</td>'
+    if col == "reason":
+        txt = reason(r)
+        return f'<td class="corpus-reason" data-v="{e(txt)}">{e(txt)}</td>'
     v = r[col]
     if col == "dataset_id":
         inner = f'<a href="{e(r["link"])}">{e(v)}</a>' if r["link"] else e(v)
@@ -64,8 +68,7 @@ def cell(
     if col == "status":
         return (f'<td data-v="{STATUSES.index(v)}"><span class="corpus-badge"><i class="corpus-bg-{SLUGS[v]}"></i>'
                 f"{e(SHORT[v])}</span></td>")  # fmt: skip
-    cls = ' class="corpus-note-cell"' if col == "note" else ""
-    return f'<td{cls} data-v="{e(v)}">{e(v)}</td>'
+    return f'<td data-v="{e(v)}">{e(v)}</td>'
 
 
 def table_html(

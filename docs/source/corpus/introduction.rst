@@ -14,14 +14,14 @@ Introduction
 What it is
 ==========
 
-EEGDash Corpus is an aggregated, training-ready collection of public EEG datasets for
-pretraining foundation models. It is served in two forms: the raw datasets, each
-reachable through EEGDash by its identifier, and a converted Zarr store, built by applying
-one recipe once (|recipe_sfreq| Hz, a |recipe_band| Hz band, |recipe_window|-second
-samples, microvolts left un-normalised, with each session's mean and standard
-deviation and each channel's position stored beside the samples), that a trainer reads
-directly. Zarr is the chunked array format the store is served in: a trainer reads the
-samples it needs, over the network or from a local copy, without unpacking the store.
+EEGDash Corpus is a training-ready collection of public EEG datasets, served through
+EEGDash from OpenNeuro and NEMAR and converted once with the recipe of REVE, an EEG
+foundation model: |recipe_sfreq| Hz, a |recipe_band| Hz band, |recipe_window|-second
+samples in microvolts, left un-normalised, with each session's mean and standard
+deviation and each channel's position stored beside the samples. The result is one
+Zarr store that a trainer reads directly; Zarr is a chunked array format, so a trainer
+reads the samples it needs, over the network or from a local copy, without unpacking
+the store.
 
 Why
 ===
@@ -35,33 +35,61 @@ collation, with the licence of every dataset accounted for.
 Starting point: REVE's corpus
 =============================
 
-The first versions cover the corpus of REVE, the largest published EEG foundation
-model. REVE's paper names |paper_named| datasets in its reference list of what it
+**EEGDash Corpus v0** is the public part of REVE's pretraining corpus, rebuilt from the
+archives. REVE's paper names |paper_named| datasets in its reference list of what it
 pretrained on, and the release card of its public subset lists |card_entries| entries,
 |card_only| of which the paper does not name. These pages track the union,
-|universe| datasets, and every count, chart and the roadmap are over all of them. Of
-the |card_only| card-only entries, |card_only_prose| (the table's notes say why).
+|universe| datasets:
 
-Versions
-========
+- |v0_datasets| are converted and released in v0;
+- |not_redistributable| cannot be redistributed: |blocked| are blocked by their licences
+  (|blocked_nd| No Derivatives, |blocked_none| with no licence stated) and |gated| are
+  gated by access agreements that forbid redistribution (|gated_names|);
+- |excluded| are excluded for other reasons (|excluded_prose|).
 
-A version is a frozen table of datasets and the converted Zarr store built from it.
-Versions are additive; each carries its own table, provenance and conversion report.
+Every dataset keeps its own licence, and the release is gated: access needs a Hugging
+Face account that accepted its terms. Later versions will add public datasets beyond
+REVE's, chosen by licence and usability.
 
-**v0** is REVE's public release rebuilt from the archives and converted:
-|v0_datasets| datasets (|v0_hours| hours). **v1** extends it to every publicly usable
-dataset named by REVE's paper: |v1_datasets| datasets, of the added ones
-|v1_added_prose|. The |gated| gated datasets are out of every version: their
-distribution is forbidden, so only weights trained on them can be released. The
-|blocked| datasets whose licences block a converted copy (No Derivative terms, or no
-licence) are listed with the reason. Later versions add public datasets beyond REVE's,
-chosen by licence and usability.
+How to get it
+=============
 
-How to get it today
-===================
+Three ways, from the training-ready store to one raw dataset; :ref:`corpus-download` on
+the v0 page gives the details.
 
-``EEGDashDataset(dataset="<id>", cache_dir=...)`` for any raw dataset of the table;
-the converted Zarr stores of v0 and v1 are to be hosted through EEGDash.
+**The converted store.** The Zarr store of v0 is a gated dataset repository on Hugging
+Face: accept its terms with a Hugging Face account, log in with ``hf auth login``, then
+download it whole (|v0_size|) or in parts with ``--include``, and open it with ``zarr``:
+
+.. code-block:: bash
+
+   hf download EEGDash/eegdash-corpus-v0 --repo-type dataset --local-dir eegdash-corpus-v0
+
+.. code-block:: python
+
+   import zarr  # zarr >= 3
+   root = zarr.open_group("eegdash-corpus-v0/eegdash-corpus-v0.zarr", mode="r")
+
+**Every raw dataset of the corpus.** The raw files the store was converted from, as the
+archives hold them, through EEGDash. The corpus table, ``eegdash-corpus-v0.csv`` (a
+download on the v0 page), lists the datasets, and one object,
+:class:`~eegdash.corpus.EEGDashCorpus`, plans the files from the catalogue, downloads
+them a few datasets at a time, verifies the cache by size or checksum, and reports;
+from the command line, ``python -m eegdash.corpus`` with ``plan``, ``download``,
+``verify`` or ``status``:
+
+.. code-block:: bash
+
+   python -m eegdash.corpus download eegdash-corpus-v0.csv --cache-dir eegdash-cache --n-jobs 16 --n-datasets 4
+
+**One raw dataset.** Any dataset of the tables, by its EEGDash id, as an
+:class:`~eegdash.api.EEGDashDataset` whose recordings download when first read (here
+AlexMI, a small motor-imagery dataset):
+
+.. code-block:: python
+
+   from eegdash import EEGDashDataset
+   ds = EEGDashDataset(dataset="nm000138", cache_dir="eegdash-cache")
 
 How it was built and checked
 ============================
@@ -72,21 +100,23 @@ archives.
 **Convert.** The recipe above, per recording, with a report of what was dropped and
 why. Each electrode takes its position from a bank of templates (REVE's public bank
 plus the BioSemi-160 and BioSemi-256 caps); for electrodes the bank lacks, the
-dataset's own ``electrodes.tsv``, aligned to the bank, places them.
+dataset's own ``electrodes.tsv``, aligned to the bank, places them. The conversion and
+training code is published in `eegdash/eegdash-corpus
+<https://github.com/eegdash/eegdash-corpus>`__ (BSD-3-Clause).
 
 **Verify.** |check_loader_datasets| datasets compared against the authors' own loader
-sample by sample; REVE-Base retrained on the Zarr store scores within |check_bench_gap| of
-the released weights on |check_bench_tasks| public OpenEEGBench tasks.
+sample by sample; REVE-Base, retrained from scratch on data converted by this pipeline,
+scores within |check_bench_gap| of the released weights on |check_bench_tasks| public
+OpenEEGBench tasks.
 
 Where the numbers come from
 ===========================
 
 Every cell carries a provenance label: ``zarr`` (measured in the converted Zarr store),
 ``eegdash`` (EEGDash's catalogue records), ``card`` (REVE's release card), ``stated``
-(REVE's paper), ``download`` (our copy). A bucket is one exact channel set of one
-dataset in the Zarr store. Status vocabulary: Ingested and Converted (v0) · Ingested and
-Converted (v1) · Ingested, but not Converted (v1) · To Be Ingested (v1) · Blocked (ND
-Licence) · Gated (Distribution Forbidden) · Excluded.
+(REVE's paper), ``download`` (a downloaded copy). A bucket is one exact channel set of
+one dataset in the Zarr store. Status vocabulary: Ingested and Converted (v0) · Blocked
+(ND Licence) · Gated (Distribution Forbidden) · Excluded.
 
 The corpus in numbers
 =====================

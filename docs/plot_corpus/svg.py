@@ -144,7 +144,9 @@ def order_toggle(default: str = "hours") -> str:
 
 def hbars_svg(items: list[dict], label: str) -> str:
     """Horizontal stacked bars: item = {label, segs {status: value}, tips {status: text}, text}; one linear scale."""
-    left, width, right, pitch, top = 150, 250, 180, 26, 6
+    # the label column widens for a long label (about 7 px a character at this size), so no label is cut
+    left = max(150, 14 + 7 * max([len(it["label"]) for it in items] + [0]))
+    width, right, pitch, top = 250, 180, 26, 6
     peak = max([sum(it["segs"].values()) for it in items] + [1e-9])
     parts = [
         svg_open(

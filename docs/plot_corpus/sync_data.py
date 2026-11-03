@@ -7,15 +7,22 @@ Usage::
     python docs/plot_corpus/sync_data.py --check                              # re-hash against MANIFEST.json
 
 The source repository holds the corpus tables and the scripts that derive
-``corpus/corpus-atlas/atlas.csv`` (one row per dataset) and the converted
-stores' channel sets (one row per bucket: v0's, and the v1 store's that v0
-does not hold), and the per-dataset recording, token and demographic tables
-when it carries them. This script copies those files and derives
-``electrodes.json`` (one entry per electrode position used by the buckets, and
-the channel names the bank lacks) from the converter's position bank. Every cell is scanned for
-cluster names, internal paths, e-mail addresses and the source repository's
-author names; a hit stops the sync. A dirty source tree is refused unless
-``--allow-dirty`` (the manifest then records ``"dirty": true``). No network.
+``corpus/corpus-atlas/atlas.csv`` (one row per dataset) and the channel sets of
+the released Zarr store, EEGDash Corpus v0 (one row per bucket), the corpus
+table ``corpus/eegdash-corpus-v0.csv`` (one row per dataset of v0, the list
+``eegdash.corpus.EEGDashCorpus`` takes), and the per-dataset recording, token
+and demographic tables when it carries them. This script copies those files and derives ``electrodes.json`` (one entry per
+electrode position used by the buckets, and the channel names the bank lacks)
+from the converter's position bank. ``atlas.csv`` is copied as its public
+projection (``public_atlas``): the internal ``note`` column (provenance, with
+the dates of the work) and the columns of unreleased stores are dropped, and a
+public ``reason`` column, derived from the status, the licence and the note
+(``derive_reason``), says why a dataset is not in the corpus; the corpus table
+is copied without its ``note`` column (``public_table``). Every published
+file is scanned for cluster names, internal paths, e-mail addresses, dates,
+unreleased stores, retired names and the source repository's author names; a
+hit stops the sync. A dirty source tree is refused unless ``--allow-dirty``
+(the manifest then records ``"dirty": true``). No network.
 """
 
 from __future__ import annotations
@@ -23,6 +30,7 @@ from __future__ import annotations
 import argparse
 import csv
 import hashlib
+import io
 import json
 import re
 import subprocess
@@ -36,27 +44,30 @@ if str(HERE.parent) not in sys.path:
     sys.path.insert(0, str(HERE.parent))
 
 from plot_corpus.data import (  # noqa: E402
+    BLOCKED,
     DEMOGRAPHIC_COLUMNS,
+    EXCLUDED,
+    GATED,
     RECORDING_COLUMNS,
+    TABLE,
     read_buckets,
     read_optional,
     read_rows,
+    read_table,
 )
 from plot_corpus.electrodes import aggregate_positions, unplaced_names  # noqa: E402
 
 SOURCES = {  # data file -> path in the source repository
     "atlas.csv": "corpus/corpus-atlas/atlas.csv",
     "eegdash-corpus-v0-channels.csv": "corpus/corpus-atlas/eegdash-corpus-v0-channels.csv",
-    "eegdash-corpus-v1-channels.csv": "corpus/corpus-atlas/eegdash-corpus-v1-channels.csv",
     "eegdash-corpus-v0-recordings.csv": "corpus/corpus-atlas/eegdash-corpus-v0-recordings.csv",
-    "eegdash-corpus-v1-recordings.csv": "corpus/corpus-atlas/eegdash-corpus-v1-recordings.csv",
     "eegdash-corpus-demographics.csv": "corpus/corpus-atlas/eegdash-corpus-demographics.csv",
+    TABLE: "corpus/eegdash-corpus-v0.csv",
 }
 # Tables the pages can do without: copied when the source carries them, skipped (and absent from the manifest)
 # otherwise; the chart that reads one says so on the page.
 OPTIONAL = {
     "eegdash-corpus-v0-recordings.csv",
-    "eegdash-corpus-v1-recordings.csv",
     "eegdash-corpus-demographics.csv",
 }
 BANK = "corpus/corpus-atlas/electrode-positions.json"  # the converter's position bank (REVE's public one and MNE's BioSemi templates), {name: [x, y, z]} in metres
@@ -65,9 +76,25 @@ FILES = [*SOURCES, DERIVED]
 # Words and paths that must never reach the public site.
 DENY = [
     r"\b(expanse|delta|deltaai|sdsc|ncsa|sdp190|sdp207|csd403|bbnv|bixu)\b",
-    r"/expanse/", r"/work/hdd", r"/Users/", r"/home/", r"\$PROJECT", r"\$OUTROOT",
+    r"reve-public-nc", r"/expanse/", r"/work/hdd", r"/Users/", r"/home/", r"\$PROJECT", r"\$OUTROOT",
     r"[\w.+-]+@[\w-]+\.[\w.-]+",
 ]  # fmt: skip
+# What else must never reach the public site, in any published file: a date of the work (``2026-10-09``; the
+# demographics' ``year`` column holds four-digit years, which do not match), the name of an unreleased store
+# (``v1``, case-sensitive) and a retired paradigm label. No column is exempt.
+PUBLIC = [r"20\d\d-\d\d-\d\d", r"(?-i:v1)", r"development \(HBN\)"]
+DROP_COLUMNS = (
+    "note",
+    "in_v1",
+)  # atlas.csv columns not published: internal provenance, an unreleased store
+TABLE_DROP = ("note",)  # the corpus table's internal provenance, with the dates of the work
+# Why an excluded dataset is out, from its note: (pattern, words), first match wins; otherwise the note's first
+# clause after "excluded from the corpus:".
+EXCLUDED_WHY = [
+    (r"test task", "held out for evaluation (an OpenEEGBench test task)"),
+    (r"fMRI", "an fMRI accession with no EEG"),
+    (r"names no dataset", "a release-card entry that names no dataset"),
+]
 
 
 def git(src: Path, *args: str) -> str:
@@ -108,18 +135,78 @@ def rows_of(path: Path) -> int:
     return len(json.loads(path.read_text(encoding="utf-8"))["electrodes"])
 
 
-def derive_electrodes(buckets_csv: Path, added_csv: Path, bank_json: Path) -> dict:
+def derive_reason(r: dict[str, str]) -> str:
+    """Why a dataset is not in the corpus, in a few public words (empty for a converted one). Blocked: ``No
+    Derivatives licence (<licence>)`` when the licence carries ND, ``no licence stated`` when it is empty, else
+    ``licence <licence> forbids a converted copy``. Gated: ``gated (<kind>): redistribution forbidden``, the kind read
+    from the note's leading ``gated (<kind>)``. Excluded: ``EXCLUDED_WHY``'s words for the note, else the note's first
+    clause (``recorded at 100 Hz, below REVE's 200 Hz input``).
+    """
+    note, lic = r.get("note", ""), r.get("licence", "")
+    if r["status"] == BLOCKED:
+        if re.search(r"(^|-)ND(-|$)", lic):
+            return f"No Derivatives licence ({lic})"
+        return f"licence {lic} forbids a converted copy" if lic else "no licence stated"
+    if r["status"] == GATED:
+        m = re.match(r"gated \(([^)]+)\)", note)
+        return (
+            f"gated ({m.group(1)}): redistribution forbidden"
+            if m
+            else "gated: redistribution forbidden"
+        )
+    if r["status"] == EXCLUDED:
+        for pat, words in EXCLUDED_WHY:
+            if re.search(pat, note):
+                return words
+        first = re.sub(r"^excluded from the corpus:\s*", "", note).split(";")[0].strip()
+        return first or "not a dataset for the corpus"
+    return ""
+
+
+def public_atlas(text: str) -> str:
+    """``atlas.csv`` as the pages publish it: ``reason`` derived in place of ``note``, without ``DROP_COLUMNS``."""
+    reader = csv.DictReader(io.StringIO(text))
+    fields = [
+        f for f in reader.fieldnames or [] if f not in DROP_COLUMNS and f != "reason"
+    ]
+    fields.insert(
+        fields.index("link") if "link" in fields else len(fields), "reason"
+    )  # where the note stood
+    buf = io.StringIO()
+    w = csv.DictWriter(
+        buf, fieldnames=fields, lineterminator="\n", extrasaction="ignore"
+    )
+    w.writeheader()
+    for r in reader:
+        w.writerow(dict(r, reason=derive_reason(r)))
+    return buf.getvalue()
+
+
+def public_table(text: str) -> str:
+    """The corpus table as the pages publish it: the source's columns in their order, without ``TABLE_DROP``."""
+    reader = csv.DictReader(io.StringIO(text))
+    fields = [f for f in reader.fieldnames or [] if f not in TABLE_DROP]
+    buf = io.StringIO()
+    w = csv.DictWriter(
+        buf, fieldnames=fields, lineterminator="\n", extrasaction="ignore"
+    )
+    w.writeheader()
+    w.writerows(reader)
+    return buf.getvalue()
+
+
+def derive_electrodes(buckets_csv: Path, bank_json: Path) -> dict:
     bank = json.loads(bank_json.read_text(encoding="utf-8"))
-    buckets, added = read_buckets(buckets_csv), read_buckets(added_csv)
+    buckets = read_buckets(buckets_csv)
     return {
-        "about": "Electrode positions used by the v0 Zarr store's channel sets (hours, datasets, buckets) and by the "
-        "channel sets the v1 store adds to v0 (added_*), derived from the converter's position bank (REVE's public "
-        "bank and MNE's BioSemi-160/256 templates; coordinates in metres, head-centred, x right, y anterior, z up, "
-        "rounded to 1e-4 m); case-fold spellings sharing a coordinate are merged. 'unplaced' lists the channel names "
-        "the bank lacks, which the converter placed from their dataset's own coordinates (not drawn). Generated by "
+        "about": "Electrode positions used by the channel sets of the EEGDash Corpus v0 Zarr store (hours, datasets, "
+        "buckets), derived from the converter's position bank (REVE's public bank and MNE's BioSemi-160/256 "
+        "templates; coordinates in metres, head-centred, x right, y anterior, z up, rounded to 1e-4 m); case-fold "
+        "spellings sharing a coordinate are merged. 'unplaced' lists the channel names the bank lacks, which the "
+        "converter placed from their dataset's own coordinates (not drawn). Generated by "
         "docs/plot_corpus/sync_data.py, do not hand-edit.",
-        "electrodes": aggregate_positions(buckets, bank, added),
-        "unplaced": unplaced_names(buckets, bank, added),
+        "electrodes": aggregate_positions(buckets, bank),
+        "unplaced": unplaced_names(buckets, bank),
     }
 
 
@@ -150,16 +237,17 @@ def sync(
         for name, rel in SOURCES.items()
         if name not in OPTIONAL or (src / rel).is_file()
     }
+    texts["atlas.csv"] = public_atlas(texts["atlas.csv"])
+    texts[TABLE] = public_table(texts[TABLE])
     derived = derive_electrodes(
-        src / SOURCES["eegdash-corpus-v0-channels.csv"],
-        src / SOURCES["eegdash-corpus-v1-channels.csv"],
-        src / BANK,
+        src / SOURCES["eegdash-corpus-v0-channels.csv"], src / BANK
     )
     texts[DERIVED] = dump_electrodes(derived)
-    hits = scan(texts, DENY + author_patterns(src) + extra_deny)
+    hits = scan(texts, DENY + PUBLIC + author_patterns(src) + extra_deny)
     if hits:
         raise SystemExit(
-            "refused, internal names or paths in the data:\n  " + "\n  ".join(hits)
+            "refused, internal or unreleased names or paths in the data:\n  "
+            + "\n  ".join(hits)
         )
     out.mkdir(parents=True, exist_ok=True)
     for name, text in texts.items():
@@ -167,14 +255,11 @@ def sync(
     read_rows(
         out / "atlas.csv"
     )  # refuses an unknown status before the manifest is written
-    for name in (
-        "eegdash-corpus-v0-recordings.csv",
-        "eegdash-corpus-v1-recordings.csv",
-    ):
-        read_optional(
-            out / name, RECORDING_COLUMNS
-        )  # refuses a header that misses a column
+    read_optional(
+        out / "eegdash-corpus-v0-recordings.csv", RECORDING_COLUMNS
+    )  # refuses a header that misses a column
     read_optional(out / "eegdash-corpus-demographics.csv", DEMOGRAPHIC_COLUMNS)
+    read_table(out / TABLE)  # refuses a missing column or a repeated dataset id
     manifest = {
         "about": "Generated by docs/plot_corpus/sync_data.py, do not hand-edit.",
         "source_commit": commit,
@@ -215,7 +300,7 @@ def main(argv: list[str] | None = None) -> int:
         "--from",
         dest="src",
         type=Path,
-        help="the source repository (holds corpus/ and results/)",
+        help="the source repository (holds corpus/corpus-atlas/)",
     )
     ap.add_argument(
         "--out", type=Path, default=DATA, help="data folder (default plot_corpus/data)"

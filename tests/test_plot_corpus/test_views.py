@@ -1,5 +1,5 @@
-"""The universe (every row counts) and the recording, people, licence-flow, budget and montage views: numbers from the tables,
-missing data handled, the treemap tiles its frame, the Sankey's flows balance.
+"""The universe (every row counts) and the v0 views: paradigms, recordings, people, licence flow, budget and montages;
+numbers from the tables, missing data handled, the treemap tiles its frame, the Sankey's flows balance.
 """
 
 from __future__ import annotations
@@ -10,16 +10,13 @@ import pytest
 from plot_corpus import charts
 from plot_corpus.data import (
     CONVERTED,
-    CONVERTED_V1,
     CSV_COLUMNS,
     EXCLUDED,
-    TO_INGEST,
     kpis,
     label_of,
     numbers,
     read_rows,
     v0_rows,
-    v1_rows,
 )
 from plot_corpus.fragments import build, build_fragments
 from plot_corpus.layout import sankey_flows, squarify
@@ -29,24 +26,9 @@ from .conftest import make_row, write_csv
 NEW_KEYS = ["lengths", "per-subject", "people", "flow-licence", "tokens", "montages"]
 
 
-def frags_of(
-    rows,
-    buckets,
-    electrodes,
-    added,
-    recordings=None,
-    recordings_v1=None,
-    demographics=None,
-):
+def frags_of(rows, buckets, electrodes, recordings=None, demographics=None):
     return build_fragments(
-        rows,
-        buckets,
-        electrodes,
-        "2026-01-02",
-        added,
-        recordings,
-        recordings_v1,
-        demographics,
+        rows, buckets, electrodes, "2026-01-02", recordings, demographics
     )
 
 
@@ -57,8 +39,8 @@ def frags_of(
 def card_only():
     """A release-card entry the paper does not name that names no dataset (excluded)."""
     return make_row("ds009999", EXCLUDED, in_reve_paper="no", in_release_card="yes", hours="1000", n_subjects="500",
-                    archive="OpenNeuro", licence="CC-BY-4.0",
-                    note="excluded from the corpus: names no dataset; the card names no item")  # fmt: skip
+                    archive="OpenNeuro", licence="CC-BY-4.0", short_name="", name="ds009999",
+                    reason="a release-card entry that names no dataset")  # fmt: skip
 
 
 @pytest.fixture
@@ -69,24 +51,22 @@ def card_converted():
 
 
 def test_card_only_entries_count_everywhere(
-    rows, card_converted, card_only, buckets, electrodes, added, recordings
+    rows, card_converted, card_only, buckets, electrodes, recordings
 ):
     """The universe is the union of the paper and the card: a card-only row counts in every number, chart and table,
     with no badge.
     """
-    paper_excl = make_row("nm000226", EXCLUDED, short_name="Zhou2016", in_release_card="yes",
-                          note="excluded from the corpus: recorded at 100 Hz, below REVE's 200 Hz input")  # fmt: skip
     every = rows + [card_converted, card_only]
-    frags = frags_of(every, buckets, electrodes, added, recordings)
+    frags = frags_of(every, buckets, electrodes, recordings)
     k = kpis(every)
-    assert (k["datasets"], k[CONVERTED], k["v0_datasets"], k[EXCLUDED]) == (10, 3, 3, 2)
-    assert (k["paper"], k["card"], k["card_only"]) == (8, 4, 2)
+    assert (k["datasets"], k[CONVERTED], k["v0_datasets"], k[EXCLUDED]) == (8, 3, 3, 2)
+    assert (k["paper"], k["card"], k["card_only"]) == (6, 4, 2)
     assert (
-        "<b>10</b><span>datasets tracked (REVE&#x27;s paper and release card)</span>"
+        "<b>8</b><span>datasets tracked (REVE&#x27;s paper and release card)</span>"
         in frags["kpis"][0]
     )
     assert frags["status"][1].startswith(
-        "4 of the 10 datasets tracked are converted (3 in v0, 1 added in v1)"
+        "3 of the 8 datasets tracked are converted and released in v0"
     )
     assert (
         'data-count="3"' in frags["status"][0]
@@ -95,28 +75,24 @@ def test_card_only_entries_count_everywhere(
     assert "entries (2 not in the paper)" in frags["flow"][0]
     table = frags["table-all"][0]
     assert (
-        table.count("<tr data-status=") == 10
+        table.count("<tr data-status=") == 8
         and "ds009999" in table
         and "card only" not in table
     )
-    assert frags["table-all"][1].startswith(
-        "All 10 datasets tracked (REVE's paper and its release card)"
-    )
-    univ = [r for r in every if r["dataset_id"] != "x-excluded"] + [paper_excl]
-    nums = numbers(univ, buckets, electrodes, "x", added)
+    assert "a release-card entry that names no dataset" in table
+    nums = numbers(every, buckets, electrodes, "x")
     assert (
         nums["universe"],
         nums["paper_named"],
         nums["card_entries"],
         nums["card_only"],
-    ) == ("10", "8", "5", "2")
-    assert nums["card_only_prose"] == (
-        "ds004262 is a real dataset that was converted with the rest (in v0) and the other one is excluded "
-        "(ds009999 names no dataset), as is Zhou2016 from the paper (recorded at 100 Hz): two excluded in all"
-    )
+    ) == ("8", "6", "4", "2")
+    assert nums["card_only_names"] == "ds004262 and ds009999"
+    assert nums["excluded_prose"] == ("Slow2016: recorded at 100 Hz, below REVE's 200 Hz input; "
+                                      "ds009999: a release-card entry that names no dataset")  # fmt: skip
 
 
-def test_tracked_column_is_ignored(rows, buckets, electrodes, added, tmp_path):
+def test_tracked_column_is_ignored(rows, buckets, electrodes, tmp_path):
     """A ``tracked`` column left by an earlier sync, whatever it says, changes nothing; a copy without it reads."""
     rows[1].update(in_reve_paper="no", in_release_card="yes")
     write_csv(tmp_path / "plain.csv", rows, CSV_COLUMNS)
@@ -124,40 +100,66 @@ def test_tracked_column_is_ignored(rows, buckets, electrodes, added, tmp_path):
     write_csv(tmp_path / "marked.csv", marked, [*CSV_COLUMNS, "tracked"])
     plain, old = read_rows(tmp_path / "plain.csv"), read_rows(tmp_path / "marked.csv")
     assert old == plain and all("tracked" not in r for r in old)
-    assert frags_of(old, buckets, electrodes, added) == frags_of(
-        plain, buckets, electrodes, added
-    )
+    assert frags_of(old, buckets, electrodes) == frags_of(plain, buckets, electrodes)
     assert kpis(old)["datasets"] == len(rows)
 
 
 def test_axis_labels_name_the_id_and_cut_the_name_only():
     long = make_row(
-        "nm000289", CONVERTED, short_name="International Cardiac Arrest REsearch"
+        "icare", CONVERTED, short_name="International Cardiac Arrest REsearch"
     )
-    assert label_of(long) == "International Cardiac… (nm000289)"
+    assert label_of(long) == "International Cardiac… (icare)"
     assert (
         label_of(make_row("ds005597", CONVERTED, short_name="", name="ds005597"))
         == "ds005597"
     )
     assert (
-        label_of({"short_name": "motor imagery"}) == "motor imagery"
+        label_of({"short_name": "BCI (MI & P300)"}) == "BCI (MI & P300)"
     )  # a paradigm: no id
 
 
 def test_every_row_ships_in_the_full_csv(data_dir, rows, card_only, tmp_path):
     write_csv(data_dir / "atlas.csv", rows + [card_only], CSV_COLUMNS)
     m = build(data_dir, tmp_path / "out")
-    assert m["rows"]["atlas"] == 9 and "tracked" not in m["rows"]
+    assert m["rows"]["atlas"] == 7 and "tracked" not in m["rows"]
     full = (tmp_path / "out/atlas.csv").read_text()
-    assert "ds009999" in full and "tracked" not in full.splitlines()[0]
+    assert (
+        "ds009999" in full
+        and "tracked" not in full.splitlines()[0]
+        and "in_v1" not in full.splitlines()[0]
+    )
     assert "ds009999" not in (tmp_path / "out/atlas-v0.csv").read_text()
-    assert ".. |universe| replace:: 9" in (tmp_path / "out/numbers.inc").read_text()
+    assert ".. |universe| replace:: 7" in (tmp_path / "out/numbers.inc").read_text()
+
+
+# ------------------------------------------------------------------------------------------------- paradigms
+
+
+def test_paradigms_come_from_the_data(rows):
+    """Every paradigm the rows carry is a bar, most hours first, whatever its name: no fixed list to go stale."""
+    more = rows + [
+        make_row(
+            "ds000003", CONVERTED, hours="2", paradigm="a paradigm never seen before"
+        )
+    ]
+    body, cap = charts.paradigms_chart(v0_rows(more))
+    labels = re.findall(
+        r'<text x="[\d.]+" y="[\d.]+" text-anchor="end">([^<]+)</text>', body
+    )
+    assert labels == [
+        "BCI (MI &amp; P300)",
+        "resting &amp; consciousness",
+        "a paradigm never seen before",
+    ]
+    assert cap.startswith(
+        "3 paradigms; BCI (MI & P300) holds 79 % of the hours with 1 dataset"
+    )
 
 
 # ------------------------------------------------------------------------------------------------- recordings
 
 
-def test_lengths_rows_and_caption(rows, recordings, recordings_v1):
+def test_lengths_rows_and_caption(rows, recordings):
     body, cap = charts.lengths_chart(v0_rows(rows), recordings)
     assert (
         body.count('class="corpus-row"') == 2 and 'class="corpus-scroll-axis"' in body
@@ -171,8 +173,6 @@ def test_lengths_rows_and_caption(rows, recordings, recordings_v1):
         "The median recording lasts 1.5 h over 90 recordings of 2 datasets"
     )
     assert "from 12 min (DS000002) to 1.5 h (DS000001)" in cap and "up to 10.0 h" in cap
-    body, cap = charts.lengths_chart(v1_rows(rows), recordings + recordings_v1)
-    assert body.count('class="corpus-row"') == 3 and "corpus-fill-converted-v1" in body
 
 
 def test_per_subject_caption(rows, recordings):
@@ -187,16 +187,9 @@ def test_per_subject_caption(rows, recordings):
     assert "DS000001 has the most recordings for one subject (4)" in cap
 
 
-def test_missing_tables_keep_the_page_building(rows, buckets, electrodes, added):
-    frags = frags_of(rows, buckets, electrodes, added)
-    for key in [
-        "lengths",
-        "per-subject",
-        "people",
-        "tokens",
-        "lengths-v1",
-        "tokens-v1",
-    ]:
+def test_missing_tables_keep_the_page_building(rows, buckets, electrodes):
+    frags = frags_of(rows, buckets, electrodes)
+    for key in ["lengths", "per-subject", "people", "tokens"]:
         text, cap = frags[key]
         assert "corpus-note" in text and cap.startswith("No "), key
 
@@ -217,10 +210,6 @@ def test_people_coverage_and_rows_without_ages(rows, demographics):
         r'data-tip="DS000002 \(ds000002\) · ages unknown[^"]*">(.*?)</g>', body
     ).group(1)
     assert 'fill="currentColor"' not in no_age and "6 F · 4 M" in no_age
-    body, cap = charts.people_chart(v1_rows(rows), demographics)
-    assert "nm000003" not in body and cap.startswith(
-        "Ages known for 1 of 4 datasets, sex for 2"
-    )
 
 
 # ---------------------------------------------------------------------------------------------------- budget
@@ -238,11 +227,10 @@ def test_squarify_tiles_the_frame():
     )
 
 
-def test_tokens_treemap_sums_to_the_frame(rows, recordings, recordings_v1):
+def test_tokens_treemap_sums_to_the_frame_and_lists_every_paradigm(rows, recordings):
     body, cap = charts.tokens_chart(v0_rows(rows), recordings)
     leaves = re.findall(
-        r'<rect x="([\d.]+)" y="([\d.]+)" width="([\d.]+)" height="([\d.]+)" class="corpus-q(\d)" '
-        r"data-tokens",
+        r'<rect x="([\d.]+)" y="([\d.]+)" width="([\d.]+)" height="([\d.]+)" class="corpus-q(\d)" data-tokens',
         body,
     )
     assert len(leaves) == 2 and [s for *_, s in leaves] == [
@@ -257,28 +245,18 @@ def test_tokens_treemap_sums_to_the_frame(rows, recordings, recordings_v1):
     )  # the ramp legend under the chart
     groups = re.findall(r'data-group="([^"]+)" data-tokens="(\d+)"', body)
     assert sorted(groups) == [
-        ("motor imagery", "6000000000"),
-        ("resting state", "2000000000"),
+        ("BCI (MI &amp; P300)", "6000000000"),
+        ("resting &amp; consciousness", "2000000000"),
     ]
+    key = re.search(r'<ul class="corpus-key"[^>]*>(.*?)</ul>', body).group(1)
+    assert re.findall(r"<b>([^<]+)</b> (\d+ %)", key) == [("BCI (MI &amp; P300)", "75 %"),
+                                                          ("resting &amp; consciousness", "25 %")]  # fmt: skip
     assert cap.startswith(
         "8.00 B tokens per epoch over 2 datasets: DS000001 alone holds 75 %"
     )
-    assert "colour is each dataset's share" in cap
-    v1 = v1_rows(
-        rows
-    )  # nm000003 converted in v1: its tokens join v0's; x-ingest has none yet
-    pending = [r for r in v1 if r["status"] == TO_INGEST]
-    body, cap = charts.tokens_chart(v1, recordings + recordings_v1, pending=pending)
-    assert "nm000003" in body and cap.startswith(
-        "9.00 B tokens per epoch over 3 datasets"
-    )
-    assert cap.endswith(
-        "Tokens exist only for converted data: the 1 dataset no store holds yet (0 h measured so far) enters "
-        "this budget when converted."
-    )
     assert (
-        "Tokens exist only"
-        not in charts.tokens_chart(v1, recordings + recordings_v1)[1]
+        "colour is each dataset's share" in cap
+        and "the 2 paradigms listed below" in cap
     )
 
 
@@ -288,10 +266,11 @@ def test_tokens_treemap_sums_to_the_frame(rows, recordings, recordings_v1):
 def test_sankey_flows_balance(rows):
     data = [
         dict(r, archive=a)
-        for r, a in zip(rows, ["OpenNeuro", "NEMAR", "NEMAR", "", "OpenNeuro"] * 2)
+        for r, a in zip(rows, ["OpenNeuro", "NEMAR", "NEMAR", "", "OpenNeuro", "NEMAR"])
     ]
     for measure in ("hours", "datasets"):
         text, nodes, links = charts.sankey_svg(data, measure)
+        assert len(nodes) == 2  # archive -> licence
         node_v = {
             m.group(1): float(m.group(2))
             for m in re.finditer(r'data-node="([^"]+)" data-v="([^"]+)"', text)
@@ -300,12 +279,12 @@ def test_sankey_flows_balance(rows):
                                                            text)]  # fmt: skip
         for n, v in node_v.items():
             col = int(n.split(":")[0])
-            if col < 2:
+            if col == 0:
                 assert sum(x for f, _, x in flows if f == n) == pytest.approx(v), (
                     measure,
                     n,
                 )
-            if col > 0:
+            else:
                 assert sum(x for _, t, x in flows if t == n) == pytest.approx(v), (
                     measure,
                     n,
@@ -317,17 +296,14 @@ def test_sankey_flows_balance(rows):
 
 
 def test_flow_licence_toggle_and_caption(rows):
-    body, cap = charts.flow_licence_chart(v1_rows(rows))
+    v0 = v0_rows(rows) + [make_row("ds000003", CONVERTED)]  # a dataset without hours
+    body, cap = charts.flow_licence_chart(v0)
     assert 'data-corpus-group="flow" data-corpus-state="hours"' in body
     assert body.count("<svg") == 2 and 'data-corpus-show="datasets"' in body
-    assert cap.startswith("162 h over 3 of the 4 datasets")
+    assert cap.startswith("150 h over 2 of the 3 datasets")
     assert (
-        "100 % of the hours are converted" in cap
-        and "1 dataset without hours shows in the datasets view only" in cap
-    )
-    assert (
-        f'data-node="2:{CONVERTED_V1}"' in body
-        and f'data-node="2:{EXCLUDED}"' not in body
+        "1 dataset without hours shows in the datasets view only" in cap
+        and "status" not in body
     )
 
 
@@ -405,72 +381,16 @@ def test_montage_columns_by_channel_band(rows, buckets, bank):
     assert "data-family" not in body  # no row grouping by naming family
 
 
-def test_v1_channel_bands_measured_per_bucket_once_converted(
-    rows, buckets, electrodes, added, to_convert
-):
-    """Every v1 dataset in a store: the bands are measured per bucket, v1's added sets stacked in their own colour;
-    a dataset waiting for conversion falls back to each dataset's mean channel count.
-    """
-    body, cap = charts.channel_bands_buckets(buckets, added)
-    assert "corpus-fill-converted-v1" in body and "(v1 adds)" in body
+def test_channel_bands_measured_per_bucket(buckets):
+    body, cap = charts.channel_bands_buckets(buckets)
+    assert "corpus-fill-converted" in body and "v1" not in body
     assert cap.startswith(
-        "100 % of the 162 converted hours come from 1–16-channel recordings (3 datasets)"
+        "100 % of the 150 converted hours come from 1–16-channel recordings (2 datasets)"
     )
-    frags = frags_of(
-        [r for r in rows if r["status"] != TO_INGEST], buckets, electrodes, added
-    )
-    assert frags["channel-bands-v1"][1] == cap
-    frags = frags_of(rows + [to_convert], buckets, electrodes, added)
-    assert "by each dataset's mean channel count" in frags["channel-bands-v1"][1]
 
 
-def test_new_fragments_build_scoped_and_small(built_all):
-    manifest, _ = built_all
-    for key in NEW_KEYS + [k + "-v1" for k in NEW_KEYS if k != "montages"]:
+def test_new_fragments_build_scoped_and_small(data_dir, tmp_path):
+    manifest = build(data_dir, tmp_path / "out")
+    for key in NEW_KEYS:
         assert key in manifest["fragments"], key
         assert manifest["fragments"][key]["bytes"] < 200_000
-
-
-@pytest.fixture
-def built_all(data_dir, tmp_path):
-    out = tmp_path / "out"
-    return build(data_dir, out), out
-
-
-def test_v1_legends_show_only_the_statuses_v1_holds(rows, buckets, electrodes, added):
-    """With nothing left to ingest (2026-10-14) and v1 converted (2026-10-18), the v1 charts' legends carry the
-    two converted statuses only.
-    """
-    from plot_corpus.fragments import build_fragments
-
-    rest = [r for r in rows if r["status"] != TO_INGEST]
-    frags = build_fragments(rest, buckets, electrodes, "2026-01-02", added)
-    for key in (
-        "hours-v1",
-        "channel-bands-v1",
-        "subjects-v1",
-        "scatter-v1",
-        "lengths-v1",
-    ):
-        legend = frags[key][0].split('class="corpus-legend"')[1].split("</div>")[0]
-        assert "to ingest" not in legend and "to convert" not in legend, key
-        assert "v0, converted" in legend and "v1, converted" in legend, key
-    frags = build_fragments(
-        rows, buckets, electrodes, "2026-01-02", added
-    )  # a dataset to ingest: back in the legend
-    assert (
-        "to ingest"
-        in frags["hours-v1"][0].split('class="corpus-legend"')[1].split("</div>")[0]
-    )
-
-
-def test_v1_montages_use_both_stores_buckets(rows, buckets, electrodes, added):
-    """v1's heatmap is v0's built from the v1 store's buckets (v0's and the added ones), the added columns in v1's
-    colour.
-    """
-    body, _ = charts.montage_chart(
-        v1_rows(rows), buckets + added, electrodes, min_datasets=2
-    )
-    cols = re.findall(r'data-dataset="([^"]+)" data-on="(\d+)" data-n="(\d+)"', body)
-    assert ("nm000003", "1", "2") in cols and len(cols) == 3
-    assert "corpus-fill-converted-v1" in body and "corpus-fill-converted" in body

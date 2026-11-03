@@ -135,7 +135,13 @@ class CommonSpatialPattern(TrainableFeature):
             for label in labels:
                 if label not in self._labels:
                     self._labels = np.append(self._labels, label)
-        assert self._labels.shape[0] < 3
+        if self._labels.shape[0] >= 3:
+            raise ValueError(
+                f"CSP requires exactly two classes, but "
+                f"{self._labels.shape[0]} unique labels have been encountered "
+                f"so far: {self._labels.tolist()}. Ensure y contains only two "
+                f"distinct class values."
+            )
         return self._labels
 
     def _update_stats(self, l, x):

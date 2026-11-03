@@ -40,7 +40,7 @@ def test_slice_freq_band_with_multiple_arrays():
 
 
 def test_get_valid_freq_band_assertions():
-    """Test assertion failures in get_valid_freq_band (lines 23, 27)."""
+    """Test validation failures in get_valid_freq_band (lines 23, 27)."""
     import pytest
 
     from eegdash.features.feature_bank.utils import get_valid_freq_band
@@ -49,11 +49,11 @@ def test_get_valid_freq_band_assertions():
     # f0 = 2 * fs / n = 1.0, f1 = fs / 2 = 128
 
     # f_min below f0 should raise
-    with pytest.raises(AssertionError):
+    with pytest.raises(ValueError, match="below the minimum resolvable frequency"):
         get_valid_freq_band(fs, n, f_min=0.5)
 
     # f_max above f1 should raise
-    with pytest.raises(AssertionError):
+    with pytest.raises(ValueError, match="exceeds the Nyquist frequency"):
         get_valid_freq_band(fs, n, f_max=150)
 
 

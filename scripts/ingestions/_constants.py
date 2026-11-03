@@ -101,4 +101,7 @@ EXCLUDED_DATASETS: set[str] = {
     # its OpenNeuro original are excluded so neither is re-added.
     "on007477",
     "ds007477",
+    # Deleted on OpenNeuro as duplicate of ds005811; on005811 holds the
+    # recordings.
+    "ds005787",
 }

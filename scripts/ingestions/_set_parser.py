@@ -103,6 +103,24 @@ def _maybe_fill_ntimes_from_fdt(
         logger.debug("_maybe_fill_ntimes_from_fdt failed: %s", e)
 
 
+def _loadmat(set_path: Path, **kwargs: Any) -> dict[str, Any]:
+    """``scipy.io.loadmat``, retried once with ``uint16_codec='latin-1'``.
+
+    MATLAB char fields such as ``EEG.filepath`` can hold non-ASCII uint16
+    code units that scipy's default UTF-8 codec decodes to fewer characters
+    than stored ("buffer is too small for requested array", on004166). The
+    runtime reader retries the same way (``eegdash/dataset/base.py``).
+    """
+    import scipy.io
+
+    try:
+        return scipy.io.loadmat(str(set_path), **kwargs)
+    except TypeError as e:
+        if "buffer is too small" not in str(e):
+            raise
+        return scipy.io.loadmat(str(set_path), uint16_codec="latin-1", **kwargs)
+
+
 def _h5_scalar(group: Any, name: str) -> float | None:
     """A 1x1 MATLAB scalar dataset as float, ``None`` when absent or not scalar."""
     try:
@@ -197,8 +215,6 @@ def parse_set_metadata(set_path: Path | str) -> dict[str, Any] | None:
 
     # Try scipy.io first (for MATLAB v5 format)
     try:
-        import scipy.io
-
         # Header-only discipline: for embedded-data .set (no .fdt companion),
         # scipy loadmat materializes EEG.data. Skip *only the loadmat* for
         # oversized embedded files (mat = {}), then fall through to the cheap
@@ -208,8 +224,8 @@ def parse_set_metadata(set_path: Path | str) -> dict[str, Any] | None:
             mat: dict[str, Any] = {}
         else:
             # variable_names=['EEG'] avoids loading unrelated top-level MAT variables.
-            mat = scipy.io.loadmat(
-                str(set_path),
+            mat = _loadmat(
+                set_path,
                 struct_as_record=False,
                 squeeze_me=True,
                 variable_names=["EEG"],
@@ -217,8 +233,8 @@ def parse_set_metadata(set_path: Path | str) -> dict[str, Any] | None:
             if "EEG" not in mat:
                 # EEGLAB "onefile" saves put the fields at the file root
                 # (on007822); load the scalars only, never ``data``.
-                root = scipy.io.loadmat(
-                    str(set_path),
+                root = _loadmat(
+                    set_path,
                     struct_as_record=False,
                     squeeze_me=True,
                     variable_names=list(_ROOT_FIELDS),

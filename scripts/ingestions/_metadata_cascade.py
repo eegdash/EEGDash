@@ -605,6 +605,33 @@ class ChannelsTsvStep:
         result.stamp(PROV_CHANNELS_TSV, "nchans", n_before, nc)
 
 
+def header_names_win(
+    result: CascadeResult, names: list[str] | None, source: str
+) -> None:
+    """Take the data file's channel names when the sidecar lists another number.
+
+    Raw is the truth (Bruno, 2026-10-21): on006910 channels.tsv names 128
+    contacts ``A1``..``B64``; the EDF holds 49 bipolar ``POL B10-B18``.. signals.
+    ``names`` are the header's, as MNE reads them; ``None`` (absent, or two
+    labels collide) keeps the sidecar names. Equal counts keep the sidecar.
+    """
+    if names and result.ch_names and len(names) != len(result.ch_names):
+        result.ch_names = list(names)
+        result.provenance["ch_names"] = source
+
+
+def _local_edf_channel_names(path: Path) -> list[str] | None:
+    """Header channel names of a local EDF/BDF (:func:`_edf_header.edf_channel_names`)."""
+    try:
+        with open(path, "rb") as f:
+            n_signals = _edf_header.edf_n_signals(f.read(_edf_header.EDF_HEADER_LEN))
+            if not n_signals:
+                return None
+            return _edf_header.edf_channel_names(f.read(16 * n_signals), n_signals)
+    except OSError:
+        return None
+
+
 class BinaryParserStep:
     """Step 4: per-extension binary parser via the format registry."""
 
@@ -657,6 +684,13 @@ class BinaryParserStep:
             ("ch_names", ch_before, result.ch_names),
         ):
             result.stamp(PROV_BINARY_PARSER, fname, old, new)
+        if ctx.ext in (".edf", ".bdf") and md.get("ch_names"):
+            if ch_before and len(md["ch_names"]) != len(ch_before):
+                header_names_win(
+                    result,
+                    _local_edf_channel_names(ctx.bids_file_path),
+                    PROV_BINARY_PARSER,
+                )
 
 
 class SizeArithmeticStep:
@@ -854,6 +888,11 @@ class RemoteHeaderStep:
                 if getattr(result, name) != value:
                     setattr(result, name, value)
                     result.provenance[name] = PROV_REMOTE_HEADER
+            header_names_win(
+                result,
+                _edf_header.edf_channel_names(sig, n_signals),
+                PROV_REMOTE_HEADER,
+            )
             return
         n_times = _edf_header.edf_n_times_from_main_header(
             buf, result.sampling_frequency

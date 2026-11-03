@@ -228,6 +228,23 @@ def _extract_channel_status_counts(bids_dataset: Any, bids_file: str) -> dict[st
     return {"bad_channels": bad_channels, "bad_channels_count": len(bad_channels)}
 
 
+def _bad_channels_in_data(
+    status: dict[str, Any], ch_names: list[str] | None
+) -> dict[str, Any]:
+    """Keep only the bad channels that are channels of the data file.
+
+    on006910 channels.tsv marks 20 of its 128 contact names bad; the EDF holds
+    49 bipolar channels and none of those 20 names, so none of them is a bad
+    channel of the recording. Without ``ch_names`` nothing is dropped.
+    """
+    bads = status.get("bad_channels")
+    if not bads or not ch_names:
+        return status
+    present = set(ch_names)
+    kept = [name for name in bads if name in present]
+    return {**status, "bad_channels": kept, "bad_channels_count": len(kept)}
+
+
 def _extract_technical_metadata(
     bids_dataset: Any, bids_file: str
 ) -> tuple[
@@ -558,6 +575,6 @@ def extract_record(
     record.update(sidecar_extras)
 
     channel_status = _extract_channel_status_counts(bids_dataset, bids_file)
-    record.update(channel_status)
+    record.update(_bad_channels_in_data(channel_status, ch_names))
 
     return dict(record)

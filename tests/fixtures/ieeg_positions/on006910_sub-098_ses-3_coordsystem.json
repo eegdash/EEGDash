@@ -1,0 +1,7 @@
+{
+  "iEEGCoordinateSystem":"Other",
+  "iEEGCoordinateSystemDescription":"Post-implant CT coregistered to pre-implant MRI in patient-native RAS orientation.",
+  "iEEGCoordinateUnits":"mm",
+  "iEEGCoordinateProcessingDescription":"Post-implant CT and pre-implant MRI were aligned using rigid-body registration without scaling. The accuracy of coregistration was confirmed by visual inspection.",
+  "iEEGCoordinateProcessingReference":"n/a"
+}

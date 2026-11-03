@@ -45,6 +45,7 @@ from ._source_inference import (
     correct_storage_inplace,
 )
 from .bids_dataset import _COMPANION_FILES, position_sidecars
+from .channel_positions import fill_missing_positions
 from .exceptions import DataIntegrityError, StorageAccessError
 from .io import (
     _ANNEX_KEY_RE,
@@ -1818,6 +1819,7 @@ class EEGDashRaw(RawDataset):
             # (especially EEGLAB .set) produce annotations with negative
             # durations that crash downstream MNE operations.
             _clamp_negative_annotation_durations(self._raw)
+            self._fill_derived_positions()
 
             # Validate that data is actually readable (catches corrupt/truncated
             # data files that MNE only discovers during lazy segment reads).
@@ -1849,6 +1851,35 @@ class EEGDashRaw(RawDataset):
                 old = cropped.info["description"]
                 cropped.info["description"] = f"{old}; {issue}" if old else issue
                 self._raw = cropped
+
+    def _fill_derived_positions(self) -> None:
+        """Place iEEG channels MNE-BIDS left unpositioned, from their contacts.
+
+        ``POL A3``, ``EEG A1-Ref`` and bipolar ``A1-A2`` channels name contacts
+        of electrodes.tsv without being a row of it (on004551, on004789,
+        on006910); :func:`.channel_positions.fill_missing_positions` places them
+        and leaves every measured position as it is. Never fails a read.
+        """
+        if (
+            self._raw is None
+            or self._unsupported_bids_entities  # direct reader: no sidecars applied
+            or (self.bidspath.datatype or "").lower() != "ieeg"
+        ):
+            return
+        try:
+            bp = self.bidspath
+            electrodes = _find_matching_sidecar(bp, "electrodes", ".tsv", "ignore")
+            coordsystem = _find_matching_sidecar(bp, "coordsystem", ".json", "ignore")
+            if electrodes and coordsystem:
+                fill_missing_positions(
+                    self._raw, Path(electrodes), Path(coordsystem), "ieeg"
+                )
+        except Exception as exc:  # noqa: BLE001 - positions are optional
+            logger.warning(
+                "%s: channel positions from contacts skipped (%s).",
+                self.bidspath.basename,
+                exc,
+            )
 
     def _read_raw_bids(self, extra_params: dict | None = None) -> BaseRaw:
         """Call ``mne_bids.read_raw_bids`` with the standard arguments.

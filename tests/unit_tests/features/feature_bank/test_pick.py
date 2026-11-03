@@ -48,7 +48,7 @@ def test_pick_channels_preprocessor_selects_requested_channels(
 def test_pick_channels_preprocessor_raises_for_unknown_channel():
     md = _metadata()
     x = np.zeros((1, 3, 10))
-    with pytest.raises(ValueError, match="Channel O1 not found"):
+    with pytest.raises(ValueError, match=r"Channel 'O1'.*not found"):
         pick_channels_preprocessor(x, channels=["O1"], _metadata=md)
 
 

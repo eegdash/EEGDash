@@ -309,13 +309,13 @@ def test_datasets_more(features_dataset, concat_dataset):
     concat_dataset.join(concat_dataset, lsuffix="_left")
 
     # 632: _enforce_inplace_operations
-    with pytest.raises(ValueError, match="only works inplace"):
+    with pytest.raises(ValueError, match="does not support inplace=False"):
         concat_dataset.fillna(0, inplace=False)
 
     # 312: save empty
     orig_datasets = concat_dataset.datasets
     concat_dataset.datasets = []
-    with pytest.raises(ValueError, match="Expect at least one dataset"):
+    with pytest.raises(ValueError, match="cannot save an empty dataset"):
         concat_dataset.save("dummy")
     concat_dataset.datasets = orig_datasets
     # 336: save with warning

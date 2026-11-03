@@ -150,16 +150,22 @@ def test_iter_split_fif_candidates(
             8 + 4 * 8 * 2,
             {"nsamp": 5, "nchan": 2},
             {
-                "n_samp": 8,
-                "n_samp_tot": 8,
-                "block_size": 8,
-                "res4_nsamp": 8,
+                "n_samp": 5,
+                "n_samp_tot": 5,
+                "block_size": 5,
+                "res4_nsamp": 5,
                 "n_chan": 2,
             },
             False,
         ),
+        (
+            8 + 4 * 3 * 2,
+            {"nsamp": 5, "nchan": 2},
+            {"origin": "orig"},
+            True,
+        ),
     ],
-    ids=["divisible-use-original", "truncated-fallback"],
+    ids=["divisible-use-original", "truncated-whole-trials", "no-whole-trial-original"],
 )
 def test_make_tolerant_get_sample_info(
     monkeypatch, st_size, res4, expected, orig_called
@@ -177,6 +183,43 @@ def test_make_tolerant_get_sample_info(
 
     assert out == expected
     assert bool(calls) is orig_called
+
+
+def _no_original(*_args):
+    raise AssertionError("original _get_sample_info must not run")
+
+
+def test_tolerant_ctf_sample_info_keeps_trial_layout(tmp_path):
+    """MNE reads the whole trials of a meg4 that ends inside a trial in place.
+
+    A meg4 stores one [channel][sample] block per trial; reading it as one
+    block (the old fallback) mixed channels and trials.
+    """
+    from mne.io.ctf.ctf import RawCTF
+
+    nchan, nsamp, n_trial = 3, 4, 2
+    value = np.array(
+        [
+            [[100 * t + 10 * c + s for s in range(nsamp)] for c in range(nchan)]
+            for t in range(n_trial)
+        ],
+        dtype=">i4",
+    )
+    meg4 = tmp_path / "x.meg4"
+    # two whole trials, then 5 samples of a third one
+    meg4.write_bytes(b"MEG41CP\x00" + value.tobytes() + bytes(4 * 5))
+    info = _make_tolerant_get_sample_info(_no_original)(
+        str(meg4), {"nsamp": nsamp, "nchan": nchan}, "ignore"
+    )
+    assert info["n_samp"] == n_trial * nsamp
+
+    data = np.zeros((nchan, info["n_samp"]))
+    fake = types.SimpleNamespace(_raw_extras=[info], filenames=[str(meg4)])
+    RawCTF._read_segment_file(
+        fake, data, slice(None), 0, 0, info["n_samp"], np.ones(nchan), None
+    )
+    expected = np.concatenate(list(value.astype(float)), axis=1)
+    np.testing.assert_array_equal(data, expected)
 
 
 @pytest.mark.parametrize(

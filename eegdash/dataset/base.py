@@ -215,8 +215,11 @@ def _make_tolerant_get_sample_info(orig_fn):
     """Build a tolerant ``_get_sample_info`` wrapper for truncated CTF meg4.
 
     Returns a function with the same signature as
-    ``mne.io.ctf.ctf._get_sample_info`` that falls back to treating all
-    available data as a single continuous block when the file is truncated.
+    ``mne.io.ctf.ctf._get_sample_info``. A meg4 stores, after its 8-byte
+    header, one ``[channel][sample]`` block of ``res4["nsamp"]`` samples per
+    trial. When the file ends inside a trial, only the whole trials are
+    read; the partial trial is dropped. With no whole trial the original
+    function runs and raises: a partial trial holds only some channels.
     """
     import os
 
@@ -225,21 +228,25 @@ def _make_tolerant_get_sample_info(orig_fn):
     def _tolerant_get_sample_info(fname, res4, system_clock):
         st_size = os.path.getsize(fname)
         nchan = res4["nchan"]
+        nsamp = res4["nsamp"]
         data_bytes = st_size - _CTF_HEADER
-        trial_bytes = 4 * res4["nsamp"] * nchan
-        if trial_bytes > 0 and data_bytes % trial_bytes != 0:
-            n_samp_tot = data_bytes // (4 * nchan)
+        trial_bytes = 4 * nsamp * nchan
+        n_trial = data_bytes // trial_bytes if trial_bytes > 0 else 0
+        if n_trial > 0 and data_bytes % trial_bytes != 0:
+            n_samp_tot = n_trial * nsamp
             logger.warning(
-                "CTF meg4 truncated: expected %d samples/trial, "
-                "using %d total samples as 1 block.",
-                res4["nsamp"],
-                n_samp_tot,
+                "CTF meg4 ends inside trial %d (%d trailing bytes); reading "
+                "the %d whole trials of %d samples only.",
+                n_trial + 1,
+                data_bytes - n_trial * trial_bytes,
+                n_trial,
+                nsamp,
             )
             return dict(
                 n_samp=n_samp_tot,
                 n_samp_tot=n_samp_tot,
-                block_size=n_samp_tot,
-                res4_nsamp=n_samp_tot,
+                block_size=nsamp,
+                res4_nsamp=nsamp,
                 n_chan=nchan,
             )
         return orig_fn(fname, res4, system_clock)
@@ -2044,10 +2051,9 @@ class EEGDashRaw(RawDataset):
                 if "in projector" in msg and self.filecache:
                     return self._retry_without_projectors(first_error)
 
-                # CTF trial-size mismatch — the meg4 file is truncated
-                # (fewer samples than res4 header declares).  Patch
-                # MNE's _get_sample_info to treat available data as a
-                # single continuous block.
+                # CTF trial-size mismatch — the meg4 file ends inside a
+                # trial.  Patch MNE's _get_sample_info to read the whole
+                # trials only.
                 if "even multiple of the trial size" in msg and self.filecache:
                     logger.warning(
                         "CTF trial size mismatch — retrying with "
@@ -2486,11 +2492,10 @@ class EEGDashRaw(RawDataset):
     def _retry_with_ctf_truncated_fix(self, first_error: Exception) -> BaseRaw:
         """Retry CTF read with a tolerant sample-info parser.
 
-        When a ``.meg4`` file is truncated (fewer complete sample rows than
-        the ``.res4`` header declares), MNE raises ``RuntimeError("The
-        number of samples is not an even multiple of the trial size")``.
-        This method patches ``mne.io.ctf.ctf._get_sample_info`` to treat
-        the available data as a single continuous block.
+        When a ``.meg4`` file ends inside a trial, MNE raises
+        ``RuntimeError("The number of samples is not an even multiple of
+        the trial size")``. This method patches
+        ``mne.io.ctf.ctf._get_sample_info`` to read the whole trials only.
         """
         import mne.io.ctf.ctf as _ctf_mod
 

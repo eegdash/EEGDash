@@ -88,4 +88,17 @@ EXCLUDED_DATASETS: set[str] = {
     # GitHub mirror is gone and S3 serves nothing.
     "ds006940",
     "ds007630",
+    # Derivative-only NEMAR deposit (Fusca, Siebenhuehner, Wang et al. 2023
+    # SEEG/MEG synchronization and DFA): 70 .mat analysis results and no
+    # recordings (README: processed-data release). The manifest digest
+    # invents 68 placeholder sub-NN_ieeg.set records without nchans/sfreq.
+    "nm000390",
+    # OpenNeuro access denied since 2026-10-23 (GraphQL "You do not have
+    # access to read this dataset", S3 403); re-add when public.
+    "ds008108",
+    # Every recording is a placeholder: all 36 .snirf files are the same
+    # 26-byte "dummy_hdf5_header_bypass" stub. Both the NEMAR mirror and
+    # its OpenNeuro original are excluded so neither is re-added.
+    "on007477",
+    "ds007477",
 }

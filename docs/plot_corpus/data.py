@@ -104,8 +104,14 @@ PROVENANCE = {
 }
 # The conversion recipe (one place; the pages read it through numbers.inc).
 BAND = (0.5, 99.5)  # Hz
-BAND_CAP = 0.45  # the converter caps the band's upper edge at this fraction of the native rate
-RECIPE = {"recipe_sfreq": "200", "recipe_band": f"{BAND[0]:g}–{BAND[1]:g}", "recipe_window": "10"}
+BAND_CAP = (
+    0.45  # the converter caps the band's upper edge at this fraction of the native rate
+)
+RECIPE = {
+    "recipe_sfreq": "200",
+    "recipe_band": f"{BAND[0]:g}–{BAND[1]:g}",
+    "recipe_window": "10",
+}
 RECIPE["recipe_points"] = (
     f"{int(RECIPE['recipe_sfreq']) * int(RECIPE['recipe_window']):,}"  # points per sample
 )
@@ -301,12 +307,16 @@ def capped_band(v0: list[dict[str, str]]) -> dict[str, str]:
     """The datasets whose native rate is too low for the band's upper edge (``BAND_CAP`` × the rate below it): how many,
     at which rates, and the band they get (from the lowest rate).
     """
-    rates = [x for x in (fnum(r["native_sfreq"]) for r in v0) if x and x * BAND_CAP < BAND[1]]
+    rates = [
+        x for x in (fnum(r["native_sfreq"]) for r in v0) if x and x * BAND_CAP < BAND[1]
+    ]
     low = sorted(set(rates))
     return {
         "v0_capped": WORDS.get(len(rates), str(len(rates))),
         "v0_capped_rates": join_and([f"{x:g}" for x in low]),
-        "v0_capped_band": f"{BAND[0]:g}–{BAND_CAP * low[0]:g}" if low else RECIPE["recipe_band"],
+        "v0_capped_band": f"{BAND[0]:g}–{BAND_CAP * low[0]:g}"
+        if low
+        else RECIPE["recipe_band"],
     }
 
 

@@ -108,8 +108,16 @@ def test_committed_row_counts():
     nums = numbers(rows, buckets, committed()[2], "x", recordings)
     assert nums["v0_tokens"] == "6.21 B"
     # NMT, Shin2017A and Weibo2014, recorded at 200 Hz: the converter caps their band at 0.45 x 200 Hz
-    assert (nums["v0_capped"], nums["v0_capped_rates"], nums["v0_capped_band"]) == ("three", "200", "0.5–90")
-    assert (nums["v0_tag"], nums["v0_files"], nums["v0_size"]) == ("v1.0", "44,801", "3.60 TB")
+    assert (nums["v0_capped"], nums["v0_capped_rates"], nums["v0_capped_band"]) == (
+        "three",
+        "200",
+        "0.5–90",
+    )
+    assert (nums["v0_tag"], nums["v0_files"], nums["v0_size"]) == (
+        "v1.0",
+        "44,801",
+        "3.60 TB",
+    )
 
 
 def test_committed_corpus_table_is_v0():
@@ -120,7 +128,10 @@ def test_committed_corpus_table_is_v0():
     rows = committed()[0]
     assert len(table) == 77
     assert {r["dataset_id"] for r in table} == {r["dataset_id"] for r in v0_rows(rows)}
-    assert collections.Counter(r["dataset_id"][:2] for r in table) == {"ds": 56, "nm": 21}
+    assert collections.Counter(r["dataset_id"][:2] for r in table) == {
+        "ds": 56,
+        "nm": 21,
+    }
     assert all(r["eegdash_id"][2:] == r["dataset_id"][2:] and r["eegdash_id"][:2] in ("ds", "on", "nm")
                for r in table)  # fmt: skip
     assert "note" not in table[0] and list(table[0])[0] == "dataset_id"
@@ -277,10 +288,15 @@ def test_every_rst_key_and_substitution_exists():
     intro = re.findall(
         r"^\.\. corpus-figure:: (\S+)", (RST / "introduction.rst").read_text(), re.M
     )
-    assert intro[-2:] == ["licences", "table-all"]  # the table of every dataset follows the licences
+    assert intro[-2:] == [
+        "licences",
+        "table-all",
+    ]  # the table of every dataset follows the licences
     assert not {"status", "flow"} & set(frags)
     # no page links the removed Coverage page ("electrode coverage" on the v0 page is prose, not a link)
-    links = r"<coverage>|:link: coverage|:doc:`[^`]*coverage|corpus-coverage|coverage\.rst"
+    links = (
+        r"<coverage>|:link: coverage|:doc:`[^`]*coverage|corpus-coverage|coverage\.rst"
+    )
     assert [p.name for p in RST.glob("*.rst") if re.search(links, p.read_text())] == []
     known = set(numbers(rows, buckets, electrodes, "x", recordings)) | {"hf_corpus"}
     # every file a page offers with :download: from the generated folder is one the build writes
@@ -339,8 +355,14 @@ def test_download_section():
         "|v0_tag|",
     ):
         assert line in section, line
-    assert section.index("\nThe converted store\n---") < section.index("\nThe raw datasets\n---")
-    intro = sources["introduction.rst"].split("\nHow to get it\n=============\n")[1].split("\n=====")[0]
+    assert section.index("\nThe converted store\n---") < section.index(
+        "\nThe raw datasets\n---"
+    )
+    intro = (
+        sources["introduction.rst"]
+        .split("\nHow to get it\n=============\n")[1]
+        .split("\n=====")[0]
+    )
     for line in (
         "hf download EEGDash/eegdash-corpus-v0 --repo-type dataset --local-dir eegdash-corpus-v0",
         'root = zarr.open_group("eegdash-corpus-v0/eegdash-corpus-v0.zarr", mode="r")',
@@ -386,7 +408,9 @@ def test_public_table_drops_the_note(rows):
     text = sync_data.public_table(src.getvalue())
     out = list(csv.DictReader(io.StringIO(text)))
     assert list(out[0]) == [c for c in table_rows(rows)[0] if c != "note"]
-    assert [r["dataset_id"] for r in out] == ["ds000001", "ds000002"] and not re.search(DATE, text)
+    assert [r["dataset_id"] for r in out] == ["ds000001", "ds000002"] and not re.search(
+        DATE, text
+    )
 
 
 def test_public_atlas_derives_reason_and_drops_note(rows):
@@ -453,7 +477,11 @@ def source(tmp_path, rows, buckets, bank):
         list(buckets[0]),
     )
     (src / "corpus/corpus-atlas/electrode-positions.json").write_text(json.dumps(bank))
-    write_csv(src / "corpus/eegdash-corpus-v0.csv", table_rows(rows), list(table_rows(rows)[0]))
+    write_csv(
+        src / "corpus/eegdash-corpus-v0.csv",
+        table_rows(rows),
+        list(table_rows(rows)[0]),
+    )
     _git(src, "init", "-q")
     _git(src, "add", ".")
     _git(
@@ -473,7 +501,9 @@ def test_sync_copies_scans_and_refuses_dirty(source, tmp_path):
     )
     assert m["files"][TABLE] == {"source": "corpus/eegdash-corpus-v0.csv", "rows": 2,
                                  "sha256": sync_data.sha256(out / TABLE)}  # fmt: skip
-    assert "note" not in (out / TABLE).read_text().splitlines()[0]  # the dated note is dropped, the scan passes
+    assert (
+        "note" not in (out / TABLE).read_text().splitlines()[0]
+    )  # the dated note is dropped, the scan passes
     assert sync_data.check(out) == []
     atlas = source / "corpus/corpus-atlas/atlas.csv"
     atlas.write_text(atlas.read_text().replace("Dataset ds000001", "Dataset by Tester"))

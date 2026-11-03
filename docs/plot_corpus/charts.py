@@ -98,7 +98,8 @@ def kpis_universe(rows: list[dict[str, str]]) -> tuple[str, str]:
 
 def kpis_intro(rows: list[dict[str, str]]) -> tuple[str, str]:
     """The Introduction's row: what the release holds, in three numbers, against the datasets tracked; the landing
-    page breaks the rest down by status and the v0 page measures the store."""
+    page breaks the rest down by status and the v0 page measures the store.
+    """
     k = kpis(rows)
     boxes = [
         (f"{k['v0_datasets']}", "datasets released (v0)", CONVERTED),

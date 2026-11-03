@@ -63,7 +63,9 @@ def test_kpis_and_numbers_come_from_rows(rows, built):
     k = kpis(rows)
     assert (k["datasets"], k[CONVERTED], k["v0_datasets"], k["out"]) == (6, 2, 2, 3)
     assert k["v0_hours"] == pytest.approx(150.5)
-    assert not {"status", "flow"} & set(manifest["fragments"])  # the status bar and the flow chart are gone
+    assert not {"status", "flow"} & set(
+        manifest["fragments"]
+    )  # the status bar and the flow chart are gone
     assert not (out / "status.html").exists() and not (out / "flow.html").exists()
     inc = (out / "numbers.inc").read_text()
     assert (
@@ -75,13 +77,19 @@ def test_kpis_and_numbers_come_from_rows(rows, built):
     )
     assert manifest["rows"] == {"atlas": 6, "v0": 2, "buckets": 4, "electrodes": 5, "unplaced": 0,
                                 "recordings": 2, "demographics": 2, "table": 2}  # fmt: skip
-    assert sorted(p.name for p in out.glob("*.csv")) == ["atlas-v0.csv", "atlas.csv", "eegdash-corpus-v0.csv"]
+    assert sorted(p.name for p in out.glob("*.csv")) == [
+        "atlas-v0.csv",
+        "atlas.csv",
+        "eegdash-corpus-v0.csv",
+    ]
 
 
 def test_corpus_table_is_copied_as_synced_and_must_list_v0(data_dir, built, tmp_path):
     """The downloadable corpus table is the synced file itself, and a table that is not v0's datasets stops the build."""
     _, out = built
-    assert (out / "eegdash-corpus-v0.csv").read_bytes() == (data_dir / "eegdash-corpus-v0.csv").read_bytes()
+    assert (out / "eegdash-corpus-v0.csv").read_bytes() == (
+        data_dir / "eegdash-corpus-v0.csv"
+    ).read_bytes()
     table = data_dir / "eegdash-corpus-v0.csv"
     table.write_text(table.read_text().replace("ds000002", "ds000009"))
     with pytest.raises(ValueError, match=r"only in the table \['ds000009'\]"):
@@ -153,8 +161,15 @@ def test_status_colours_in_both_themes():
         for kind in ("fill", "bg", "bd"):
             assert f".corpus-{kind}-{slug} " in css, (kind, slug)
     assert re.findall(r"--corpus-st-([\w-]+):", light) == list(SLUGS.values())
-    for gone in ("converted-v1", "to-convert", "to-ingest", "paper-only",
-                 "corpus-psteps", "corpus-stroke-", "corpus-on-"):
+    for gone in (
+        "converted-v1",
+        "to-convert",
+        "to-ingest",
+        "paper-only",
+        "corpus-psteps",
+        "corpus-stroke-",
+        "corpus-on-",
+    ):
         assert gone not in css, gone
 
 

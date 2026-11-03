@@ -87,7 +87,9 @@ DROP_COLUMNS = (
     "note",
     "in_v1",
 )  # atlas.csv columns not published: internal provenance, an unreleased store
-TABLE_DROP = ("note",)  # the corpus table's internal provenance, with the dates of the work
+TABLE_DROP = (
+    "note",
+)  # the corpus table's internal provenance, with the dates of the work
 # Why an excluded dataset is out, from its note: (pattern, words), first match wins; otherwise the note's first
 # clause after "excluded from the corpus:".
 EXCLUDED_WHY = [

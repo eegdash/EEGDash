@@ -68,9 +68,18 @@ def test_card_only_entries_count_everywhere(
     assert frags["kpis"][1].startswith(
         "3 of the 8 datasets tracked are converted and released in v0"
     )
-    intro = frags["intro-kpis"][0]   # the Introduction's short row: the release in three numbers, against the universe
-    assert intro.count("<b>") == 4 and "<b>3</b><span>datasets released (v0)</span>" in intro
-    assert "<b>8</b><span>datasets tracked</span>" in intro and frags["intro-kpis"][1].endswith("of the 8 datasets tracked.")
+    intro = frags[
+        "intro-kpis"
+    ][
+        0
+    ]  # the Introduction's short row: the release in three numbers, against the universe
+    assert (
+        intro.count("<b>") == 4
+        and "<b>3</b><span>datasets released (v0)</span>" in intro
+    )
+    assert "<b>8</b><span>datasets tracked</span>" in intro and frags["intro-kpis"][
+        1
+    ].endswith("of the 8 datasets tracked.")
     assert "Feedback (ds004262)" in frags["hours"][0]
     table = frags["table-all"][0]
     assert (

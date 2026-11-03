@@ -99,12 +99,12 @@ def _regenerate(app) -> None:
 
 
 def _assets(app, pagename: str, templatename: str, context: dict, doctree) -> None:
-    """The corpus CSS and JS on corpus pages only; the 3-D view's script on the two version pages."""
+    """The corpus CSS and JS on corpus pages only; the 3-D view's script on the v0 page."""
     if not pagename.startswith("corpus/"):
         return
     app.add_css_file("css/corpus.css")
     app.add_js_file("js/corpus.js", defer="defer")
-    if pagename in ("corpus/v0", "corpus/v1"):
+    if pagename == "corpus/v0":
         app.add_js_file("js/corpus-3d.js", defer="defer")
 
 

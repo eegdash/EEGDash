@@ -1,9 +1,12 @@
-:og:description: EEGDash Corpus v0, the converted Zarr store: electrode coverage, hours, channels and distributions of every dataset.
+:og:description: EEGDash Corpus v0, the converted Zarr store: its datasets, electrode coverage, hours, channels and distributions, and how to download and load it.
 
 .. meta::
-   :description: EEGDash Corpus v0, the converted Zarr store: electrode coverage, hours, channels and distributions of every dataset.
+   :description: EEGDash Corpus v0, the converted Zarr store: its datasets, electrode coverage, hours, channels and distributions, and how to download and load it.
 
 .. include:: /_static/corpus_generated/numbers.inc
+
+.. The one place the Hugging Face link is set.
+.. |hf_corpus| replace:: `EEGDash/eegdash-corpus-v0 <https://huggingface.co/datasets/EEGDash/eegdash-corpus-v0>`__
 
 .. _corpus-v0:
 
@@ -11,13 +14,152 @@
 EEGDash Corpus v0
 #################
 
-Version 0 is REVE's public release rebuilt from the archives and converted: every
-number on this page is measured in the converted Zarr store, as of |synced|.
+EEGDash Corpus v0 is the public part of REVE's pretraining corpus, rebuilt from the
+archives and converted: |v0_datasets| datasets, |v0_hours| hours, |v0_subjects|
+subjects. Every number on this page is measured in the converted Zarr store, as of
+|synced|; :ref:`corpus-download` says how to get it.
 
 In numbers
 ==========
 
 .. corpus-figure:: v0-kpis
+
+.. _corpus-download:
+
+Download
+========
+
+EEGDash Corpus v0 comes in two forms: the converted Zarr store, ready for training, and
+the raw datasets it was converted from, fetched through EEGDash. The corpus table,
+:download:`eegdash-corpus-v0.csv </_static/corpus_generated/eegdash-corpus-v0.csv>`,
+lists the |v0_datasets| datasets, one row each: the dataset id, EEGDash's id for it,
+the name, paradigm and archive, subjects, sessions, hours, mean channel count, native
+sampling rate, size of the raw copy, licence and the terms it sets. It is the input of
+the raw download.
+
+The converted store
+-------------------
+
+The store is published on Hugging Face as a gated dataset repository, |hf_corpus|, at
+tag |v0_tag|.
+
+**Access.** A Hugging Face account that accepted the repository's terms, and a token
+on the machine that downloads (``hf auth login``). Every dataset keeps its own licence
+and the collection has none of its own; ``LICENSES.csv`` in the repository lists them:
+|v0_licences|.
+
+**What it holds.** One Zarr v3 store, ``eegdash-corpus-v0.zarr``, with one group per
+bucket (one dataset and one exact channel set; |v0_buckets| buckets): |v0_samples|
+samples of |recipe_window| seconds at |recipe_sfreq| Hz (|recipe_points| points), in
+float32 microvolts, band-passed |recipe_band| Hz (|v0_capped_band| Hz for the
+|v0_capped| datasets recorded at |v0_capped_rates| Hz) and not normalised, with each
+session's per-channel mean and standard deviation stored beside them and the electrode
+positions in metres. In all |v0_hours| hours from |v0_subjects| subjects, |v0_size|.
+
+**How it was built.** The code that converted the raw datasets into the store and
+trained REVE on it is published in `eegdash/eegdash-corpus
+<https://github.com/eegdash/eegdash-corpus>`__ (BSD-3-Clause), with the records of the
+conversion: the sessions and hours kept per dataset, the recordings skipped and the
+channels dropped.
+
+**Download** everything, or a part with ``--include``:
+
+.. code-block:: bash
+
+   hf download EEGDash/eegdash-corpus-v0 --repo-type dataset --local-dir eegdash-corpus-v0          # everything, 3.6 TB
+   hf download EEGDash/eegdash-corpus-v0 --repo-type dataset --local-dir eegdash-corpus-v0 \
+       --include "eegdash-corpus-v0.zarr/zarr.json" "eegdash-corpus-v0.zarr/0/**"                    # the root and bucket 0
+
+**Load** with ``zarr`` (version 3 or later):
+
+.. code-block:: python
+
+   import numpy as np
+   import zarr  # zarr >= 3
+
+   root = zarr.open_group("eegdash-corpus-v0/eegdash-corpus-v0.zarr", mode="r")
+   print(root.attrs["n_samples"], root.attrs["licences"]["ds004395"])        # 5045111 CC0-1.0
+
+   b = root["0"]
+   print(b.attrs["dataset"], b.attrs["licence"], b.attrs["source"], len(b.attrs["channels"]))
+   x = b["data"][0]                            # (2000, C) float32, µV: one 10-s sample
+   mean, sd = b["stats"][int(b["session"][0])] # its session's per-channel mean and SD
+   z = np.clip((x - mean) / sd, -15, 15)       # REVE's normalisation, applied at load
+   pos = b["positions"][:]                     # (C, 3), metres
+
+   # the permissive subset (CC0, CC BY, CC BY-SA), from the root's index without opening each bucket
+   permissive = {"CC0-1.0", "CC-BY-4.0", "CC-BY-SA-4.0"}
+   keep = [str(r["bucket"]) for r in root.attrs["buckets"] if root.attrs["licences"][r["dataset"]] in permissive]
+
+**Integrity.** ``eegdash-corpus-v0-SHA256SUMS`` holds the SHA-256 of every file
+(|v0_files| files). From the download root, ``sha256sum -c eegdash-corpus-v0-SHA256SUMS``
+checks them (add ``--ignore-missing`` after a partial download). The list's own SHA-256,
+at tag |v0_tag|, is |v0_sums_sha256|.
+
+The raw datasets
+----------------
+
+The raw copy is what the converter turned into the store: the archives' own files,
+fetched through EEGDash into a cache that mirrors each archive's layout. The ids of the
+table are EEGDash's: OpenNeuro datasets ``ds…``, NEMAR datasets ``nm…``. EEGDash serves
+most OpenNeuro datasets from their re-host on NEMAR, ``on…``, and caches them under that
+id; the corpus object follows it, offline too, so the table's ``ds…`` ids work as they
+are. One object, :class:`~eegdash.corpus.EEGDashCorpus`, plans, downloads, verifies and
+reports the whole list, from the command line or from Python.
+
+**Plan.** The files each dataset needs, from EEGDash's catalogue, without downloading:
+
+.. code-block:: bash
+
+   python -m eegdash.corpus plan eegdash-corpus-v0.csv --cache-dir eegdash-cache
+
+One row per dataset: the id it is served under, its state, the files expected and how
+many are present, missing or corrupt, the bytes present and expected, the subjects. A
+dataset the catalogue does not serve, or whose catalogue lists fewer subjects than the
+table, is reported as a problem. Each dataset's plan is written to
+``<cache>/<dataset>/.eegdash/manifest.jsonl``; planned again later, the report's
+``drift`` (``--json report.json``) lists the files the catalogue added or dropped since.
+
+**Download.** A few datasets at a time, smallest first:
+
+.. code-block:: bash
+
+   python -m eegdash.corpus download eegdash-corpus-v0.csv --cache-dir eegdash-cache \
+       --n-jobs 16 --n-datasets 4 --time-budget 21600     # 16 workers over 4 datasets; no new dataset after 6 h
+
+A dataset already complete is skipped after a size check, a file already at its size is
+not fetched again, and the datasets the time budget left out are reported as deferred:
+the same line, run again, moves only what is missing.
+
+**Verify.** Offline, every expected file against its size (``--level size``) or also
+against the archive's checksum (``--level hash``, which reads every file); a dataset
+whose files all pass gets a ``.eegdash/COMPLETE`` marker, removed when one fails:
+
+.. code-block:: bash
+
+   python -m eegdash.corpus verify eegdash-corpus-v0.csv --cache-dir eegdash-cache --level hash
+
+**Status.** Offline and without reading the files, from each dataset's
+``.eegdash/manifest.jsonl`` and ``COMPLETE``:
+
+.. code-block:: bash
+
+   python -m eegdash.corpus status eegdash-corpus-v0.csv --cache-dir eegdash-cache
+
+Every command exits with status 1 when a dataset has a problem, and ``download``,
+``verify`` and ``status`` also when a file is missing. In Python:
+
+.. code-block:: python
+
+   from eegdash.corpus import EEGDashCorpus
+
+   corpus = EEGDashCorpus("eegdash-corpus-v0.csv", cache_dir="eegdash-cache")
+   print(corpus.plan())                                           # the catalogue: files, bytes
+   corpus.download(n_jobs=16, n_datasets=4, time_budget=6 * 3600)
+   print(corpus.verify(level="hash"))                             # sizes, then checksums
+   print(corpus.status())                                         # offline, from the manifests
+   for rec in corpus.records():                                   # every recording, offline
+       raw = rec.raw                                              # an MNE Raw, read on access
 
 Electrode coverage
 ==================
@@ -69,6 +211,8 @@ Native sampling rates
 Paradigms
 ---------
 
+The datasets fall into |v0_paradigms| paradigm groups.
+
 .. corpus-figure:: paradigms
 
 Subjects against hours
@@ -102,19 +246,19 @@ Ages and sex of the subjects, for the datasets whose records state them.
 
 .. corpus-figure:: people
 
-From archive to status
-======================
+From archive to licence
+=======================
 
-Where the hours come from and under which licence: archive, then licence, then status;
-switch the flow width to datasets to see the datasets without hours.
+Where the hours come from and under which licence; switch the flow width to datasets
+to count datasets instead.
 
 .. corpus-figure:: flow-licence
 
 Training budget
 ===============
 
-What one training epoch reads: tokens per dataset, grouped by paradigm, each tile
-shaded by its share of the tokens.
+What one training epoch reads: |v0_tokens| tokens, per dataset, grouped by paradigm,
+each tile shaded by its share of the tokens.
 
 .. corpus-figure:: tokens
 

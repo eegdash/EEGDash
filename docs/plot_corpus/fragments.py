@@ -1,4 +1,5 @@
-"""Write every corpus fragment (``<key>.html``), ``numbers.inc``, ``manifest.json`` and the CSV downloads.
+"""Write every corpus fragment (``<key>.html``), ``numbers.inc``, ``manifest.json`` and the CSV downloads (the two
+table views and the corpus table, ``eegdash-corpus-v0.csv``, copied byte for byte from the data folder).
 
 The RST pages embed a fragment with ``.. corpus-figure:: <key>``; the
 directive validates the key against ``manifest.json``.
@@ -15,44 +16,42 @@ from pathlib import Path
 from . import charts
 from .data import (
     BLOCKED,
-    CONVERTED_V1,
     CSV_COLUMNS,
     DEMOGRAPHIC_COLUMNS,
     EXCLUDED,
     GATED,
     RECORDING_COLUMNS,
-    TO_CONVERT,
-    TO_INGEST,
+    TABLE,
     numbers,
     of_status,
     read_buckets,
     read_electrodes,
     read_optional,
     read_rows,
+    read_table,
     read_unplaced,
+    reason,
     v0_rows,
-    v1_added,
-    v1_pending,
-    v1_rows,
 )  # fmt: skip
 from .electrodes import check_coverage, electrode_svg, electrodes_3d
 from .svg import legend_html, order_toggle
-from .table import COMPACT, table_html
+from .table import DISPLAY_ALL, table_html
 
 FRAGMENT_LIMIT = 200_000  # bytes per fragment
-V0_NAME, V1_NAME = "eegdash-corpus-v0", "eegdash-corpus-v1"
-ADDED = "eegdash-corpus-v1-channels.csv"  # channel sets the v1 store adds to v0 (its buckets v0 lacks); optional
-# Per-dataset recording lengths, recordings and hours per subject, tokens (v1: the added datasets only), and the
-# subjects' ages and sex where known; optional, a chart without its table says so.
-REC_V0, REC_V1 = "eegdash-corpus-v0-recordings.csv", "eegdash-corpus-v1-recordings.csv"
+V0_NAME = "eegdash-corpus-v0"
+BUCKETS = (
+    "eegdash-corpus-v0-channels.csv"  # one row per channel set (bucket) of the v0 store
+)
+# Per-dataset recording lengths, recordings and hours per subject, tokens, and the subjects' ages and sex where
+# known; optional, a chart without its table says so.
+REC_V0 = "eegdash-corpus-v0-recordings.csv"
 DEMOGRAPHICS = "eegdash-corpus-demographics.csv"
 INPUTS = [
     "atlas.csv",
-    "eegdash-corpus-v0-channels.csv",
-    ADDED,
+    BUCKETS,
     REC_V0,
-    REC_V1,
     DEMOGRAPHICS,
+    TABLE,
     "electrodes.json",
     "MANIFEST.json",
 ]
@@ -85,38 +84,29 @@ def build_fragments(
     buckets,
     electrodes,
     synced: str,
-    added=None,
     recordings=None,
-    recordings_v1=None,
     demographics=None,
     unplaced=None,
 ) -> dict[str, tuple[str, str]]:
-    """Key -> (fragment HTML, caption). Pure: no file is read or written. The counts, status charts, roadmap and
-    full table are over every row (the paper's datasets and the release card's entries); the v0 and v1 pages over
-    the rows of their statuses. ``unplaced`` are the channel names the position bank lacks (not drawn, counted in
-    the electrode captions).
+    """Key -> (fragment HTML, caption). Pure: no file is read or written. The counts, the licence chart and the
+    full table are over every row (the paper's datasets and the release card's entries); the v0 page over v0's rows.
+    ``unplaced`` are the channel names the position bank lacks (not drawn, counted in the electrode captions).
     """
-    added, recordings, demographics = added or [], recordings or [], demographics or []
-    rec_v1 = recordings + (
-        recordings_v1 or []
-    )  # the v1 file holds only the datasets v1 adds
-    check_coverage(electrodes, buckets + added, unplaced)
-    v0, v1 = v0_rows(rows), v1_rows(rows)
+    recordings, demographics = recordings or [], demographics or []
+    check_coverage(electrodes, buckets, unplaced)
+    v0 = v0_rows(rows)
     n_ds = len({b["dataset"] for b in buckets})
-    n_ds_v1 = n_ds + len({b["dataset"] for b in added})
     legend_all = legend_html([r["status"] for r in rows])
-    legend_v1 = legend_html(
-        [r["status"] for r in v1]
-    )  # only the statuses v1 holds: no "to ingest" once nothing waits
     out = _Fragments()
     add = out.add
+    # the universe: landing page and introduction
     add("kpis", charts.kpis_universe(rows))
+    add("intro-kpis", charts.kpis_intro(rows))
     add("licences", charts.licences_chart(rows), legend_all)
-    add("progress", charts.progress_html(rows))
-    add("roadmap", charts.roadmap_html(rows, synced))
-    add("flow", charts.flow_svg(rows))
-    add("status", charts.status_svg(rows), legend_all)
-    add("table-all", (table_html(rows, "atlas.csv"), table_all_caption(rows)))
+    add(
+        "table-all",
+        (table_html(rows, "atlas.csv", columns=DISPLAY_ALL), table_all_caption(rows)),
+    )
     # v0
     add("v0-kpis", charts.store_kpis(v0, buckets, electrodes))
     h, c = charts.hours_chart(v0)
@@ -146,92 +136,33 @@ def build_fragments(
             f"The {len(v0)} datasets of {V0_NAME}. Click a header to sort, hover a number for its source.",
         ),
     )
-    # v1
-    new, pending = v1_added(rows), v1_pending(rows)
-    add(
-        "v1-adds-table",
-        (
-            table_html(new, "atlas-v1.csv", columns=COMPACT, controls=False),
-            adds_caption(new, added),
-        ),
-    )
-    add("v1-kpis", charts.store_kpis(v1, buckets + added, electrodes, added=True))
-    add(
-        "electrodes-v1",
-        electrode_svg(
-            electrodes,
-            n_ds_v1,
-            len(buckets) + len(added),
-            added=True,
-            unplaced=unplaced,
-        ),
-    )
-    add(
-        "electrodes-3d-v1",
-        electrodes_3d(
-            electrodes,
-            n_ds_v1,
-            len(buckets) + len(added),
-            added=True,
-            unplaced=unplaced,
-        ),
-    )
-    h, c = charts.hours_chart(v1)
-    add("hours-v1", (order_toggle() + h, c), legend_v1)
-    h, c = charts.channels_chart(v1)
-    add("channels-v1", (order_toggle() + h, c), legend_v1)
-    # every v1 dataset in a store: measured per bucket as on v0; else by each dataset's mean channel count
-    bands_v1 = (
-        charts.channel_bands_rows(v1)
-        if pending
-        else charts.channel_bands_buckets(buckets, added)
-    )
-    add("channel-bands-v1", bands_v1, legend_v1)
-    add("subjects-v1", charts.subjects_chart(v1), legend_v1)
-    add("rates-v1", charts.rates_chart(v1), legend_v1)
-    add("paradigms-v1", charts.paradigms_chart(v1), legend_v1)
-    add("scatter-v1", charts.scatter_chart(v1), legend_v1)
-    add("lengths-v1", charts.lengths_chart(v1, rec_v1), legend_v1)
-    add("per-subject-v1", charts.per_subject_chart(v1, rec_v1), legend_v1)
-    add("people-v1", charts.people_chart(v1, demographics), legend_v1)
-    add("flow-licence-v1", charts.flow_licence_chart(v1), legend_v1)
-    add("tokens-v1", charts.tokens_chart(v1, rec_v1, pending=pending))
-    add("montages-v1", charts.montage_chart(v1, buckets + added, electrodes))
-    add(
-        "table-v1",
-        (
-            table_html(v1, "atlas-v1.csv"),
-            f"The {len(v1)} datasets of {V1_NAME}. Click a header to sort, hover a number for its source.",
-        ),
-    )
     return {k: (figure(k, body, cap, leg), cap) for k, (body, cap, leg) in out.items()}
 
 
 def table_all_caption(rows: list[dict[str, str]]) -> str:
-    """The full table's caption: how many of the datasets tracked will not be converted (blocked, gated, excluded)."""
-    out = len(of_status(rows, BLOCKED, GATED, EXCLUDED))
-    pending = len(v1_pending(rows))
-    wait = f", {pending} more in v1 but in no store yet" if pending else ""
-    return (f"All {len(rows)} datasets tracked (REVE's paper and its release card); {out} of them will not be "
-            f"converted{wait}. Filter by text or by status, click a header to sort, hover a number for its source.")  # fmt: skip
+    """The full table's caption: how many datasets are not in the corpus, and where the reason is."""
+    left = of_status(rows, BLOCKED, GATED, EXCLUDED)
+    if not all(reason(r) for r in left):
+        raise ValueError(
+            f"no reason for {[r['dataset_id'] for r in left if not reason(r)]}"
+        )
+    out = len(left)
+    return (f"All {len(rows)} datasets tracked (REVE's paper and its release card); the {out} not in the corpus "
+            f"say why in the Reason column, and their notes give the detail. Filter by text or by status, click a "
+            f"header to sort, hover a number for its source.")  # fmt: skip
 
 
-def adds_caption(new: list[dict[str, str]], added: list[dict[str, str]]) -> str:
-    """The caption of the table of what v1 adds, each status named only when it holds a dataset."""
-    n = {s: len(of_status(new, s)) for s in (CONVERTED_V1, TO_CONVERT, TO_INGEST)}
-    said = [f"{n[s]} {words}" for s, words in ((CONVERTED_V1, "converted into the v1 store"),
-                                              (TO_CONVERT, "ingested by EEGDash for the next conversion pass"),
-                                              (TO_INGEST, "still to be ingested")) if n[s]]  # fmt: skip
-    conv = {r["dataset_id"] for r in of_status(new, CONVERTED_V1)}
-    sets = [
-        b for b in added if b["dataset"] in conv
-    ]  # summed over the store's buckets, not the rounded rows
-    cap = f"The {len(new)} datasets v1 adds: {', '.join(said) or 'none'}"
-    if sets:
-        cap += f"; {sum(float(b['hours']) for b in sets):,.1f} h in {len(sets)} channel sets, measured in the v1 store"
-    if n[TO_CONVERT] or n[TO_INGEST]:
-        cap += "; the others' numbers come from EEGDash's catalogue"
-    return cap + "."
+def check_table(table: list[dict[str, str]], rows: list[dict[str, str]]) -> None:
+    """The downloadable corpus table lists exactly v0's datasets: a reader who downloads it gets the corpus the
+    pages describe.
+    """
+    have = {r["dataset_id"].strip() for r in table}
+    want = {r["dataset_id"] for r in v0_rows(rows)}
+    if have != want:
+        raise ValueError(
+            f"{TABLE} and atlas.csv's v0 rows differ: only in the table {sorted(have - want)}, "
+            f"only in the atlas {sorted(want - have)}"
+        )
 
 
 def numbers_inc(nums: dict[str, str]) -> str:
@@ -249,25 +180,23 @@ def build(data: Path, out: Path) -> dict:
     meta = json.loads((data / "MANIFEST.json").read_text(encoding="utf-8"))
     synced = meta["synced"]
     rows = read_rows(data / "atlas.csv")
-    buckets = read_buckets(data / "eegdash-corpus-v0-channels.csv")
+    buckets = read_buckets(data / BUCKETS)
     electrodes = read_electrodes(data / "electrodes.json")
     unplaced = read_unplaced(data / "electrodes.json")
-    added = read_buckets(data / ADDED) if (data / ADDED).is_file() else []
     recordings = read_optional(data / REC_V0, RECORDING_COLUMNS)
-    recordings_v1 = read_optional(data / REC_V1, RECORDING_COLUMNS)
     demographics = read_optional(data / DEMOGRAPHICS, DEMOGRAPHIC_COLUMNS)
     frags = build_fragments(
-        rows,
-        buckets,
-        electrodes,
-        synced,
-        added,
-        recordings,
-        recordings_v1,
-        demographics,
-        unplaced,
+        rows, buckets, electrodes, synced, recordings, demographics, unplaced
     )
     out.mkdir(parents=True, exist_ok=True)
+    for stale in out.glob(
+        "*.html"
+    ):  # a fragment no page uses any more (a removed view) is not left behind
+        if stale.stem not in frags:
+            stale.unlink()
+    for stale in out.glob("atlas-*.csv"):
+        if stale.name != "atlas-v0.csv":
+            stale.unlink()
     entries = {}
     for key, (text, cap) in frags.items():
         size = len(text.encode())
@@ -277,21 +206,21 @@ def build(data: Path, out: Path) -> dict:
             )
         (out / f"{key}.html").write_text(text, encoding="utf-8")
         entries[key] = {"file": f"{key}.html", "caption": cap, "bytes": size}
-    for name, sub in (
-        ("atlas.csv", rows),
-        ("atlas-v0.csv", v0_rows(rows)),
-        ("atlas-v1.csv", v1_rows(rows)),
-    ):
+    for name, sub in (("atlas.csv", rows), ("atlas-v0.csv", v0_rows(rows))):
         (out / name).write_text(csv_text(sub), encoding="utf-8")
-    nums = numbers(rows, buckets, electrodes, synced, added)
+    table = read_table(data / TABLE)
+    check_table(table, rows)
+    (out / TABLE).write_bytes(
+        (data / TABLE).read_bytes()
+    )  # the synced file itself: its hash is MANIFEST.json's
+    nums = numbers(rows, buckets, electrodes, synced, recordings)
     (out / "numbers.inc").write_text(numbers_inc(nums), encoding="utf-8")
     manifest = {"about": "Generated by docs/prepare_corpus.py, do not hand-edit.", "synced": synced,
                 "source_commit": meta.get("source_commit", ""), "fragments": entries, "numbers": nums,
-                "rows": {"atlas": len(rows), "v0": len(v0_rows(rows)), "v1": len(v1_rows(rows)),
-                         "buckets": len(buckets), "added": len(added), "electrodes": len(electrodes),
-                         "unplaced": len(unplaced),
-                         "recordings": len(recordings), "recordings_v1": len(recordings_v1),
-                         "demographics": len(demographics)}}  # fmt: skip
+                "rows": {"atlas": len(rows), "v0": len(v0_rows(rows)), "buckets": len(buckets),
+                         "electrodes": len(electrodes), "unplaced": len(unplaced),
+                         "recordings": len(recordings), "demographics": len(demographics),
+                         "table": len(table)}}  # fmt: skip
     (out / "manifest.json").write_text(
         json.dumps(manifest, indent=2, ensure_ascii=False) + "\n", encoding="utf-8"
     )

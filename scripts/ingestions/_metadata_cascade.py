@@ -632,6 +632,25 @@ def _local_edf_channel_names(path: Path) -> list[str] | None:
         return None
 
 
+def _parsed_header_names(md: dict[str, Any]) -> list[str] | None:
+    """A BrainVision/EEGLAB header's channel names, when they are the file's.
+
+    The parsers name channels as MNE does ([Channel Infos] with an escaped
+    comma and ``Ch<n>`` for an empty name; EEGLAB ``chanlocs.labels``). They
+    count only when there is one per channel of the header and no two collide
+    (MNE would rename those). on003702 channels.tsv lists 59 of the vhdr's 64
+    channels (no Fp1, Fpz, M1, M2, EOG); on004917/on005571 add ``Ref`` and
+    ``Gnd``, which are not channels of the file (2026-11-03).
+    """
+    names = [str(n) for n in md.get("ch_names") or []]
+    nchans = md.get("nchans")
+    if not names or len(set(names)) != len(names):
+        return None
+    if nchans is not None and int(nchans) != len(names):
+        return None
+    return names
+
+
 class BinaryParserStep:
     """Step 4: per-extension binary parser via the format registry."""
 
@@ -684,13 +703,14 @@ class BinaryParserStep:
             ("ch_names", ch_before, result.ch_names),
         ):
             result.stamp(PROV_BINARY_PARSER, fname, old, new)
-        if ctx.ext in (".edf", ".bdf") and md.get("ch_names"):
-            if ch_before and len(md["ch_names"]) != len(ch_before):
-                header_names_win(
-                    result,
-                    _local_edf_channel_names(ctx.bids_file_path),
-                    PROV_BINARY_PARSER,
-                )
+        if md.get("ch_names") and ch_before and len(md["ch_names"]) != len(ch_before):
+            if ctx.ext in (".edf", ".bdf"):
+                names = _local_edf_channel_names(ctx.bids_file_path)
+            elif ctx.ext in (".vhdr", ".set"):
+                names = _parsed_header_names(md)
+            else:
+                names = None
+            header_names_win(result, names, PROV_BINARY_PARSER)
 
 
 class SizeArithmeticStep:

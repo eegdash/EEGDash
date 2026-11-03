@@ -224,6 +224,21 @@ jobs:
           
           if ! git diff --cached --quiet; then
             git commit -m "chore: digest ${{ inputs.source_name }} datasets [$(date -u +%Y-%m-%d)]"
-            git pull --rebase origin main
+            # Every source writes digested/BATCH_SUMMARY.json, so two source
+            # pipelines finishing close together conflict on it (2026-11-02:
+            # EEGManyLabs landed 10 min before NEMAR, run 41417085988). Keep
+            # this run's summary; any other conflict still fails the job.
+            if ! git pull --rebase origin main; then
+              conflicts=$(git diff --name-only --diff-filter=U)
+              if [ "$conflicts" != "digested/BATCH_SUMMARY.json" ]; then
+                echo "::error::rebase conflict in: $conflicts"
+                git rebase --abort
+                exit 1
+              fi
+              # During a rebase, --theirs is the commit being replayed (this run).
+              git checkout --theirs digested/BATCH_SUMMARY.json
+              git add digested/BATCH_SUMMARY.json
+              GIT_EDITOR=true git rebase --continue
+            fi
             git push
           fi

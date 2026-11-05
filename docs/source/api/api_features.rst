@@ -24,6 +24,7 @@ Feature API
    eegdash.features.output_types
    eegdash.features.trainable
    eegdash.features.utils
+   eegdash.features.feature_bank.avalanches
    eegdash.features.feature_bank.complexity
    eegdash.features.feature_bank.connectivity
    eegdash.features.feature_bank.csp

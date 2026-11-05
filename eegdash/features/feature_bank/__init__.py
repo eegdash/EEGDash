@@ -5,6 +5,20 @@ feature functions so users can import them directly from
 :mod:`eegdash.features.feature_bank`.
 """
 
+from .avalanches import (
+    StandardizedSignalType,
+    avalanche_alpha_exponent,
+    avalanche_bin_preprocessor,
+    avalanche_branching_parameter,
+    avalanche_dcc,
+    avalanche_detect_preprocessor,
+    avalanche_events_preprocessor,
+    avalanche_exponents_preprocessor,
+    avalanche_gamma_exponent,
+    avalanche_standardize_mad_preprocessor,
+    avalanche_standardize_preprocessor,
+    avalanche_tau_exponent,
+)
 from .complexity import (
     complexity_approx_entropy,
     complexity_detrended_fluctuation_analysis,
@@ -76,6 +90,19 @@ from .spectral import (
 from .utils import preprocessor_as_feature
 
 __all__ = [
+    # Avalanches
+    "StandardizedSignalType",
+    "avalanche_standardize_preprocessor",
+    "avalanche_standardize_mad_preprocessor",
+    "avalanche_events_preprocessor",
+    "avalanche_bin_preprocessor",
+    "avalanche_detect_preprocessor",
+    "avalanche_exponents_preprocessor",
+    "avalanche_branching_parameter",
+    "avalanche_alpha_exponent",
+    "avalanche_tau_exponent",
+    "avalanche_gamma_exponent",
+    "avalanche_dcc",
     # Complexity
     "complexity_entropy_preprocessor",
     "complexity_approx_entropy",

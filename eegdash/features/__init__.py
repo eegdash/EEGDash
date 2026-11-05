@@ -20,8 +20,20 @@ from .decorators import (
     univariate_feature,
 )
 from .extractors import FeatureExtractor
-from .feature_bank import (  # Complexity; Connectivity; CSP; Dimensionality; Signal; Spectral
+from .feature_bank import (  # Avalanches; Complexity; Connectivity; CSP; Dimensionality; Signal; Spectral
     CommonSpatialPattern,
+    StandardizedSignalType,
+    avalanche_alpha_exponent,
+    avalanche_bin_preprocessor,
+    avalanche_branching_parameter,
+    avalanche_dcc,
+    avalanche_detect_preprocessor,
+    avalanche_events_preprocessor,
+    avalanche_exponents_preprocessor,
+    avalanche_gamma_exponent,
+    avalanche_standardize_mad_preprocessor,
+    avalanche_standardize_preprocessor,
+    avalanche_tau_exponent,
     complexity_approx_entropy,
     complexity_detrended_fluctuation_analysis,
     complexity_entropy_preprocessor,
@@ -143,6 +155,19 @@ __all__ = [
     "extract_features",
     "fit_feature_extractors",
     # Feature part
+    # Avalanches
+    "StandardizedSignalType",
+    "avalanche_standardize_preprocessor",
+    "avalanche_standardize_mad_preprocessor",
+    "avalanche_events_preprocessor",
+    "avalanche_bin_preprocessor",
+    "avalanche_detect_preprocessor",
+    "avalanche_exponents_preprocessor",
+    "avalanche_branching_parameter",
+    "avalanche_alpha_exponent",
+    "avalanche_tau_exponent",
+    "avalanche_gamma_exponent",
+    "avalanche_dcc",
     # Complexity
     "complexity_entropy_preprocessor",
     "complexity_approx_entropy",

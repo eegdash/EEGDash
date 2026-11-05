@@ -29,6 +29,7 @@ def test_import_features_submodules():
         "eegdash.features.datasets",
         "eegdash.features.decorators",
         "eegdash.features.feature_bank",
+        "eegdash.features.feature_bank.avalanches",
         "eegdash.features.feature_bank.complexity",
         "eegdash.features.feature_bank.dimensionality",
         "eegdash.features.feature_bank.signal",

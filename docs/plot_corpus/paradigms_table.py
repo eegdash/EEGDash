@@ -19,8 +19,7 @@ def paradigm_summary(rows, buckets, recordings):
     if len(records) != len(recordings):
         raise ValueError("duplicate dataset ids in the recording table")
     have_tokens = bool(rows) and all(
-        r["dataset_id"] in records and records[r["dataset_id"]]["tokens"]
-        for r in rows
+        r["dataset_id"] in records and records[r["dataset_id"]]["tokens"] for r in rows
     )
     hours = {}
     for bucket in buckets:
@@ -42,12 +41,17 @@ def paradigm_summary(rows, buckets, recordings):
     result.sort(key=lambda r: (-r["hours"], r["paradigm"]))
     if not result:
         return []
-    total = {key: sum(r[key] for r in result) for key in ("datasets", "subjects", "hours", "tokens")}
+    total = {
+        key: sum(r[key] for r in result)
+        for key in ("datasets", "subjects", "hours", "tokens")
+    }
     result.append(dict(paradigm="Total", **total))
     for row in result:
         row["pct_hours"] = 100 * row["hours"] / total["hours"] if total["hours"] else 0
         row["pct_tokens"] = (
-            100 * row["tokens"] / total["tokens"] if have_tokens and total["tokens"] else None
+            100 * row["tokens"] / total["tokens"]
+            if have_tokens and total["tokens"]
+            else None
         )
     return result
 
@@ -55,10 +59,13 @@ def paradigm_summary(rows, buckets, recordings):
 def summary_cells(row):
     """The paper table's rounding: integer hours, billion tokens, 0.1% shares."""
     return [
-        row["paradigm"], f'{row["datasets"]:,}', f'{row["subjects"]:,}',
-        f'{row["hours"]:,.0f}', f'{row["pct_hours"]:.1f}',
-        f'{row["tokens"] / 1e9:.2f}' if row["pct_tokens"] is not None else "—",
-        f'{row["pct_tokens"]:.1f}' if row["pct_tokens"] is not None else "—",
+        row["paradigm"],
+        f"{row['datasets']:,}",
+        f"{row['subjects']:,}",
+        f"{row['hours']:,.0f}",
+        f"{row['pct_hours']:.1f}",
+        f"{row['tokens'] / 1e9:.2f}" if row["pct_tokens"] is not None else "—",
+        f"{row['pct_tokens']:.1f}" if row["pct_tokens"] is not None else "—",
     ]
 
 
@@ -67,14 +74,22 @@ def paradigms_table_html(rows, buckets, recordings):
     summary = paradigm_summary(rows, buckets, recordings)
     if not summary:
         return missing("paradigm data")
-    headers = ("Paradigm", "Datasets", "Subjects", "Hours", "Hours (%)", "Tokens (B)", "Tokens (%)")
+    headers = (
+        "Paradigm",
+        "Datasets",
+        "Subjects",
+        "Hours",
+        "Hours (%)",
+        "Tokens (B)",
+        "Tokens (%)",
+    )
     head = "".join(f'<th scope="col">{h}</th>' for h in headers)
     body = []
     for row in summary:
         values = summary_cells(row)
         cells = [f'<th scope="row">{html.escape(values[0])}</th>']
         cells.extend(f'<td class="corpus-n">{html.escape(v)}</td>' for v in values[1:])
-        body.append(f'<tr>{"".join(cells)}</tr>')
+        body.append(f"<tr>{''.join(cells)}</tr>")
     caption = (
         "The corpus by paradigm, ordered by hours. Hours and token shares use unrounded totals; "
         "subjects are summed across datasets. Tokens per epoch: 11 patches per channel in each "
@@ -85,6 +100,6 @@ def paradigms_table_html(rows, buckets, recordings):
     return (
         '<div class="corpus-table-wrap" tabindex="0" role="region" aria-label="Corpus by paradigm">'
         f'<table class="corpus-table corpus-paradigm-table"><thead><tr>{head}</tr></thead>'
-        f'<tbody>{"".join(body[:-1])}</tbody><tfoot>{body[-1]}</tfoot></table></div>',
+        f"<tbody>{''.join(body[:-1])}</tbody><tfoot>{body[-1]}</tfoot></table></div>",
         caption,
     )

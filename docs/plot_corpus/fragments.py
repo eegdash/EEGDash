@@ -122,7 +122,9 @@ def build_fragments(
     add("subjects", charts.subjects_chart(v0))
     add("rates", charts.rates_chart(v0))
     add("paradigms", charts.paradigms_chart(v0))
-    add("paradigms-table", paradigms_table.paradigms_table_html(v0, buckets, recordings))
+    add(
+        "paradigms-table", paradigms_table.paradigms_table_html(v0, buckets, recordings)
+    )
     add("scatter", charts.scatter_chart(v0))
     add("lengths", charts.lengths_chart(v0, recordings))
     add("per-subject", charts.per_subject_chart(v0, recordings))

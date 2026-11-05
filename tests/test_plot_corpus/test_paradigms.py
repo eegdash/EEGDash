@@ -8,7 +8,11 @@ import re
 
 import pytest
 from plot_corpus.data import v0_rows
-from plot_corpus.paradigms_table import paradigm_summary, paradigms_table_html, summary_cells
+from plot_corpus.paradigms_table import (
+    paradigm_summary,
+    paradigms_table_html,
+    summary_cells,
+)
 
 from .conftest import DOCS
 from .test_snapshot import committed
@@ -53,19 +57,42 @@ def test_committed_paradigm_totals_and_rendered_cells():
         ids = {r["dataset_id"] for r in members}
         assert row["datasets"] == counts[row["paradigm"]]
         assert row["subjects"] == sum(int(r["n_subjects"]) for r in members)
-        assert row["hours"] == pytest.approx(sum(float(b["hours"]) for b in buckets if b["dataset"] in ids))
-        assert row["tokens"] == sum(int(r["tokens"]) for r in recordings if r["dataset_id"] in ids)
-    assert summary_cells(summary[-1]) == ["Total", "77", "7,272", "14,075", "100.0", "6.21", "100.0"]
-    assert summary_cells(summary[0]) == ["memory & cognition", "5", "510", "9,659", "68.6", "4.79", "77.2"]
+        assert row["hours"] == pytest.approx(
+            sum(float(b["hours"]) for b in buckets if b["dataset"] in ids)
+        )
+        assert row["tokens"] == sum(
+            int(r["tokens"]) for r in recordings if r["dataset_id"] in ids
+        )
+    assert summary_cells(summary[-1]) == [
+        "Total",
+        "77",
+        "7,272",
+        "14,075",
+        "100.0",
+        "6.21",
+        "100.0",
+    ]
+    assert summary_cells(summary[0]) == [
+        "memory & cognition",
+        "5",
+        "510",
+        "9,659",
+        "68.6",
+        "4.79",
+        "77.2",
+    ]
     assert sum(r["pct_hours"] for r in summary[:-1]) == pytest.approx(100)
     assert sum(r["pct_tokens"] for r in summary[:-1]) == pytest.approx(100)
     body, _ = paradigms_table_html(v0, buckets, recordings)
     rendered = [
-        [html.unescape(re.sub("<[^>]+>", "", c)) for c in re.findall(r"<t[dh][^>]*>(.*?)</t[dh]>", row)]
+        [
+            html.unescape(re.sub("<[^>]+>", "", c))
+            for c in re.findall(r"<t[dh][^>]*>(.*?)</t[dh]>", row)
+        ]
         for row in re.findall(r"<tr>(.*?)</tr>", body)[1:]
     ]
     assert rendered == [summary_cells(r) for r in summary]
-    assert '<tfoot>' in body and 'scope="row"' in body
+    assert "<tfoot>" in body and 'scope="row"' in body
 
 
 def test_docs_use_named_python_api_but_do_not_claim_named_cli_support():
@@ -73,7 +100,9 @@ def test_docs_use_named_python_api_but_do_not_claim_named_cli_support():
         text = (DOCS / f"source/corpus/{page}.rst").read_text()
         assert "from eegdash import EEGDashCorpus" in text
         assert 'EEGDashCorpus("eegdash-corpus-v0",' in text
-        assert not re.search(r"python -m eegdash.corpus \w+ eegdash-corpus-v0(?:\s|$)", text)
+        assert not re.search(
+            r"python -m eegdash.corpus \w+ eegdash-corpus-v0(?:\s|$)", text
+        )
     text = (DOCS / "source/corpus/v0.rst").read_text()
-    assert 'without_nc_gpl = ' in text and 'permissive' not in text
-    assert 'CC BY-SA retains its share-alike terms' in text
+    assert "without_nc_gpl = " in text and "permissive" not in text
+    assert "CC BY-SA retains its share-alike terms" in text

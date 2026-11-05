@@ -78,17 +78,23 @@ download it whole (|v0_size|) or in parts with ``--include``, and open it with `
    import zarr  # zarr >= 3
    root = zarr.open_group("eegdash-corpus-v0/eegdash-corpus-v0.zarr", mode="r")
 
-**Every raw dataset of the corpus.** The raw files the store was converted from, as the
-archives hold them, through EEGDash. The corpus table, ``eegdash-corpus-v0.csv`` (a
-download on the v0 page), lists the datasets, and one object,
-:class:`~eegdash.corpus.EEGDashCorpus`, plans the files from the catalogue, downloads
-them a few datasets at a time, verifies the cache by size or checksum, and reports;
-from the command line, ``python -m eegdash.corpus`` with ``plan``, ``download``,
-``verify`` or ``status``:
+**Every raw dataset of the corpus.** Fetch the archives' own files through
+:class:`~eegdash.corpus.EEGDashCorpus`, not the converted Zarr store. The list of
+datasets ships with EEGDash, so no extra CSV download is needed:
 
-.. code-block:: bash
+.. code-block:: python
 
-   python -m eegdash.corpus download eegdash-corpus-v0.csv --cache-dir eegdash-cache --n-jobs 16 --n-datasets 4
+   from eegdash import EEGDashCorpus
+
+   corpus = EEGDashCorpus("eegdash-corpus-v0", cache_dir="eegdash-cache")
+   print(corpus.plan())
+   corpus.download(n_jobs=16, n_datasets=4)
+
+The object plans files from the catalogue, downloads a few datasets at a time,
+verifies the cache by size or checksum, and reports its status. A custom CSV with a
+``dataset_id`` column works too. The command-line interface currently takes a CSV
+path or comma-separated ids rather than a corpus name; :ref:`corpus-download` gives
+those commands and the optional CSV download.
 
 **One raw dataset.** Any dataset of the tables, by its EEGDash id, as an
 :class:`~eegdash.api.EEGDashDataset` whose recordings download when first read (here

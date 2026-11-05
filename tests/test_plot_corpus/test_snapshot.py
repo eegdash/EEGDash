@@ -343,7 +343,7 @@ def test_download_section():
         '--include "eegdash-corpus-v0.zarr/zarr.json" "eegdash-corpus-v0.zarr/0/**"',
         'root = zarr.open_group("eegdash-corpus-v0/eegdash-corpus-v0.zarr", mode="r")',
         "z = np.clip((x - mean) / sd, -15, 15)",
-        'permissive = {"CC0-1.0", "CC-BY-4.0", "CC-BY-SA-4.0"}',
+        'without_nc_gpl = {"CC0-1.0", "CC-BY-4.0", "CC-BY-SA-4.0"}',
         "sha256sum -c eegdash-corpus-v0-SHA256SUMS",
         TABLE_LINK,
         CODE_URL,
@@ -351,7 +351,7 @@ def test_download_section():
         "--n-jobs 16 --n-datasets 4 --time-budget 21600",
         "python -m eegdash.corpus verify eegdash-corpus-v0.csv --cache-dir eegdash-cache --level hash",
         "python -m eegdash.corpus status eegdash-corpus-v0.csv --cache-dir eegdash-cache",
-        'corpus = EEGDashCorpus("eegdash-corpus-v0.csv", cache_dir="eegdash-cache")',
+        'corpus = EEGDashCorpus("eegdash-corpus-v0", cache_dir="eegdash-cache")',
         "|v0_tag|",
     ):
         assert line in section, line
@@ -366,7 +366,8 @@ def test_download_section():
     for line in (
         "hf download EEGDash/eegdash-corpus-v0 --repo-type dataset --local-dir eegdash-corpus-v0",
         'root = zarr.open_group("eegdash-corpus-v0/eegdash-corpus-v0.zarr", mode="r")',
-        "python -m eegdash.corpus download eegdash-corpus-v0.csv --cache-dir eegdash-cache",
+        'from eegdash import EEGDashCorpus',
+        'corpus = EEGDashCorpus("eegdash-corpus-v0", cache_dir="eegdash-cache")',
         'EEGDashDataset(dataset="nm000138", cache_dir="eegdash-cache")',
         ":ref:`corpus-download`",
     ):

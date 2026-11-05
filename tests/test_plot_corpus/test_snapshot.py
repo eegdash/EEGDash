@@ -366,7 +366,7 @@ def test_download_section():
     for line in (
         "hf download EEGDash/eegdash-corpus-v0 --repo-type dataset --local-dir eegdash-corpus-v0",
         'root = zarr.open_group("eegdash-corpus-v0/eegdash-corpus-v0.zarr", mode="r")',
-        'from eegdash import EEGDashCorpus',
+        "from eegdash import EEGDashCorpus",
         'corpus = EEGDashCorpus("eegdash-corpus-v0", cache_dir="eegdash-cache")',
         'EEGDashDataset(dataset="nm000138", cache_dir="eegdash-cache")',
         ":ref:`corpus-download`",

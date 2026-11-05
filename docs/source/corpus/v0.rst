@@ -34,8 +34,9 @@ the raw datasets it was converted from, fetched through EEGDash. The corpus tabl
 :download:`eegdash-corpus-v0.csv </_static/corpus_generated/eegdash-corpus-v0.csv>`,
 lists the |v0_datasets| datasets, one row each: the dataset id, EEGDash's id for it,
 the name, paradigm and archive, subjects, sessions, hours, mean channel count, native
-sampling rate, size of the raw copy, licence and the terms it sets. It is the input of
-the raw download.
+sampling rate, size of the raw copy, licence and the terms it sets. This table ships
+with EEGDash: use the name ``"eegdash-corpus-v0"`` in Python, with no separate CSV
+download. The object fetches the raw archive files, not the converted Zarr store.
 
 The converted store
 -------------------
@@ -87,9 +88,12 @@ channels dropped.
    z = np.clip((x - mean) / sd, -15, 15)       # REVE's normalisation, applied at load
    pos = b["positions"][:]                     # (C, 3), metres
 
-   # the permissive subset (CC0, CC BY, CC BY-SA), from the root's index without opening each bucket
-   permissive = {"CC0-1.0", "CC-BY-4.0", "CC-BY-SA-4.0"}
-   keep = [str(r["bucket"]) for r in root.attrs["buckets"] if root.attrs["licences"][r["dataset"]] in permissive]
+   # the subset without NC/GPL licences (CC0, CC BY, CC BY-SA), from the root's index
+   without_nc_gpl = {"CC0-1.0", "CC-BY-4.0", "CC-BY-SA-4.0"}
+   keep = [str(r["bucket"]) for r in root.attrs["buckets"] if root.attrs["licences"][r["dataset"]] in without_nc_gpl]
+
+CC BY still requires attribution and CC BY-SA retains its share-alike terms; this
+filter does not replace any dataset's licence.
 
 **Integrity.** ``eegdash-corpus-v0-SHA256SUMS`` holds the SHA-256 of every file
 (|v0_files| files). From the download root, ``sha256sum -c eegdash-corpus-v0-SHA256SUMS``
@@ -105,7 +109,13 @@ table are EEGDash's: OpenNeuro datasets ``ds…``, NEMAR datasets ``nm…``. EEG
 most OpenNeuro datasets from their re-host on NEMAR, ``on…``, and caches them under that
 id; the corpus object follows it, offline too, so the table's ``ds…`` ids work as they
 are. One object, :class:`~eegdash.corpus.EEGDashCorpus`, plans, downloads, verifies and
-reports the whole list, from the command line or from Python.
+reports the whole list, from the command line or from Python. A path to a CSV
+with a ``dataset_id`` column works too, for a custom corpus.
+
+The Python interface accepts the shipped name directly; the current command-line
+interface accepts a CSV path or comma-separated dataset ids, not a corpus name.
+For the CLI commands below, first save the optional corpus table linked above as
+``eegdash-corpus-v0.csv``. No separate table is needed for the Python example.
 
 **Plan.** The files each dataset needs, from EEGDash's catalogue, without downloading:
 
@@ -151,15 +161,25 @@ Every command exits with status 1 when a dataset has a problem, and ``download``
 
 .. code-block:: python
 
-   from eegdash.corpus import EEGDashCorpus
+   from eegdash import EEGDashCorpus
 
-   corpus = EEGDashCorpus("eegdash-corpus-v0.csv", cache_dir="eegdash-cache")
+   corpus = EEGDashCorpus("eegdash-corpus-v0", cache_dir="eegdash-cache")
    print(corpus.plan())                                           # the catalogue: files, bytes
    corpus.download(n_jobs=16, n_datasets=4, time_budget=6 * 3600)
    print(corpus.verify(level="hash"))                             # sizes, then checksums
    print(corpus.status())                                         # offline, from the manifests
    for rec in corpus.records():                                   # every recording, offline
        raw = rec.raw                                              # an MNE Raw, read on access
+
+For a custom list, pass dataset ids or a CSV you maintain:
+
+.. code-block:: python
+
+   subset = EEGDashCorpus(["ds004395", "nm000138"], cache_dir="eegdash-cache")
+   custom = EEGDashCorpus("my-corpus.csv", cache_dir="eegdash-cache")
+
+The CSV needs a ``dataset_id`` column; an optional ``n_subjects`` column is checked
+against the catalogue during planning.
 
 Electrode coverage
 ==================
@@ -214,6 +234,16 @@ Paradigms
 The datasets fall into |v0_paradigms| paradigm groups.
 
 .. corpus-figure:: paradigms
+
+.. _corpus-paradigm-summary:
+
+Paradigm summary
+~~~~~~~~~~~~~~~
+
+The full breakdown behind the chart: dataset and subject counts, hours, tokens per
+epoch and their shares. Hours are summed from the channel-set buckets before rounding.
+
+.. corpus-figure:: paradigms-table
 
 Subjects against hours
 ----------------------

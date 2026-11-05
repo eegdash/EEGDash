@@ -476,3 +476,11 @@ def test_catalogue_drift_withdraws_complete(tmp_path, archive, s3):
     assert drift["removed"] == [DEP.format(s="02"), RAW.format(s="02")]
     assert corpus.status().datasets[0].state == "partial"
     assert corpus.download(n_jobs=1).ok
+
+
+def test_named_corpus(tmp_path):
+    corpus = EEGDashCorpus("eegdash-corpus-v0", cache_dir=tmp_path)
+    assert len(corpus.ids) == 77 and "ds004395" in corpus.ids
+    assert corpus.table.loc["ds004395", "n_subjects"] == "364"
+    with pytest.raises(ValueError, match="neither a file nor a corpus"):
+        EEGDashCorpus("eegdash-corpus-v9", cache_dir=tmp_path)

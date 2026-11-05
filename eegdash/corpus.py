@@ -9,7 +9,7 @@ files are fetched by :meth:`EEGDashDataset.download_all`, exactly as for one
 dataset; this module adds the list of expected files per dataset, a check of
 the cache against it, and a report::
 
-    corpus = EEGDashCorpus(["ds004395", "nm000289"], cache_dir="/data/cache")
+    corpus = EEGDashCorpus("eegdash-corpus-v0")   # a named corpus: its 77 datasets
     corpus.plan()                        # catalogue only: files, bytes, drift
     corpus.download(n_jobs=16, n_datasets=4, time_budget=6 * 3600)
     corpus.verify(level="hash")          # sizes, then git-annex hashes
@@ -54,6 +54,7 @@ _MANIFEST = Path(".eegdash", "manifest.jsonl")
 _COMPLETE = Path(".eegdash", "COMPLETE")
 _OK = ("present", "absent")
 _COUNTED = ("files", "present", "absent", "missing", "corrupt", "incomplete")
+_CORPORA = Path(__file__).parent / "corpora"  # <name>.csv: the named corpora
 
 
 def _read_manifest(root: Path) -> tuple[dict, dict[str, dict]]:
@@ -259,8 +260,9 @@ class EEGDashCorpus:
     Parameters
     ----------
     source : str | Path | Sequence[str]
-        Dataset ids, or the path of a CSV with a ``dataset_id`` column (an
-        ``n_subjects`` column is checked against the catalogue when present).
+        The name of a released corpus (``"eegdash-corpus-v0"``), dataset ids,
+        or the path of a CSV with a ``dataset_id`` column (an ``n_subjects``
+        column is checked against the catalogue when present).
     cache_dir : str | Path | None
         As for :class:`EEGDashDataset` (``EEGDASH_CACHE_DIR``, else
         ``./.eegdash_cache``).
@@ -277,6 +279,12 @@ class EEGDashCorpus:
         cache_dir: str | Path | None = None,
         eeg_dash_instance: Any = None,
     ):
+        if isinstance(source, str) and not Path(source).is_file():
+            named = _CORPORA / f"{source}.csv"
+            if not named.is_file():
+                known = sorted(p.stem for p in _CORPORA.glob("*.csv"))
+                raise ValueError(f"{source!r} is neither a file nor a corpus: {known}")
+            source = named
         if isinstance(source, (str, Path)):
             table = pd.read_csv(source, dtype=str, keep_default_na=False)
             if "dataset_id" not in table.columns:

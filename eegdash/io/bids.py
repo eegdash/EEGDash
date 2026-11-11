@@ -28,6 +28,11 @@ main 085e309 as of 2026-10-18); the upstream PRs are still to be written:
   neural channels start 0.1-0.2 s after its aux channels) sets
   ``raw._eegdash_lead_s``; events.tsv onsets, counted from the earliest start,
   are moved back by as much so they stay on the same samples.
+- fNIRS channel types: of the BIDS fNIRS types, MNE-BIDS maps only
+  ``NIRSCWAMPLITUDE`` (and ``NIRS``) to an MNE type, so channels.tsv
+  ``NIRSCWHBO``, ``NIRSCWHBR`` and ``NIRSCWOPTICALDENSITY`` (nm000641,
+  nm000714) turn the ``hbo``, ``hbr`` and ``fnirs_od`` channels of MNE's SNIRF
+  reader into ``misc``. They map to those MNE types; samples are unchanged.
 
 Several ``space-`` electrodes files matching a recording equally well (nm000485
 ``space-Other`` and ``space-Talairach``) make MNE-BIDS read no positions, and
@@ -61,6 +66,13 @@ _RESERVED = ("onset", "duration", "description", "ch_names", "hed_string")
 _orig_make_annotation_kwargs = _read._make_annotation_kwargs
 _orig_handle_participants_reading = _read._handle_participants_reading
 _orig_find_matching_sidecar = _read._find_matching_sidecar
+_orig_get_ch_type_mapping = _read._get_ch_type_mapping
+# BIDS channels.tsv types MNE-BIDS 0.20 leaves without an MNE type.
+NIRS_CH_TYPES = {
+    "NIRSCWHBO": "hbo",
+    "NIRSCWHBR": "hbr",
+    "NIRSCWOPTICALDENSITY": "fnirs_od",
+}
 _skip_events = ContextVar("eegdash_skip_events_tsv", default=False)
 _lead_s = ContextVar("eegdash_events_lead_s", default=0.0)
 
@@ -78,6 +90,13 @@ def _make_annotation_kwargs(*args, **kwargs):
             for extra in info["extras"]
         ]
     return info, rows
+
+
+def _get_ch_type_mapping(*args, **kwargs):
+    mapping = _orig_get_ch_type_mapping(*args, **kwargs)
+    if kwargs.get("to", args[1] if len(args) > 1 else None) == "mne":  # BIDS -> MNE
+        mapping = {**NIRS_CH_TYPES, **mapping}  # MNE-BIDS's own entries win
+    return mapping
 
 
 def _handle_events_reading(handle, events_fname, raw, **kwargs):
@@ -207,6 +226,9 @@ def fixes():
         )
         stack.enter_context(
             mock.patch.object(_read, "_find_matching_sidecar", _find_matching_sidecar)
+        )
+        stack.enter_context(
+            mock.patch.object(_read, "_get_ch_type_mapping", _get_ch_type_mapping)
         )
         stack.enter_context(
             mock.patch.object(_tsv_handler, "_detect_file_encoding", tsv_encoding)

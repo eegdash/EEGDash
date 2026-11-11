@@ -125,3 +125,58 @@ def test_snirf_td_moments_through_mne_bids(tmp_path):
 
 def test_snirf_in_table():
     assert get_reader(".snirf") is read_raw_snirf
+
+
+def _write_processed_snirf(path, *, labels=("HbO", "HbR"), wavelengths=(760.0, 850.0)):
+    meta = {
+        "SubjectID": b"01",
+        "MeasurementDate": b"2026-03-04",
+        "MeasurementTime": b"10:03:03",
+        "LengthUnit": b"mm",
+        "TimeUnit": b"s",
+        "FrequencyUnit": b"Hz",
+    }
+    n_ch = len(labels)
+    with h5py.File(path, "w") as f:
+        f.create_dataset("formatVersion", data=b"1.1")
+        for key, value in meta.items():
+            f.create_dataset(f"nirs/metaDataTags/{key}", data=value)
+        if wavelengths is not None:
+            f.create_dataset("nirs/probe/wavelengths", data=np.array(wavelengths, dtype=float))
+        f.create_dataset("nirs/probe/sourcePos3D", data=[[0.0, 80.0, 0.0]])
+        f.create_dataset("nirs/probe/detectorPos3D", data=[[30.0, 80.0, 0.0]])
+        data = np.arange(N_TIMES * n_ch, dtype=float).reshape(N_TIMES, n_ch) + 1
+        f.create_dataset("nirs/data1/dataTimeSeries", data=data)
+        f.create_dataset("nirs/data1/time", data=np.arange(N_TIMES) / SFREQ)
+        for i, label in enumerate(labels):
+            ml = f.create_group(f"nirs/data1/measurementList{i + 1}")
+            ml.create_dataset("sourceIndex", data=1)
+            ml.create_dataset("detectorIndex", data=1)
+            ml.create_dataset("wavelengthIndex", data=1)
+            ml.create_dataset("dataType", data=99999)
+            ml.create_dataset("dataTypeIndex", data=1)
+            ml.create_dataset("dataTypeLabel", data=label.encode("utf-8"))
+    return path
+
+
+def test_snirf_single_chromophore(tmp_path):
+    """MNE requires HbO/HbR pairs in Raw constructor; single-chromophore files read under tolerant."""
+    fname = _write_processed_snirf(tmp_path / "single_hbo.snirf", labels=("HbO",), wavelengths=(760.0, 850.0))
+    with pytest.raises(ValueError, match="At least two chromophore"):
+        mne.io.read_raw_snirf(fname)
+    raw = read_raw_snirf(fname)
+    assert raw.ch_names == ["S1_D1 hbo"]
+    assert raw.get_channel_types() == ["hbo"]
+    assert raw.get_data().shape == (1, N_TIMES)
+
+
+def test_snirf_processed_missing_wavelengths(tmp_path):
+    """Processed HbO/HbR files lacking probe wavelengths read cleanly under tolerant."""
+    for case, wl in [("absent", None), ("empty", [])]:
+        fname = _write_processed_snirf(tmp_path / f"no_wavelengths_{case}.snirf", labels=("HbO", "HbR"), wavelengths=wl)
+        with pytest.raises((RuntimeError, TypeError)):
+            mne.io.read_raw_snirf(fname)
+        raw = read_raw_snirf(fname)
+        assert raw.ch_names == ["S1_D1 hbo", "S1_D1 hbr"]
+        assert raw.get_channel_types() == ["hbo", "hbr"]
+        assert raw.get_data().shape == (2, N_TIMES)

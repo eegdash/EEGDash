@@ -23,7 +23,6 @@ from mne_bids.utils import _get_ch_type_mapping
 
 from eegdash.dataset.base import EEGDashRaw
 from eegdash.io import tolerant
-from eegdash.io.bids import NIRS_CH_TYPES
 
 SFREQ, N_TIMES = 8.0, 30  # 1 / 8 is exact in binary
 RELPATH = "sub-01/nirs/sub-01_task-rest_nirs.snirf"
@@ -128,7 +127,8 @@ def test_mapping_only_adds_types():
         to_bids = mne_bids_read._get_ch_type_mapping("mne", "bids")
         assert patched == mne_bids_read._get_ch_type_mapping("bids", to="mne")
     assert {k: patched[k] for k in stock} == stock
-    assert {k: patched[k] for k in NIRS_CH_TYPES} == NIRS_CH_TYPES
+    nirs = {"NIRSCWHBO": "hbo", "NIRSCWHBR": "hbr", "NIRSCWOPTICALDENSITY": "fnirs_od"}
+    assert {k: patched.get(k) for k in nirs} == nirs
     assert to_bids == _get_ch_type_mapping("mne", "bids")
     assert mne_bids_read._get_ch_type_mapping("bids", "mne") == stock
 

@@ -365,15 +365,19 @@ def _fetch_dataset_details_from_api(dataset_id: str) -> dict[str, object]:
 # Suffixes the BIDS spec defines for the modality-specific sidecars the
 # editorial field-card lists ("events · channels · electrodes · coordsystem").
 # These match against the trailing path segment of each storage.dep_key.
+# fNIRS recordings carry ``*_nirs.json`` and ``*_optodes.tsv`` (the optode
+# positions, the fNIRS counterpart of ``*_electrodes.tsv``).
 _SIDECAR_SUFFIXES = {
     "events.tsv": "events",
     "events.json": "events.json",
     "channels.tsv": "channels",
     "electrodes.tsv": "electrodes",
+    "optodes.tsv": "optodes",
     "coordsystem.json": "coordsystem",
     "eeg.json": "eeg.json",
     "meg.json": "meg.json",
     "ieeg.json": "ieeg.json",
+    "nirs.json": "nirs.json",
     "physio.tsv": "physio",
     "stim.tsv": "stim",
 }
@@ -385,10 +389,12 @@ _SIDECAR_RENDER_ORDER = (
     "events.json",
     "channels",
     "electrodes",
+    "optodes",
     "coordsystem",
     "eeg.json",
     "meg.json",
     "ieeg.json",
+    "nirs.json",
     "physio",
     "stim",
 )

@@ -347,6 +347,18 @@ def _fetch_dataset_details_from_api(dataset_id: str) -> dict[str, object]:
     details["github_url"] = _clean_value(external_links.get("github_url"))
     details["osf_url"] = _clean_value(external_links.get("osf_url"))
 
+    # The paper DOI from the source catalogue (NEMAR's DataCite related
+    # identifiers, OpenNeuro's associatedPaperDOI) already drives the
+    # field card's "Read paper" action; give the provenance strip's "Paper"
+    # link the same target.
+    paper_doi = _normalize_doi(details["associated_paper_doi"])
+    if not details["paper_url"] and paper_doi:
+        details["paper_url"] = (
+            paper_doi
+            if paper_doi.lower().startswith(("http://", "https://"))
+            else f"https://doi.org/{paper_doi}"
+        )
+
     # Some NEMAR-ingested datasets never populate ``external_links.paper_url``
     # even though the README ships a ``[![Paper DOI](...)](https://doi.org/…)``
     # badge. The lede block already turns that badge into a visible link, so

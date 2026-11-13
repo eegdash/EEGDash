@@ -262,6 +262,54 @@ def _read_participants_demographics(
     return subjects_count, ages, sex_distribution, handedness_distribution
 
 
+# A DOI value: "10.1234/abc", "doi:10.1234/abc" or "https://doi.org/10.1234/abc".
+_DOI_PREFIX_RE = re.compile(
+    r"^(?:doi:\s*|https?://(?:dx\.|www\.)?doi\.org/)", re.IGNORECASE
+)
+_DOI_RE = re.compile(r"10\.\d{4,9}/\S+")
+# Separator before a second DOI in a list ("10.1/a, doi:10.2/b").
+_DOI_LIST_SEP_RE = re.compile(
+    r"[\s,;]+(?=(?:doi:\s*|https?://(?:dx\.|www\.)?doi\.org/)?10\.\d{4,9}/)",
+    re.IGNORECASE,
+)
+
+
+def _bare_doi(value: object) -> str | None:
+    """Return the DOI ``value`` holds, without prefix, or None.
+
+    The value must be a DOI, optionally prefixed with ``doi:`` or a doi.org
+    URL; of a list of DOIs the first is kept. Free text, other URLs (a
+    publisher page that embeds a DOI) and anything else give None, so a page
+    never links to a made-up DOI.
+    """
+    if not isinstance(value, str):
+        return None
+    text = _DOI_PREFIX_RE.sub("", value.strip())
+    doi = _DOI_LIST_SEP_RE.split(text, maxsplit=1)[0].rstrip(".,; ")
+    for close, open_ in ((")", "("), ("]", "[")):
+        while doi.endswith(close) and doi.count(close) > doi.count(open_):
+            doi = doi[:-1]
+    return doi if _DOI_RE.fullmatch(doi) else None
+
+
+def _paper_doi_from_manifest(metadata: dict, dataset_doi: object) -> str | None:
+    """Return the paper DOI the stage-1 fetcher found for this dataset.
+
+    The manifest carries the stage-1 document's ``associated_paper_doi``:
+    for NEMAR, the first DataCite related identifier with a paper relation
+    (``_PAPER_RELATIONS`` in ``1_fetch_sources/nemar.py``); for OpenNeuro,
+    ``associatedPaperDOI``. Values holding no DOI, and the dataset's own DOI,
+    give None.
+    """
+    doi = _bare_doi(metadata.get("associated_paper_doi"))
+    if doi is None:
+        return None
+    own_doi = _bare_doi(dataset_doi)
+    if own_doi is not None and own_doi.lower() == doi.lower():
+        return None
+    return doi
+
+
 _BIDS_GLOBAL_FILES: tuple[str, ...] = (
     "participants.tsv",
     "participants.json",
@@ -479,6 +527,7 @@ def extract_dataset_metadata(
         authors=authors if isinstance(authors, list) else [authors] if authors else [],
         funding=funding if isinstance(funding, list) else [funding] if funding else [],
         dataset_doi=dataset_doi,
+        associated_paper_doi=_paper_doi_from_manifest(metadata, dataset_doi),
         tasks=sorted(tasks),
         sessions=sorted(sessions),
         total_files=len(files),

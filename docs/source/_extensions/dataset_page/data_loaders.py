@@ -777,6 +777,23 @@ def _load_dataset_rows(dataset_names: Sequence[str]) -> Mapping[str, Mapping[str
 # Dataset context: row + details -> dict consumed by the section formatters
 # ---------------------------------------------------------------------------
 
+# README year fallbacks, tried in order: a citation-style "(YYYY)", then a
+# bare 19xx/20xx year. Both capture all four digits; the bare pattern's group
+# used to hold only the century, so findall returned "19" or "20". A bare year
+# inside an identifier (a DOI or URL such as ".../j.neuroimage.2021.118000",
+# "sub-2019", a version "1.2019.3") is not a year of the dataset and is skipped.
+_README_CITED_YEAR_RE = re.compile(r"\(((?:19|20)\d{2})\)")
+_README_BARE_YEAR_RE = re.compile(r"(?<![\w./-])((?:19|20)\d{2})(?!\w|\.\d)")
+
+
+def _year_from_readme(readme: str) -> str:
+    """Return the first year a README cites, or ``""`` when it names none."""
+    for pattern in (_README_CITED_YEAR_RE, _README_BARE_YEAR_RE):
+        match = pattern.search(readme)
+        if match:
+            return match.group(1)
+    return ""
+
 
 def _build_dataset_context(
     class_name: str, row: Mapping[str, str] | None
@@ -815,12 +832,9 @@ def _build_dataset_context(
     if not year or year == "—":
         refs = details.get("references", [])
         if not refs:
-            readme = str(details.get("readme", ""))
-            years = re.findall(r"\((\d{4})\)", readme)
-            if not years:
-                years = re.findall(r"\b(19|20)\d{2}\b", readme)
-            if years:
-                year = years[0]
+            readme_year = _year_from_readme(str(details.get("readme", "")))
+            if readme_year:
+                year = readme_year
 
     n_subjects = _clean_value((row or {}).get("n_subjects"))
     if not n_subjects or n_subjects == "0":

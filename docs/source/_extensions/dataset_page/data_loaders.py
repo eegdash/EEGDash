@@ -468,6 +468,20 @@ def _detect_huggingface_mirror(dataset_id: str) -> dict[str, object]:
     }
 
 
+# Record suffixes whose subjects make up a dataset's cohort. Kept in lockstep
+# with the API's ``/datasets/{id}/participants`` allow-list. Ingestion stores
+# fNIRS recordings as ``fnirs``; ``nirs`` is the BIDS suffix itself, carried by
+# records built from file names.
+_PARTICIPANT_RECORD_SUFFIXES: tuple[str, ...] = (
+    "eeg",
+    "ieeg",
+    "emg",
+    "meg",
+    "fnirs",
+    "nirs",
+)
+
+
 def _fetch_participants_from_records(dataset_id: str) -> list[dict[str, object]]:
     """Pull per-subject demographics for a dataset.
 
@@ -503,7 +517,7 @@ def _fetch_participants_from_records(dataset_id: str) -> list[dict[str, object]]
     query = json.dumps(
         {
             "dataset": dataset_lower,
-            "suffix": {"$in": ["eeg", "ieeg", "emg", "meg"]},
+            "suffix": {"$in": list(_PARTICIPANT_RECORD_SUFFIXES)},
             "_has_missing_files": {"$ne": True},
         },
         separators=(",", ":"),

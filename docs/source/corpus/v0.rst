@@ -44,6 +44,10 @@ The converted store
 The store is published on Hugging Face as a gated dataset repository, |hf_corpus|, at
 tag |v0_tag|.
 
+The corpus, its conversion and the retraining that checks it are described in the paper
+*EEGDash Corpus: A Training-Ready Public Corpus for EEG Foundation Models* (MLESP 2026,
+with IEEE BIBM 2026; preprint `arXiv:2611.06356 <https://arxiv.org/abs/2611.06356>`__).
+
 **Access.** A Hugging Face account that accepted the repository's terms, and a token
 on the machine that downloads (``hf auth login``). Every dataset keeps its own licence
 and the collection has none of its own; ``LICENSES.csv`` in the repository lists them:

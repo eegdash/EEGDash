@@ -278,13 +278,18 @@ def _bare_doi(value: object) -> str | None:
     """Return the DOI ``value`` holds, without prefix, or None.
 
     The value must be a DOI, optionally prefixed with ``doi:`` or a doi.org
-    URL; of a list of DOIs the first is kept. Free text, other URLs (a
-    publisher page that embeds a DOI) and anything else give None, so a page
-    never links to a made-up DOI.
+    URL (whose query string or fragment is dropped); of a list of DOIs the
+    first is kept. Free text, other URLs (a publisher page that embeds a DOI)
+    and anything else give None, so a page never links to a made-up DOI.
     """
     if not isinstance(value, str):
         return None
-    text = _DOI_PREFIX_RE.sub("", value.strip())
+    text = value.strip()
+    prefix = _DOI_PREFIX_RE.match(text)
+    if prefix:
+        text = text[prefix.end() :]
+        if prefix.group(0).lower().startswith("http"):
+            text = re.split(r"[?#]", text, maxsplit=1)[0]
     doi = _DOI_LIST_SEP_RE.split(text, maxsplit=1)[0].rstrip(".,; ")
     for close, open_ in ((")", "("), ("]", "[")):
         while doi.endswith(close) and doi.count(close) > doi.count(open_):
@@ -292,20 +297,92 @@ def _bare_doi(value: object) -> str | None:
     return doi if _DOI_RE.fullmatch(doi) else None
 
 
-def _paper_doi_from_manifest(metadata: dict, dataset_doi: object) -> str | None:
-    """Return the paper DOI the stage-1 fetcher found for this dataset.
+def _doi_identity(doi: str) -> str:
+    """Compare key of a DOI: lower case, without a version suffix (``.v1.0.0``)."""
+    return re.sub(r"\.v\d+(?:\.\d+)*$", "", doi.lower())
 
-    The manifest carries the stage-1 document's ``associated_paper_doi``:
-    for NEMAR, the first DataCite related identifier with a paper relation
-    (``_PAPER_RELATIONS`` in ``1_fetch_sources/nemar.py``); for OpenNeuro,
-    ``associatedPaperDOI``. Values holding no DOI, and the dataset's own DOI,
-    give None.
-    """
-    doi = _bare_doi(metadata.get("associated_paper_doi"))
-    if doi is None:
+
+# The README "Paper DOI" badge, the paper line a deposit declares:
+# [![Paper DOI](https://img.shields.io/...)](https://doi.org/<doi>). Same
+# pattern as the dataset page's _README_PAPER_DOI_RE
+# (docs/source/_extensions/dataset_page/_constants.py).
+_README_PAPER_BADGE_RE = re.compile(
+    r"\[!\[Paper[^\]]*\]\([^)]+\)\]\((https?://[^)\s]+)\)", re.IGNORECASE
+)
+# A deposit's paper-match record: which paper, if any, is confirmed to
+# describe the data ({"association": {"verdict": "confirmed" | ...},
+# "document": {"doi": ...}}). Most NEMAR fNIRS deposits carry one.
+_PAPER_MATCH_RELPATH = Path("code") / "paper_match" / "match.json"
+# Sources whose catalogue paper is no confirmation that the paper describes the
+# dataset. NEMAR's comes from DataCite related identifiers (IsDescribedBy,
+# IsSupplementTo), and some of those name a method paper or the wrong study;
+# for these sources only a README badge or a confirmed record gives a paper.
+# OpenNeuro's associatedPaperDOI and EEGManyLabs' paper are declared by the
+# dataset's authors and are kept as a last resort.
+_UNCONFIRMED_CATALOGUE_PAPER_SOURCES: frozenset[str] = frozenset({"nemar"})
+
+
+def _readme_paper_doi(readme: str | None) -> str | None:
+    """DOI of the README's "Paper DOI" badge, or None."""
+    if not readme:
         return None
-    own_doi = _bare_doi(dataset_doi)
-    if own_doi is not None and own_doi.lower() == doi.lower():
+    match = _README_PAPER_BADGE_RE.search(readme)
+    return _bare_doi(match.group(1)) if match else None
+
+
+def _paper_match_doi(bids_root: Path) -> tuple[bool, str | None]:
+    """Read the deposit's paper-match record.
+
+    Returns ``(False, None)`` without a record, ``(True, doi)`` when it
+    confirms a paper, and ``(True, None)`` when it confirms none (another
+    verdict such as "probable" or "wrong-paper", no DOI, or an unreadable
+    file).
+    """
+    path = bids_root / _PAPER_MATCH_RELPATH
+    if not path.is_file():
+        return False, None
+    try:
+        record = json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, UnicodeDecodeError, ValueError):
+        return True, None
+    if not isinstance(record, dict):
+        return True, None
+    association = record.get("association")
+    document = record.get("document")
+    if not isinstance(association, dict) or not isinstance(document, dict):
+        return True, None
+    if association.get("verdict") != "confirmed":
+        return True, None
+    return True, _bare_doi(document.get("doi"))
+
+
+def _paper_doi_for_dataset(
+    bids_root: Path,
+    readme: str | None,
+    metadata: dict,
+    dataset_doi: object,
+    source: str,
+) -> str | None:
+    """Return the DOI of the paper that describes the dataset, or None.
+
+    In order: the README "Paper DOI" badge; else the deposit's paper-match
+    record, which decides when present (only a confirmed paper counts); else,
+    except for ``_UNCONFIRMED_CATALOGUE_PAPER_SOURCES`` (NEMAR), the paper the
+    source catalogue gives, which stage 1 put on the manifest as
+    ``associated_paper_doi`` (OpenNeuro: ``associatedPaperDOI``). A NEMAR
+    dataset with neither a badge nor a confirmed record has no paper. The
+    dataset's own DOI, in any version, is never its paper. Methods or toolbox
+    papers a dataset only references give no paper link.
+    """
+    own = _bare_doi(dataset_doi)
+    own_identity = _doi_identity(own) if own else None
+    badge = _readme_paper_doi(readme)
+    if badge is not None and _doi_identity(badge) != own_identity:
+        return badge
+    recorded, doi = _paper_match_doi(bids_root)
+    if not recorded and source not in _UNCONFIRMED_CATALOGUE_PAPER_SOURCES:
+        doi = _bare_doi(metadata.get("associated_paper_doi"))
+    if doi is None or _doi_identity(doi) == own_identity:
         return None
     return doi
 
@@ -527,7 +604,9 @@ def extract_dataset_metadata(
         authors=authors if isinstance(authors, list) else [authors] if authors else [],
         funding=funding if isinstance(funding, list) else [funding] if funding else [],
         dataset_doi=dataset_doi,
-        associated_paper_doi=_paper_doi_from_manifest(metadata, dataset_doi),
+        associated_paper_doi=_paper_doi_for_dataset(
+            bids_root, readme, metadata, dataset_doi, source
+        ),
         tasks=sorted(tasks),
         sessions=sorted(sessions),
         total_files=len(files),

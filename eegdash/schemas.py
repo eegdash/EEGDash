@@ -272,12 +272,13 @@ class Demographics(TypedDict, total=False):
         Maximum age in the cohort, in years.
     age_mean : float | None
         Mean age of subjects, in years.
-    participants_age_units : str | None
+    participants_age_units : str
         Unit of the ``age`` column in ``participants.tsv`` (and therefore of
         ``participant_tsv['age']`` on records) when participants.json
         declares one other than years: a key of :data:`AGE_UNITS_PER_YEAR`.
-        Absent when ages are in years. ``ages``, ``age_min``, ``age_max``
-        and ``age_mean`` are always converted to years.
+        The key is absent (not None) when ages are in years. ``ages``,
+        ``age_min``, ``age_max`` and ``age_mean`` are always converted to
+        years.
     species : str | None
         Species of subjects (e.g., "Human", "Mouse").
     sex_distribution : dict[str, int] | None

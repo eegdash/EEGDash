@@ -7,8 +7,8 @@ Two things broke the age charts of infant (mostly fNIRS) datasets:
   dataset-level ages to years and records the column's declared unit in
   ``demographics.participants_age_units``; the chart has to apply it too, or a
   cohort aged 100-140 days is drawn as 100-140 years.
-* Ages under two years all fell into one "0" bar captioned "range 0-0 yr".
-  Such cohorts are now drawn in months.
+* Ages under two years all fell into one "0" bar with a whole-year caption
+  such as "range 0-1 yr". Such cohorts are now drawn in months.
 
 Adult cohorts render exactly as before. The section renders only when the
 dataset document has some statistic (here its ``ages``), as on real pages.

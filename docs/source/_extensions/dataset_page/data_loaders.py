@@ -27,6 +27,7 @@ import urllib.error
 import urllib.parse
 import urllib.request
 from collections import Counter
+from datetime import datetime, timezone
 from pathlib import Path
 from typing import Iterable, Mapping, Sequence
 
@@ -802,14 +803,84 @@ def _load_dataset_rows(dataset_names: Sequence[str]) -> Mapping[str, Mapping[str
 # "sub-2019", a version "1.2019.3") is not a year of the dataset and is skipped.
 _README_CITED_YEAR_RE = re.compile(r"\(((?:19|20)\d{2})\)")
 _README_BARE_YEAR_RE = re.compile(r"(?<![\w./-])((?:19|20)\d{2})(?!\w|\.\d)")
+# A 19xx/20xx number followed by a unit is a measurement, not a year: "2048 Hz",
+# "2000 ms", "2000-Hz", "2000 kΩ", "2000 milliseconds", "2000 samples". Case-
+# sensitive, and without single capitals, so an initial after a year ("In 2019
+# S. Smith") is no unit. Count nouns (samples, trials, events, ...) read as
+# counts, so "In 2019 events ..." gives no year; no year beats a wrong one.
+_YEAR_UNIT_AFTER_RE = re.compile(
+    r"[\s\-\u2010\u2011]*(?:"
+    r"[kKMG]?(?:Hz|hz|HZ)|(?:kilo|mega)?[Hh]ertz"
+    r"|[mµμnu]?s|[mµμu]?secs?|(?:milli|micro|nano)?seconds?"
+    r"|mins?|minutes?|hrs?|hours?"
+    r"|[nµμucmk]?m|(?:nano|micro|milli|centi|kilo)?met(?:er|re)s?"
+    r"|[nµμum]V|kV|(?:micro|milli|kilo)?volts?"
+    r"|[kM]?(?:Ω|Ω|[Oo]hms?)|kilo?ohms?"
+    r"|dB|%|°|deg|degrees?"
+    r"|[kMGT]B|bytes?|bits?"
+    r"|px|pixels?|samples?|S/s|sps|channels?|ch|trials?|epochs?|events?"
+    r"|frames?|fps|voxels?"
+    r")(?![^\W\d_])"
+)
+# A 19xx/20xx number inside a number range, tolerance or dimension is not a
+# year either: "2000-4000 Hz", "1999–2001", "2015 to 2017", "2015 until 2017",
+# "2000 ± 500 ms", "1920 x 1080", "between 1900 and 2100 ms".
+_NUMBER_SPAN_SEP = r"(?:[-\u2010-\u2014\u2212~×±]|\+/-|\+-|to|x|until|till|through)"
+_YEAR_SPAN_AFTER_RE = re.compile(rf"\s*{_NUMBER_SPAN_SEP}\s*\d")
+# The left end of a range is a whole number of two or more digits, so a version
+# or an item number before a dash ("Version 1.0 - 2019", "Dataset 3 - 2019")
+# leaves the year alone.
+_YEAR_SPAN_BEFORE_RE = re.compile(rf"(?<![\w.])\d{{2,}}\s*{_NUMBER_SPAN_SEP}\s*$")
+_BETWEEN_BEFORE_RE = re.compile(r"\bbetween\s+$", re.IGNORECASE)
+_AND_NUMBER_AFTER_RE = re.compile(r"\s+and\s+\d", re.IGNORECASE)
+_BETWEEN_AND_BEFORE_RE = re.compile(
+    r"\bbetween\s+\d\S*(?:\s+[^\s\d]\S*)?\s+and\s+$", re.IGNORECASE
+)
+# ... but "2019-05" and "2019-05-03" are ISO dates, not ranges.
+_ISO_DATE_TAIL_RE = re.compile(r"-(?:0[1-9]|1[0-2])(?:-(?:0[1-9]|[12]\d|3[01]))?(?!\d)")
+
+
+def _reads_as_year(text: str, start: int, end: int) -> bool:
+    """Whether the 19xx/20xx number at ``text[start:end]`` reads as a year.
+
+    False when a unit follows it, or when it is one end of a number range,
+    tolerance or dimension; an ISO date (``2019-05-03``) counts as a year.
+    """
+    rest = text[end:]
+    before = text[max(0, start - 60) : start]
+    date = _ISO_DATE_TAIL_RE.match(rest)
+    if date:
+        return not _YEAR_UNIT_AFTER_RE.match(rest[date.end() :])
+    if _YEAR_UNIT_AFTER_RE.match(rest) or _YEAR_SPAN_AFTER_RE.match(rest):
+        return False
+    if _BETWEEN_BEFORE_RE.search(before) and _AND_NUMBER_AFTER_RE.match(rest):
+        return False
+    return not (
+        _YEAR_SPAN_BEFORE_RE.search(before) or _BETWEEN_AND_BEFORE_RE.search(before)
+    )
+
+
+def _current_year() -> int:
+    """Return the current year (UTC); a later README year is no dataset year."""
+    return datetime.now(timezone.utc).year
 
 
 def _year_from_readme(readme: str) -> str:
-    """Return the first year a README cites, or ``""`` when it names none."""
-    for pattern in (_README_CITED_YEAR_RE, _README_BARE_YEAR_RE):
-        match = pattern.search(readme)
-        if match:
-            return match.group(1)
+    """Return the first year a README cites, or ``""`` when it names none.
+
+    A citation-style "(YYYY)" wins over a bare year. A number next to a unit
+    ("2048 Hz"), inside a number range or dimension ("2000-4000", "2018–2019",
+    "1920 x 1080") or inside an identifier is never taken, and neither is a
+    year after the current one: no dataset year is better than a wrong one.
+    """
+    max_year = _current_year()
+    for pattern, group in ((_README_CITED_YEAR_RE, 0), (_README_BARE_YEAR_RE, 1)):
+        for match in pattern.finditer(readme):
+            year = match.group(1)
+            if int(year) <= max_year and _reads_as_year(
+                readme, match.start(group), match.end(group)
+            ):
+                return year
     return ""
 
 

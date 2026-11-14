@@ -353,7 +353,55 @@ def _paper_match_doi(bids_root: Path) -> tuple[bool, str | None]:
         return True, None
     if association.get("verdict") != "confirmed":
         return True, None
-    return True, _bare_doi(document.get("doi"))
+    return True, _confirmed_paper_doi(record, association, document)
+
+
+# The paper an evidence quote was read from, as its ``source`` names it:
+# "https://doi.org/<doi> [...]" or "[...; paper doi:<doi>; ...]".
+_EVIDENCE_PAPER_DOI_RE = re.compile(
+    r"(?:paper doi:\s*|doi\.org/)(10\.\d{4,9}/[^\s;\[\]]+)", re.IGNORECASE
+)
+
+
+def _evidence_paper_dois(association: dict) -> list[str]:
+    """DOIs of the texts the evidence quotes were read from, skipping data records."""
+    evidence = association.get("evidence")
+    dois: list[str] = []
+    for item in evidence if isinstance(evidence, list) else []:
+        source = item.get("source") if isinstance(item, dict) else None
+        if isinstance(source, str) and "repository record" not in source.lower():
+            dois.extend(_EVIDENCE_PAPER_DOI_RE.findall(source))
+    return dois
+
+
+def _confirmed_paper_doi(record: dict, association: dict, document: dict) -> str | None:
+    """DOI of the paper a confirmed paper-match record names, or None.
+
+    ``_paperenrich.confirmed_paper.doi`` when the record carries it. Else
+    ``document.doi`` when the document is a paper; when the document is the
+    data record the match read (``kind`` "repository-record", or a
+    ``source_kind`` naming a repository record), a paper an evidence quote was
+    read from instead. The data record is never the paper, in any version: no
+    DOI under its registrant prefix (e.g. every Zenodo version of a Zenodo
+    record) is taken.
+    """
+    is_data_record = document.get("kind") == "repository-record" or (
+        "repository record" in str(document.get("source_kind") or "").lower()
+    )
+    record_doi = _bare_doi(document.get("doi")) if is_data_record else None
+    enrich = record.get("_paperenrich")
+    confirmed = enrich.get("confirmed_paper") if isinstance(enrich, dict) else None
+    candidates = [confirmed.get("doi")] if isinstance(confirmed, dict) else []
+    if is_data_record:
+        candidates.extend(_evidence_paper_dois(association))
+    else:
+        candidates.append(document.get("doi"))
+    record_prefix = record_doi.split("/", 1)[0] if record_doi else None
+    for value in candidates:
+        doi = _bare_doi(value)
+        if doi is not None and doi.split("/", 1)[0] != record_prefix:
+            return doi
+    return None
 
 
 def _paper_doi_for_dataset(

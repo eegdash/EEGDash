@@ -45,6 +45,33 @@ def _match(verdict: str | None, doi: str | None) -> dict:
     return {"association": {"verdict": verdict}, "document": {"doi": doi}}
 
 
+_RECORD_SOURCE = (
+    "https://api.datacite.org/dois/10.5555%2Fdata.record [repository record "
+    "(DataCite / repository API); paper doi:10.5555/data.record; record > description]"
+)
+_PAPER_SOURCE = "https://doi.org/10.1000/paper [Europe PMC full text PMC1]"
+
+
+def _confirmed_record(
+    *,
+    doc_doi: str | None,
+    doc_kind: str,
+    confirmed_paper: dict | None = None,
+    sources: tuple[str, ...] = (),
+) -> dict:
+    """A confirmed paper-match record whose document is a paper or a data record."""
+    record = {
+        "association": {
+            "verdict": "confirmed",
+            "evidence": [{"what": "N", "source": source} for source in sources],
+        },
+        "document": {"doi": doc_doi, "kind": doc_kind},
+    }
+    if confirmed_paper is not None:
+        record["_paperenrich"] = {"confirmed_paper": confirmed_paper}
+    return record
+
+
 def _digest(
     root: Path,
     manifest: dict | None,
@@ -201,6 +228,99 @@ def test_paper_match_without_a_confirmed_doi_gives_no_paper(tmp_path: Path, matc
         match=match,
     )
     assert doc["associated_paper_doi"] is None
+
+
+# A confirmed record whose document is the data record the match read: the
+# paper comes from _paperenrich.confirmed_paper or from the evidence, and the
+# data record is never shown as the paper, in any version.
+
+
+def test_data_record_document_takes_the_enriched_paper(tmp_path: Path):
+    record = _confirmed_record(
+        doc_doi="10.5555/data.record",
+        doc_kind="repository-record",
+        confirmed_paper={"doi": "https://doi.org/10.1000/paper"},
+        sources=(_RECORD_SOURCE,),
+    )
+    doc = _digest(tmp_path, {}, source="nemar", match=record)
+    assert doc["associated_paper_doi"] == "10.1000/paper"
+
+
+def test_data_record_document_takes_a_paper_the_evidence_quotes(tmp_path: Path):
+    record = _confirmed_record(
+        doc_doi="10.5555/data.record",
+        doc_kind="repository-record",
+        sources=(_RECORD_SOURCE, _PAPER_SOURCE),
+    )
+    doc = _digest(tmp_path, {}, source="nemar", match=record)
+    assert doc["associated_paper_doi"] == "10.1000/paper"
+
+
+@pytest.mark.parametrize(
+    ("confirmed_paper", "sources"),
+    [
+        # Only the data record was read.
+        (None, (_RECORD_SOURCE,)),
+        # A paper entry without a DOI (e.g. proceedings with a URL only).
+        ({"doi": None, "url": "https://example.org/paper.pdf"}, (_RECORD_SOURCE,)),
+        # Another version of the data record, as the enriched paper ...
+        ({"doi": "10.5555/data.record.v2"}, (_RECORD_SOURCE,)),
+        # ... or as a source outside a repository record.
+        (None, ("https://doi.org/10.5555/data.concept [landing page]",)),
+    ],
+)
+def test_data_record_document_without_a_paper_gives_none(
+    tmp_path: Path, confirmed_paper, sources
+):
+    record = _confirmed_record(
+        doc_doi="10.5555/data.record",
+        doc_kind="repository-record",
+        confirmed_paper=confirmed_paper,
+        sources=sources,
+    )
+    doc = _digest(
+        tmp_path,
+        {"associated_paper_doi": "10.1000/catalogue"},
+        source="nemar",
+        match=record,
+    )
+    assert doc["associated_paper_doi"] is None
+
+
+def test_data_record_named_by_its_source_kind_only(tmp_path: Path):
+    # A record without "kind" whose source_kind says it read a repository record.
+    record = _confirmed_record(
+        doc_doi="10.5555/data.record",
+        doc_kind="repository-record",
+        sources=(_RECORD_SOURCE,),
+    )
+    del record["document"]["kind"]
+    record["document"]["source_kind"] = "repository record (DataCite / repository API)"
+    doc = _digest(tmp_path, {}, source="nemar", match=record)
+    assert doc["associated_paper_doi"] is None
+
+
+def test_enriched_paper_preferred_over_a_paper_document(tmp_path: Path):
+    record = _confirmed_record(
+        doc_doi="10.1000/preprint",
+        doc_kind="paper",
+        confirmed_paper={"doi": "10.1000/published"},
+    )
+    doc = _digest(tmp_path, {}, source="nemar", match=record)
+    assert doc["associated_paper_doi"] == "10.1000/published"
+
+
+def test_paper_document_keeps_its_doi(tmp_path: Path):
+    # The evidence is only searched when the document is the data record, so
+    # a confirmed paper is not swapped for another text the quotes came from.
+    record = _confirmed_record(
+        doc_doi="10.1000/journal-article",
+        doc_kind="paper",
+        confirmed_paper={"title": "no doi here"},
+        sources=("https://example.org/x [PMC; paper doi:10.1000/preprint; p. 2]",),
+    )
+    doc = _digest(tmp_path, {}, source="nemar", match=record)
+    assert doc["associated_paper_doi"] == "10.1000/journal-article"
 
 
 def test_nemar_catalogue_paper_alone_gives_no_paper(tmp_path: Path):

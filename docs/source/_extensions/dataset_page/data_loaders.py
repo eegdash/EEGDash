@@ -27,6 +27,7 @@ import urllib.error
 import urllib.parse
 import urllib.request
 from collections import Counter
+from datetime import datetime, timezone
 from pathlib import Path
 from typing import Iterable, Mapping, Sequence
 
@@ -347,6 +348,18 @@ def _fetch_dataset_details_from_api(dataset_id: str) -> dict[str, object]:
     details["github_url"] = _clean_value(external_links.get("github_url"))
     details["osf_url"] = _clean_value(external_links.get("osf_url"))
 
+    # The paper DOI from the source catalogue (NEMAR's DataCite related
+    # identifiers, OpenNeuro's associatedPaperDOI) already drives the
+    # field card's "Read paper" action; give the provenance strip's "Paper"
+    # link the same target.
+    paper_doi = _normalize_doi(details["associated_paper_doi"])
+    if not details["paper_url"] and paper_doi:
+        details["paper_url"] = (
+            paper_doi
+            if paper_doi.lower().startswith(("http://", "https://"))
+            else f"https://doi.org/{paper_doi}"
+        )
+
     # Some NEMAR-ingested datasets never populate ``external_links.paper_url``
     # even though the README ships a ``[![Paper DOI](...)](https://doi.org/…)``
     # badge. The lede block already turns that badge into a visible link, so
@@ -365,15 +378,19 @@ def _fetch_dataset_details_from_api(dataset_id: str) -> dict[str, object]:
 # Suffixes the BIDS spec defines for the modality-specific sidecars the
 # editorial field-card lists ("events · channels · electrodes · coordsystem").
 # These match against the trailing path segment of each storage.dep_key.
+# fNIRS recordings carry ``*_nirs.json`` and ``*_optodes.tsv`` (the optode
+# positions, the fNIRS counterpart of ``*_electrodes.tsv``).
 _SIDECAR_SUFFIXES = {
     "events.tsv": "events",
     "events.json": "events.json",
     "channels.tsv": "channels",
     "electrodes.tsv": "electrodes",
+    "optodes.tsv": "optodes",
     "coordsystem.json": "coordsystem",
     "eeg.json": "eeg.json",
     "meg.json": "meg.json",
     "ieeg.json": "ieeg.json",
+    "nirs.json": "nirs.json",
     "physio.tsv": "physio",
     "stim.tsv": "stim",
 }
@@ -385,10 +402,12 @@ _SIDECAR_RENDER_ORDER = (
     "events.json",
     "channels",
     "electrodes",
+    "optodes",
     "coordsystem",
     "eeg.json",
     "meg.json",
     "ieeg.json",
+    "nirs.json",
     "physio",
     "stim",
 )
@@ -468,6 +487,20 @@ def _detect_huggingface_mirror(dataset_id: str) -> dict[str, object]:
     }
 
 
+# Record suffixes whose subjects make up a dataset's cohort. Kept in lockstep
+# with the API's ``/datasets/{id}/participants`` allow-list. Ingestion stores
+# fNIRS recordings as ``fnirs``; ``nirs`` is the BIDS suffix itself, carried by
+# records built from file names.
+_PARTICIPANT_RECORD_SUFFIXES: tuple[str, ...] = (
+    "eeg",
+    "ieeg",
+    "emg",
+    "meg",
+    "fnirs",
+    "nirs",
+)
+
+
 def _fetch_participants_from_records(dataset_id: str) -> list[dict[str, object]]:
     """Pull per-subject demographics for a dataset.
 
@@ -503,7 +536,7 @@ def _fetch_participants_from_records(dataset_id: str) -> list[dict[str, object]]
     query = json.dumps(
         {
             "dataset": dataset_lower,
-            "suffix": {"$in": ["eeg", "ieeg", "emg", "meg"]},
+            "suffix": {"$in": list(_PARTICIPANT_RECORD_SUFFIXES)},
             "_has_missing_files": {"$ne": True},
         },
         separators=(",", ":"),
@@ -763,6 +796,93 @@ def _load_dataset_rows(dataset_names: Sequence[str]) -> Mapping[str, Mapping[str
 # Dataset context: row + details -> dict consumed by the section formatters
 # ---------------------------------------------------------------------------
 
+# README year fallbacks, tried in order: a citation-style "(YYYY)", then a
+# bare 19xx/20xx year. Both capture all four digits; the bare pattern's group
+# used to hold only the century, so findall returned "19" or "20". A bare year
+# inside an identifier (a DOI or URL such as ".../j.neuroimage.2021.118000",
+# "sub-2019", a version "1.2019.3") is not a year of the dataset and is skipped.
+_README_CITED_YEAR_RE = re.compile(r"\(((?:19|20)\d{2})\)")
+_README_BARE_YEAR_RE = re.compile(r"(?<![\w./-])((?:19|20)\d{2})(?!\w|\.\d)")
+# A 19xx/20xx number followed by a unit is a measurement, not a year: "2048 Hz",
+# "2000 ms", "2000-Hz", "2000 kΩ", "2000 milliseconds", "2000 samples". Case-
+# sensitive, and without single capitals, so an initial after a year ("In 2019
+# S. Smith") is no unit. Count nouns (samples, trials, events, ...) read as
+# counts, so "In 2019 events ..." gives no year; no year beats a wrong one.
+_YEAR_UNIT_AFTER_RE = re.compile(
+    r"[\s\-\u2010\u2011]*(?:"
+    r"[kKMG]?(?:Hz|hz|HZ)|(?:kilo|mega)?[Hh]ertz"
+    r"|[mµμnu]?s|[mµμu]?secs?|(?:milli|micro|nano)?seconds?"
+    r"|mins?|minutes?|hrs?|hours?"
+    r"|[nµμucmk]?m|(?:nano|micro|milli|centi|kilo)?met(?:er|re)s?"
+    r"|[nµμum]V|kV|(?:micro|milli|kilo)?volts?"
+    r"|[kM]?(?:Ω|Ω|[Oo]hms?)|kilo?ohms?"
+    r"|dB|%|°|deg|degrees?"
+    r"|[kMGT]B|bytes?|bits?"
+    r"|px|pixels?|samples?|S/s|sps|channels?|ch|trials?|epochs?|events?"
+    r"|frames?|fps|voxels?"
+    r")(?![^\W\d_])"
+)
+# A 19xx/20xx number inside a number range, tolerance or dimension is not a
+# year either: "2000-4000 Hz", "1999–2001", "2015 to 2017", "2015 until 2017",
+# "2000 ± 500 ms", "1920 x 1080", "between 1900 and 2100 ms".
+_NUMBER_SPAN_SEP = r"(?:[-\u2010-\u2014\u2212~×±]|\+/-|\+-|to|x|until|till|through)"
+_YEAR_SPAN_AFTER_RE = re.compile(rf"\s*{_NUMBER_SPAN_SEP}\s*\d")
+# The left end of a range is a whole number of two or more digits, so a version
+# or an item number before a dash ("Version 1.0 - 2019", "Dataset 3 - 2019")
+# leaves the year alone.
+_YEAR_SPAN_BEFORE_RE = re.compile(rf"(?<![\w.])\d{{2,}}\s*{_NUMBER_SPAN_SEP}\s*$")
+_BETWEEN_BEFORE_RE = re.compile(r"\bbetween\s+$", re.IGNORECASE)
+_AND_NUMBER_AFTER_RE = re.compile(r"\s+and\s+\d", re.IGNORECASE)
+_BETWEEN_AND_BEFORE_RE = re.compile(
+    r"\bbetween\s+\d\S*(?:\s+[^\s\d]\S*)?\s+and\s+$", re.IGNORECASE
+)
+# ... but "2019-05" and "2019-05-03" are ISO dates, not ranges.
+_ISO_DATE_TAIL_RE = re.compile(r"-(?:0[1-9]|1[0-2])(?:-(?:0[1-9]|[12]\d|3[01]))?(?!\d)")
+
+
+def _reads_as_year(text: str, start: int, end: int) -> bool:
+    """Whether the 19xx/20xx number at ``text[start:end]`` reads as a year.
+
+    False when a unit follows it, or when it is one end of a number range,
+    tolerance or dimension; an ISO date (``2019-05-03``) counts as a year.
+    """
+    rest = text[end:]
+    before = text[max(0, start - 60) : start]
+    date = _ISO_DATE_TAIL_RE.match(rest)
+    if date:
+        return not _YEAR_UNIT_AFTER_RE.match(rest[date.end() :])
+    if _YEAR_UNIT_AFTER_RE.match(rest) or _YEAR_SPAN_AFTER_RE.match(rest):
+        return False
+    if _BETWEEN_BEFORE_RE.search(before) and _AND_NUMBER_AFTER_RE.match(rest):
+        return False
+    return not (
+        _YEAR_SPAN_BEFORE_RE.search(before) or _BETWEEN_AND_BEFORE_RE.search(before)
+    )
+
+
+def _current_year() -> int:
+    """Return the current year (UTC); a later README year is no dataset year."""
+    return datetime.now(timezone.utc).year
+
+
+def _year_from_readme(readme: str) -> str:
+    """Return the first year a README cites, or ``""`` when it names none.
+
+    A citation-style "(YYYY)" wins over a bare year. A number next to a unit
+    ("2048 Hz"), inside a number range or dimension ("2000-4000", "2018–2019",
+    "1920 x 1080") or inside an identifier is never taken, and neither is a
+    year after the current one: no dataset year is better than a wrong one.
+    """
+    max_year = _current_year()
+    for pattern, group in ((_README_CITED_YEAR_RE, 0), (_README_BARE_YEAR_RE, 1)):
+        for match in pattern.finditer(readme):
+            year = match.group(1)
+            if int(year) <= max_year and _reads_as_year(
+                readme, match.start(group), match.end(group)
+            ):
+                return year
+    return ""
+
 
 def _build_dataset_context(
     class_name: str, row: Mapping[str, str] | None
@@ -801,12 +921,9 @@ def _build_dataset_context(
     if not year or year == "—":
         refs = details.get("references", [])
         if not refs:
-            readme = str(details.get("readme", ""))
-            years = re.findall(r"\((\d{4})\)", readme)
-            if not years:
-                years = re.findall(r"\b(19|20)\d{2}\b", readme)
-            if years:
-                year = years[0]
+            readme_year = _year_from_readme(str(details.get("readme", "")))
+            if readme_year:
+                year = readme_year
 
     n_subjects = _clean_value((row or {}).get("n_subjects"))
     if not n_subjects or n_subjects == "0":

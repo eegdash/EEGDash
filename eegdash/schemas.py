@@ -243,6 +243,19 @@ class Timestamps(TypedDict, total=False):
 # =============================================================================
 
 
+# How many of each age unit make one year. These are the units EEGDash
+# converts when a dataset's participants.json declares one for its ``age``
+# column (BIDS defines ``age`` in years); see
+# ``Demographics.participants_age_units``.
+AGE_UNITS_PER_YEAR: dict[str, float] = {
+    "years": 1.0,
+    "months": 12.0,
+    "weeks": 365.25 / 7.0,
+    "days": 365.25,
+    "hours": 365.25 * 24.0,
+}
+
+
 class Demographics(TypedDict, total=False):
     """Subject demographics summary for a dataset.
 
@@ -250,14 +263,22 @@ class Demographics(TypedDict, total=False):
     ----------
     subjects_count : int
         Total number of subjects.
-    ages : list[int]
-        List of all subject ages (if available).
-    age_min : int | None
-        Minimum age in the cohort.
-    age_max : int | None
-        Maximum age in the cohort.
+    ages : list[float]
+        List of all subject ages in years (if available). Whole-year ages
+        are stored as ``int``; fractional ages (infants) as ``float``.
+    age_min : float | None
+        Minimum age in the cohort, in years.
+    age_max : float | None
+        Maximum age in the cohort, in years.
     age_mean : float | None
-        Mean age of subjects.
+        Mean age of subjects, in years.
+    participants_age_units : str
+        Unit of the ``age`` column in ``participants.tsv`` (and therefore of
+        ``participant_tsv['age']`` on records) when participants.json
+        declares one other than years: a key of :data:`AGE_UNITS_PER_YEAR`.
+        The key is absent (not None) when ages are in years. ``ages``,
+        ``age_min``, ``age_max`` and ``age_mean`` are always converted to
+        years.
     species : str | None
         Species of subjects (e.g., "Human", "Mouse").
     sex_distribution : dict[str, int] | None
@@ -268,10 +289,11 @@ class Demographics(TypedDict, total=False):
     """
 
     subjects_count: int
-    ages: list[int]
-    age_min: int | None
-    age_max: int | None
+    ages: list[float]
+    age_min: float | None
+    age_max: float | None
     age_mean: float | None
+    participants_age_units: str
     species: str | None
     sex_distribution: dict[str, int] | None
     handedness_distribution: dict[str, int] | None
@@ -551,8 +573,9 @@ def create_dataset(
     study_design: str | None = None,
     # Demographics
     subjects_count: int | None = None,
-    ages: list[int] | None = None,
+    ages: list[float] | None = None,
     age_mean: float | None = None,
+    participants_age_units: str | None = None,
     species: str | None = None,
     sex_distribution: dict[str, int] | None = None,
     handedness_distribution: dict[str, int] | None = None,
@@ -637,10 +660,14 @@ def create_dataset(
         Study design description.
     subjects_count : int, optional
         Number of subjects.
-    ages : list[int], optional
-        Subject ages.
+    ages : list[float], optional
+        Subject ages, in years.
     age_mean : float, optional
-        Mean age of subjects.
+        Mean age of subjects, in years.
+    participants_age_units : str, optional
+        Unit of the participants.tsv ``age`` column when it is not years
+        (a key of :data:`AGE_UNITS_PER_YEAR`). Stored only when set, so
+        documents of datasets with ages in years are unchanged.
     species : str, optional
         Species (e.g., "Human").
     sex_distribution : dict[str, int], optional
@@ -704,6 +731,8 @@ def create_dataset(
         sex_distribution=sex_distribution,
         handedness_distribution=handedness_distribution,
     )
+    if participants_age_units:
+        demographics["participants_age_units"] = participants_age_units
 
     _canonical = (
         [n.strip() for n in canonical_name if isinstance(n, str) and n.strip()]

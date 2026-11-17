@@ -25,7 +25,7 @@ agreements) and |excluded| are excluded.
 
 .. container:: corpus
 
-   .. grid:: 1 1 2 2
+   .. grid:: 1 1 3 3
       :gutter: 4
 
       .. grid-item-card:: Introduction
@@ -64,8 +64,27 @@ agreements) and |excluded| are excluded.
 
          What you will find: the converted Zarr store measured, the electrode map in 2-D and 3-D, the download, the table of its datasets.
 
+      .. grid-item-card:: Pretraining REVE
+         :link: pretraining_reve
+         :link-type: doc
+         :class-card: corpus-card
+
+         .. rst-class:: corpus-card-label
+
+         The tutorial
+
+         - Download the converted store
+         - Install the code and REVE's trainer
+         - Pretrain REVE with the paper's settings
+         - One machine, or 16 GPUs on 4 machines
+
+         .. rst-class:: corpus-card-find
+
+         What you will find: three steps and the two scripts behind them, from an empty machine to a pretrained encoder, and the paper's run times and scores.
+
 .. toctree::
    :hidden:
 
    Introduction <introduction>
    EEGDash Corpus v0 <v0>
+   Pretraining REVE <pretraining_reve>

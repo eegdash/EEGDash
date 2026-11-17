@@ -37,7 +37,7 @@ from .conftest import DOCS, REPO_ROOT, source_rows, table_rows, write_csv
 
 DATA = DOCS / "plot_corpus" / "data"
 RST = DOCS / "source" / "corpus"
-PAGES = ["index", "introduction", "v0"]
+PAGES = ["index", "introduction", "pretraining_reve", "v0"]
 HF_URL = "https://huggingface.co/datasets/EEGDash/eegdash-corpus-v0"
 CODE_URL = "https://github.com/eegdash/eegdash-corpus"
 TABLE_LINK = ":download:`eegdash-corpus-v0.csv </_static/corpus_generated/eegdash-corpus-v0.csv>`"
@@ -247,9 +247,9 @@ def test_reason_on_exactly_the_sixteen_rows_out_of_the_corpus():
     }
 
 
-def test_two_pages_and_their_links():
-    """Introduction and EEGDash Corpus v0 under the landing page; no page links a removed one (Coverage, whose table
-    moved into the Introduction).
+def test_three_pages_and_their_links():
+    """Introduction, EEGDash Corpus v0 and the pretraining tutorial under the landing page; no page links a removed
+    one (Coverage, whose table moved into the Introduction).
     """
     assert sorted(p.stem for p in RST.glob("*.rst")) == sorted(PAGES)
     index = (RST / "index.rst").read_text()
@@ -257,14 +257,107 @@ def test_two_pages_and_their_links():
         1
     )
     assert [line.strip() for line in toc.strip().splitlines()] == [
-        "Introduction <introduction>", "EEGDash Corpus v0 <v0>"]  # fmt: skip
-    assert re.findall(r":link: (\w+)", index) == ["introduction", "v0"]
-    assert ".. grid:: 1 1 2 2" in index
+        "Introduction <introduction>", "EEGDash Corpus v0 <v0>", "Pretraining REVE <pretraining_reve>"]  # fmt: skip
+    assert re.findall(r":link: (\w+)", index) == [
+        "introduction",
+        "v0",
+        "pretraining_reve",
+    ]
+    assert ".. grid:: 1 1 3 3" in index
     sources = list((DOCS / "source").rglob("*.rst")) + [DOCS / "source" / "conf.py"]
     stale = [str(p) for p in sources if re.search(r"corpus/(v1|progress|coverage)\b|<(progress|coverage)>|"
                                                      r"corpus-(progress|coverage)|corpus-v1",
                                                      p.read_text(encoding="utf-8"))]  # fmt: skip
     assert stale == []
+
+
+def test_pretraining_page():
+    """The tutorial is three numbered steps around the code repository's two scripts and a fourth section with the
+    paper's run times and scores; it starts with the download, names no cluster, and the release page points to it.
+    """
+    page = (RST / "pretraining_reve.rst").read_text()
+    assert "\n.. _corpus-pretraining-reve:\n" in page and CODE_URL in page
+    steps = re.findall(r"\n(\d)\. (.+)\n=+\n", page)
+    assert steps == [
+        ("1", "Download the corpus"),
+        ("2", "Install"),
+        ("3", "Pretrain REVE"),
+        ("4", "What you get"),
+        ("5", "Settings of the scripts"),
+    ]
+    download = page.split("\n1. Download the corpus\n")[1].split("\n2. Install\n")[0]
+    for line in (
+        "git clone https://github.com/eegdash/eegdash-corpus.git",
+        "python3.11 -m venv ../hf-env",
+        "pip install -U huggingface_hub hf_xet",
+        "hf auth login",
+        "bash download.sh /data",
+    ):
+        assert line in download, line
+    install = page.split("\n2. Install\n")[1].split("\n3. Pretrain REVE\n")[0]
+    for line in (
+        "python3.11 -m venv ../reve-env",
+        "pip install -r requirements-pretraining.txt",
+        "git -C ../reve_eeg checkout 06a7059",
+        "bash patches/apply_patches.sh ../reve_eeg",
+    ):
+        assert line in install, line
+    for line in (
+        "bash download.sh /data",
+        'snapshot_download("EEGDash/eegdash-corpus-v0", repo_type="dataset", revision=',
+        "rate limit",
+        "DATA=/data/eegdash-corpus-v0/eegdash-corpus-v0.zarr CKPT=/ckpt/reve-base-v0 bash pretrain.sh",
+        'bash "$HERE/train.sh"',
+        "NNODES=4 NODE_RANK=0 MAIN_HOST=node01",
+        "- ``NNODES``:",
+        "- ``NODE_RANK``:",
+        "- ``MAIN_HOST``:",
+        ":ref:`corpus-download`",
+    ):
+        assert line in page, line
+    results = page.split("\n4. What you get\n")[1].split(
+        "\n5. Settings of the scripts\n"
+    )[0]
+    settings = page.split("\n5. Settings of the scripts\n")[1]
+    for name in (
+        "VERIFY",
+        "JOBS",
+        "WAIT",
+        "DATA",
+        "CKPT",
+        "SEED",
+        "RUN",
+        "REVE_EEG",
+        "GPUS",
+        "NNODES",
+        "NODE_RANK",
+        "MAIN_HOST",
+        "EPOCHS",
+        "ENCODER",
+        "LR",
+        "BS",
+        "WORKERS",
+        "MIXED_PRECISION",
+        "EXCLUDE_DATASETS",
+        "REVE_ENCODER_EVERY",
+        "RESUME",
+        "ACCELERATE_ARGS",
+    ):  # every setting of the three scripts
+        assert f"   * - ``{name}``\n" in settings, name
+    for line in (
+        "encoder.pth",
+        "loss.csv",
+        "**0.331**",
+        "**0.273**",
+        "CHB-MIT",
+        "export_encoder.py",
+    ):
+        assert line in results, line
+    assert (
+        "srun" not in page and "scontrol" not in page
+    )  # no scheduler example: pretrain.sh's header has the line
+    assert not re.search(r"#SBATCH|--account|--partition|expanse|delta\b", page, re.I)
+    assert ":ref:`corpus-pretraining-reve`" in (RST / "v0.rst").read_text()
 
 
 def test_every_rst_key_and_substitution_exists():
@@ -330,8 +423,8 @@ def test_download_section():
     assert sum(t.count("PLACEHOLDER") for t in sources.values()) == 0
     v0 = sources["v0.rst"]
     assert re.search(r"\n\.\. \|hf_corpus\| replace:: .*" + re.escape(HF_URL), v0)
-    section = v0.split("\nDownload\n========\n")[1].split(
-        "\nThe |v0_datasets| datasets\n"
+    section = v0.split("\n2. Download\n===========\n")[1].split(
+        "\n12. The |v0_datasets| datasets\n"
     )[0]
     assert (
         "|hf_corpus|" in section
@@ -355,12 +448,12 @@ def test_download_section():
         "|v0_tag|",
     ):
         assert line in section, line
-    assert section.index("\nThe converted store\n---") < section.index(
-        "\nThe raw datasets\n---"
+    assert section.index("\n2.1 The converted store\n---") < section.index(
+        "\n2.2 The raw datasets\n---"
     )
     intro = (
         sources["introduction.rst"]
-        .split("\nHow to get it\n=============\n")[1]
+        .split("\n5. How to get it\n================\n")[1]
         .split("\n=====")[0]
     )
     for line in (

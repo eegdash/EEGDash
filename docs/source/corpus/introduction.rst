@@ -11,8 +11,8 @@
 Introduction
 ############
 
-What it is
-==========
+1. What it is
+=============
 
 EEGDash Corpus is a training-ready collection of public EEG datasets, served through
 EEGDash from OpenNeuro and NEMAR and converted once with the recipe of REVE, an EEG
@@ -23,8 +23,8 @@ Zarr store that a trainer reads directly; Zarr is a chunked array format, so a t
 reads the samples it needs, over the network or from a local copy, without unpacking
 the store.
 
-Why
-===
+2. Why
+======
 
 The data behind EEG foundation models is fragmented across archives, file formats,
 sampling rates, montages and licences. Each group collates, checks, licenses and
@@ -32,8 +32,8 @@ converts its own copy, and that work is not released in a form another model can
 on. The corpus does it once: a group can start from the data rather than from the
 collation, with the licence of every dataset accounted for.
 
-Starting point: REVE's corpus
-=============================
+3. Starting point: REVE's corpus
+================================
 
 **EEGDash Corpus v0** is the public part of REVE's pretraining corpus, rebuilt from the
 archives. REVE's paper names |paper_named| datasets in its reference list of what it
@@ -51,16 +51,16 @@ Every dataset keeps its own licence, and the release is gated: access needs a Hu
 Face account that accepted its terms. Later versions will add public datasets beyond
 REVE's, chosen by licence and usability.
 
-In numbers
-==========
+4. In numbers
+=============
 
 What the release holds, against the datasets tracked; the v0 page measures the store
 itself.
 
 .. corpus-figure:: intro-kpis
 
-How to get it
-=============
+5. How to get it
+================
 
 Three ways, from the training-ready store to one raw dataset; :ref:`corpus-download` on
 the v0 page gives the details.
@@ -105,8 +105,8 @@ AlexMI, a small motor-imagery dataset):
    from eegdash import EEGDashDataset
    ds = EEGDashDataset(dataset="nm000138", cache_dir="eegdash-cache")
 
-How it was built and checked
-============================
+6. How it was built and checked
+===============================
 
 **Fetch.** OpenNeuro and NEMAR datasets through EEGDash into a cache that mirrors the
 archives.
@@ -123,8 +123,8 @@ sample by sample; REVE-Base, retrained from scratch on data converted by this pi
 scores within |check_bench_gap| of the released weights on |check_bench_tasks| public
 OpenEEGBench tasks.
 
-Where the numbers come from
-===========================
+7. Where the numbers come from
+==============================
 
 Every cell carries a provenance label: ``zarr`` (measured in the converted Zarr store),
 ``eegdash`` (EEGDash's catalogue records), ``card`` (REVE's release card), ``stated``
@@ -132,16 +132,16 @@ Every cell carries a provenance label: ``zarr`` (measured in the converted Zarr 
 one dataset in the Zarr store. Status vocabulary: Ingested and Converted (v0) · Blocked
 (ND Licence) · Gated (Distribution Forbidden) · Excluded.
 
-Licences
-========
+8. Licences
+===========
 
 Every dataset tracked, by licence, coloured by status: the licence decides whether a
 converted copy may be redistributed, and under which terms.
 
 .. corpus-figure:: licences
 
-Every dataset tracked
-=====================
+9. Every dataset tracked
+========================
 
 REVE's paper names |paper_named| datasets and its release card lists |card_entries|
 entries, |card_only| of them not in the paper: |universe| datasets in all. |v0_datasets|

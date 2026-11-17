@@ -19,15 +19,15 @@ archives and converted: |v0_datasets| datasets, |v0_hours| hours, |v0_subjects|
 subjects. Every number on this page is measured in the converted Zarr store, as of
 |synced|; :ref:`corpus-download` says how to get it.
 
-In numbers
-==========
+1. In numbers
+=============
 
 .. corpus-figure:: v0-kpis
 
 .. _corpus-download:
 
-Download
-========
+2. Download
+===========
 
 EEGDash Corpus v0 comes in two forms: the converted Zarr store, ready for training, and
 the raw datasets it was converted from, fetched through EEGDash. The corpus table,
@@ -38,8 +38,8 @@ sampling rate, size of the raw copy, licence and the terms it sets. This table s
 with EEGDash: use the name ``"eegdash-corpus-v0"`` in Python, with no separate CSV
 download. The object fetches the raw archive files, not the converted Zarr store.
 
-The converted store
--------------------
+2.1 The converted store
+-----------------------
 
 The store is published on Hugging Face as a gated dataset repository, |hf_corpus|, at
 tag |v0_tag|.
@@ -67,7 +67,11 @@ trained REVE on it is published in `eegdash/eegdash-corpus
 conversion: the sessions and hours kept per dataset, the recordings skipped and the
 channels dropped.
 
-**Download** everything, or a part with ``--include``:
+**Download** everything, or a part with ``--include``, with the newest Hugging Face
+client (``pip install -U huggingface_hub hf_xet``): an older one spends a request per
+file and is paused by the Hub's rate limit over the store's |v0_files| files. For the
+whole store, ``download.sh`` of the code repository goes on until every file is there
+(:ref:`corpus-pretraining-reve`).
 
 .. code-block:: bash
 
@@ -104,8 +108,11 @@ filter does not replace any dataset's licence.
 checks them (add ``--ignore-missing`` after a partial download). The list's own SHA-256,
 at tag |v0_tag|, is |v0_sums_sha256|.
 
-The raw datasets
-----------------
+**Train.** :ref:`corpus-pretraining-reve` pretrains REVE on the store in three steps:
+download, install, pretrain.
+
+2.2 The raw datasets
+--------------------
 
 The raw copy is what the converter turned into the store: the archives' own files,
 fetched through EEGDash into a cache that mirrors each archive's layout. The ids of the
@@ -185,8 +192,8 @@ For a custom list, pass dataset ids or a CSV you maintain:
 The CSV needs a ``dataset_id`` column; an optional ``n_subjects`` column is checked
 against the catalogue during planning.
 
-Electrode coverage
-==================
+3. Electrode coverage
+=====================
 
 One mark per electrode position of the Zarr store (|v0_positions| positions in
 |v0_buckets| channel sets), coloured and sized by the hours recorded there or by the
@@ -202,38 +209,38 @@ number of datasets that include it.
 
       .. corpus-figure:: electrodes-3d
 
-Hours per dataset
-=================
+4. Hours per dataset
+====================
 
 .. corpus-figure:: hours
 
-Channel count per dataset
-=========================
+5. Channel count per dataset
+============================
 
 Both bar lists follow the same order; switch it on either.
 
 .. corpus-figure:: channels
 
-Distributions
-=============
+6. Distributions
+================
 
-Channel-count bands
--------------------
+6.1 Channel-count bands
+-----------------------
 
 .. corpus-figure:: channel-bands
 
-Subjects
---------
+6.2 Subjects
+------------
 
 .. corpus-figure:: subjects
 
-Native sampling rates
----------------------
+6.3 Native sampling rates
+-------------------------
 
 .. corpus-figure:: rates
 
-Paradigms
----------
+6.4 Paradigms
+-------------
 
 The datasets fall into |v0_paradigms| paradigm groups.
 
@@ -249,55 +256,55 @@ epoch and their shares. Hours are summed from the channel-set buckets before rou
 
 .. corpus-figure:: paradigms-table
 
-Subjects against hours
-----------------------
+6.5 Subjects against hours
+--------------------------
 
 .. corpus-figure:: scatter
 
-Recordings
-==========
+7. Recordings
+=============
 
-Recording length
-----------------
+7.1 Recording length
+--------------------
 
 How long one recording lasts in each dataset, summarised by its quantiles (the
 per-recording lengths themselves are not shipped), on a log axis from minutes to days.
 
 .. corpus-figure:: lengths
 
-Recordings per subject
-----------------------
+7.2 Recordings per subject
+--------------------------
 
 How much each subject contributes: recordings and hours per subject, the median subject
 and the subject with the most.
 
 .. corpus-figure:: per-subject
 
-People
-======
+8. People
+=========
 
 Ages and sex of the subjects, for the datasets whose records state them.
 
 .. corpus-figure:: people
 
-From archive to licence
-=======================
+9. From archive to licence
+==========================
 
 Where the hours come from and under which licence; switch the flow width to datasets
 to count datasets instead.
 
 .. corpus-figure:: flow-licence
 
-Training budget
-===============
+10. Training budget
+===================
 
 What one training epoch reads: |v0_tokens| tokens, per dataset, grouped by paradigm,
 each tile shaded by its share of the tokens.
 
 .. corpus-figure:: tokens
 
-Montages
-========
+11. Montages
+============
 
 A channel is one electrode. The columns are the datasets, by channel count, and the
 rows the |montage_rows| standard names used by at least |montage_min| datasets, so nets
@@ -306,8 +313,8 @@ coincide.
 
 .. corpus-figure:: montages
 
-The |v0_datasets| datasets
-==========================
+12. The |v0_datasets| datasets
+==============================
 
 .. corpus-figure:: table-v0
 

@@ -25,6 +25,7 @@ from eegdash.corpus_convert import (
     Shard,
     convert_shard,
     is_local_id,
+    keep_listed,
     plan_shards,
     sample_offsets,
 )
@@ -207,6 +208,71 @@ def test_shard_and_n_shards_select_the_parts(cache, tmp_path, monkeypatch):
     assert len(corpus.convert(tmp_path, **kwargs).shards) == 3 and len(calls) == 3
     with pytest.raises(ValueError, match="shard 3 of 3"):
         corpus.convert(tmp_path, shard=3, **kwargs)
+
+
+class _Record:
+    """A record as the converter reads it: its path inside the dataset."""
+
+    def __init__(self, path):
+        self.record = {"bids_relpath": path}
+
+
+def test_only_a_datasets_own_recordings_are_kept():
+    recs = [
+        _Record("sub-1/ses-0/eeg/sub-1_ses-0_task-x_acq-a_run-0_eeg.bdf"),
+        _Record("sub-1/ses-0/eeg/sub-1_ses-0_task-x_run-0_recording-a_eeg.bdf"),
+        _Record("sourcedata/sub-01/eeg/sub-01_task-x_eeg.edf"),
+        _Record("derivatives/clean/sub-1/eeg/sub-1_task-x_eeg.bdf"),
+    ]
+    kept, left = keep_listed(recs, None)  # no list: everything under sub-*
+    assert kept == recs[:2]
+    assert [x["detail"] for x in left] == ["sourcedata", "derivatives"]
+    kept, left = keep_listed(recs, {recs[0].record["bids_relpath"]})
+    assert kept == recs[:1]  # the old name of the same file is not listed
+    assert [x["reason"] for x in left] == [
+        "not_in_file_list",
+        "outside_subject_folders",
+        "outside_subject_folders",
+    ]
+
+
+def test_a_file_the_list_does_not_name_is_not_converted(tmp_path, bank):
+    pytest.importorskip("zarr")
+    root = tmp_path / "cache" / "ds000002"
+    _recording(root, "01")
+    _recording(root, "01", run=2)
+    one = "sub-01/eeg/sub-01_task-rest_run-1_eeg.set"
+    summary = convert_shard(
+        "ds000002", None, root, tmp_path / "part", bank=bank, files={one}
+    )
+    assert summary["skipped_by_reason"] == {"not_in_file_list": 1}
+    assert summary["n_records_seen"] == 2 and summary["n_sessions"] == 1
+    sessions = _open(tmp_path / "part")["0"].attrs["sessions"]
+    assert [s["file"] for s in sessions] == [one]
+
+
+def test_convert_passes_the_manifests_recordings(cache, tmp_path, monkeypatch):
+    seen = {}
+
+    def fake(dataset, subjects, root, out, **kwargs):
+        seen[dataset] = kwargs["files"]
+        return {"n_sessions": 1, "n_records_seen": 1}
+
+    monkeypatch.setattr(corpus_mod, "convert_shard", fake)
+    manifest = cache / "ds9" / ".eegdash" / "manifest.jsonl"
+    manifest.parent.mkdir(parents=True)
+    rows = [
+        {"dataset": "ds9"},
+        {"path": "sub-a/eeg/sub-a_task-x_eeg.edf", "kind": "recording", "size": 50},
+        {"path": "sub-a/eeg/sub-a_task-x_channels.tsv", "kind": "sidecar", "size": 5},
+    ]
+    manifest.write_text("".join(json.dumps(r) + "\n" for r in rows))
+    corpus = EEGDashCorpus(["demo-1.0", "ds9"], cache_dir=cache)
+    corpus.convert(
+        tmp_path, positions=Bank(["Cz"], np.zeros((1, 3))), require_complete=False
+    )
+    assert seen["ds9"] == {"sub-a/eeg/sub-a_task-x_eeg.edf"}
+    assert len(seen["demo-1.0"]) == 4  # a local tree: the recordings under sub-*
 
 
 # ------------------------------------------------------------ local datasets

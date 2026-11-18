@@ -720,6 +720,7 @@ class EEGDashCorpus:
             reps = reps if shard == 0 else []  # reported once, by the first process
         bank = positions if isinstance(positions, Bank) else None
         ready: dict[str, list[str]] = {}
+        listed: dict[str, set[str] | None] = {}  # per dataset, its recordings
         for part in todo:
             dsid, dest = part.dataset_id, Path(out) / "parts" / part.name
             if (dest / "_DONE").exists():
@@ -728,6 +729,10 @@ class EEGDashCorpus:
                 continue
             if dsid not in ready:
                 rep = self._from_disk(dsid)
+                names = {
+                    p for p, e in rep.entries.items() if e.get("kind") == "recording"
+                }
+                listed[dsid] = names or None
                 ready[dsid] = [] if rep.ok or not require_complete else rep.problems
                 if not rep.ok and require_complete and not rep.problems:
                     ready[dsid] = ["files missing or unchecked: run verify first"]
@@ -748,6 +753,7 @@ class EEGDashCorpus:
                     bank=bank,
                     n_jobs=n_jobs,
                     compress=compress,
+                    files=listed[dsid],
                 )
             except Exception as exc:  # one broken shard must not hide the others
                 reps.append(

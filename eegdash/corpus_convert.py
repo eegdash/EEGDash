@@ -42,7 +42,7 @@ import time
 from collections import Counter
 from dataclasses import dataclass, field
 from pathlib import Path
-from typing import Any, Sequence
+from typing import Any, Collection, Sequence
 
 import numpy as np
 import pandas as pd
@@ -785,6 +785,31 @@ def discover_records(
     return sorted(recs, key=_record_order)
 
 
+def keep_listed(
+    recs: Sequence[Any], files: Collection[str] | None
+) -> tuple[list[Any], list[dict]]:
+    """Split *recs* into the recordings to convert and those left out, with the reason.
+
+    A recording is a dataset's own only under a subject folder of its root:
+    ``sourcedata/`` holds the files a dataset was made from (the same signal a
+    second time), ``derivatives/`` what was computed from it. When *files* is
+    given (the recordings the catalogue or a shipped file list names), a file on
+    disk that is not in it is left out too: a cache keeps a file after the
+    archive renames it, and both names would be converted.
+    """
+    kept, left = [], []
+    for rec in recs:
+        file = record_file(rec)
+        top = file.split("/")[0]
+        if not top.startswith("sub-"):
+            left.append(dict(file=file, reason="outside_subject_folders", detail=top))
+        elif files is not None and file not in files:
+            left.append(dict(file=file, reason="not_in_file_list", detail=""))
+        else:
+            kept.append(rec)
+    return kept, left
+
+
 def record_electrodes(rec: Any, root: Path) -> Path | None:
     """The ``*_electrodes.tsv`` that applies to a record of the dataset at *root*."""
     if isinstance(rec, LocalRecord):
@@ -856,6 +881,7 @@ def convert_shard(
     compress: bool = True,
     use_dataset_positions: bool = True,
     max_records: int | None = None,
+    files: Collection[str] | None = None,
 ) -> dict:
     """Convert one shard into the part folder *out*; returns its summary.
 
@@ -888,6 +914,11 @@ def convert_shard(
         electrodes.tsv; False drops them.
     max_records : int | None
         Stop after this many recordings (a dry run).
+    files : collection of str | None
+        The dataset's recordings, as paths inside it. A recording on disk that
+        is not one of them is left out and listed in the summary
+        (:func:`keep_listed`); None converts every recording under the
+        subject folders.
 
     """
     recipe = get_recipe(recipe)
@@ -913,12 +944,18 @@ def convert_shard(
         raise ValueError(
             f"no recordings found for {dataset} subjects={subjects or 'all'} under {root}"
         )
+    recs, skipped = keep_listed(recs, files)
+    if skipped:
+        reasons = dict(Counter(s["reason"] for s in skipped))
+        logger.warning(
+            "%s: %d recording(s) left out: %s", dataset, len(skipped), reasons
+        )
+    n_left_out = len(skipped)
     if max_records:
         recs = recs[:max_records]
     logger.info("%s subjects=%s: %d recordings", dataset, subjects or "all", len(recs))
 
     writer = ZarrGroupWriter(out, dataset, bank, recipe, compress)
-    skipped: list[dict] = []
     dropped_names: Counter = Counter()
     aligned_names: Counter = Counter()
     sfreqs: Counter = Counter()
@@ -958,7 +995,7 @@ def convert_shard(
         dataset=dataset,
         subjects=list(subjects) if subjects else None,
         offline=True,
-        n_records_seen=len(recs),
+        n_records_seen=len(recs) + n_left_out,
         n_records_typed_from_names=n_typed_from_names,
         skipped=skipped,
         skipped_by_reason=dict(Counter(s["reason"] for s in skipped)),
@@ -1070,6 +1107,7 @@ __all__ = [
     "convert_shard",
     "get_recipe",
     "is_local_id",
+    "keep_listed",
     "plan_shards",
     "preprocess_recording",
     "sample_offsets",

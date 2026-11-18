@@ -800,6 +800,11 @@ def main(argv: Sequence[str] | None = None) -> int:
     parser.add_argument(
         "--positions", help="convert: a {name: [x, y, z]} JSON position bank, metres"
     )
+    parser.add_argument(
+        "--unverified",
+        action="store_true",
+        help="convert: also a dataset whose files were not all verified (refused by default)",
+    )
     args = parser.parse_args(argv)
     named = (_CORPORA / f"{args.corpus}.csv").is_file()
     source = (
@@ -824,6 +829,7 @@ def main(argv: Sequence[str] | None = None) -> int:
             max_bytes=max_bytes,
             n_jobs=args.n_jobs,
             positions=args.positions,
+            require_complete=not args.unverified,
         )
     elif args.command == "plan":
         report = corpus.plan()

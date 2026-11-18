@@ -275,6 +275,19 @@ def test_convert_passes_the_manifests_recordings(cache, tmp_path, monkeypatch):
     assert len(seen["demo-1.0"]) == 4  # a local tree: the recordings under sub-*
 
 
+def test_cli_converts_an_unverified_dataset_only_when_told(tmp_path, bank, capsys):
+    pytest.importorskip("zarr")
+    _recording(tmp_path / "cache" / "ds000003", "01")  # a catalogue id, never planned
+    positions = tmp_path / "bank.json"
+    positions.write_text(json.dumps(dict(zip(bank.names, bank.xyz.tolist()))))
+    args = ["convert", "ds000003", "--cache-dir", str(tmp_path / "cache")]
+    args += ["--out", str(tmp_path / "out"), "--positions", str(positions)]
+    assert corpus_mod.main(args) == 1
+    assert "no manifest" in capsys.readouterr().out
+    assert corpus_mod.main([*args, "--unverified"]) == 0
+    assert " converted " in capsys.readouterr().out
+
+
 # ------------------------------------------------------------ local datasets
 
 

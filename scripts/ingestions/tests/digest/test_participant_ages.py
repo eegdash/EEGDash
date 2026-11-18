@@ -145,6 +145,9 @@ def test_read_participants_age_units_tolerates_bad_json(tmp_path: Path):
         ("hours", "hours"),
         ("decimal years", "years"),
         ("years (decimal)", "years"),
+        ("months (corrected)", "months"),
+        ("corrected age in months", "months"),
+        ("chronological age in days", "days"),
         # Free text is never parsed for a unit; it reads as years.
         ("years and months", None),
         ("age at the day of testing", None),

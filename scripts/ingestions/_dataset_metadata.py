@@ -82,9 +82,11 @@ _AGE_UNIT_SPELLINGS: dict[str, str] = {
 }
 
 # Words a ``Units`` value may carry besides the unit itself ("Year(s)",
-# "decimal years", "age in days"). Anything else makes the value free text,
-# which is read as years (the BIDS default), never parsed for a unit.
-_AGE_UNIT_FILLER_WORDS: frozenset[str] = frozenset({"s", "in", "age", "decimal"})
+# "decimal years", "age in days", infant "months (corrected)"). Anything else
+# makes the value free text, read as years (the BIDS default).
+_AGE_UNIT_FILLER_WORDS: frozenset[str] = frozenset(
+    {"s", "in", "age", "decimal", "corrected", "chronological", "postnatal", "adjusted"}
+)
 
 
 def _canonical_age_unit(raw: object) -> str | None:

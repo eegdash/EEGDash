@@ -15,9 +15,19 @@ the cache against it, and a report::
     corpus.verify(level="hash")          # sizes, then git-annex hashes
     corpus.status()                      # offline, from the manifests
     for raw in corpus.records(): ...     # every recording, offline
+    corpus.shards()                      # the parts a conversion writes
+    corpus.convert("/data/out", shard=3, n_shards=64)  # this process's parts
 
-Command line: ``python -m eegdash.corpus plan|download|verify|status <csv or
-a,b,c> [--cache-dir ...]``; exit code 1 when anything is missing.
+Command line: ``python -m eegdash.corpus plan|download|verify|status|shards|
+convert <name, csv or a,b,c> [--cache-dir ...]``; exit code 1 when anything is
+missing.
+
+A dataset id of the form ``<name>-<version>`` (``tdbrain-3.1``) is a local
+dataset: one the catalogue does not serve, such as a gated one obtained under
+its own terms. Its BIDS tree is read from ``<cache_dir>/<id>/`` (a symbolic
+link will do); it is never queried, downloaded or written to. When
+``corpora/files/<id>.csv`` (``path,size,sha256``) exists, the tree is checked
+against it.
 
 Per dataset the cache holds ``<dataset>/.eegdash/manifest.jsonl`` (a header,
 then one line per expected file: path, kind, size, key, required, state) and
@@ -45,6 +55,21 @@ from typing import Any, Iterator, Sequence
 import pandas as pd
 
 from . import downloader
+from .corpus_convert import (
+    DEFAULT_SHARD_BYTES,
+    PRIMARY_EXT,
+    Bank,
+    ConvertReport,
+    Recipe,
+    Shard,
+    ShardReport,
+    convert_shard,
+    get_recipe,
+    is_local_id,
+    local_subjects,
+    plan_shards,
+    shard_report,
+)
 from .dataset._source_inference import nemar_twin_of
 from .logging import logger
 from .paths import get_default_cache_dir
@@ -151,6 +176,34 @@ def _check(root: Path, entry: dict, level: str) -> None:
             entry["state"] = "incomplete"
     # ponytail: a .set's .fdt is not checked here (reading a .set loads its matrix);
     # download_all raises for a missing one (_require_data_file), so download reports it.
+
+
+def _local_files(dsid: str, root: Path) -> dict[str, dict]:
+    """The expected files of a local dataset: its shipped file list, else its recordings."""
+    listing = _CORPORA / "files" / f"{dsid}.csv"
+    if listing.is_file():
+        rows = pd.read_csv(listing, dtype=str, keep_default_na=False)
+        out = {}
+        for path, size, sha in zip(rows["path"], rows["size"], rows["sha256"]):
+            suffix = "".join(Path(path).suffixes[-1:])
+            is_recording = path.endswith(tuple(f"_eeg{e}" for e in PRIMARY_EXT))
+            out[path] = {
+                "path": path,
+                "kind": "recording" if is_recording else "sidecar",
+                "size": int(size),
+                "key": f"SHA256E-s{int(size)}--{sha.lower()}{suffix}",
+                "required": True,
+            }
+        return out
+    found = sorted(
+        p.relative_to(root).as_posix()
+        for p in root.glob("sub-*/**/eeg/*_eeg.*")
+        if p.suffix in PRIMARY_EXT
+    )
+    return {
+        p: {"path": p, "kind": "recording", "size": None, "key": None, "required": True}
+        for p in found
+    }
 
 
 def _state(root: Path, entries: dict[str, dict]) -> str:
@@ -309,7 +362,36 @@ class EEGDashCorpus:
             return self.cache_dir / twin
         return self.cache_dir / dsid
 
+    def _local(self, dsid: str, level: str = "size") -> DatasetReport:
+        """A local dataset, from its tree: nothing is queried and nothing written."""
+        root = self.cache_dir / dsid
+        rep = DatasetReport(dsid, state="local")
+        if not root.is_dir():
+            rep.state = "problem"
+            rep.problems.append(
+                f"local: obtain it under its terms and place its BIDS tree at {root}"
+            )
+            return rep
+        rep.entries = _local_files(dsid, root)
+        escaped = [
+            p for p in rep.entries if Path(p).is_absolute() or ".." in Path(p).parts
+        ]
+        if escaped:
+            rep.entries = {}
+            rep.problems.append(f"path outside the dataset folder: {escaped[0]}")
+            return rep
+        for entry in rep.entries.values():
+            _check(root, entry, level)
+        rep.subjects = len({p.split("/")[0] for p in rep.entries if p[:4] == "sub-"})
+        if not rep.entries:
+            rep.problems.append(f"no recording under {root}")
+        elif not rep.ok:
+            rep.state = "partial"
+        return rep
+
     def _from_disk(self, dsid: str) -> DatasetReport:
+        if is_local_id(dsid):
+            return self._local(dsid)
         root = self._root(dsid)
         header, entries = _read_manifest(root)
         rep = DatasetReport(
@@ -342,6 +424,8 @@ class EEGDashCorpus:
         """Plan one dataset; returns its report and the ``EEGDashDataset`` (None on a problem)."""
         from .dataset import EEGDashDataset  # noqa: PLC0415 (heavy import)
 
+        if is_local_id(dsid):
+            return self._local(dsid), None
         rep = DatasetReport(dsid, state="problem")
         if self.client is None:
             from .api import EEGDash  # noqa: PLC0415
@@ -489,10 +573,15 @@ class EEGDashCorpus:
         if level not in ("size", "hash"):
             raise ValueError(f"level must be 'size' or 'hash', got {level!r}")
         t0 = time.monotonic()
-        reps = [self._from_disk(d) for d in self.ids]
-        for rep in reps:
+        reps = []
+        for dsid in self.ids:
+            if is_local_id(dsid):  # checked in place: no manifest, no COMPLETE
+                reps.append(self._local(dsid, level))
+                continue
+            rep = self._from_disk(dsid)
             if rep.entries:
-                self._check_all(rep, self._root(rep.dataset_id), level, n_jobs)
+                self._check_all(rep, self._root(dsid), level, n_jobs)
+            reps.append(rep)
         return CorpusReport("verify", reps, time.monotonic() - t0)
 
     @staticmethod
@@ -522,10 +611,151 @@ class EEGDashCorpus:
         from .dataset import EEGDashDataset  # noqa: PLC0415 (heavy import)
 
         for dsid in self.ids:
-            folder = self._root(dsid).name
+            root = self._root(dsid)
+            if root.is_symlink():  # paths are recorded against the real folder
+                root = root.resolve()
             yield from EEGDashDataset(
-                cache_dir=self.cache_dir, dataset=folder, download=False
+                cache_dir=root.parent, dataset=root.name, download=False
             ).datasets
+
+    # -- convert ----------------------------------------------------------
+
+    def _subject_bytes(self, dsid: str) -> dict[str, int]:
+        """Subject -> bytes, offline: from the manifest, else from the tree."""
+        root = self._root(dsid)
+        _, entries = ({}, {}) if is_local_id(dsid) else _read_manifest(root)
+        if not entries:
+            return local_subjects(root) if root.is_dir() else {}
+        sizes: Counter = Counter()
+        subjects = set()
+        for path, entry in entries.items():
+            first = path.split("/")[0]
+            if not first.startswith("sub-"):
+                continue
+            sizes[first[4:]] += entry.get("size") or entry.get("bytes") or 0
+            if entry.get("kind") == "recording":
+                subjects.add(first[4:])
+        return {s: sizes[s] for s in subjects}
+
+    def shards(self, *, max_bytes: int = DEFAULT_SHARD_BYTES) -> list[Shard]:
+        """The parts a conversion writes: per dataset, its subjects in groups of *max_bytes*.
+
+        Computed offline from the manifests (or the tree of a local dataset),
+        datasets in the order of the corpus and subjects sorted, so every
+        process that asks gets the same list. A dataset that is not on disk
+        has no shard.
+        """
+        return [
+            shard
+            for dsid in self.ids
+            for shard in plan_shards(dsid, self._subject_bytes(dsid), max_bytes)
+        ]
+
+    def convert(
+        self,
+        out: str | Path,
+        *,
+        recipe: str | Recipe = "reve",
+        shard: int | None = None,
+        n_shards: int | None = None,
+        max_bytes: int = DEFAULT_SHARD_BYTES,
+        n_jobs: int = 1,
+        positions: str | Path | Bank | None = None,
+        require_complete: bool = True,
+        compress: bool = True,
+    ) -> ConvertReport:
+        """Convert shards into ``<out>/parts/<dataset>_<kkk>/``, one part each.
+
+        Parameters
+        ----------
+        out : str | Path
+            Where the parts go.
+        recipe : str | Recipe
+            The preprocessing (:class:`~eegdash.corpus_convert.Recipe`).
+        shard, n_shards : int | None
+            Which of :meth:`shards` this process converts: all of them, one
+            after the other, when *shard* is None; shard number *shard* alone
+            when *n_shards* is None; else every *n_shards*-th starting at
+            *shard*, so that ``n_shards`` processes given ``shard=0`` to
+            ``n_shards - 1`` (a job array, a pool) convert the corpus between
+            them. A part that holds ``_DONE`` is skipped.
+        max_bytes : int
+            As for :meth:`shards`; every process must use the same value.
+        n_jobs : int
+            Workers for the filter and the resampling of one recording.
+        positions : str | Path | Bank | None
+            The position bank, or a ``{name: [x, y, z]}`` JSON file in metres;
+            by default REVE's public bank through braindecode.
+        require_complete : bool
+            Refuse a dataset whose files are not all there (``verify``); False
+            converts whatever the cache holds.
+        compress : bool
+            Blosc-zstd chunks.
+
+        Returns
+        -------
+        ConvertReport
+            One row per shard; ``ok`` when each wrote at least one session.
+
+        """
+        t0 = time.monotonic()
+        recipe = get_recipe(recipe)
+        refused = [d for d in self.ids if recipe.refuses(d)]
+        if refused:
+            raise ValueError(
+                f"benchmark source(s) of recipe {recipe.name!r} in the corpus: {refused}"
+            )
+        todo = self.shards(max_bytes=max_bytes)
+        planned = {s.dataset_id for s in todo}
+        reps = [
+            ShardReport(d, d, problems=["nothing on disk: download or place it first"])
+            for d in self.ids
+            if d not in planned
+        ]
+        if shard is not None:
+            n = len(todo) if n_shards is None else n_shards
+            if not 0 <= shard < max(n, 1):
+                raise ValueError(f"shard {shard} of {n}")
+            todo = todo[shard::n] if n_shards else todo[shard : shard + 1]
+            reps = reps if shard == 0 else []  # reported once, by the first process
+        bank = positions if isinstance(positions, Bank) else None
+        ready: dict[str, list[str]] = {}
+        for part in todo:
+            dsid, dest = part.dataset_id, Path(out) / "parts" / part.name
+            if (dest / "_DONE").exists():
+                summary = json.loads((dest / "summary.json").read_text())
+                reps.append(shard_report(part, "done", summary))
+                continue
+            if dsid not in ready:
+                rep = self._from_disk(dsid)
+                ready[dsid] = [] if rep.ok or not require_complete else rep.problems
+                if not rep.ok and require_complete and not rep.problems:
+                    ready[dsid] = ["files missing or unchecked: run verify first"]
+            if ready[dsid]:
+                reps.append(ShardReport(part.name, dsid, problems=ready[dsid]))
+                continue
+            if bank is None:
+                bank = (
+                    Bank.from_json(positions) if positions else Bank.from_braindecode()
+                )
+            try:
+                summary = convert_shard(
+                    dsid,
+                    part.subjects,
+                    self._root(dsid),
+                    dest,
+                    recipe=recipe,
+                    bank=bank,
+                    n_jobs=n_jobs,
+                    compress=compress,
+                )
+            except Exception as exc:  # one broken shard must not hide the others
+                reps.append(
+                    ShardReport(part.name, dsid, problems=[f"failed: {exc!r}"[:300]])
+                )
+                continue
+            reps.append(shard_report(part, "converted", summary))
+        return ConvertReport(reps, time.monotonic() - t0)
 
 
 def main(argv: Sequence[str] | None = None) -> int:
@@ -533,8 +763,13 @@ def main(argv: Sequence[str] | None = None) -> int:
         prog="python -m eegdash.corpus",
         description="Plan, download, verify and report a corpus of EEGDash datasets.",
     )
-    parser.add_argument("command", choices=("plan", "download", "verify", "status"))
-    parser.add_argument("corpus", help="a CSV with a dataset_id column, or ids a,b,c")
+    parser.add_argument(
+        "command",
+        choices=("plan", "download", "verify", "status", "shards", "convert"),
+    )
+    parser.add_argument(
+        "corpus", help="a corpus name, a CSV with a dataset_id column, or ids a,b,c"
+    )
     parser.add_argument(
         "--cache-dir", help="default EEGDASH_CACHE_DIR or ./.eegdash_cache"
     )
@@ -547,10 +782,44 @@ def main(argv: Sequence[str] | None = None) -> int:
         "--level", choices=("size", "hash"), default="size", help="verify"
     )
     parser.add_argument("--json", help="write the report here as JSON")
+    parser.add_argument("--out", help="convert: the parts go to <out>/parts/")
+    parser.add_argument("--shard", type=int, help="convert: this process's number")
+    parser.add_argument(
+        "--n-shards", type=int, help="convert: how many processes share the shards"
+    )
+    parser.add_argument("--recipe", default="reve", help="convert")
+    parser.add_argument(
+        "--max-gb", type=float, help="shards, convert: raw gigabytes per shard"
+    )
+    parser.add_argument(
+        "--positions", help="convert: a {name: [x, y, z]} JSON position bank, metres"
+    )
     args = parser.parse_args(argv)
-    source = args.corpus if Path(args.corpus).is_file() else args.corpus.split(",")
+    named = (_CORPORA / f"{args.corpus}.csv").is_file()
+    source = (
+        args.corpus if named or Path(args.corpus).is_file() else args.corpus.split(",")
+    )
     corpus = EEGDashCorpus(source, cache_dir=args.cache_dir)
-    if args.command == "plan":
+    max_bytes = int(args.max_gb * 1024**3) if args.max_gb else DEFAULT_SHARD_BYTES
+    if args.command == "shards":
+        shards = corpus.shards(max_bytes=max_bytes)
+        for k, s in enumerate(shards):
+            print(f"{k}\t{s.name}\t{len(s.subjects)}\t{s.n_bytes / 1e9:.2f} GB")
+        print(f"shards: {len(shards)}")
+        return 0 if shards else 1
+    if args.command == "convert":
+        if not args.out:
+            parser.error("convert needs --out")
+        report = corpus.convert(
+            args.out,
+            recipe=args.recipe,
+            shard=args.shard,
+            n_shards=args.n_shards,
+            max_bytes=max_bytes,
+            n_jobs=args.n_jobs,
+            positions=args.positions,
+        )
+    elif args.command == "plan":
         report = corpus.plan()
     elif args.command == "download":
         report = corpus.download(
@@ -566,7 +835,15 @@ def main(argv: Sequence[str] | None = None) -> int:
     return 0 if report.ok else 1
 
 
-__all__ = ["EEGDashCorpus", "CorpusReport", "DatasetReport", "main"]
+__all__ = [
+    "EEGDashCorpus",
+    "CorpusReport",
+    "ConvertReport",
+    "DatasetReport",
+    "Recipe",
+    "Shard",
+    "main",
+]
 
 if __name__ == "__main__":
     sys.exit(main())

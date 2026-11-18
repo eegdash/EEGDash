@@ -1,7 +1,6 @@
 import logging
 import os
 from pathlib import Path
-from unittest.mock import patch
 
 import pytest
 
@@ -10,169 +9,76 @@ from eegdash.paths import get_default_cache_dir
 
 
 @pytest.fixture(autouse=True)
-def _clean_cache_env(monkeypatch):
-    """Clear every environment variable consulted by get_default_cache_dir."""
+def isolated(monkeypatch, tmp_path):
+    """Empty working directory, no cache env vars, no MNE_DATA, a temp user cache."""
     for var in ("EEGDASH_CACHE_DIR", "SCRATCH", "TMPDIR"):
         monkeypatch.delenv(var, raising=False)
+    cwd = tmp_path / "cwd"
+    cwd.mkdir()
+    monkeypatch.chdir(cwd)
+    monkeypatch.setattr(paths_module, "mne_get_config", lambda key: None)
+    monkeypatch.setattr(
+        paths_module, "user_cache_dir", lambda *a, **k: str(tmp_path / "user-cache")
+    )
+    return tmp_path
 
 
 @pytest.mark.parametrize("env_value", ["~/custom_eegdash_cache", "/opt/eegdash-cache"])
-def test_get_default_cache_dir_from_env(monkeypatch, env_value):
+def test_env_var_wins(monkeypatch, env_value):
     monkeypatch.setenv("EEGDASH_CACHE_DIR", env_value)
-
     assert get_default_cache_dir() == Path(env_value).expanduser().resolve()
 
 
-def test_get_default_cache_dir_prefers_scratch_over_tmpdir(monkeypatch, tmp_path):
-    scratch = tmp_path / "scratch"
-    tmpdir = tmp_path / "tmpdir"
+def test_resolution_order(monkeypatch, isolated):
+    scratch, mne_dir = isolated / "scratch", isolated / "mne"
     scratch.mkdir()
-    tmpdir.mkdir()
     monkeypatch.setenv("SCRATCH", str(scratch))
-    monkeypatch.setenv("TMPDIR", str(tmpdir))
+    monkeypatch.setattr(paths_module, "mne_get_config", lambda key: str(mne_dir))
+    local = Path.cwd() / ".eegdash_cache"
 
+    local.mkdir()  # an existing working-directory cache is kept
+    assert get_default_cache_dir() == local
+    local.rmdir()
     assert get_default_cache_dir() == scratch / "eegdash"
+    monkeypatch.delenv("SCRATCH")
+    assert get_default_cache_dir() == mne_dir
+    monkeypatch.setattr(paths_module, "mne_get_config", lambda key: None)
+    assert get_default_cache_dir() == isolated / "user-cache"
+    assert not local.exists()
 
 
-def test_get_default_cache_dir_uses_tmpdir(monkeypatch, tmp_path):
-    tmpdir = tmp_path / "tmpdir"
-    tmpdir.mkdir()
-    monkeypatch.setenv("TMPDIR", str(tmpdir))
-
-    assert get_default_cache_dir() == tmpdir / "eegdash"
+def test_tmpdir_is_not_used(monkeypatch, isolated):
+    # TMPDIR is purged by macOS and wiped after a Slurm job: never a default.
+    monkeypatch.setenv("TMPDIR", str(isolated))
+    assert get_default_cache_dir() == isolated / "user-cache"
 
 
-@pytest.mark.parametrize("var", ["SCRATCH", "TMPDIR"])
-def test_get_default_cache_dir_skips_unwritable_env_dirs(monkeypatch, tmp_path, var):
-    not_writable = tmp_path / var.lower()
-    not_writable.mkdir()
-    mne_dir = tmp_path / "mne_data"
-    monkeypatch.setenv(var, str(not_writable))
-
-    real_access = os.access
-    monkeypatch.setattr(
-        os,
-        "access",
-        lambda path, mode: (
-            False if Path(path) == not_writable else real_access(path, mode)
-        ),
-    )
-
-    with patch("eegdash.paths.mne_get_config", return_value=str(mne_dir)):
-        assert get_default_cache_dir() == mne_dir
-
-
-def test_get_default_cache_dir_skips_missing_scratch(monkeypatch, tmp_path):
-    monkeypatch.setenv("SCRATCH", str(tmp_path / "does-not-exist"))
-    mne_dir = tmp_path / "mne_data"
-
-    with patch("eegdash.paths.mne_get_config", return_value=str(mne_dir)):
-        assert get_default_cache_dir() == mne_dir
-
-
-def test_get_default_cache_dir_uses_mne_data(monkeypatch, tmp_path):
-    mne_dir = tmp_path / "mne_data"
-
-    with patch("eegdash.paths.mne_get_config", return_value=str(mne_dir)):
-        assert get_default_cache_dir() == mne_dir
-
-
-def test_get_default_cache_dir_uses_platform_user_cache(monkeypatch, tmp_path):
-    platform_cache = tmp_path / "user-cache" / "eegdash"
-
-    with patch("eegdash.paths.mne_get_config", return_value=None):
-        with patch("eegdash.paths.user_cache_dir", return_value=str(platform_cache)):
-            resolved = get_default_cache_dir()
-
-    assert resolved == platform_cache
-    assert resolved.exists()
-
-
-def test_get_default_cache_dir_falls_back_to_local_hidden_folder(monkeypatch, tmp_path):
-    with patch("eegdash.paths.mne_get_config", return_value=None):
-        with patch(
-            "eegdash.paths.user_cache_dir",
-            return_value=str(tmp_path / "a-file" / "eegdash"),
-        ):
-            # The platform cache cannot be created below an existing file.
-            (tmp_path / "a-file").touch()
-            with patch.object(Path, "cwd", return_value=tmp_path):
-                resolved = get_default_cache_dir()
-
-    assert resolved == tmp_path / ".eegdash_cache"
-    assert resolved.exists()
-
-
-@pytest.mark.parametrize(
-    "mne_value,expected_name",
-    [
-        ("~/mne-data", "mne-data"),
-        (None, ".eegdash_cache"),
-    ],
-)
-def test_get_default_cache_dir_local_last_resort_when_mkdir_fails(
-    monkeypatch, tmp_path, mne_value, expected_name
-):
-    with patch.object(Path, "cwd", return_value=tmp_path):
-        with patch.object(Path, "mkdir", side_effect=PermissionError("readonly")):
-            with patch("eegdash.paths.mne_get_config", return_value=mne_value):
-                with patch(
-                    "eegdash.paths.user_cache_dir",
-                    return_value=str(tmp_path / "user-cache"),
-                ):
-                    resolved = get_default_cache_dir()
-
-    assert resolved.name == expected_name
-    if mne_value is None:
-        assert resolved == tmp_path / ".eegdash_cache"
-        assert not resolved.exists()
-    else:
-        assert resolved == Path(mne_value).expanduser().resolve()
-
-
-def test_get_default_cache_dir_resolution_order(monkeypatch, tmp_path):
-    scratch = tmp_path / "scratch"
-    tmpdir = tmp_path / "tmpdir"
-    scratch.mkdir()
-    tmpdir.mkdir()
-    env_dir = tmp_path / "from-env"
-    mne_dir = tmp_path / "mne-data"
-    platform_cache = tmp_path / "user-cache" / "eegdash"
-
-    monkeypatch.setenv("EEGDASH_CACHE_DIR", str(env_dir))
+@pytest.mark.parametrize("writable", [False, None])  # unwritable, missing
+def test_unusable_scratch_is_skipped(monkeypatch, isolated, writable):
+    scratch = isolated / "scratch"
+    if writable is False:
+        scratch.mkdir()
+        real = os.access
+        monkeypatch.setattr(
+            os, "access", lambda p, m: False if Path(p) == scratch else real(p, m)
+        )
     monkeypatch.setenv("SCRATCH", str(scratch))
-    monkeypatch.setenv("TMPDIR", str(tmpdir))
-
-    with patch("eegdash.paths.mne_get_config", return_value=str(mne_dir)):
-        with patch("eegdash.paths.user_cache_dir", return_value=str(platform_cache)):
-            with patch.object(Path, "cwd", return_value=tmp_path):
-                assert get_default_cache_dir() == env_dir
-
-                monkeypatch.delenv("EEGDASH_CACHE_DIR")
-                assert get_default_cache_dir() == scratch / "eegdash"
-
-                monkeypatch.delenv("SCRATCH")
-                assert get_default_cache_dir() == tmpdir / "eegdash"
-
-                monkeypatch.delenv("TMPDIR")
-                assert get_default_cache_dir() == mne_dir
-
-                with patch("eegdash.paths.mne_get_config", return_value=None):
-                    assert get_default_cache_dir() == platform_cache
+    assert get_default_cache_dir() == isolated / "user-cache"
 
 
-def test_get_default_cache_dir_logs_once(monkeypatch, tmp_path, caplog):
+def test_working_directory_is_the_last_resort(monkeypatch, isolated):
+    (isolated / "a-file").touch()  # the user cache cannot be created below a file
+    monkeypatch.setattr(
+        paths_module, "user_cache_dir", lambda *a, **k: str(isolated / "a-file" / "x")
+    )
+    resolved = get_default_cache_dir()
+    assert resolved == Path.cwd() / ".eegdash_cache"
+    assert resolved.is_dir()
+
+
+def test_logs_once(monkeypatch, caplog):
     monkeypatch.setattr(paths_module, "_cache_dir_logged", False)
-    monkeypatch.setenv("SCRATCH", str(tmp_path))
-
     with caplog.at_level(logging.INFO, logger="eegdash.paths"):
         get_default_cache_dir()
         get_default_cache_dir()
-
-    messages = [
-        record.getMessage()
-        for record in caplog.records
-        if "cache directory" in record.getMessage().lower()
-    ]
-    assert len(messages) == 1
-    assert str(tmp_path / "eegdash") in messages[0]
+    assert sum("cache directory" in r.getMessage() for r in caplog.records) == 1

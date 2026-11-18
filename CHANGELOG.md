@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Changed
+- The default cache directory is no longer the working directory: after `EEGDASH_CACHE_DIR` and an existing `./.eegdash_cache` (kept, so nothing is downloaded again), it is `$SCRATCH/eegdash` when `$SCRATCH` is writable, then `MNE_DATA`, then the platform user cache (`platformdirs`); `./.eegdash_cache` is the last resort. The resolved path is logged once (#400, #435 by Christopher Pruijsen).
 - Requires `mne>=1.13` and `mne_bids>=0.20` (were 1.11 / 0.19). MNE 1.11 has no `read_raw_mef`, so MNE-BIDS left `.mefd` out of its readers and EEGDash silently dropped the 640 MEF3 records; 1.13 also reuses the MEF session across reads (mne-python#14254).
 
 ### Added

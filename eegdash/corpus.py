@@ -264,8 +264,8 @@ class EEGDashCorpus:
         or the path of a CSV with a ``dataset_id`` column (an ``n_subjects``
         column is checked against the catalogue when present).
     cache_dir : str | Path | None
-        As for :class:`EEGDashDataset` (``EEGDASH_CACHE_DIR``, else
-        ``./.eegdash_cache``).
+        As for :class:`EEGDashDataset` (see
+        :func:`eegdash.paths.get_default_cache_dir`).
     eeg_dash_instance : EEGDash | None
         The catalogue client, created when first needed (verify, status and
         records never need one).
@@ -536,7 +536,7 @@ def main(argv: Sequence[str] | None = None) -> int:
     parser.add_argument("command", choices=("plan", "download", "verify", "status"))
     parser.add_argument("corpus", help="a CSV with a dataset_id column, or ids a,b,c")
     parser.add_argument(
-        "--cache-dir", help="default EEGDASH_CACHE_DIR or ./.eegdash_cache"
+        "--cache-dir", help="default: eegdash.paths.get_default_cache_dir()"
     )
     parser.add_argument("--n-jobs", type=int, default=8)
     parser.add_argument("--n-datasets", type=int, default=2, help="download")

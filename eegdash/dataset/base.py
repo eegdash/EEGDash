@@ -510,9 +510,9 @@ def _destination_lock(dest: Path) -> threading.Lock:
     """
     # resolve(), not absolute(): two spellings of one file must map to one lock.
     # absolute() leaves symlinks and ".." in place and is cwd-dependent, and
-    # cache_dir is frequently relative (EEGDASH_CACHE_DIR defaults to
-    # ".eegdash_cache"), so absolute() would hand two callers different locks
-    # for the same destination and serialize nothing.
+    # cache_dir is frequently relative (EEGDASH_CACHE_DIR or a cache_dir
+    # argument such as ".eegdash_cache"), so absolute() would hand two callers
+    # different locks for the same destination and serialize nothing.
     key = dest.resolve()
     with _DESTINATION_LOCKS_GUARD:
         return _DESTINATION_LOCKS.setdefault(key, threading.Lock())

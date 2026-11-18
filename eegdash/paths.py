@@ -52,59 +52,49 @@ def _log_resolved(path: Path) -> Path:
 def get_default_cache_dir() -> Path:
     """Resolve the default cache directory for EEGDash data.
 
-    The function determines the cache directory based on the following
-    priority order:
+    The first match wins:
 
-     1. The path specified by the ``EEGDASH_CACHE_DIR`` environment variable.
-     2. An ``eegdash`` directory inside ``$SCRATCH`` when it points to a
+     1. The ``EEGDASH_CACHE_DIR`` environment variable.
+     2. An existing ``.eegdash_cache`` in the current working directory (the
+        previous default), so an existing cache is not downloaded again.
+     3. An ``eegdash`` directory inside ``$SCRATCH`` when it points to a
         writable directory (common on HPC clusters).
-     3. An ``eegdash`` directory inside ``$TMPDIR`` when it points to a
-        writable directory.
-     4. The path specified by the ``MNE_DATA`` configuration in the
-        MNE-Python config file.
+     4. The ``MNE_DATA`` configuration of MNE-Python.
      5. The platform user-cache directory
         (:func:`platformdirs.user_cache_dir`).
-     6. A hidden directory named ``.eegdash_cache`` in the current working
-        directory (last resort).
+     6. ``.eegdash_cache`` in the current working directory (last resort).
 
-    The resolved path is logged once per process at first use.
+    The resolved path is logged once per process.
 
     Returns
     -------
-    pathlib.Path
+    Path
         The resolved, absolute path to the default cache directory.
 
     """
-    # 1) Explicit env var wins
     env_dir = os.environ.get("EEGDASH_CACHE_DIR")
     if env_dir:
         return _log_resolved(Path(env_dir).expanduser().resolve())
 
-    # 2) HPC scratch space if usable
+    local = Path.cwd() / ".eegdash_cache"
+    if local.is_dir():
+        return _log_resolved(local)
+
     scratch = os.environ.get("SCRATCH")
     if scratch and _is_writable_dir(Path(scratch).expanduser()):
         return _log_resolved(Path(scratch).expanduser().resolve() / "eegdash")
 
-    # 3) TMPDIR if usable
-    tmpdir = os.environ.get("TMPDIR")
-    if tmpdir and _is_writable_dir(Path(tmpdir).expanduser()):
-        return _log_resolved(Path(tmpdir).expanduser().resolve() / "eegdash")
-
-    # 4) MNE's configured data directory
     mne_data = mne_get_config("MNE_DATA")
     if mne_data:
         return _log_resolved(Path(mne_data).expanduser().resolve())
 
-    # 5) Platform user-cache directory
     platform_cache = Path(user_cache_dir("eegdash", appauthor=False))
     if _create_and_check_writable(platform_cache):
         return _log_resolved(platform_cache)
 
-    # 6) Last resort: a hidden folder in the current working directory
-    local = Path.cwd() / ".eegdash_cache"
     try:
         local.mkdir(exist_ok=True, parents=True)
-    except Exception:
+    except OSError:
         pass
     return _log_resolved(local)
 

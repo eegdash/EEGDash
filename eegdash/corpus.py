@@ -236,6 +236,19 @@ class DatasetReport:
         states = [e.get("state") for e in self.entries.values()]
         return not self.problems and bool(states) and all(s in _OK for s in states)
 
+    @property
+    def twins(self) -> list[list[str]]:
+        """Recordings the file list names more than once: the same bytes (one key) under several paths.
+
+        An archive that renames its files may list both names for a while, and
+        both would be converted: the same signal twice.
+        """
+        by_key: dict[str, list[str]] = {}
+        for path, e in self.entries.items():
+            if e.get("kind") == "recording" and e.get("key"):
+                by_key.setdefault(e["key"], []).append(path)
+        return sorted(sorted(paths) for paths in by_key.values() if len(paths) > 1)
+
     def row(self) -> dict[str, Any]:
         c = Counter(e.get("state") for e in self.entries.values())
         c["files"] = len(self.entries)
@@ -253,6 +266,7 @@ class DatasetReport:
             "gb_present": round(present / 1e9, 2),
             "gb_expected": round(expected / 1e9, 2),
             "subjects": self.subjects,
+            "twins": sum(len(t) - 1 for t in self.twins),
         }
 
 
@@ -285,6 +299,7 @@ class CorpusReport:
                     **d.row(),
                     "problems": d.problems,
                     "drift": d.drift,
+                    "twins": d.twins,
                     "not_present": [
                         e for e in d.entries.values() if e.get("state") != "present"
                     ],
@@ -300,6 +315,12 @@ class CorpusReport:
             [
                 frame.to_string(index=False),
                 *(f"PROBLEM {p}" for p in self.problems),
+                *(
+                    f"TWINS {d.dataset_id}: {sum(len(t) - 1 for t in d.twins)} "
+                    f"recording(s) listed under a second name, first: {' = '.join(d.twins[0])}"
+                    for d in self.datasets
+                    if d.twins
+                ),
                 f"{self.action}: {len(frame)} datasets, "
                 + ", ".join(f"{total[k]} {k}" for k in _COUNTED)
                 + f"; {len(self.problems)} problem(s); {self.seconds:.0f} s",

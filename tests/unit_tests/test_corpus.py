@@ -395,6 +395,48 @@ def test_brainvision_samples_file_is_required(tmp_path, archive, s3):
     assert report.datasets[0].state != "complete"
 
 
+def test_a_recording_listed_under_two_names_is_reported(tmp_path):
+    """The same bytes (one key) under two paths: an archive that renamed its files lists both."""
+    manifest = tmp_path / "nm9" / ".eegdash" / "manifest.jsonl"
+    manifest.parent.mkdir(parents=True)
+    old = "sub-1/eeg/sub-1_task-x_run-0_recording-a_eeg.bdf"
+    new = "sub-1/eeg/sub-1_task-x_acq-a_run-0_eeg.bdf"
+    rows = [
+        {"dataset": "nm9"},
+        {"path": new, "kind": "recording", "size": 9, "key": "MD5E-s9--aa.bdf"},
+        {"path": old, "kind": "recording", "size": 9, "key": "MD5E-s9--aa.bdf"},
+        {
+            "path": "sub-2/eeg/sub-2_task-x_eeg.bdf",
+            "kind": "recording",
+            "size": 9,
+            "key": "MD5E-s9--bb.bdf",
+        },
+        {
+            "path": "sub-1/eeg/a_channels.tsv",
+            "kind": "sidecar",
+            "size": 1,
+            "key": "MD5E-s1--cc.tsv",
+        },
+        {
+            "path": "sub-2/eeg/a_channels.tsv",
+            "kind": "sidecar",
+            "size": 1,
+            "key": "MD5E-s1--cc.tsv",
+        },
+    ]
+    for r in rows[1:]:
+        r.update(required=True, state="present", bytes=r["size"])
+    manifest.write_text("".join(json.dumps(r) + "\n" for r in rows))
+    report = EEGDashCorpus(["nm9"], cache_dir=tmp_path).status()
+    assert report.datasets[0].twins == [[new, old]]  # sidecars may share bytes
+    assert report.datasets[0].row()["twins"] == 1
+    assert report.to_dict()["datasets"][0]["twins"] == [[new, old]]
+    assert (
+        f"TWINS nm9: 1 recording(s) listed under a second name, first: {new} = {old}"
+        in str(report)
+    )
+
+
 def test_status_is_offline(tmp_path, archive, s3):
     corpus = _corpus(tmp_path, archive)
     report = corpus.status()

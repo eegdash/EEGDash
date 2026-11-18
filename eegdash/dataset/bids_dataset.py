@@ -8,21 +8,26 @@ This module provides the EEGBIDSDataset class for interfacing with local BIDS
 datasets on the filesystem, parsing metadata, and retrieving BIDS-related information.
 """
 
+import fnmatch
 import json
 import os
 import re
-from pathlib import Path
+import time
+from collections.abc import Iterable
+from functools import lru_cache
+from pathlib import Path, PurePosixPath
 from typing import Any
 
 import pandas as pd
 from mne_bids import BIDSPath, find_matching_paths, get_entities_from_fname
 from mne_bids.config import ALLOWED_DATATYPE_EXTENSIONS, EPHY_ALLOWED_DATATYPES, reader
+from mne_bids.path import _find_best_candidates
 
 # Known companion/sidecar files for specific formats (BIDS spec requirement)
 # These files must be downloaded together with the primary file
 _COMPANION_FILES = {
     ".set": [".fdt"],  # EEGLAB: data file
-    ".vhdr": [".eeg", ".vmrk", ".dat"],  # BrainVision: data + marker files
+    ".vhdr": [".eeg", ".vmrk"],  # BrainVision: data + marker files
 }
 
 # Modality directory aliases - different sources use different naming conventions
@@ -33,6 +38,39 @@ _MODALITY_DIR_ALIASES = {
 }
 
 _TSV_ENCODINGS = ("utf-8", "cp1252", "latin-1")
+
+
+def position_sidecars(bids_relpath: str, relpaths: Iterable[str]) -> list[str]:
+    """Return the electrodes.tsv and coordsystem.json MNE-BIDS weighs for a recording.
+
+    ``relpaths`` are the dataset's files, relative to its root. By BIDS
+    inheritance a sidecar in the recording's folder, or in a parent folder up to
+    the subject's, applies unless one of its entities contradicts the
+    recording's (``sub-01_acq-1min_space-MNI152NLin2009aSym_electrodes.tsv`` for
+    ``sub-01_task-x_acq-1min_ieeg.vhdr``). Of those, MNE-BIDS reads the best
+    match (``_find_best_candidates``); every tie is returned, such as one file
+    per ``space-`` label.
+    """
+    rec = PurePosixPath(bids_relpath)
+    subject = rec.parts[0]
+    if not subject.startswith("sub-"):
+        return []
+    folders = {rec.parents[i] for i in range(len(rec.parts) - 1)}
+    entities = get_entities_from_fname(rec.name, on_error="ignore")
+    relpaths = list(relpaths)
+    found = []
+    # ponytail: dataset-root sidecars (no sub- entity) are not looked for; no
+    # catalogue iEEG deposit has one. MNE-BIDS reads them when no subject one fits.
+    for suffix in ("_electrodes.tsv", "_coordsystem.json"):
+        candidates = sorted(
+            p
+            for p in relpaths
+            if p.endswith(suffix)
+            and PurePosixPath(p).parent in folders
+            and PurePosixPath(p).name.startswith(f"{subject}_")
+        )
+        found += _find_best_candidates(entities, candidates)
+    return found
 
 
 def _read_tsv_column(tsv_path: Path, column: str) -> list[str]:
@@ -63,6 +101,35 @@ def _read_participants_tsv(tsv_path: Path) -> pd.DataFrame | None:
         return None
     df.set_index("participant_id", inplace=True)
     return df
+
+
+_RACY_NS = 2_000_000_000
+
+
+@lru_cache(maxsize=256)
+def _dir_names(path: str, mtime_ns: int) -> tuple[str, ...]:
+    return tuple(sorted(os.listdir(path)))
+
+
+def glob_dir(directory: Path, pattern: str) -> list[Path]:
+    """``directory.glob(pattern)`` (one level, sorted) from a cached listing.
+
+    Per-recording sidecar lookups re-list the same directory; with 22,507 files
+    in one folder (nm000359) that is quadratic. The listing is keyed on the
+    directory's mtime, so adding or removing a file invalidates it.
+    """
+    try:
+        mtime_ns = os.stat(directory).st_mtime_ns
+    except OSError:
+        return []
+    if time.time_ns() - mtime_ns < _RACY_NS:
+        # ponytail: "racy git" rule. A file added within the filesystem's mtime
+        # granularity (1 s on some) may not change mtime, so a just-modified
+        # directory is listed fresh; only settled directories are cached.
+        names = tuple(sorted(os.listdir(directory)))
+    else:
+        names = _dir_names(str(directory), mtime_ns)
+    return [directory / n for n in fnmatch.filter(names, pattern)]
 
 
 class EEGBIDSDataset:
@@ -149,6 +216,7 @@ class EEGBIDSDataset:
         self.dataset = dataset
         self.data_dir = data_dir
         self.allow_symlinks = allow_symlinks
+        self._meta_files_cache: dict[tuple[str, str], list[Path]] = {}
 
         # Set modalities to search for (default: all electrophysiology modalities from MNE-BIDS)
         if modalities is None:
@@ -351,7 +419,7 @@ class EEGBIDSDataset:
                 # Look for BIDS-specific JSON files (e.g., "sub-001_task-rest_eeg.json")
                 # Match files ending with the json_filename pattern
                 suffix_key = f"_{json_filename.split('.')[0]}"
-                for json_file in current_dir.glob(f"*_{json_filename}"):
+                for json_file in glob_dir(current_dir, f"*_{json_filename}"):
                     # Check if this JSON corresponds to the data file
                     data_basename = Path(data_filepath).stem
                     json_basename = json_file.stem
@@ -439,10 +507,20 @@ class EEGBIDSDataset:
 
         path, filename = os.path.split(filepath)
         basename = filename[: filename.rfind("_")]
-        meta_files = self._get_bids_file_inheritance(
-            path, basename, metadata_file_extension
-        )
-        return meta_files
+        # The inheritance walk depends only on (directory, extension): scan each
+        # directory once instead of once per recording (O(N^2) on flat datasets).
+        # Misses are not cached, so a file added later is still found.
+        # ponytail: hits are never invalidated, and a dataset with no such file
+        # still walks per recording; cache misses too if that ever shows up.
+        key = (path, metadata_file_extension)
+        if key not in self._meta_files_cache:
+            found = self._get_bids_file_inheritance(
+                path, basename, metadata_file_extension
+            )
+            if not found:
+                return found
+            self._meta_files_cache[key] = found
+        return list(self._meta_files_cache[key])
 
     def get_files(self) -> list[str]:
         """Get all EEG recording file paths in the BIDS dataset.
@@ -570,7 +648,7 @@ class EEGBIDSDataset:
         filepath = Path(data_filepath)
         channels_tsv_path = filepath.parent / "channels.tsv"
         if not channels_tsv_path.exists():
-            for tsv_file in filepath.parent.glob("*_channels.tsv"):
+            for tsv_file in glob_dir(filepath.parent, "*_channels.tsv"):
                 prefix = tsv_file.stem.replace("_channels", "").lower()
                 if filepath.stem.lower().startswith(prefix):
                     return tsv_file

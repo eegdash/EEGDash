@@ -10,6 +10,8 @@ braindecode for machine learning workflows and handles data loading from both lo
 """
 
 import configparser
+import inspect
+import json
 import os
 import re
 import shutil
@@ -17,57 +19,52 @@ import threading
 import urllib.error
 import urllib.request
 import uuid
-from contextlib import contextmanager
 from functools import lru_cache, partial
 from pathlib import Path, PurePosixPath
 from typing import Any
 
-import filelock
 import mne.io.ctf.info as ctf_info
 import mne_bids
+import mne_bids.read as mne_bids_read  # _handle_channels_reading (0.19-0.20)
 import nemar
 import numpy as np
+import pandas as pd
 from mne.io import BaseRaw
-from mne_bids import BIDSPath
+from mne_bids import BIDSPath, get_entities_from_fname
 
 from braindecode.datasets.base import RawDataset
 
 from .. import downloader
 from ..const import MODALITY_ALIASES
+from ..io import brainvision, tolerant
+from ..io.bids import _find_matching_sidecar, tsv_encoding, without_events
+from ..io.fif import crop_unreadable_tail
 from ..logging import logger
 from ..schemas import NEMAR_ROOT_METADATA_FILES, validate_record
-from ._source_inference import correct_storage_inplace
-from .bids_dataset import _COMPANION_FILES
+from ._source_inference import (
+    correct_storage_inplace,
+)
+from .bids_dataset import _COMPANION_FILES, position_sidecars
+from .channel_positions import fill_missing_positions
 from .exceptions import DataIntegrityError, StorageAccessError
 from .io import (
     _ANNEX_KEY_RE,
     _convert_time_with_numeric_dash,
+    _eeglab_fdt_path,
     _eeglab_load_first_eeg,
-    _ensure_coordsystem_symlink,
     _fix_negative_annotation_durations,
     _generate_coordsystem_json,
     _generate_vhdr_from_metadata,
     _generate_vhdr_from_sibling,
-    _generate_vmrk_stub,
-    _get_optional_task_fn,
     _is_annex_placeholder,
     _load_raw_direct,
     _load_raw_eeglab_alleeg,
     _load_raw_eeglab_fallback,
     _load_raw_from_eeglab_epochs,
-    _load_raw_snirf_fallback,
     _repair_channels_tsv,
-    _repair_channels_tsv_duplicates,
-    _repair_eeglab_fdt,
-    _repair_events_tsv_nan_samples,
     _repair_participants_tsv_ids,
-    _repair_scans_tsv_timestamps,
     _repair_snirf_bids_metadata,
-    _repair_tsv_decimal_separators,
-    _repair_tsv_encoding,
-    _repair_tsv_na_whitespace,
-    _repair_vhdr_missing_markerfile,
-    _repair_vhdr_pointers,
+    _warn_no_coordsystem,
 )
 
 # Error messages indicating unrecoverable data corruption — the source
@@ -163,26 +160,6 @@ def _clamp_negative_annotation_durations(raw: BaseRaw) -> None:
         annots.duration[mask] = 0.0
 
 
-@contextmanager
-def _dummy_filelock(*args, **kwargs):
-    """No-op context manager used as a stand-in for ``filelock.FileLock``."""
-    yield
-
-
-@contextmanager
-def _noop_filelock():
-    """Replace ``filelock.FileLock`` with a no-op so mne-bids can read
-    sidecar JSON files in read-only directories without creating ``.lock``
-    files.
-    """
-    _orig = filelock.FileLock
-    filelock.FileLock = _dummy_filelock
-    try:
-        yield
-    finally:
-        filelock.FileLock = _orig
-
-
 def _parse_split_fif_missing_path(message: str) -> Path | None:
     """Extract the missing continuation path from an MNE split FIF error."""
     match = _SPLIT_FIF_MISSING_RE.search(message)
@@ -239,8 +216,11 @@ def _make_tolerant_get_sample_info(orig_fn):
     """Build a tolerant ``_get_sample_info`` wrapper for truncated CTF meg4.
 
     Returns a function with the same signature as
-    ``mne.io.ctf.ctf._get_sample_info`` that falls back to treating all
-    available data as a single continuous block when the file is truncated.
+    ``mne.io.ctf.ctf._get_sample_info``. A meg4 stores, after its 8-byte
+    header, one ``[channel][sample]`` block of ``res4["nsamp"]`` samples per
+    trial. When the file ends inside a trial, only the whole trials are
+    read; the partial trial is dropped. With no whole trial the original
+    function runs and raises: a partial trial holds only some channels.
     """
     import os
 
@@ -249,21 +229,25 @@ def _make_tolerant_get_sample_info(orig_fn):
     def _tolerant_get_sample_info(fname, res4, system_clock):
         st_size = os.path.getsize(fname)
         nchan = res4["nchan"]
+        nsamp = res4["nsamp"]
         data_bytes = st_size - _CTF_HEADER
-        trial_bytes = 4 * res4["nsamp"] * nchan
-        if trial_bytes > 0 and data_bytes % trial_bytes != 0:
-            n_samp_tot = data_bytes // (4 * nchan)
+        trial_bytes = 4 * nsamp * nchan
+        n_trial = data_bytes // trial_bytes if trial_bytes > 0 else 0
+        if n_trial > 0 and data_bytes % trial_bytes != 0:
+            n_samp_tot = n_trial * nsamp
             logger.warning(
-                "CTF meg4 truncated: expected %d samples/trial, "
-                "using %d total samples as 1 block.",
-                res4["nsamp"],
-                n_samp_tot,
+                "CTF meg4 ends inside trial %d (%d trailing bytes); reading "
+                "the %d whole trials of %d samples only.",
+                n_trial + 1,
+                data_bytes - n_trial * trial_bytes,
+                n_trial,
+                nsamp,
             )
             return dict(
                 n_samp=n_samp_tot,
                 n_samp_tot=n_samp_tot,
-                block_size=n_samp_tot,
-                res4_nsamp=n_samp_tot,
+                block_size=nsamp,
+                res4_nsamp=nsamp,
                 n_chan=nchan,
             )
         return orig_fn(fname, res4, system_clock)
@@ -314,6 +298,11 @@ def _fetch_nemar_manifest(dataset_id: str):
         return None
 
 
+# git-annex keeps no extension in the key of a file without one, or with one
+# longer than annex.maxextensionlength (4): CTF ``BadChannels``, ``.infods``.
+_ANNEX_BARE_KEY_RE = re.compile(r"^(SHA256E?|MD5E?)-s\d+--[0-9a-f]+$", re.IGNORECASE)
+
+
 @lru_cache(maxsize=4096)
 def _resolve_nemar_pointer(dataset_id: str, relpath: str) -> tuple[str | None, bytes]:
     """Return ``(annex_key, raw_bytes)`` for a NEMAR-tracked file.
@@ -332,7 +321,7 @@ def _resolve_nemar_pointer(dataset_id: str, relpath: str) -> tuple[str | None, b
     if "/annex/objects/" not in text:
         return None, raw
     candidate = text.rsplit("/", 1)[-1]
-    if _ANNEX_KEY_RE.match(candidate):
+    if _ANNEX_KEY_RE.match(candidate) or _ANNEX_BARE_KEY_RE.match(candidate):
         return candidate, raw
     return None, raw
 
@@ -348,6 +337,91 @@ def _nemar_fast_paths(storage: dict, relpath: str) -> tuple[str | None, str | No
         (storage.get("annex_keys") or {}).get(relpath),
         (storage.get("sidecar_inline") or {}).get(relpath),
     )
+
+
+_NEMAR_TREE_URL = (
+    "https://api.github.com/repos/NEMARDatasets/{dataset_id}/git/trees/HEAD?recursive=1"
+)
+_DIRECTORY_SUFFIXES = (".ds", ".mefd")
+
+
+@lru_cache(maxsize=16)
+def _nemar_tree(dataset_id: str) -> tuple[str, ...]:
+    """Every file path in a NEMAR dataset's git repo (one GitHub API call).
+
+    NEMAR's bucket denies ListBucket and GitHub raw cannot list, so directory
+    recordings (CTF ``.ds``, MEF3 ``.mefd``) are enumerated from the git tree.
+    """
+    headers = {"User-Agent": _NEMAR_USER_AGENT}
+    if token := os.environ.get("GITHUB_TOKEN"):
+        headers["Authorization"] = f"Bearer {token}"
+    url = _NEMAR_TREE_URL.format(dataset_id=dataset_id)
+    req = urllib.request.Request(url, headers=headers)
+    with urllib.request.urlopen(req, timeout=_NEMAR_POINTER_TIMEOUT) as resp:
+        tree = json.load(resp)
+    if tree.get("truncated"):
+        raise OSError(f"GitHub truncated the file tree of {dataset_id}")
+    return tuple(e["path"] for e in tree["tree"] if e["type"] == "blob")
+
+
+def _holds_annex_pointer(directory: Path) -> bool:
+    """Whether a file under *directory* is a git-annex pointer, not content.
+
+    Older eegdash wrote the pointer text of extension-less annex keys (CTF
+    ``BadChannels``, ``.infods``) as the file, and MNE then reads it as data.
+    """
+    return any(
+        p.is_file() and p.stat().st_size < 512 and b"/annex/objects/" in p.read_bytes()
+        for p in directory.rglob("*")
+    )
+
+
+def _download_nemar_directory(
+    record: dict, dest: Path, filesystem, *, replace: bool = False
+) -> None:
+    """Fetch a NEMAR directory recording file by file, then move it into place.
+
+    Staged in a caller-unique sibling and renamed, so ``dest`` only appears
+    complete and an existing ``dest`` is kept unless *replace* is set.
+    Concurrent callers (threads, or two jobs sharing a cache such as ds005279
+    and on005279) never share a staging folder.
+    """
+    if dest.is_dir() and not replace:
+        return
+    storage = record["storage"]
+    dataset_id, base = record["dataset"], storage["base"].rstrip("/")
+    prefix = storage["raw_key"].rstrip("/") + "/"
+    tmp = dest.with_name(f"{dest.name}.{uuid.uuid4().hex}.part")
+    stale = dest.with_name(f"{dest.name}.{uuid.uuid4().hex}.stale")
+    try:
+        pairs = []
+        for path in _nemar_tree(dataset_id):
+            if not path.startswith(prefix):
+                continue
+            local = tmp / path[len(prefix) :]
+            annex_key, payload = _resolve_nemar_pointer(dataset_id, path)
+            if annex_key:
+                pairs.append((f"{base}/objects/{annex_key}", local))
+            else:
+                local.parent.mkdir(parents=True, exist_ok=True)
+                local.write_bytes(payload)
+        if not pairs:
+            raise FileNotFoundError(f"{base}/{prefix}")
+        downloader.download_files(pairs, filesystem=filesystem, skip_existing=True)
+        if replace and dest.is_dir():  # set the incomplete copy aside
+            try:
+                dest.rename(stale)
+            except FileNotFoundError:
+                pass
+        try:
+            tmp.rename(dest)
+        except OSError:
+            if not dest.is_dir():
+                raise
+            # A peer published first (ENOTEMPTY/EEXIST); its copy is complete.
+    finally:
+        shutil.rmtree(tmp, ignore_errors=True)
+        shutil.rmtree(stale, ignore_errors=True)
 
 
 def _resolve_nemar_uris(
@@ -377,8 +451,12 @@ def _resolve_nemar_uris(
         return None, []
 
     raw_uri = None
-    if not raw_dest.exists():
-        stored_key, stored_sidecar = _nemar_fast_paths(storage, raw_key)
+    stored_key, stored_sidecar = _nemar_fast_paths(storage, raw_key)
+    if not raw_dest.exists() and raw_dest.suffix.lower() in _DIRECTORY_SUFFIXES:
+        raw_uri = f"{base}/{raw_key}"  # listed and fetched per file at download
+    elif not _cached_complete(
+        raw_dest, stored_key, verify_hash=_verify_nemar_raw_hash(record)
+    ):  # short or wrong-content copy: refetch
         raw_uri = _resolve_one_nemar_entry(
             dataset_id=dataset_id,
             relpath=raw_key,
@@ -440,19 +518,63 @@ def _destination_lock(dest: Path) -> threading.Lock:
         return _DESTINATION_LOCKS.setdefault(key, threading.Lock())
 
 
-def _download_via_nemar(dataset_id: str, relpath: str, local_path: Path) -> bool:
+def _verify_nemar_raw_hash(record: dict) -> bool:
+    """Legacy on* caches may hold equal-size bytes from their OpenNeuro twin."""
+    return bool(
+        str(record.get("dataset", "")).startswith("on")
+        and (record.get("storage") or {}).get("backend") == "nemar"
+    )
+
+
+def _cached_complete(
+    local_path: Path, annex_key: str | None, *, verify_hash: bool = False
+) -> bool:
+    """Offline key check; never probe S3 during the bulk pre-scan.
+
+    Cached directory contents are not revalidated here.
+    """
+    try:
+        downloader.verify_file(local_path, annex_key or "", verify_hash=verify_hash)
+    except OSError:
+        return False
+    return True
+
+
+def _write_staged(dest: Path, payload: bytes) -> None:
+    """Write *payload* to *dest* through a caller-unique ``.part`` sibling.
+
+    A failed or concurrent write never leaves a partial file under *dest*.
+    """
+    tmp = dest.with_name(f"{dest.name}.{uuid.uuid4().hex}.part")
+    try:
+        with open(tmp, "wb") as fh:
+            fh.write(payload)
+        tmp.replace(dest)
+    finally:
+        tmp.unlink(missing_ok=True)
+
+
+def _download_via_nemar(
+    dataset_id: str,
+    relpath: str,
+    local_path: Path,
+    annex_key: str | None = None,
+    *,
+    verify_hash: bool = False,
+) -> bool:
     """Download *relpath* from data.nemar.org via ``nemar-py``.
 
     nemar-py resolves the dataset index → version manifest → file mapping
     and streams the bytes (version-pinned, with retries and checksum
     verification), so this is the canonical NEMAR sidecar/companion path.
-    Returns ``True`` once the file is on disk (including already-present),
-    ``False`` when the dataset/file isn't served by data.nemar.org (callers
-    then fall back to the GitHub-raw pointer).
+    Returns ``True`` once the file is on disk (including already-present, and
+    of the size *annex_key* gives when one is known), ``False`` when the
+    dataset/file isn't served by data.nemar.org (callers then fall back to the
+    GitHub-raw pointer).
     """
     if not (dataset_id and relpath):
         return False
-    if local_path.exists():
+    if _cached_complete(local_path, annex_key, verify_hash=verify_hash):
         return True
     manifest = _fetch_nemar_manifest(dataset_id)
     if manifest is None:
@@ -460,6 +582,17 @@ def _download_via_nemar(dataset_id: str, relpath: str, local_path: Path) -> bool
     target = relpath.lstrip("/")
     if target not in manifest:
         return False
+    entry = manifest.file(target)
+    expected = downloader.annex_key_info(annex_key)[0] if annex_key else None
+    manifest_size = getattr(entry, "size", None)
+    if expected is not None and manifest_size is not None and expected != manifest_size:
+        raise DataIntegrityError(
+            f"Record key for {local_path} expects {expected} bytes, but NEMAR "
+            f"manifest {getattr(manifest, 'manifest_url', 'latest')} has {manifest_size}; "
+            "verify the deposit and re-digest the record before downloading.",
+            record={"dataset": dataset_id, "bids_relpath": relpath},
+            issues=["Record key disagrees with NEMAR manifest"],
+        )
     # One thread at a time per destination, to deduplicate rather than to
     # protect: 86 records of nm000183 resolve one sub-012_electrodes.tsv, and
     # only the first pays for the transfer. Correctness comes from the unique
@@ -468,10 +601,8 @@ def _download_via_nemar(dataset_id: str, relpath: str, local_path: Path) -> bool
         # A peer may have finished this transfer while we waited for the lock.
         # The pre-lock exists() above is an optimisation, not a guarantee:
         # ``download_one`` and ``S3Client.get_file`` do publish with an atomic
-        # rename, but the GitHub-raw fallback below writes the destination
-        # directly, so exists() can still observe a half-written file from that
-        # writer. Giving every writer a unique staging name is the real fix.
-        if local_path.exists():
+        # rename, and so does the GitHub-raw fallback below (``_write_staged``).
+        if _cached_complete(local_path, annex_key, verify_hash=verify_hash):
             return True
         # Stage under a caller-unique name. nemar derives its staging path from
         # the target (``<target>.part``), so handing it the destination makes
@@ -484,7 +615,7 @@ def _download_via_nemar(dataset_id: str, relpath: str, local_path: Path) -> bool
         staging = local_path.with_name(f"{local_path.name}.{uuid.uuid4().hex}")
         try:
             local_path.parent.mkdir(parents=True, exist_ok=True)
-            result = nemar.download_one(manifest.file(target), staging)
+            result = nemar.download_one(entry, staging)
             # download_one *returns* its verdict rather than raising: MISSING,
             # SIZE_MISMATCH, HASH_MISMATCH and the ERROR_SENTINEL body all come
             # back as a value. Dropping it publishes corruption as success.
@@ -498,7 +629,23 @@ def _download_via_nemar(dataset_id: str, relpath: str, local_path: Path) -> bool
                     result,
                 )
                 return False
+            if annex_key:
+                try:
+                    downloader.verify_file(
+                        staging,
+                        annex_key,
+                        verify_hash=verify_hash,
+                        display_path=local_path,
+                    )
+                except downloader.DownloadIntegrityError as exc:
+                    raise DataIntegrityError(
+                        f"{exc} NEMAR manifest and record disagree; re-digest the record.",
+                        record={"dataset": dataset_id, "bids_relpath": relpath},
+                        issues=[str(exc)],
+                    ) from exc
             os.replace(staging, local_path)
+        except DataIntegrityError:
+            raise
         except Exception as exc:
             logger.warning(
                 "NEMAR download failed for %s/%s: %s", dataset_id, relpath, exc
@@ -530,7 +677,8 @@ def _resolve_one_nemar_entry(
     and we return ``None`` to signal "no remote URI needed". Both fast
     paths are populated only at digest time and are never set together
     for the same relpath. When neither is present we fall back to the
-    original ``_resolve_nemar_pointer`` GitHub-raw path.
+    original ``_resolve_nemar_pointer`` GitHub-raw path, whose inline content
+    is written through a staging file, never straight to *dest*.
     """
     if stored_key:
         return f"{base}/objects/{stored_key}"
@@ -538,10 +686,7 @@ def _resolve_one_nemar_entry(
     if stored_sidecar is not None:
         if not dest.exists():
             dest.parent.mkdir(parents=True, exist_ok=True)
-            # Atomic write so concurrent loaders never see a partial file.
-            tmp = dest.with_suffix(dest.suffix + ".tmp")
-            tmp.write_text(stored_sidecar, encoding="utf-8", newline="")
-            tmp.replace(dest)
+            _write_staged(dest, stored_sidecar.encode("utf-8"))
         return None
 
     # No digest-time fast path: fetch from data.nemar.org via nemar-py
@@ -577,8 +722,119 @@ def _resolve_one_nemar_entry(
 
     dest.parent.mkdir(parents=True, exist_ok=True)
     if not dest.exists():
-        dest.write_bytes(payload)
+        _write_staged(dest, payload)
     return None
+
+
+# Anatomical labels of iEEG electrodes.tsv: never coordinates. Surfaces in
+# raw.info["electrode_labels"]; never feeds an xyz position.
+_LABEL_SUBSTR = ("region", "label", "anatom", "location", "target", "trajector")
+
+
+def electrode_labels(path: Path) -> pd.DataFrame:
+    """Anatomical labels of a recording (BIDS electrodes.tsv, NWB electrodes table).
+
+    Returns a DataFrame indexed by channel/electrode name with the label columns
+    the deposit carries (eg anatomical_label, region, target, location); empty if
+    none. BIDS channels.tsv ``anatomy``/``location`` columns are honoured too.
+    """
+    path = Path(path)
+    frames = []
+    if path.suffix.lower() == ".nwb":
+        try:
+            import h5py
+
+            with h5py.File(path, "r") as f:
+                tab = f.get("general/extracellular_ephys/electrodes")
+                if tab is not None and "location" in tab:
+                    loc = [
+                        v.decode() if isinstance(v, bytes) else str(v)
+                        for v in tab["location"][()]
+                    ]
+                    if "id" in tab:
+                        names = [str(v) for v in tab["id"][()]]
+                    elif "ch_name" in tab:
+                        names = [
+                            v.decode() if isinstance(v, bytes) else str(v)
+                            for v in tab["ch_name"][()]
+                        ]
+                    else:
+                        names = [str(i) for i in range(len(loc))]
+                    frames.append(
+                        pd.DataFrame({"name": names, "location": loc}).set_index("name")
+                    )
+        except Exception:
+            pass
+    for suffix, ext in (("electrodes", ".tsv"), ("channels", ".tsv")):
+        try:
+            bp = mne_bids.get_bids_path_from_fname(path, check=False)
+            f = _find_matching_sidecar(bp, suffix, ext, on_error="ignore")
+        except Exception:
+            f = None
+        if f is None and suffix == "channels":
+            cand = sorted(path.parent.glob("*_channels.tsv"))
+            f = cand[0] if cand else None
+        if f is None or not Path(f).exists():
+            continue
+        try:
+            df = pd.read_csv(f, sep="	", dtype=str, encoding=tsv_encoding(Path(f)))
+        except Exception:
+            continue
+        if "name" not in df.columns:
+            continue
+        cols = [
+            c
+            for c in df.columns
+            if c != "name" and any(sub in c.lower() for sub in _LABEL_SUBSTR)
+        ]
+        if cols:
+            frames.append(df.set_index("name")[cols])
+    if not frames:
+        return pd.DataFrame()
+    out = frames[0]
+    for extra in frames[1:]:
+        out = out.join(extra, how="outer", lsuffix="", rsuffix="_channels")
+    out.index.name = "name"
+    out = out.replace({"n/a": np.nan, "": np.nan})  # BIDS n/a / empty -> NaN
+    return out.dropna(how="all")
+
+
+def _attach_electrode_labels(path: Path, raw: BaseRaw) -> BaseRaw:
+    labels = electrode_labels(path)
+    if not labels.empty:  # MNE Info refuses new keys; "temp" is its scratch slot
+        raw.info["temp"] = {"electrode_labels": labels}
+    return raw
+
+
+def _read_nwb_with_channels_tsv(path: Path) -> BaseRaw:
+    """Read an NWB recording, then apply its BIDS channels.tsv as read_raw_bids would.
+
+    The NWB reader can only guess channel types (sEEG); the sidecar has the real
+    ones (e.g. ECOG) and the bad channels. The electrode positions follow, from
+    the electrodes.tsv and coordsystem.json read_raw_bids would pick.
+    """
+    raw = _load_raw_direct(path)
+    _attach_electrode_labels(path, raw)
+    tsv = path.with_name(path.name.rsplit("_", 1)[0] + "_channels.tsv")
+    if not tsv.exists():
+        return raw
+    # NWB names channels by electrode id; channels.tsv lists them in data order
+    # (BIDS), so take its names (on008610: ch01.., nm000350: 0..).
+    text = tsv.read_text(encoding=tsv_encoding(tsv))
+    names = [ln.split("\t", 1)[0] for ln in text.splitlines()[1:] if ln]
+    if len(names) == len(raw.ch_names) and len(set(names)) == len(names):
+        raw.rename_channels(dict(zip(raw.ch_names, names)))
+    with tolerant():  # TSV in its own encoding; the space-aware sidecar lookup
+        raw = mne_bids_read._handle_channels_reading(tsv, raw, on_ch_mismatch="warn")
+        # positions, as read_raw_bids reads them, for a file in a BIDS tree
+        if any(p.name.startswith("sub-") for p in path.parents):
+            bp = mne_bids.get_bids_path_from_fname(path, check=False)
+            find = partial(mne_bids_read._find_matching_sidecar, bp, on_error="ignore")
+            if (el := find("electrodes", ".tsv")) and (
+                co := find("coordsystem", ".json")
+            ):
+                mne_bids_read._read_dig_bids(el, co, bp.datatype, raw)
+    return raw
 
 
 class EEGDashRaw(RawDataset):
@@ -679,22 +935,24 @@ class EEGDashRaw(RawDataset):
         self.s3file = self._raw_uri
 
         entities_mne = self.record.get("entities_mne") or {}
-
-        # Fallback: parse acquisition from bids_relpath for records
-        # that predate the acquisition field in entities_mne
-        acq_val = entities_mne.get("acquisition")
-        if acq_val is None:
-            _acq_match = re.search(r"acq-([^_/]+)", self.record.get("bids_relpath", ""))
-            if _acq_match:
-                acq_val = _acq_match.group(1)
-
-        recording_val = entities_mne.get("recording")
-        if recording_val is None:
-            recording_match = re.search(
-                r"(?:^|_)recording-([^_/]+)", self.filecache.name
-            )
-            if recording_match:
-                recording_val = recording_match.group(1)
+        # Records carry sub/ses/task/run/acq only; desc, split, proc, space,
+        # recording come from the file name, or MNE-BIDS looks for another file
+        # (on006923 ``*_desc-preprocessed_eeg.set`` -> ``*_eeg.set``). The run
+        # stays the record's: ``None`` when the name's run is not a number.
+        entities = get_entities_from_fname(
+            PurePosixPath(bids_relpath).name, on_error="ignore"
+        )
+        entities.update(
+            (k, v) for k, v in entities_mne.items() if k in entities and v is not None
+        )
+        entities["run"] = entities_mne.get("run")
+        # Parsing recognizes entities (e.g. part) that BIDSPath cannot represent.
+        # Keep their values so loading cannot silently select a different file.
+        parameters = inspect.signature(BIDSPath).parameters
+        self._unsupported_bids_entities = {
+            k: v for k, v in entities.items() if k not in parameters and v is not None
+        }
+        entities = {k: v for k, v in entities.items() if k in parameters}
 
         self.bidspath = BIDSPath(
             root=self.bids_root,
@@ -705,13 +963,7 @@ class EEGDashRaw(RawDataset):
                 self.record.get("suffix", "eeg"), self.record.get("suffix", "eeg")
             ),
             extension=self.record.get("extension", self.filecache.suffix),
-            subject=entities_mne.get("subject"),
-            session=entities_mne.get("session"),
-            task=entities_mne.get("task"),
-            run=entities_mne.get("run"),
-            acquisition=acq_val,
-            recording=recording_val,
-            split=entities_mne.get("split"),
+            **entities,
             check=False,
         )
 
@@ -744,6 +996,59 @@ class EEGDashRaw(RawDataset):
         bids_filename = PurePosixPath(self.record["bids_relpath"]).name
         return uri.rsplit("/", 1)[0] + "/" + bids_filename
 
+    def _annex_key_for(self, path: Path) -> str | None:
+        """The record's git-annex key for *path* (raw file or sidecar), if any.
+
+        An OpenNeuro twin serves BIDS-named URIs that carry no key, while the
+        record still names one (ds004840, 2026-10-21): the key must flow from
+        the record for its size, and hash, to govern.
+        """
+        storage = self.record.get("storage") or {}
+        keys = storage.get("annex_keys") or {}
+        if not keys:
+            return None
+        if path == self.filecache and storage.get("raw_key") in keys:
+            return keys[storage["raw_key"]]
+        try:
+            return keys.get(Path(path).relative_to(self.bids_root).as_posix())
+        except ValueError:
+            return None
+
+    def _cached_files_complete(self) -> bool:
+        """Whether the raw file and every dependency are cached at their key's size.
+
+        Existence alone kept a truncated or pointer-text file forever.
+        """
+        storage = self.record.get("storage") or {}
+        pins = {
+            self.bids_root / key: pin
+            for key, pin in (storage.get("version_ids") or {}).items()
+        }
+        if storage.get("version_id"):
+            pins[self.filecache] = storage["version_id"]
+        uris = {dest: uri for uri, dest in self._dep_downloads}
+        uris[self.filecache] = self._raw_uri
+        for path in (self.filecache, *self._dep_paths):
+            if not _cached_complete(
+                path,
+                self._annex_key_for(path),
+                verify_hash=path == self.filecache
+                and _verify_nemar_raw_hash(self.record),
+            ):
+                return False
+            marker = path.with_name(path.name + ".s3-version.json")
+            pin = pins.get(path)
+            if pin:
+                try:
+                    identity = json.loads(marker.read_text())
+                except (OSError, ValueError):
+                    return False
+                if identity != {"uri": uris.get(path), "version_id": pin}:
+                    return False
+            elif marker.exists():
+                return False
+        return True
+
     @property
     def _is_remote(self) -> bool:
         """Whether the recording must be fetched from a remote source.
@@ -756,6 +1061,15 @@ class EEGDashRaw(RawDataset):
         return self._raw_uri is not None or self._storage_backend == "nemar"
 
     def _download_required_files(self) -> None:
+        """Download a record, translating byte-integrity errors with its context."""
+        try:
+            self._download_required_files_impl()
+        except downloader.DownloadIntegrityError as exc:
+            raise DataIntegrityError(
+                str(exc), record=self.record, issues=[str(exc)]
+            ) from exc
+
+    def _download_required_files_impl(self) -> None:
         # NEMAR records carry a logical ``s3://nemar/<id>/<bids_relpath>``
         # base, but actual fetching has to go through the SHA-keyed
         # object name under ``s3://nemar/<id>/objects/<KEY>``. Resolve
@@ -766,10 +1080,22 @@ class EEGDashRaw(RawDataset):
         deferred_nemar_deps = (
             self._storage_backend == "nemar" and self.filecache.suffix.lower() == ".set"
         )
+        storage = self.record.get("storage") or {}
+        raw_annex_key, _ = _nemar_fast_paths(storage, storage.get("raw_key", ""))
         if (
             self._raw_uri is None
             and self._storage_backend == "nemar"
-            and not self.filecache.exists()
+            and (
+                not _cached_complete(
+                    self.filecache,
+                    raw_annex_key,
+                    verify_hash=_verify_nemar_raw_hash(self.record),
+                )
+                or any(
+                    not _cached_complete(path, self._annex_key_for(path))
+                    for path in self._dep_paths
+                )
+            )
         ):
             self._raw_uri, self._dep_downloads = _resolve_nemar_uris(
                 self.record,
@@ -778,15 +1104,42 @@ class EEGDashRaw(RawDataset):
                 dep_dests=[] if deferred_nemar_deps else list(self._dep_paths),
             )
 
-        if self._raw_uri is not None or deferred_nemar_deps:
+        if self._raw_uri is not None or self._dep_downloads or deferred_nemar_deps:
             filesystem = downloader.get_s3_filesystem(
                 max_concurrency=self._max_concurrency
             )
 
             try:
-                if self._raw_uri is not None:
+                if (
+                    self._raw_uri is not None
+                    and self.filecache.suffix.lower() in _DIRECTORY_SUFFIXES
+                ):
+                    # a directory recording is an S3 prefix, not one object
+                    if self._storage_backend == "nemar":
+                        _download_nemar_directory(
+                            self.record, self.filecache, filesystem
+                        )
+                    else:
+                        downloader.download_s3_directory(
+                            self._raw_uri, self.filecache, filesystem=filesystem
+                        )
+                elif self._raw_uri is not None:
+                    raw_annex_key = self._annex_key_for(self.filecache)
                     downloader.download_s3_file(
-                        self._raw_uri, self.filecache, filesystem=filesystem
+                        self._raw_uri,
+                        self.filecache,
+                        filesystem=filesystem,
+                        **(
+                            {"version_id": self.record["storage"]["version_id"]}
+                            if (self.record.get("storage") or {}).get("version_id")
+                            else {}
+                        ),
+                        **({"annex_key": raw_annex_key} if raw_annex_key else {}),
+                        **(
+                            {"verify_hash": True}
+                            if raw_annex_key and _verify_nemar_raw_hash(self.record)
+                            else {}
+                        ),
                     )
             except FileNotFoundError:
                 raw_key = (self.record.get("storage") or {}).get("raw_key", "")
@@ -802,11 +1155,18 @@ class EEGDashRaw(RawDataset):
                         self._raw_uri,
                         resolved_uri,
                     )
+                    raw_annex_key = self._annex_key_for(self.filecache)
                     try:
                         downloader.download_s3_file(
                             resolved_uri,
                             self.filecache,
                             filesystem=filesystem,
+                            **({"annex_key": raw_annex_key} if raw_annex_key else {}),
+                            **(
+                                {"verify_hash": True}
+                                if raw_annex_key and _verify_nemar_raw_hash(self.record)
+                                else {}
+                            ),
                         )
                     except FileNotFoundError:
                         raise DataIntegrityError(
@@ -871,7 +1231,7 @@ class EEGDashRaw(RawDataset):
                 selected = [
                     (key, dest)
                     for key, dest in zip(dep_keys, self._dep_paths, strict=True)
-                    if not dest.exists()
+                    if not _cached_complete(dest, self._annex_key_for(dest))
                     and not (embedded_samples and dest.suffix.lower() == ".fdt")
                 ]
                 _, self._dep_downloads = _resolve_nemar_uris(
@@ -885,11 +1245,34 @@ class EEGDashRaw(RawDataset):
                 for uri, dest in self._dep_downloads
                 if not (embedded_samples and dest.suffix.lower() == ".fdt")
             ]
+            version_ids = (self.record.get("storage") or {}).get("version_ids") or {}
+            pinned = {
+                self.bids_root / key: version for key, version in version_ids.items()
+            }
+            dep_annex_keys = {
+                dest: key
+                for _, dest in dependencies
+                if (key := self._annex_key_for(dest))
+            }
+            for uri, dest in dependencies:
+                if dest in pinned:
+                    downloader.download_s3_file(
+                        uri,
+                        dest,
+                        filesystem=filesystem,
+                        version_id=pinned[dest],
+                        **(
+                            {"annex_key": dep_annex_keys[dest]}
+                            if dest in dep_annex_keys
+                            else {}
+                        ),
+                    )
             downloader.download_files(
-                dependencies,
+                [(uri, dest) for uri, dest in dependencies if dest not in pinned],
                 filesystem=filesystem,
                 skip_existing=True,
                 skip_missing=True,
+                **({"annex_keys": dep_annex_keys} if dep_annex_keys else {}),
             )
 
             # Auto-discover and download companion files (.fdt, .eeg, .vmrk)
@@ -905,6 +1288,55 @@ class EEGDashRaw(RawDataset):
 
         # Always set filenames (important for local datasets)
         self.filenames = [self.filecache]
+        self._download_position_sidecars()
+
+    def _download_position_sidecars(self) -> None:
+        """Fetch the electrodes.tsv and coordsystem.json MNE-BIDS will look for.
+
+        ``dep_keys`` hold only sidecars named like the recording, so those BIDS
+        inheritance applies were never fetched: ``space-`` files, ``acq-`` or
+        ``task-`` level ones, subject-level ones (6,389 iEEG records with
+        deposited positions read none). They are found in the dataset's file list.
+        """
+        relpath = self.record["bids_relpath"]
+        subject = PurePosixPath(relpath).parts[0]
+        dataset_id = self.record["dataset"]
+        base = ((self.record.get("storage") or {}).get("base") or "").rstrip("/")
+        if self._storage_backend not in ("s3", "nemar") or not base:
+            return
+        try:
+            filesystem = downloader.get_s3_filesystem()
+            if self._storage_backend == "nemar":
+                manifest = _fetch_nemar_manifest(dataset_id)
+                files = (
+                    [f.path for f in manifest.files]
+                    if manifest
+                    else _nemar_tree(dataset_id)
+                )
+            else:
+                key = downloader._split_s3_uri(base)[1]
+                files = [
+                    o["Key"][len(key) + 1 :]
+                    for o in filesystem._iter_objects(f"{base}/{subject}/")
+                ]
+            for sidecar in position_sidecars(relpath, files):
+                dest = self.bids_root / sidecar
+                annex_key = self._annex_key_for(dest)
+                if _cached_complete(dest, annex_key):
+                    continue
+                if self._storage_backend == "nemar":
+                    self._fetch_nemar_companion(dest, sidecar, filesystem)
+                else:
+                    downloader.download_s3_file(
+                        f"{base}/{sidecar}",
+                        dest,
+                        filesystem=filesystem,
+                        **({"annex_key": annex_key} if annex_key else {}),
+                    )
+        except Exception as exc:  # positions are optional; the recording reads
+            logger.warning(
+                "Could not fetch the electrode sidecars of %s: %s", relpath, exc
+            )
 
     def _download_nemar_data_file(self, relpath: str, local_path: Path) -> bool:
         """Resolve *relpath* via ``nemar-py`` (data.nemar.org) and stream it.
@@ -912,9 +1344,18 @@ class EEGDashRaw(RawDataset):
         Safety net for records whose pre-computed ``annex_keys`` don't
         cover *relpath*. Delegates to :func:`_download_via_nemar`, which
         handles ID/version resolution, the BIDS-path → file mapping, and
-        the transfer (retries + checksum verification).
+        the transfer (retries + checksum verification). A cached file counts
+        only at the size of the record's annex key for *relpath*, if any.
         """
-        return _download_via_nemar(self.record.get("dataset", ""), relpath, local_path)
+        annex_key, _ = _nemar_fast_paths(self.record.get("storage") or {}, relpath)
+        return _download_via_nemar(
+            self.record.get("dataset", ""),
+            relpath,
+            local_path,
+            annex_key,
+            verify_hash=local_path == self.filecache
+            and _verify_nemar_raw_hash(self.record),
+        )
 
     # BIDS root files not enumerated in dep_keys but expected by mne-bids /
     # braindecode. All are direct-git on NEMAR (excluded from annex).
@@ -1017,7 +1458,8 @@ class EEGDashRaw(RawDataset):
 
         for ext in companions:
             local_path = self.filecache.with_suffix(ext)
-            if local_path.exists():
+            annex_key = self._annex_key_for(local_path)
+            if _cached_complete(local_path, annex_key):
                 continue
 
             # Skip companions already declared at digest time — they were
@@ -1043,7 +1485,10 @@ class EEGDashRaw(RawDataset):
 
             try:
                 downloader.download_s3_file(
-                    companion_uri, local_path, filesystem=filesystem
+                    companion_uri,
+                    local_path,
+                    filesystem=filesystem,
+                    **({"annex_key": annex_key} if annex_key else {}),
                 )
             except FileNotFoundError:
                 # For .set files, the .fdt may have a non-BIDS name embedded
@@ -1057,6 +1502,54 @@ class EEGDashRaw(RawDataset):
                         base_uri,
                     )
                 continue
+
+        self._require_data_file(filesystem)
+
+    def _require_data_file(self, filesystem) -> None:
+        """Fetch the file holding the samples by the name its header gives, or raise.
+
+        Dependencies download with ``skip_missing=True``: a missing sidecar is
+        skipped with a warning, and so was a missing BrainVision ``DataFile=``
+        or EEGLAB ``.fdt``, which left the record half downloaded (#427).
+        """
+        folder = self.filecache.parent
+        if self.filecache.suffix.lower() == ".vhdr":
+            names = brainvision.companion_names(self.filecache)[0]
+        else:
+            eeg = _eeglab_load_first_eeg(self.filecache)
+            fdt = eeg and _eeglab_fdt_path(self.filecache, eeg)
+            if not fdt or fdt.suffix.lower() != ".fdt":
+                return  # the samples are in the .set
+            names = (fdt.name,)
+        if any((folder / name).is_file() for name in names):
+            return
+        relpath = PurePosixPath(self.record["bids_relpath"]).parent
+        tried = set((self.record.get("storage") or {}).get("dep_keys") or [])
+        for name in names:
+            dest = folder / name
+            if str(relpath / name) in tried or dest == self.filecache.with_suffix(
+                dest.suffix
+            ):
+                continue  # already requested as a dependency or a companion
+            if self._storage_backend == "nemar":
+                self._fetch_nemar_companion(dest, str(relpath / name), filesystem)
+            elif self._raw_uri:
+                uri = f"{self._raw_uri.rsplit('/', 1)[0]}/{name}"
+                try:
+                    downloader.download_s3_file(uri, dest, filesystem=filesystem)
+                except (FileNotFoundError, PermissionError):
+                    pass
+            if dest.is_file():
+                return
+        missing = relpath / names[0]
+        raise DataIntegrityError(
+            message=(
+                f"Required data file missing: {missing}, named by "
+                f"{self.filecache.name}, is not available from the source"
+            ),
+            record=self.record,
+            issues=[f"Missing required file: {missing}"],
+        )
 
     def _fetch_nemar_companion(
         self, local_path: Path, companion_relpath: str, filesystem
@@ -1158,18 +1651,28 @@ class EEGDashRaw(RawDataset):
         required files and, if missing, attempts a recursive download of
         the entire ``.ds`` S3 prefix.
         """
+        # Never create ds_dir here: an empty .ds would pass for cached forever.
         ds_dir = self.filecache
-        if not ds_dir.exists():
-            ds_dir.mkdir(parents=True, exist_ok=True)
 
         required_exts = (".meg4", ".res4")
         missing = [ext for ext in required_exts if not list(ds_dir.glob(f"*{ext}"))]
-
-        if not missing:
+        nemar = self._storage_backend == "nemar"
+        if not missing and not (nemar and _holds_annex_pointer(ds_dir)):
             return
 
+        if nemar:
+            # Left incomplete, or with annex pointer text, by an older eegdash.
+            try:
+                _download_nemar_directory(
+                    self.record,
+                    ds_dir,
+                    downloader.get_s3_filesystem(max_concurrency=self._max_concurrency),
+                    replace=True,
+                )
+            except Exception as e:
+                logger.warning("NEMAR CTF download failed: %s", e)
         # Attempt recursive S3 download of the full .ds prefix
-        if self._raw_uri is not None:
+        elif self._raw_uri is not None:
             logger.info(
                 "CTF .ds directory missing %s — attempting recursive S3 download.",
                 ", ".join(missing),
@@ -1206,6 +1709,25 @@ class EEGDashRaw(RawDataset):
                 issues=[f"Missing required CTF file(s): {', '.join(still_missing)}"],
             )
 
+    def _repair_current_channels_tsv(self) -> bool:
+        """Never rewrite siblings absent from this record's sparse key map."""
+        current = self.filecache.with_name(
+            self.filecache.stem.rsplit("_", 1)[0] + "_channels.tsv"
+        )
+        eligible = {current} | {
+            path for path in self._dep_paths if path.name.endswith("_channels.tsv")
+        }
+        return _repair_channels_tsv(
+            self.filecache.parent,
+            protected=self._protected_cache_paths(),
+            eligible=eligible,
+        )
+
+    def _protected_cache_paths(self) -> set[Path]:
+        """Files described by annex keys must never be rewritten by read repairs."""
+        keys = (self.record.get("storage") or {}).get("annex_keys") or {}
+        return {self.bids_root / key for key in keys}
+
     def _ensure_raw(self) -> None:
         """Ensure the raw data file and its dependencies are cached locally.
 
@@ -1219,20 +1741,20 @@ class EEGDashRaw(RawDataset):
 
         # Helper: Fix participants.tsv ID padding to match sub-* folder names
         if self.bids_root and self.bids_root.exists():
-            _repair_participants_tsv_ids(self.bids_root)
+            _repair_participants_tsv_ids(
+                self.bids_root, protected=self._protected_cache_paths()
+            )
 
-        # Helper: Fix MNE-BIDS strictness regarding coordsystem.json location
         if self.filecache and self.filecache.parent.exists():
-            _ensure_coordsystem_symlink(self.filecache.parent)
-            _repair_tsv_encoding(self.filecache.parent)
-            _repair_tsv_na_whitespace(self.filecache.parent)
-            _repair_tsv_decimal_separators(self.filecache.parent)
-            _repair_scans_tsv_timestamps(self.filecache.parent)
-            _repair_events_tsv_nan_samples(self.filecache.parent)
-            _repair_channels_tsv(self.filecache.parent)
+            _warn_no_coordsystem(self.bidspath, self.record.get("dataset"))
+            self._repair_current_channels_tsv()
 
         # Helper: Handle VHDR files - generate if missing, repair if broken
-        if self.filecache and self.filecache.suffix == ".vhdr":
+        if (
+            self.filecache
+            and self.filecache.suffix == ".vhdr"
+            and not self._annex_key_for(self.filecache)
+        ):
             # Early exit: when the data file (.eeg) is a git-annex
             # placeholder (content never fetched), no header repair can
             # help — the binary data is simply not available.
@@ -1254,11 +1776,8 @@ class EEGDashRaw(RawDataset):
                     ],
                 )
 
-            # Generate VMRK stub first so pointer repair can find the target
-            vmrk_path = self.filecache.with_suffix(".vmrk")
-            if not vmrk_path.exists():
-                _generate_vmrk_stub(vmrk_path, self.filecache.name)
-
+            # Stale DataFile=/MarkerFile= pointers are not rewritten: they are
+            # passed to MNE as overrides at read time (eegdash.io.brainvision).
             if not self.filecache.exists():
                 # Generate VHDR from database metadata if file is missing
                 if not _generate_vhdr_from_metadata(self.filecache, self.record):
@@ -1281,12 +1800,8 @@ class EEGDashRaw(RawDataset):
                     if not _generate_vhdr_from_metadata(self.filecache, self.record):
                         _generate_vhdr_from_sibling(self.filecache)
 
-                # Auto-Repair broken VHDR pointers (common in OpenNeuro exports)
-                _repair_vhdr_pointers(self.filecache)
-
-        # Repair .set header: fix .fdt filename mismatches and truncated data
-        if self.filecache and self.filecache.suffix.lower() == ".set":
-            _repair_eeglab_fdt(self.filecache)
+        # A .set naming another recording's .fdt, or a truncated .fdt, is handled
+        # at read time by eegdash.io.eeglab; the cached .set is not rewritten.
 
         if self._raw is None:
             try:
@@ -1304,58 +1819,91 @@ class EEGDashRaw(RawDataset):
             # (especially EEGLAB .set) produce annotations with negative
             # durations that crash downstream MNE operations.
             _clamp_negative_annotation_durations(self._raw)
+            self._fill_derived_positions()
 
             # Validate that data is actually readable (catches corrupt/truncated
             # data files that MNE only discovers during lazy segment reads).
             # Read from start and end to catch truncated files.
+            n = self._raw.n_times
             try:
-                n = self._raw.n_times
                 if n > 0:
                     self._raw.get_data(start=0, stop=min(1, n))
                     if n > 1:
                         self._raw.get_data(start=n - 1, stop=n)
             except Exception as e:
-                self._raw = None
-                raise DataIntegrityError(
-                    message=f"Data file unreadable: {e}",
-                    record=self.record,
-                    issues=[str(e)],
-                ) from e
+                # A FIF file cut inside its last data buffer, or an EEGLAB
+                # .fdt shorter than its .set: keep the samples that are there.
+                cropped = crop_unreadable_tail(self._raw)
+                if cropped is None:
+                    self._raw = None
+                    raise DataIntegrityError(
+                        message=f"Data file unreadable: {e}",
+                        record=self.record,
+                        issues=[str(e)],
+                    ) from e
+                issue = (
+                    f"Truncated data file: {cropped.n_times} of {n} samples are in "
+                    f"the file; the last {(n - cropped.n_times) / cropped.info['sfreq']:.3f} s are missing."
+                )
+                DataIntegrityError(
+                    issue, record=self.record, issues=[issue]
+                ).log_warning()
+                old = cropped.info["description"]
+                cropped.info["description"] = f"{old}; {issue}" if old else issue
+                self._raw = cropped
+
+    def _fill_derived_positions(self) -> None:
+        """Place iEEG channels MNE-BIDS left unpositioned, from their contacts.
+
+        ``POL A3``, ``EEG A1-Ref`` and bipolar ``A1-A2`` channels name contacts
+        of electrodes.tsv without being a row of it (on004551, on004789,
+        on006910); :func:`.channel_positions.fill_missing_positions` places them
+        and leaves every measured position as it is. Never fails a read.
+        """
+        if (
+            self._raw is None
+            or self._unsupported_bids_entities  # direct reader: no sidecars applied
+            or (self.bidspath.datatype or "").lower() != "ieeg"
+        ):
+            return
+        try:
+            bp = self.bidspath
+            electrodes = _find_matching_sidecar(bp, "electrodes", ".tsv", "ignore")
+            coordsystem = _find_matching_sidecar(bp, "coordsystem", ".json", "ignore")
+            if electrodes and coordsystem:
+                fill_missing_positions(
+                    self._raw, Path(electrodes), Path(coordsystem), "ieeg"
+                )
+        except Exception as exc:  # noqa: BLE001 - positions are optional
+            logger.warning(
+                "%s: channel positions from contacts skipped (%s).",
+                self.bidspath.basename,
+                exc,
+            )
 
     def _read_raw_bids(self, extra_params: dict | None = None) -> BaseRaw:
         """Call ``mne_bids.read_raw_bids`` with the standard arguments.
 
-        Uses a no-op file lock to avoid ``PermissionError`` when the dataset
-        directory is read-only (e.g. shared cluster storage where mne-bids
-        cannot create ``.json.lock`` files).
+        MNE-BIDS 0.20 already covers what used to be patched here: a
+        ``BIDSPath`` without ``task`` is read with a warning, a lock that
+        cannot be taken (read-only dataset directory) is skipped with a
+        warning, and ``on_ch_mismatch="rename"`` also de-duplicates repeated
+        names in channels.tsv (``-0``, ``-1``, ...).
 
-        When ``self.bidspath.task`` is ``None`` and the installed mne-bids
-        rejects it, retries with a backported function from mne-bids
-        PR #1527.  If mne-bids already supports ``task=None`` natively,
-        the first call succeeds and no retry is needed.
+        Runs under :func:`eegdash.io.tolerant`, the MNE fixes not yet released.
+        A BrainVision header whose ``DataFile=``/``MarkerFile=`` name other files
+        than the recording's own gets ``overrides`` (MNE 1.13) in ``extra_params``.
         """
-        with _noop_filelock():
-            try:
-                return mne_bids.read_raw_bids(
-                    bids_path=self.bidspath,
-                    extra_params=extra_params,
-                    verbose="ERROR",
-                    on_ch_mismatch="rename",
-                )
-            except RuntimeError as exc:
-                # mne-bids < 0.19 rejects task=None with a RuntimeError
-                # whose message contains "missing `task`".  Retry with
-                # the backported function that removes this requirement.
-                if self.bidspath.task is None and "missing `task`" in str(exc):
-                    patched_fn = _get_optional_task_fn()
-                    if patched_fn is not None:
-                        return patched_fn(
-                            bids_path=self.bidspath,
-                            extra_params=extra_params,
-                            verbose="ERROR",
-                            on_ch_mismatch="rename",
-                        )
-                raise
+        if self.filecache is not None and self.filecache.suffix.lower() == ".vhdr":
+            if found := brainvision.overrides(self.filecache):
+                extra_params = {**(extra_params or {}), "overrides": found}
+        with tolerant():
+            return mne_bids.read_raw_bids(
+                bids_path=self.bidspath,
+                extra_params=extra_params,
+                verbose="ERROR",
+                on_ch_mismatch="rename",
+            )
 
     def _download_split_fif_continuation(
         self,
@@ -1434,13 +1982,16 @@ class EEGDashRaw(RawDataset):
     def _load_raw(self) -> BaseRaw:
         """Load raw data, preferring MNE-BIDS if BIDSPath resolves.
 
-        Applies on-the-fly fixes and retries for known failure modes:
+        Applies on-the-fly fixes and retries for known failure modes. What
+        MNE-BIDS 0.20 already tolerates is left to it: TSV cells with padding
+        or decimal commas, ``n/a``/NaN event onsets, unparsable scans.tsv
+        ``acq_time`` (meas_date kept from the file), duplicate channels.tsv
+        names (``on_ch_mismatch="rename"``) and a missing ``task`` entity.
 
-        - **Missing or wrong-key ``coordsystem.json``**: mne-bids raises
-          ``RuntimeError`` or ``KeyError`` when the file is absent or has keys
-          for the wrong datatype (e.g. ``EEGCoordinateSystem`` in iEEG data).
-          We (re-)generate a minimal ``coordsystem.json`` with the correct
-          datatype-specific keys and retry.
+        - **Wrong-key ``coordsystem.json``**: mne-bids raises ``KeyError``
+          when it has keys for another datatype (e.g. ``EEGCoordinateSystem``
+          in iEEG data). We (re-)generate a minimal ``coordsystem.json`` with
+          the datatype-specific keys and retry.
         - **SNIRF** metadata issues: regenerates ``channels.tsv`` /
           ``scans.tsv`` and retries.
         - **EEGLAB char-encoding** (``.set`` files with non-UTF char fields):
@@ -1450,14 +2001,12 @@ class EEGDashRaw(RawDataset):
           MAT/EEGLAB files with array errors, etc.): attempts EEGLAB fallback
           for ``.set`` files and direct MNE reader before raising
           ``DataIntegrityError``.
-        - **Invalid scans.tsv timestamps** (seconds >= 60, NaN): repairs
-          the scans.tsv and retries.
         - **participants.tsv subject mismatches**: repairs ``participant_id``
           values to match ``sub-*`` folder names and retries.
-        - **events.tsv rows with NaN onset/sample**: drops broken rows and
-          retries, then falls back to direct MNE loading if needed.
         - **Split FIF continuations missing locally**: derives the next split
           key, downloads it from remote storage, and retries.
+        - **Sidecar ``RecordingType: epoched``**: mne-bids refuses it; falls
+          back to direct MNE reader (EEGLAB trials are concatenated).
         - **Invalid BIDS entity characters** (hyphens in task, etc.):
           falls back to direct MNE reader.
         - **Non-numeric ``run`` entity** (e.g. ``run-5H``): MNE-BIDS rejects
@@ -1467,8 +2016,6 @@ class EEGDashRaw(RawDataset):
           MNE's CTF date parser to try %d-%m-%Y and retries.
         - **Empty/malformed channels.tsv** (KeyError: 'name'): removes empty
           files or renames the first column to 'name' and retries.
-        - **Duplicate channel names in channels.tsv**: deduplicates by appending
-          ``-0``, ``-1``, … suffixes and retries.
         - **Missing sidecars** (channels.tsv, events.tsv absent from S3):
           falls back to direct MNE reader.
         - **Split FIF** (record points to split-02+ file): direct MNE reader
@@ -1477,13 +2024,27 @@ class EEGDashRaw(RawDataset):
           entity): attempts direct MNE reader before raising
           ``DataIntegrityError``.
         """
+        if self._unsupported_bids_entities:
+            logger.warning(
+                "BIDSPath does not support entities %s; reading the exact file %s "
+                "with the direct reader (BIDS sidecars are not applied).",
+                self._unsupported_bids_entities,
+                self.filecache,
+            )
+            return _load_raw_direct(self.filecache)
+
+        # mne_bids.read_raw_bids raises for .nwb ("allowed, but not yet
+        # implemented"), so NWB goes straight to the direct reader.
+        if self.filecache.suffix.lower() == ".nwb":
+            return _read_nwb_with_channels_tsv(self.filecache)
+
         current_split_key = self.record.get("storage", {}).get("raw_key")
         current_split_path = self.filecache
         attempted_split_keys: set[str] = set()
 
         while True:
             try:
-                return self._read_raw_bids()
+                return _attach_electrode_labels(self.filecache, self._read_raw_bids())
             except NotImplementedError as first_error:
                 msg = str(first_error)
                 if (
@@ -1500,47 +2061,30 @@ class EEGDashRaw(RawDataset):
                         raise fallback_error from first_error
                 raise
             except RuntimeError as first_error:
-                if "coordsystem.json" in str(first_error):
-                    return self._retry_with_generated_coordsystem(first_error)
                 if "Illegal date" in str(first_error):
                     return self._retry_with_ctf_date_patch(first_error)
 
                 msg = str(first_error)
 
-                # SNIRF channel mismatch — fall back to direct reader.
-                # mne-bids sometimes fails even with on_ch_mismatch="rename"
-                # when the channels.tsv naming convention diverges significantly
-                # from the SNIRF internal channel names.
-                if (
-                    "Channel mismatch" in msg
-                    and self.filecache
-                    and self.filecache.suffix.lower() == ".snirf"
-                ):
-                    logger.warning(
-                        "SNIRF channel mismatch — falling back to direct reader."
-                    )
+                # Sidecar says RecordingType "epoched": mne-bids refuses it,
+                # the direct reader ignores sidecars. EEGLAB files that do hold
+                # trials are concatenated, as in the TypeError branch below.
+                if 'RecordingType is "epoched"' in msg and self.filecache:
                     try:
                         return _load_raw_direct(self.filecache)
-                    except Exception as fallback_error:
-                        raise DataIntegrityError(
-                            message=f"SNIRF channel mismatch and direct reader failed: {fallback_error}",
-                            record=self.record,
-                            issues=[str(fallback_error)],
-                        ) from first_error
-
-                # CTF mandatory HPI coil-kind mismatch
-                if "mandatory HPI" in msg and self.filecache:
-                    return self._retry_with_ctf_hpi_fix(first_error)
+                    except TypeError as direct_err:
+                        if "number of trials is" not in str(direct_err):
+                            raise
+                        return _load_raw_from_eeglab_epochs(self.filecache)
 
                 # Projector channel type conflict during MNE-BIDS channel
                 # renaming — the direct reader bypasses this.
                 if "in projector" in msg and self.filecache:
                     return self._retry_without_projectors(first_error)
 
-                # CTF trial-size mismatch — the meg4 file is truncated
-                # (fewer samples than res4 header declares).  Patch
-                # MNE's _get_sample_info to treat available data as a
-                # single continuous block.
+                # CTF trial-size mismatch — the meg4 file ends inside a
+                # trial.  Patch MNE's _get_sample_info to read the whole
+                # trials only.
                 if "even multiple of the trial size" in msg and self.filecache:
                     logger.warning(
                         "CTF trial size mismatch — retrying with "
@@ -1553,25 +2097,6 @@ class EEGDashRaw(RawDataset):
                     except Exception as fallback_error:
                         raise DataIntegrityError(
                             message=f"CTF trial size mismatch and all fallbacks failed: {fallback_error}",
-                            record=self.record,
-                            issues=[str(fallback_error)],
-                        ) from first_error
-
-                # SNIRF TD-NIRS: MNE rejects dataType 301 but the raw
-                # time-series is usable via h5py direct read.
-                if (
-                    "only supports reading continuous" in msg
-                    and self.filecache
-                    and self.filecache.suffix.lower() == ".snirf"
-                ):
-                    logger.warning(
-                        "Unsupported SNIRF data type — loading via h5py fallback."
-                    )
-                    try:
-                        return _load_raw_snirf_fallback(self.filecache)
-                    except Exception as fallback_error:
-                        raise DataIntegrityError(
-                            message=f"SNIRF h5py fallback failed: {fallback_error}",
                             record=self.record,
                             issues=[str(fallback_error)],
                         ) from first_error
@@ -1677,16 +2202,6 @@ class EEGDashRaw(RawDataset):
                                 issues=[msg, str(fallback_error)],
                             ) from first_error
 
-                # Non-UTF-8 encoding in TSV sidecar files (e.g. µ in Latin-1)
-                if isinstance(first_error, UnicodeDecodeError) and self.filecache:
-                    data_dir = self.filecache.parent
-                    if _repair_tsv_encoding(data_dir):
-                        logger.info("Repaired non-UTF-8 TSV encoding, retrying load...")
-                        try:
-                            return self._read_raw_bids()
-                        except Exception as retry_error:
-                            raise retry_error from first_error
-
                 # CTF "no valid samples" — MNE misinterprets a zeroed
                 # system clock (SCLK01) channel as empty data (OSError).
                 # Retry with system_clock="ignore" to bypass the SCLK check.
@@ -1717,7 +2232,6 @@ class EEGDashRaw(RawDataset):
 
                 # FIFFV_COIL_NONE KeyError from MNE-BIDS montage setting —
                 # the data is readable, just the montage lookup fails.
-                # Also catches re-raised errors from _retry_with_ctf_hpi_fix.
                 if (
                     isinstance(first_error, KeyError)
                     and ("FIFFV_COIL_NONE" in msg or first_error.args == (0,))
@@ -1741,25 +2255,8 @@ class EEGDashRaw(RawDataset):
 
                 # Malformed channels.tsv (empty or missing 'name' column)
                 if isinstance(first_error, KeyError) and first_error.args == ("name",):
-                    if self.filecache and _repair_channels_tsv(self.filecache.parent):
+                    if self.filecache and self._repair_current_channels_tsv():
                         logger.info("Repaired malformed channels.tsv, retrying load...")
-                        try:
-                            return self._read_raw_bids()
-                        except Exception as retry_error:
-                            raise retry_error from first_error
-
-                # Duplicate channel names in channels.tsv
-                if (
-                    isinstance(first_error, ValueError)
-                    and "not unique" in msg
-                    and "renaming" in msg
-                    and self.filecache
-                ):
-                    if _repair_channels_tsv_duplicates(self.filecache.parent):
-                        logger.info(
-                            "Deduplicated channel names in channels.tsv, "
-                            "retrying load..."
-                        )
                         try:
                             return self._read_raw_bids()
                         except Exception as retry_error:
@@ -1848,17 +2345,6 @@ class EEGDashRaw(RawDataset):
                 if "projector channels not found" in msg and self.filecache:
                     return self._retry_without_projectors(first_error)
 
-                # Invalid timestamp in scans.tsv (seconds >= 60, NaN, etc.)
-                if "second must be" in msg or "does not match format" in msg:
-                    if self.filecache and _repair_scans_tsv_timestamps(
-                        self.filecache.parent
-                    ):
-                        logger.info("Repaired scans.tsv timestamps, retrying load...")
-                        try:
-                            return self._read_raw_bids()
-                        except Exception as retry_error:
-                            raise retry_error from first_error
-
                 # scans.tsv path mismatch (EEG file not listed in scans.tsv)
                 if (
                     "is not in list" in msg
@@ -1875,34 +2361,12 @@ class EEGDashRaw(RawDataset):
 
                 # Subject/session ID mismatch between folders and participants.tsv
                 if "is not in list" in msg and self.bids_root:
-                    if _repair_participants_tsv_ids(self.bids_root):
+                    if _repair_participants_tsv_ids(
+                        self.bids_root, protected=self._protected_cache_paths()
+                    ):
                         logger.info(
                             "Repaired participants.tsv ID padding, retrying load..."
                         )
-                        try:
-                            return self._read_raw_bids()
-                        except Exception as retry_error:
-                            raise retry_error from first_error
-
-                # Whitespace-padded n/a in TSV fields (float('n/a      ') fails)
-                if (
-                    "could not convert string to float" in msg
-                    and "n/a" in msg
-                    and self.filecache
-                ):
-                    if _repair_tsv_na_whitespace(self.filecache.parent):
-                        logger.info(
-                            "Repaired n/a whitespace in TSV files, retrying load..."
-                        )
-                        try:
-                            return self._read_raw_bids()
-                        except Exception as retry_error:
-                            raise retry_error from first_error
-
-                # NaN onset/sample in events.tsv (mne-bids tries int(NaN))
-                if "cannot convert float NaN to integer" in msg and self.filecache:
-                    if _repair_events_tsv_nan_samples(self.filecache.parent):
-                        logger.info("Repaired events.tsv NaN samples, retrying load...")
                         try:
                             return self._read_raw_bids()
                         except Exception as retry_error:
@@ -1962,19 +2426,6 @@ class EEGDashRaw(RawDataset):
                     return self._retry_without_events_tsv(first_error)
                 raise
             except Exception as first_error:
-                # Missing MarkerFile entry in VHDR [Common Infos]
-                if (
-                    isinstance(first_error, configparser.NoOptionError)
-                    and "markerfile" in str(first_error).lower()
-                    and self.filecache
-                    and self.filecache.suffix.lower() == ".vhdr"
-                ):
-                    if _repair_vhdr_missing_markerfile(self.filecache):
-                        try:
-                            return self._read_raw_bids()
-                        except Exception as retry_error:
-                            raise retry_error from first_error
-
                 # Corrupted VHDR file (missing required sections)
                 if isinstance(first_error, configparser.NoSectionError):
                     raise DataIntegrityError(
@@ -2069,62 +2520,13 @@ class EEGDashRaw(RawDataset):
         finally:
             ctf_info._convert_time = orig
 
-    def _retry_with_ctf_hpi_fix(self, first_error: Exception) -> BaseRaw:
-        """Retry CTF read after extending the HPI coil-kind dictionary.
-
-        Some CTF ``.hc`` files use ``"Nasion"`` / ``"LPA"`` / ``"RPA"``
-        instead of the lowercase ``"nasion"`` / ``"left ear"`` /
-        ``"right ear"`` that MNE expects.  This patches the lookup dict
-        to accept both forms.
-        """
-        import mne.io.ctf.hc as ctf_hc
-        from mne.io.ctf.constants import CTF
-
-        orig_dict = ctf_hc._kind_dict
-        patched = dict(orig_dict)
-        patched.update(
-            {
-                "Nasion": CTF.CTFV_COIL_NAS,
-                "LPA": CTF.CTFV_COIL_LPA,
-                "RPA": CTF.CTFV_COIL_RPA,
-            }
-        )
-        try:
-            ctf_hc._kind_dict = patched
-            logger.warning(
-                "CTF HPI coil-kind mismatch — retrying with extended kind dict."
-            )
-            try:
-                return self._read_raw_bids()
-            except Exception:
-                pass  # MNE-BIDS failed; try direct reader with patch still active
-
-            # Direct reader while HPI patch is still active
-            if self.filecache:
-                logger.warning(
-                    "CTF HPI fix via MNE-BIDS failed — "
-                    "falling back to direct reader (with HPI patch)."
-                )
-                try:
-                    return _load_raw_direct(self.filecache)
-                except Exception as fallback_error:
-                    raise DataIntegrityError(
-                        message=f"CTF HPI/coil error and direct reader failed: {fallback_error}",
-                        record=self.record,
-                        issues=[str(first_error), str(fallback_error)],
-                    ) from first_error
-            raise first_error
-        finally:
-            ctf_hc._kind_dict = orig_dict
-
     def _retry_with_ctf_truncated_fix(self, first_error: Exception) -> BaseRaw:
         """Retry CTF read with a tolerant sample-info parser.
 
-        When a ``.meg4`` file is truncated (fewer complete sample rows than
-        the ``.res4`` header declares), MNE raises ``RuntimeError("The
-        number of samples is not an even multiple of the trial size")``.
-        This method patches ``mne.io.ctf.ctf._get_sample_info`` to treat
-        the available data as a single continuous block.
+        When a ``.meg4`` file ends inside a trial, MNE raises
+        ``RuntimeError("The number of samples is not an even multiple of
+        the trial size")``. This method patches
+        ``mne.io.ctf.ctf._get_sample_info`` to read the whole trials only.
         """
         import mne.io.ctf.ctf as _ctf_mod
 
@@ -2165,45 +2567,30 @@ class EEGDashRaw(RawDataset):
         return raw
 
     def _retry_without_events_tsv(self, first_error: Exception) -> BaseRaw:
-        """Temporarily hide ``*_events.tsv`` and retry loading.
+        """Retry the read as if the recording had no ``*_events.tsv``.
 
         Some datasets have malformed events files that cause
         ``AssertionError`` inside MNE-BIDS annotation handling.  The
         underlying data is fine — only the event markers are broken.
 
-        Uses a lock file to prevent concurrent workers from interfering
-        when processing recordings from the same subject directory.
+        Only this read skips the events sidecar
+        (:func:`eegdash.io.bids.without_events`); no file is renamed, so the
+        other runs of the folder, read by other threads or processes, keep
+        their events.
         """
         data_dir = self.filecache.parent
-        events_files = list(data_dir.glob("*_events.tsv"))
-        if not events_files:
+        if not any(data_dir.glob("*_events.tsv")):
             raise first_error
-
-        lock_path = data_dir / ".events_tsv_hide.lock"
-        lock = filelock.FileLock(str(lock_path), timeout=60)
-        hidden = []
+        logger.warning(
+            "Reading %s without its events.tsv (annotations dropped): %s",
+            self.filecache.name,
+            first_error,
+        )
         try:
-            with lock:
-                for ef in events_files:
-                    dest = ef.with_suffix(".tsv._hidden")
-                    ef.rename(dest)
-                    hidden.append((dest, ef))
-                logger.warning(
-                    "Hiding %d events.tsv file(s) and retrying load.",
-                    len(hidden),
-                )
+            with without_events():
                 return self._read_raw_bids()
-        except filelock.Timeout:
-            logger.warning("Could not acquire events.tsv hide lock, skipping.")
-            raise first_error
         except Exception as retry_error:
             raise retry_error from first_error
-        finally:
-            for src, dst in hidden:
-                if src.exists():
-                    src.rename(dst)
-            # Clean up lock file
-            lock_path.unlink(missing_ok=True)
 
     def _make_mne_info(self):
         """Return :class:`mne.Info` for the recording without loading the data.

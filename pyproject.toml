@@ -55,8 +55,13 @@ classifiers = [
 dependencies = [
   "braindecode[hub]>=1.8.0",
   "eeglabio",
-  "mne>=1.11.0",
-  "mne_bids>=0.19.0",
+  # 1.13: read_raw_mef with session reuse (mne-python#13610, #14254);
+  # mne_bids 0.20 maps .mefd to it. Floors = the versions tested.
+  "mne>=1.13.0",
+  "mne_bids>=0.20.0",
+  # mne.io.read_raw_mef imports it lazily and mne does not depend on it.
+  # Wheels for cp311+ on linux x86_64, macOS universal2 and win_amd64.
+  "pymef",
   # Official NEMAR client: owns dataset-id validation (nm*/on*),
   # manifest fetching, BIDS-path → annex-key mapping, and streaming
   # downloads. eegdash delegates the data.nemar.org safety net to it
@@ -200,7 +205,7 @@ exclude    = []
 namespaces = false
 
 [tool.setuptools.package-data]
-"eegdash" = ["dataset_summary.csv"]
+"eegdash" = ["dataset_summary.csv", "corpora/*.csv"]
 "eegdash.dataset" = ["dataset_summary.csv"]
 
 [tool.ruff]
@@ -219,6 +224,7 @@ ignore = ["E402", "E501", "D100", "D101", "D102", "D103", "D104", "D105", "D107"
 # rule still fires on any NEW function-scoped import in untouched files.
 "eegdash/__init__.py" = ["PLC0415"]
 "eegdash/api.py" = ["PLC0415"]
+"eegdash/corpus.py" = ["PLC0415"]
 "eegdash/dataset/base.py" = ["PLC0415"]
 "eegdash/dataset/dataset.py" = ["PLC0415"]
 "eegdash/dataset/io.py" = ["PLC0415"]

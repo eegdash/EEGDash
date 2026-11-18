@@ -233,6 +233,39 @@ def test_dep_keys_ignores_another_datatype_sidecar(tmp_path: Path):
     assert not [k for k in dep_keys if k.endswith(("_meg.json", "_ieeg.json"))]
 
 
+def test_dep_keys_find_the_position_sidecars_bids_inheritance_applies(tmp_path: Path):
+    """electrodes.tsv / coordsystem.json named without the recording's task/run.
+
+    nm000362 ``sub-031_acq-10min_space-MNI152NLin2009aSym_*``, on007118
+    ``*_task-sleep_acq-A_coordsystem.json`` and on004624's subject-level files
+    were never listed, so EEGDash read no positions for 6,389 iEEG records.
+    """
+    digest = load_digest()
+    sub = tmp_path / "sub-01"
+    ieeg = sub / "ses-01" / "ieeg"
+    ieeg.mkdir(parents=True)
+    record = ieeg / "sub-01_ses-01_task-sleep_acq-A_run-01_ieeg.edf"
+    record.touch()
+    for name in (
+        "ses-01/ieeg/sub-01_ses-01_acq-A_space-MNI152NLin2009aSym_electrodes.tsv",
+        "ses-01/ieeg/sub-01_ses-01_acq-A_space-Talairach_electrodes.tsv",
+        "ses-01/ieeg/sub-01_ses-01_acq-B_space-Talairach_electrodes.tsv",
+        "ses-01/ieeg/sub-01_ses-01_task-sleep_acq-A_coordsystem.json",
+        "sub-01_coordsystem.json",
+    ):
+        (sub / name).write_text("x")
+
+    dep_keys, _, _ = digest._build_dep_keys(
+        record, tmp_path, fif_is_split=False, fif_continuations_ok=True
+    )
+    positions = [k for k in dep_keys if k.endswith(("electrodes.tsv", "system.json"))]
+    assert positions == [
+        "sub-01/ses-01/ieeg/sub-01_ses-01_acq-A_space-MNI152NLin2009aSym_electrodes.tsv",
+        "sub-01/ses-01/ieeg/sub-01_ses-01_acq-A_space-Talairach_electrodes.tsv",
+        "sub-01/ses-01/ieeg/sub-01_ses-01_task-sleep_acq-A_coordsystem.json",
+    ]
+
+
 def test_dep_keys_includes_fdt_companion_for_set_file(tmp_path: Path):
     """.fdt companion for a .set file appears in dep_keys even when absent on disk."""
     digest = load_digest()
@@ -244,6 +277,60 @@ def test_dep_keys_includes_fdt_companion_for_set_file(tmp_path: Path):
         record, tmp_path, fif_is_split=False, fif_continuations_ok=True
     )
     assert any(k.endswith(".fdt") for k in dep_keys)
+
+
+def _brainvision_companions(tmp_path: Path, header: str | None, present: list[str]):
+    digest = load_digest()
+    eeg_dir = tmp_path / "sub-01" / "eeg"
+    eeg_dir.mkdir(parents=True)
+    record = eeg_dir / "sub-01_task-rest_eeg.vhdr"
+    if header is None:  # an annexed header whose content is not in the clone
+        record.symlink_to(tmp_path / ".git" / "annex" / "absent")
+    else:
+        record.write_text(f"[Common Infos]\n{header}")
+    for name in present:
+        (eeg_dir / name).symlink_to(tmp_path / ".git" / "annex" / name)
+    dep_keys, _, _ = digest._build_dep_keys(
+        record, tmp_path, fif_is_split=False, fif_continuations_ok=True
+    )
+    return [k for k in dep_keys if k.endswith((".eeg", ".vmrk", ".dat"))]
+
+
+def test_dep_keys_brainvision_lists_the_files_its_header_names(tmp_path: Path):
+    """DataFile=/MarkerFile= name the companions, not a fixed list (#427).
+
+    ``.vhdr: [.eeg, .vmrk, .dat]`` put ``<stem>.dat`` in every BrainVision
+    record's dep_keys (ds006576 67/67, ds007454 42/42), a file no deposit holds.
+    """
+    header = "DataFile=rest.dat\nMarkerFile=sub-01_task-rest_eeg.vmrk\n"
+    present = ["rest.dat", "sub-01_task-rest_eeg.vmrk"]
+    assert _brainvision_companions(tmp_path, header, present) == [
+        "sub-01/eeg/rest.dat",
+        "sub-01/eeg/sub-01_task-rest_eeg.vmrk",
+    ]
+
+
+def test_dep_keys_brainvision_never_lists_a_file_absent_from_the_deposit(
+    tmp_path: Path,
+):
+    """ds006576 sub-170: the .eeg the header names is not in the deposit."""
+    header = "DataFile=sub-01_task-rest_eeg.eeg\nMarkerFile=sub-01_task-rest_eeg.vmrk\n"
+    present = ["sub-01_task-rest_eeg.vmrk"]
+    assert _brainvision_companions(tmp_path, header, present) == [
+        "sub-01/eeg/sub-01_task-rest_eeg.vmrk"
+    ]
+
+
+def test_dep_keys_brainvision_unreadable_header_gives_eeg_and_vmrk(tmp_path: Path):
+    """Header content not in the clone, or a stale name: the BIDS .eeg and .vmrk."""
+    present = ["sub-01_task-rest_eeg.eeg", "sub-01_task-rest_eeg.vmrk"]
+    expected = [
+        "sub-01/eeg/sub-01_task-rest_eeg.eeg",
+        "sub-01/eeg/sub-01_task-rest_eeg.vmrk",
+    ]
+    assert _brainvision_companions(tmp_path, None, present) == expected
+    stale = "DataFile=old.eeg\nMarkerFile=MD5E-s4--0123456789abcdef.vmrk\n"
+    assert _brainvision_companions(tmp_path / "b", stale, present) == expected
 
 
 def test_dep_keys_detects_split_fif_continuation(tmp_path: Path):

@@ -61,7 +61,10 @@ def _attach_montage_to_record(
 
     try:
         layout_result = extract_layout(
-            Path(str(bids_file)), dataset_dir, datatype=record_datatype
+            Path(str(bids_file)),
+            dataset_dir,
+            datatype=record_datatype,
+            ch_names=record.get("ch_names"),
         )
     except (OSError, ValueError, KeyError, TypeError, AttributeError) as exc:
         record["montage_hash"] = None

@@ -53,17 +53,29 @@ _LEN_N_SIGNALS = 4
 _BYTES_PER_SAMPLE = {".edf": 2, ".bdf": 3}
 
 
+def _field_text(raw: bytes) -> str:
+    r"""Decode a fixed-width EDF ASCII field, dropping its padding.
+
+    The spec pads with spaces; some clinical exporters also end the number with
+    a C-style NUL (on006914: ``b"551\x00    "``), which MNE reads. Only padding
+    is dropped, so a NUL between digits still fails the number parse.
+    Raises ``UnicodeDecodeError`` on non-ASCII bytes.
+    """
+    return raw.decode("ascii").strip(" \x00")
+
+
 def _read_ascii_int(buf: bytes, offset: int, length: int) -> int | None:
     """Parse a fixed-width ASCII integer field; return ``None`` on any failure.
 
-    EDF header fields are ASCII, left-justified, space-padded. A blank field,
-    a non-ASCII byte, or a truncated buffer all yield ``None`` rather than
-    raising — upholding the ``FormatParser`` recoverable-failure contract.
+    EDF header fields are ASCII, left-justified, space-padded (or NUL-ended, see
+    :func:`_field_text`). A blank field, a non-ASCII byte, or a truncated buffer
+    all yield ``None`` rather than raising — upholding the ``FormatParser``
+    recoverable-failure contract.
     """
     if offset + length > len(buf):
         return None
     try:
-        text = buf[offset : offset + length].decode("ascii").strip()
+        text = _field_text(buf[offset : offset + length])
     except (UnicodeDecodeError, ValueError):
         return None
     if not text:
@@ -115,6 +127,78 @@ def edf_n_times_from_main_header(buf: bytes, sfreq: float | None) -> int | None:
         return None
 
 
+def edf_n_signals(buf: bytes) -> int | None:
+    """``n_signals`` (@252) from the main header, ``None`` when unparsable."""
+    n = _read_ascii_int(buf, _OFF_N_SIGNALS, _LEN_N_SIGNALS)
+    return n if n and n > 0 else None
+
+
+def edf_data_channel_count(labels: bytes, n_signals: int) -> int | None:
+    """Channels MNE reports: the signal labels minus EDF+/BDF+ annotation signals.
+
+    ``labels`` is the 16-byte-per-signal label block that follows the main header.
+    """
+    if len(labels) < 16 * n_signals:
+        return None
+    names = [
+        labels[16 * i : 16 * i + 16].decode("ascii", "replace").strip()
+        for i in range(n_signals)
+    ]
+    return sum(n not in ("EDF Annotations", "BDF Annotations") for n in names) or None
+
+
+def edf_channel_names(labels: bytes, n_signals: int) -> list[str] | None:
+    """Channel names exactly as MNE reads them; ``None`` if two collide.
+
+    ``labels`` starts with the 16-byte-per-signal label block that follows the
+    main header. Like ``mne.io.read_raw_edf``: each label is stripped as bytes
+    and decoded as latin-1, and EDF+/BDF+ annotation signals are not channels.
+    MNE renames colliding labels (``-0``, ``-1``); those are not the header's
+    names, so they give ``None``. **Never raises.**
+    """
+    if not n_signals or len(labels) < 16 * n_signals:
+        return None
+    names = [
+        labels[16 * i : 16 * i + 16].strip().decode("latin-1") for i in range(n_signals)
+    ]
+    names = [n for n in names if n not in ("EDF Annotations", "BDF Annotations")]
+    if not names or len(set(names)) != len(names):
+        return None
+    return names
+
+
+def edf_raw_shape(main: bytes, signals: bytes) -> tuple[float, int, int] | None:
+    """``(sfreq, n_times, nchans)`` MNE reads, from the main + per-signal headers.
+
+    ``signals`` is the ``256 x n_signals`` block after the main header (labels at
+    16 bytes each, samples-per-record at ``216 x n_signals + 8 x i``). The rate is
+    the highest data-channel samples-per-record over the record duration, which
+    may be fractional (on005007: 438 samples per 0.219 s). Annotation signals are
+    not channels. ``None`` on any unparsable field. **Never raises.**
+    """
+    try:
+        n_signals = edf_n_signals(main)
+        n_records = _read_ascii_int(main, _OFF_N_RECORDS, _LEN_N_RECORDS)
+        duration = float(
+            _field_text(main[_OFF_REC_DURATION : _OFF_REC_DURATION + _LEN_REC_DURATION])
+        )
+        if not n_signals or not n_records or n_records <= 0 or duration <= 0:
+            return None
+        if len(signals) < 256 * n_signals:
+            return None
+        spr = []
+        for i in range(n_signals):
+            label = signals[16 * i : 16 * i + 16].decode("ascii", "replace").strip()
+            off = 216 * n_signals + 8 * i
+            if label not in ("EDF Annotations", "BDF Annotations"):
+                spr.append(int(_field_text(signals[off : off + 8])))
+        if not spr or max(spr) <= 0:
+            return None
+        return max(spr) / duration, n_records * max(spr), len(spr)
+    except (ValueError, UnicodeDecodeError):
+        return None
+
+
 def edf_bytes_per_sample(ext: str) -> int:
     """Bytes per sample for an EDF/BDF extension (``.edf`` → 2, ``.bdf`` → 3).
 
@@ -160,3 +244,43 @@ def edf_size_arithmetic_n_times(file_size: int, nchans: int, ext: str) -> int | 
         return data_bytes // divisor
     except Exception:  # noqa: BLE001
         return None
+
+
+#: What MNE multiplies a header's physical values by; any other unit reads as 1.
+_MNE_SCALE = {"uV": 1e-6, "µV": 1e-6, "mV": 1e-3}
+#: Largest plausible |value| MNE returns, in V for any voltage unit, or rad.
+_MAX_ABS = {"V": 1.0, "rad": 100.0}
+
+
+def _signal_field(signals: bytes, n_signals: int, at: int, width: int, i: int) -> str:
+    """Field ``i`` of the per-signal header column at ``at`` (in units of ``n_signals``)."""
+    start = at * n_signals + width * i
+    return signals[start : start + width].decode("latin-1").strip(" \x00")
+
+
+def edf_scale_issues(signals: bytes, n_signals: int, tsv_units: dict) -> list[str]:
+    """Channels MNE reads at an implausible scale (nm000281: joints at ±2e6 rad).
+
+    ``signals`` is the ``256 x n_signals`` block after the main header. MNE
+    scales by the header unit and ignores channels.tsv, so the peak MNE returns
+    is the header's physical range times :data:`_MNE_SCALE`; it is judged in the
+    quantity channels.tsv declares (else the header's). Unknown quantities are
+    not judged. **Never raises** on an unparsable range: that channel is skipped.
+    """
+    issues = []
+    for i in range(n_signals):
+        name = _signal_field(signals, n_signals, 0, 16, i)
+        unit = _signal_field(signals, n_signals, 96, 8, i)
+        declared = tsv_units.get(name, unit)
+        quantity = "V" if declared.endswith("V") else declared
+        try:
+            peak = max(
+                abs(float(_signal_field(signals, n_signals, 104, 8, i))),
+                abs(float(_signal_field(signals, n_signals, 112, 8, i))),
+            )
+        except ValueError:
+            continue
+        peak *= _MNE_SCALE.get(unit, 1)
+        if peak > _MAX_ABS.get(quantity, float("inf")):
+            issues.append(f"{name}: reads up to {peak:g} {quantity} (header {unit!r})")
+    return issues

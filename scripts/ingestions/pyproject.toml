@@ -17,6 +17,7 @@ py-modules = [
     "_github",
     "_http",
     "_inject_config",
+    "_inject_pin_guard",
     "_inject_plan",
     "_keywords",
     "_mef3_parser",
@@ -52,7 +53,7 @@ dependencies = [
     "pydantic>=2.5",
     "pydantic-settings>=2",
     "pandas",
-    "mne-bids>=0.14",
+    "mne-bids>=0.20",
     "python-dotenv>=1",
     "pooch>=1.7",  # eegdash.testing.data_path() lazy-fetches test corpus
 ]
@@ -147,6 +148,7 @@ known-first-party = [
     "_github",
     "_http",
     "_inject_config",
+    "_inject_pin_guard",
     "_inject_plan",
     "_keywords",
     "_mef3_parser",

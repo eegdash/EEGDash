@@ -3,6 +3,8 @@ from unittest.mock import MagicMock, call, patch
 
 import pytest
 
+from eegdash.dataset.base import EEGDashRaw
+
 
 def test_len_with_ntimes_and_sfreq():
     """Test length calculation when ntimes exists and raw is accessed."""
@@ -112,6 +114,7 @@ def test_nemar_download_required_files_uses_annex_object_uri(tmp_path):
         f"s3://nemar/nm000104/objects/{annex_key}",
         tmp_path / "nm000104" / bids_relpath,
         filesystem=mock_deps.call_args.kwargs["filesystem"],
+        annex_key=annex_key,
     )
 
 
@@ -158,6 +161,7 @@ def test_nemar_download_pairs_annex_object_with_its_own_destination(tmp_path):
         patch("eegdash.dataset.base.downloader.download_s3_file"),
         patch("eegdash.dataset.base._download_via_nemar", return_value=True),
         patch.object(ds, "_fetch_nemar_root_metadata"),
+        patch.object(ds, "_require_data_file"),  # downloads are mocked: no .eeg
     ):
         ds._download_required_files()
 
@@ -235,7 +239,7 @@ def test_nemar_download_required_files_falls_back_to_data_portal(tmp_path):
     from eegdash.dataset.base import EEGDashRaw
     from eegdash.schemas import create_record
 
-    annex_key = "MD5E-s117384448--3f1620cf0484cce641d500a406630b89.edf"
+    annex_key = "MD5E-s4--8d777f385d3dfec8815d20f7496026dc.edf"
     bids_relpath = "sub-70495563/emg/sub-70495563_task-typing_emg.edf"
     record = create_record(
         dataset="nm000104",
@@ -253,14 +257,14 @@ def test_nemar_download_required_files_falls_back_to_data_portal(tmp_path):
 
     ds = EEGDashRaw(record=record, cache_dir=tmp_path)
 
-    fake_file = MagicMock(path=bids_relpath, size=117384448)
+    fake_file = MagicMock(path=bids_relpath, size=4)
     fake_manifest = MagicMock()
     fake_manifest.__contains__ = lambda self, key: key == bids_relpath
     fake_manifest.file = MagicMock(return_value=fake_file)
 
     def _ok_download(entry, target):
         """Model download_one: leave the file at *target*, return the verdict."""
-        target.write_bytes(b"")
+        target.write_bytes(b"data")
         return SimpleNamespace(name="OK")
 
     with (
@@ -276,6 +280,7 @@ def test_nemar_download_required_files_falls_back_to_data_portal(tmp_path):
         ) as mock_fetch,
         patch("nemar.download_one", side_effect=_ok_download) as mock_download_one,
         patch.object(ds, "_fetch_nemar_root_metadata"),
+        patch.object(ds, "_download_position_sidecars"),
     ):
         ds._download_required_files()
 
@@ -451,47 +456,27 @@ def test_len_error_handling(mock_validate, tmp_path):
 
 
 @pytest.mark.parametrize(
-    "create_vhdr,create_vmrk,expect_repair,expect_generate_vhdr,expect_generate_vmrk",
-    [
-        (True, True, True, False, False),  # VHDR+VMRK exist: repair only
-        (
-            True,
-            False,
-            True,
-            False,
-            True,
-        ),  # VHDR exists, VMRK missing: repair + generate vmrk
-        (
-            False,
-            False,
-            False,
-            True,
-            True,
-        ),  # VHDR missing: generate vhdr + vmrk stub (mock doesn't create files)
-    ],
+    "create_vhdr,create_vmrk,expect_generate_vhdr",
+    [(True, True, False), (True, False, False), (False, False, True)],
     ids=["vhdr_exists", "vmrk_missing", "vhdr_missing"],
 )
 @patch("eegdash.dataset.base.validate_record")
-@patch("eegdash.dataset.base._generate_vmrk_stub")
 @patch("eegdash.dataset.base._generate_vhdr_from_metadata")
-@patch("eegdash.dataset.base._repair_vhdr_pointers")
-@patch("eegdash.dataset.base._ensure_coordsystem_symlink")
+@patch("eegdash.dataset.base._warn_no_coordsystem")
 @patch("eegdash.dataset.base.mne_bids")
 def test_ensure_raw_vhdr_handling(
     mock_mne_bids,
-    mock_ensure_symlink,
-    mock_repair,
+    mock_warn_no_coordsystem,
     mock_generate_vhdr,
-    mock_generate_vmrk,
     mock_validate,
     tmp_path,
     create_vhdr,
     create_vmrk,
-    expect_repair,
     expect_generate_vhdr,
-    expect_generate_vmrk,
 ):
-    """Test _ensure_raw handles VHDR/VMRK generation and repair correctly."""
+    """_ensure_raw generates a missing VHDR only; it never rewrites the header or
+    writes a stub VMRK (stale pointers are read-time overrides).
+    """
     from eegdash.dataset.base import EEGDashRaw
 
     mock_validate.return_value = None
@@ -511,12 +496,12 @@ def test_ensure_raw_vhdr_handling(
         },
     }
 
+    vhdr = eeg_dir / "sub-01_task-rest_eeg.vhdr"
     if create_vhdr:
-        (eeg_dir / "sub-01_task-rest_eeg.vhdr").write_text(
-            "[Common Infos]\nDataFile=sub-01_task-rest_eeg.eeg\n"
-        )
+        vhdr.write_text("[Common Infos]\nDataFile=OLD_NAME.eeg\n")
     if create_vmrk:
         (eeg_dir / "sub-01_task-rest_eeg.vmrk").touch()
+    before = {p.name: p.read_bytes() for p in eeg_dir.iterdir()}
 
     dataset = EEGDashRaw(record, cache_dir=str(tmp_path))
     mock_raw = MagicMock()
@@ -524,9 +509,8 @@ def test_ensure_raw_vhdr_handling(
     dataset._load_raw = MagicMock(return_value=mock_raw)
     dataset._ensure_raw()
 
-    assert mock_repair.called == expect_repair
     assert mock_generate_vhdr.called == expect_generate_vhdr
-    assert mock_generate_vmrk.called == expect_generate_vmrk
+    assert {p.name: p.read_bytes() for p in eeg_dir.iterdir()} == before
 
 
 def test_eegdashraw_backend_logic(tmp_path):
@@ -1171,147 +1155,6 @@ def test_load_raw_eeglab_fallback_failure_raises_data_integrity(tmp_path):
                 ds._load_raw()
 
 
-# ── Error: NaN onset/sample in events.tsv → repair + retry / direct fallback ──
-
-
-def test_load_raw_na_whitespace_repair_and_retry(tmp_path):
-    """Whitespace-padded n/a in TSV triggers repair then retry."""
-    ds = _make_local_eegdashraw(
-        tmp_path, "ds004860", "sub-01/eeg/sub-01_task-rest_eeg.bdf"
-    )
-
-    mock_raw = MagicMock()
-    call_count = 0
-
-    def side_effect(**kwargs):
-        nonlocal call_count
-        call_count += 1
-        if call_count == 1:
-            raise ValueError("could not convert string to float: 'n/a      '")
-        return mock_raw
-
-    with patch("mne_bids.read_raw_bids", side_effect=side_effect):
-        with patch(
-            "eegdash.dataset.base._repair_tsv_na_whitespace", return_value=True
-        ) as mock_repair:
-            result = ds._load_raw()
-
-    mock_repair.assert_called_once()
-    assert result is mock_raw
-    assert call_count == 2
-
-
-def test_load_raw_na_whitespace_repair_no_change_falls_through(tmp_path):
-    """n/a whitespace repair returns False → error propagates."""
-    ds = _make_local_eegdashraw(
-        tmp_path, "ds004860", "sub-01/eeg/sub-01_task-rest_eeg.bdf"
-    )
-
-    with patch(
-        "mne_bids.read_raw_bids",
-        side_effect=ValueError("could not convert string to float: 'n/a      '"),
-    ):
-        with patch(
-            "eegdash.dataset.base._repair_tsv_na_whitespace",
-            return_value=False,
-        ):
-            with pytest.raises(ValueError, match="could not convert string to float"):
-                ds._load_raw()
-
-
-def test_load_raw_nan_events_repair_and_retry(tmp_path):
-    """NaN in events.tsv sample column should trigger repair then retry."""
-    ds = _make_local_eegdashraw(
-        tmp_path, "ds004841", "sub-01/eeg/sub-01_task-drive_eeg.set"
-    )
-
-    mock_raw = MagicMock()
-    call_count = 0
-
-    def side_effect(**kwargs):
-        nonlocal call_count
-        call_count += 1
-        if call_count == 1:
-            raise ValueError("cannot convert float NaN to integer")
-        return mock_raw
-
-    with patch("mne_bids.read_raw_bids", side_effect=side_effect):
-        with patch(
-            "eegdash.dataset.base._repair_events_tsv_nan_samples", return_value=True
-        ) as mock_repair:
-            result = ds._load_raw()
-
-    mock_repair.assert_called_once()
-    assert result is mock_raw
-    assert call_count == 2
-
-
-def test_load_raw_nan_events_repair_fails_propagates(tmp_path):
-    """NaN events repair fails → error propagates (no direct reader fallback)."""
-    ds = _make_local_eegdashraw(
-        tmp_path, "ds004841", "sub-01/eeg/sub-01_task-drive_eeg.set"
-    )
-
-    with patch(
-        "mne_bids.read_raw_bids",
-        side_effect=ValueError("cannot convert float NaN to integer"),
-    ):
-        with patch(
-            "eegdash.dataset.base._repair_events_tsv_nan_samples",
-            return_value=False,
-        ):
-            with pytest.raises(ValueError, match="cannot convert float NaN to integer"):
-                ds._load_raw()
-
-
-# ── Error 1: Invalid scans.tsv timestamp → repair + retry ──
-
-
-def test_load_raw_repairs_bad_scans_timestamp_and_retries(tmp_path):
-    """'second must be' error should trigger timestamp repair then retry."""
-    ds = _make_local_eegdashraw(
-        tmp_path, "ds003775", "sub-01/ses-t1/eeg/sub-01_ses-t1_task-rest_eeg.edf"
-    )
-
-    mock_raw = MagicMock()
-    call_count = 0
-
-    def side_effect(**kwargs):
-        nonlocal call_count
-        call_count += 1
-        if call_count == 1:
-            raise ValueError("second must be in 0..59")
-        return mock_raw
-
-    with patch("mne_bids.read_raw_bids", side_effect=side_effect):
-        with patch(
-            "eegdash.dataset.base._repair_scans_tsv_timestamps", return_value=True
-        ) as mock_repair:
-            result = ds._load_raw()
-
-    mock_repair.assert_called_once()
-    assert result is mock_raw
-    assert call_count == 2
-
-
-def test_load_raw_timestamp_repair_fails_still_raises(tmp_path):
-    """If timestamp repair returns False, original ValueError re-raises."""
-    ds = _make_local_eegdashraw(
-        tmp_path, "ds003775", "sub-01/ses-t1/eeg/sub-01_ses-t1_task-rest_eeg.edf"
-    )
-
-    with patch(
-        "mne_bids.read_raw_bids",
-        side_effect=ValueError("second must be in 0..59"),
-    ):
-        with patch(
-            "eegdash.dataset.base._repair_scans_tsv_timestamps",
-            return_value=False,
-        ):
-            with pytest.raises(ValueError, match="second must be"):
-                ds._load_raw()
-
-
 # ── Error 5: Unallowed BIDS entity → direct reader fallback ──
 
 
@@ -1504,47 +1347,6 @@ def test_ensure_ctf_directory_incomplete_raises(mock_validate, tmp_path):
         ds._ensure_ctf_directory_complete()
 
 
-# ── _repair_scans_tsv_timestamps standalone tests ──
-
-
-def test_repair_scans_tsv_timestamps_fixes_bad_seconds(tmp_path):
-    """Timestamps with seconds >= 60 should be replaced with n/a."""
-    from eegdash.dataset.io import _repair_scans_tsv_timestamps
-
-    scans = tmp_path / "sub-01_scans.tsv"
-    scans.write_text(
-        "filename\tacq_time\n"
-        "eeg/file1.edf\t2020-01-01T12:30:60\n"
-        "eeg/file2.edf\t2020-01-01T12:30:45\n"
-    )
-
-    assert _repair_scans_tsv_timestamps(tmp_path) is True
-
-    lines = scans.read_text().strip().split("\n")
-    assert lines[1].split("\t")[1] == "n/a"
-    assert lines[2].split("\t")[1] == "2020-01-01T12:30:45.000000"
-
-
-def test_repair_scans_tsv_timestamps_noop_when_valid(tmp_path):
-    """No changes when all timestamps are valid."""
-    from eegdash.dataset.io import _repair_scans_tsv_timestamps
-
-    scans = tmp_path / "sub-01_scans.tsv"
-    scans.write_text("filename\tacq_time\neeg/file1.edf\t2020-01-01T12:30:45.000000\n")
-
-    assert _repair_scans_tsv_timestamps(tmp_path) is False
-
-
-def test_repair_scans_tsv_timestamps_handles_na(tmp_path):
-    """Existing n/a values should not be modified."""
-    from eegdash.dataset.io import _repair_scans_tsv_timestamps
-
-    scans = tmp_path / "sub-01_scans.tsv"
-    scans.write_text("filename\tacq_time\neeg/file1.edf\tn/a\n")
-
-    assert _repair_scans_tsv_timestamps(tmp_path) is False
-
-
 # ── _load_raw_direct standalone tests ──
 
 
@@ -1646,6 +1448,56 @@ def test_load_raw_projector_type_conflict_retries(tmp_path):
     assert result is mock_raw
 
 
+def test_load_raw_recordingtype_epoched_falls_back_to_direct(tmp_path):
+    """nm000256: sidecar says RecordingType 'epoched' on a continuous BDF."""
+    ds = _make_local_eegdashraw(
+        tmp_path, "nm000256", "sub-01/eeg/sub-01_task-stim02_eeg.bdf", ext=".bdf"
+    )
+
+    mock_raw = MagicMock()
+    with patch(
+        "mne_bids.read_raw_bids",
+        side_effect=RuntimeError(
+            'RecordingType is "epoched"; use mne_bids.read_epochs_bids() '
+            "instead of read_raw_bids()."
+        ),
+    ):
+        with patch(
+            "eegdash.dataset.base._load_raw_direct", return_value=mock_raw
+        ) as mock_direct:
+            result = ds._load_raw()
+
+    mock_direct.assert_called_once_with(ds.filecache)
+    assert result is mock_raw
+
+
+def test_load_raw_recordingtype_epoched_eeglab_trials_concatenated(tmp_path):
+    """ds004771: RecordingType 'epoched' on a .set that holds 445 trials."""
+    ds = _make_local_eegdashraw(
+        tmp_path, "ds004771", "sub-026/eeg/sub-026_task-PY_eeg.set", ext=".set"
+    )
+
+    mock_raw = MagicMock()
+    with (
+        patch(
+            "mne_bids.read_raw_bids",
+            side_effect=RuntimeError('RecordingType is "epoched"; use ...'),
+        ),
+        patch(
+            "eegdash.dataset.base._load_raw_direct",
+            side_effect=TypeError("The number of trials is 445. It must be 1"),
+        ),
+        patch(
+            "eegdash.dataset.base._load_raw_from_eeglab_epochs",
+            return_value=mock_raw,
+        ) as mock_epochs,
+    ):
+        result = ds._load_raw()
+
+    mock_epochs.assert_called_once_with(ds.filecache)
+    assert result is mock_raw
+
+
 # ── AssertionError → hide events.tsv and retry ──
 
 
@@ -1743,33 +1595,6 @@ def test_load_raw_runtime_error_unrecoverable_raises_data_integrity(
                 ds._load_raw()
 
 
-# ── CTF mandatory HPI fix → retry with patched kind dict ──
-
-
-def test_load_raw_mandatory_hpi_retries_with_fix(tmp_path):
-    """RuntimeError('mandatory HPI') retries with extended _kind_dict."""
-    ds = _make_local_eegdashraw(
-        tmp_path,
-        "ds006502",
-        "sub-01/ses-meg1/meg/sub-01_ses-meg1_task-rest_run-1_meg.ds",
-        ext=".ds",
-    )
-
-    mock_raw = MagicMock()
-    with patch(
-        "mne_bids.read_raw_bids",
-        side_effect=[
-            RuntimeError(
-                "Some of the mandatory HPI device-coordinate info was not there."
-            ),
-            mock_raw,
-        ],
-    ):
-        result = ds._load_raw()
-
-    assert result is mock_raw
-
-
 # ── KeyError FIFFV_COIL_NONE → direct reader fallback ──
 
 
@@ -1855,19 +1680,92 @@ def test_download_companion_files_set_fdt(tmp_path):
     mock_dl.assert_called_once_with(expected_uri, expected_local, filesystem=mock_fs)
 
 
-def test_download_companion_files_vhdr_eeg_vmrk_dat(tmp_path):
-    """All .eeg, .vmrk, and .dat companions should be downloaded for .vhdr files."""
+def _fake_s3(present: dict[str, str]):
+    """download_s3_file over a bucket holding ``present`` (file name -> text)."""
+
+    def download(uri, path, filesystem=None, **kwargs):
+        name = uri.rsplit("/", 1)[1]
+        if name not in present:
+            raise FileNotFoundError(uri)
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.write_text(present[name])
+
+    return download
+
+
+def test_download_companion_files_vhdr_eeg_vmrk(tmp_path):
+    """A .vhdr's companions are its .eeg and .vmrk; no deposit holds a .dat (#427)."""
     ds = _make_s3_raw(tmp_path, ".vhdr")
-    mock_fs = MagicMock()
+    stem = "sub-01_task-rest_eeg"
+    bucket = {f"{stem}.eeg": "x", f"{stem}.vmrk": "x"}
 
-    with patch("eegdash.dataset.base.downloader.download_s3_file") as mock_dl:
-        ds._download_companion_files(mock_fs)
+    with patch(
+        "eegdash.dataset.base.downloader.download_s3_file", side_effect=_fake_s3(bucket)
+    ) as mock_dl:
+        ds._download_companion_files(MagicMock())
 
-    assert mock_dl.call_count == 3
     uris = [call.args[0] for call in mock_dl.call_args_list]
-    assert "s3://openneuro.org/ds_test/sub-01/eeg/sub-01_task-rest_eeg.eeg" in uris
-    assert "s3://openneuro.org/ds_test/sub-01/eeg/sub-01_task-rest_eeg.vmrk" in uris
-    assert "s3://openneuro.org/ds_test/sub-01/eeg/sub-01_task-rest_eeg.dat" in uris
+    assert uris == [
+        f"s3://openneuro.org/ds_test/sub-01/eeg/{stem}.eeg",
+        f"s3://openneuro.org/ds_test/sub-01/eeg/{stem}.vmrk",
+    ]
+
+
+def _download_brainvision(tmp_path, header, bucket):
+    ds = _make_s3_raw(tmp_path, ".vhdr")
+    bucket = {"sub-01_task-rest_eeg.vhdr": f"[Common Infos]\n{header}", **bucket}
+    with (
+        patch("eegdash.dataset.base.downloader.get_s3_filesystem"),
+        patch(
+            "eegdash.dataset.base.downloader.download_s3_file",
+            side_effect=_fake_s3(bucket),
+        ),
+        patch("eegdash.dataset.base.downloader.download_files"),
+        patch("eegdash.dataset.base.EEGDashRaw._download_position_sidecars"),
+    ):
+        ds._download_required_files()
+    return ds
+
+
+def test_download_fails_when_the_brainvision_data_file_is_missing(tmp_path):
+    """A .eeg that is 404 fails the download naming it, not a skip warning (#427).
+
+    ds006576 sub-170/sub-178 and ds007454 sub-032/033/048 hold a .vhdr and
+    .vmrk whose .eeg is not in the deposit; the download reported success.
+    """
+    from eegdash.dataset.exceptions import DataIntegrityError
+
+    stem = "sub-01_task-rest_eeg"
+    header = f"DataFile={stem}.eeg\nMarkerFile={stem}.vmrk\n"
+    with pytest.raises(DataIntegrityError, match=f"{stem}.eeg") as err:
+        _download_brainvision(tmp_path, header, {f"{stem}.vmrk": "x"})
+    assert err.value.issues == [f"Missing required file: sub-01/eeg/{stem}.eeg"]
+
+
+def test_download_fetches_the_data_file_the_brainvision_header_names(tmp_path):
+    """DataFile= naming a file other than <stem>.eeg is fetched by that name."""
+    header = "DataFile=rest.dat\nMarkerFile=sub-01_task-rest_eeg.vmrk\n"
+    ds = _download_brainvision(tmp_path, header, {"rest.dat": "samples"})
+    assert (ds.filecache.parent / "rest.dat").read_text() == "samples"
+
+
+def test_download_fails_when_the_eeglab_fdt_is_missing(tmp_path):
+    """The .fdt EEG.data names is required too; a .set with samples needs none."""
+    import scipy.io
+
+    from eegdash.dataset.exceptions import DataIntegrityError
+
+    ds = _make_s3_raw(tmp_path, ".set")
+    ds.filecache.parent.mkdir(parents=True)
+    scipy.io.savemat(ds.filecache, {"EEG": {"data": "other.fdt"}})
+    with (
+        patch(
+            "eegdash.dataset.base.downloader.download_s3_file",
+            side_effect=_fake_s3({}),
+        ),
+        pytest.raises(DataIntegrityError, match="other.fdt"),
+    ):
+        ds._download_companion_files(MagicMock())
 
 
 def test_download_companion_files_skips_existing(tmp_path):
@@ -2002,29 +1900,6 @@ def test_load_raw_bad_task_metadata_raises_data_integrity(tmp_path):
         pytest.raises(DataIntegrityError, match="Bad record metadata"),
     ):
         ds._load_raw()
-
-
-def test_load_raw_retries_on_coordsystem_should_exist(tmp_path):
-    """RuntimeError 'coordsystem.json should exist' triggers coordsystem retry."""
-    ds = _make_s3_raw(tmp_path, ".edf")
-    mock_raw = MagicMock()
-
-    with (
-        patch.object(
-            ds,
-            "_read_raw_bids",
-            side_effect=RuntimeError("coordsystem.json should exist for iEEG"),
-        ),
-        patch.object(
-            ds,
-            "_retry_with_generated_coordsystem",
-            return_value=mock_raw,
-        ) as mock_retry,
-    ):
-        result = ds._load_raw()
-
-    mock_retry.assert_called_once()
-    assert result is mock_raw
 
 
 def test_load_raw_retries_on_coordsystem_key_error(tmp_path):
@@ -2174,52 +2049,6 @@ def test_load_raw_ctf_trial_size_mismatch_fallback_fails(tmp_path):
 # ── configparser.NoOptionError (missing MarkerFile) → repair + retry ──
 
 
-def test_load_raw_no_option_error_markerfile_repairs_and_retries(tmp_path):
-    """configparser.NoOptionError for markerfile triggers VHDR repair then retry."""
-    import configparser
-
-    ds = _make_local_eegdashraw(
-        tmp_path, "ds003944", "sub-01/eeg/sub-01_task-rest_eeg.vhdr", ext=".vhdr"
-    )
-
-    mock_raw = MagicMock()
-    call_count = 0
-
-    def side_effect(**kwargs):
-        nonlocal call_count
-        call_count += 1
-        if call_count == 1:
-            raise configparser.NoOptionError("markerfile", "Common Infos")
-        return mock_raw
-
-    with patch("mne_bids.read_raw_bids", side_effect=side_effect):
-        with patch(
-            "eegdash.dataset.base._repair_vhdr_missing_markerfile", return_value=True
-        ) as mock_repair:
-            result = ds._load_raw()
-
-    mock_repair.assert_called_once_with(ds.filecache)
-    assert result is mock_raw
-    assert call_count == 2
-
-
-def test_load_raw_no_option_error_repair_fails_reraises(tmp_path):
-    """configparser.NoOptionError when repair returns False → re-raises."""
-    import configparser
-
-    ds = _make_local_eegdashraw(
-        tmp_path, "ds003944", "sub-01/eeg/sub-01_task-rest_eeg.vhdr", ext=".vhdr"
-    )
-
-    error = configparser.NoOptionError("markerfile", "Common Infos")
-    with patch("mne_bids.read_raw_bids", side_effect=error):
-        with patch(
-            "eegdash.dataset.base._repair_vhdr_missing_markerfile", return_value=False
-        ):
-            with pytest.raises(configparser.NoOptionError):
-                ds._load_raw()
-
-
 def test_load_raw_no_option_error_non_markerfile_reraises(tmp_path):
     """configparser.NoOptionError for non-markerfile option → re-raises."""
     import configparser
@@ -2234,47 +2063,7 @@ def test_load_raw_no_option_error_non_markerfile_reraises(tmp_path):
             ds._load_raw()
 
 
-# ── UnicodeDecodeError → repair TSV encoding + retry ──
-
-
-def test_load_raw_unicode_decode_error_repairs_encoding(tmp_path):
-    """UnicodeDecodeError triggers TSV encoding repair then retry."""
-    ds = _make_local_eegdashraw(
-        tmp_path, "ds005692", "sub-01/eeg/sub-01_task-rest_eeg.edf"
-    )
-
-    mock_raw = MagicMock()
-    call_count = 0
-
-    def side_effect(**kwargs):
-        nonlocal call_count
-        call_count += 1
-        if call_count == 1:
-            raise UnicodeDecodeError("utf-8", b"\xb5", 0, 1, "invalid start byte")
-        return mock_raw
-
-    with patch("mne_bids.read_raw_bids", side_effect=side_effect):
-        with patch(
-            "eegdash.dataset.base._repair_tsv_encoding", return_value=True
-        ) as mock_repair:
-            result = ds._load_raw()
-
-    mock_repair.assert_called_once_with(ds.filecache.parent)
-    assert result is mock_raw
-    assert call_count == 2
-
-
-def test_load_raw_unicode_decode_error_repair_fails_reraises(tmp_path):
-    """UnicodeDecodeError when encoding repair returns False → re-raises."""
-    ds = _make_local_eegdashraw(
-        tmp_path, "ds005692", "sub-01/eeg/sub-01_task-rest_eeg.edf"
-    )
-
-    error = UnicodeDecodeError("utf-8", b"\xb5", 0, 1, "invalid start byte")
-    with patch("mne_bids.read_raw_bids", side_effect=error):
-        with patch("eegdash.dataset.base._repair_tsv_encoding", return_value=False):
-            with pytest.raises(UnicodeDecodeError):
-                ds._load_raw()
+# ── UnicodeDecodeError: no TSV rewrite, no retry ──
 
 
 # ── scans.tsv path mismatch → direct reader fallback ──
@@ -2596,6 +2385,26 @@ def test_resolve_annex_key_uri_md5e(tmp_path):
     )
 
 
+def test_on_record_reads_nemar_not_the_openneuro_twin(tmp_path):
+    """on008062's OpenNeuro twin was deleted; NEMAR is read first anyway."""
+    relpath = "sub-17/eeg/sub-17_task-soundscape_eeg.edf"
+    key = "SHA256E-s425668--b366ad.edf"
+    record = {
+        "dataset": "on008062",
+        "bids_relpath": relpath,
+        "storage": {
+            "backend": "nemar",
+            "base": "s3://nemar/on008062",
+            "raw_key": relpath,
+            "annex_keys": {relpath: key},
+        },
+    }
+    with patch("eegdash.dataset.base.validate_record", return_value=None):
+        ds = EEGDashRaw(record, cache_dir=str(tmp_path))
+    assert ds._storage_backend == "nemar"
+    assert ds.record["storage"]["base"] == "s3://nemar/on008062"
+
+
 def test_resolve_annex_key_uri_sha256e(tmp_path):
     """_resolve_annex_key_uri detects SHA256E annex keys."""
     from eegdash.dataset.base import EEGDashRaw
@@ -2673,7 +2482,7 @@ def test_download_required_files_annex_key_fallback(tmp_path):
         ds._download_required_files()
 
     # First two calls: annex URI (fails), then BIDS URI (succeeds).
-    # Additional calls are companion file downloads (.eeg, .vmrk, .dat).
+    # Additional calls are companion file downloads (.eeg, .vmrk).
     assert mock_dl.call_count >= 2
     assert "MD5E-s11657--" in mock_dl.call_args_list[0][0][0]
     assert mock_dl.call_args_list[1][0][0] == bids_uri
@@ -3057,3 +2866,57 @@ def test_fresh_nemar_set_retries_only_missing_dependencies(
         restarted._download_required_files()
         resolve.assert_not_called()
         primary.assert_not_called()
+
+
+def test_nemar_directory_recording_fetched_file_by_file(tmp_path, monkeypatch):
+    """CTF .ds on NEMAR: the dir has no pointer, so list it from the git tree."""
+    from eegdash.dataset import base as base_mod  # noqa: PLC0415
+
+    rel = "sub-1/meg/sub-1_meg.ds"
+    tree = (
+        f"{rel}/sub-1_meg.meg4",
+        f"{rel}/sub-1_meg.res4",
+        f"{rel}/params.dsc",
+        "sub-1/meg/sub-1_meg.json",
+    )
+    pointers = {
+        f"{rel}/sub-1_meg.meg4": ("SHA256E-s4--aa.meg4", b""),
+        f"{rel}/sub-1_meg.res4": ("SHA256E-s4--bb.res4", b""),
+        f"{rel}/params.dsc": (None, b"inline"),
+    }
+    monkeypatch.setattr(base_mod, "_nemar_tree", lambda _ds: tree)
+    monkeypatch.setattr(base_mod, "_resolve_nemar_pointer", lambda _ds, p: pointers[p])
+    fetched = []
+
+    def fake_download_files(pairs, **_kw):
+        for uri, dest in pairs:
+            fetched.append(uri)
+            dest.parent.mkdir(parents=True, exist_ok=True)
+            dest.write_bytes(b"data")
+
+    monkeypatch.setattr(base_mod.downloader, "download_files", fake_download_files)
+    record = {
+        "dataset": "on1",
+        "storage": {"backend": "nemar", "base": "s3://nemar/on1", "raw_key": rel},
+    }
+    dest = tmp_path / rel
+
+    raw_uri, _ = base_mod._resolve_nemar_uris(
+        record, raw_dest=dest, dep_keys=[], dep_dests=[]
+    )
+    assert (
+        raw_uri == f"s3://nemar/on1/{rel}"
+    )  # a prefix, no GitHub raw lookup of the dir
+
+    base_mod._download_nemar_directory(record, dest, filesystem=None)
+    assert sorted(p.name for p in dest.iterdir()) == [
+        "params.dsc",
+        "sub-1_meg.meg4",
+        "sub-1_meg.res4",
+    ]
+    assert (dest / "params.dsc").read_bytes() == b"inline"
+    assert sorted(fetched) == [
+        "s3://nemar/on1/objects/SHA256E-s4--aa.meg4",
+        "s3://nemar/on1/objects/SHA256E-s4--bb.res4",
+    ]
+    assert not dest.with_name(dest.name + ".part").exists()

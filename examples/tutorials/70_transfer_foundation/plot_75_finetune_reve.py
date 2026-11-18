@@ -8,8 +8,7 @@ Adapt the published REVE-Base checkpoint to a motor-imagery-vs-rest task from
 OpenNeuro dataset ``ds003810``, served through EEGDash and trained with
 Braindecode's ``EEGClassifier``. The checkpoint is
 https://huggingface.co/brain-bzh/reve-base (documented by Braindecode's ``REVE``
-model). It is gated: accepting the authors' terms once and logging in to the
-Hugging Face Hub is part of this tutorial. It downloads about 280 MB of weights
+model), public on the Hugging Face Hub. It downloads about 280 MB of weights
 and 7 MB of EEG (one participant, four runs).
 
 Two ways to adapt a pretrained encoder are shown with the same code path:
@@ -33,11 +32,8 @@ Keywords: foundation-model, fine-tuning, linear-probe, REVE, motor-imagery, tran
 # straight into a model pretrained mostly on 19- to 128-channel data, with no
 # common-channel subset to pick.
 #
-# The weights are published under a gated license (the electrode position table,
-# ``brain-bzh/reve-positions``, is public). One-time setup:
-#
-# 1. Open https://huggingface.co/brain-bzh/reve-base and accept the terms.
-# 2. Log in once from a terminal: ``hf auth login`` (or set ``HF_TOKEN``).
+# The weights (https://huggingface.co/brain-bzh/reve-base) and the electrode
+# position table (``brain-bzh/reve-positions``) are public; no login is needed.
 #
 import matplotlib.pyplot as plt
 import numpy as np
@@ -73,8 +69,7 @@ PROBE_EPOCHS, FT_EPOCHS = 5, 2  # small workflow budget, not converged performan
 PROBE_LR, FINETUNE_LR = 1e-4, 1e-5
 torch.manual_seed(0)
 print(f"device={DEVICE}; probe epochs={PROBE_EPOCHS}; fine-tune={RUN_FINETUNE}")
-# from_pretrained reports gated access/download errors directly. Complete the
-# one-time login above before running; no exception is silently treated as offline.
+# from_pretrained reports download errors directly; none is treated as offline.
 
 # %%
 # Match the real signal to the encoder input
@@ -88,9 +83,9 @@ print(f"device={DEVICE}; probe epochs={PROBE_EPOCHS}; fine-tune={RUN_FINETUNE}")
 # codes as the imagery runs -- so loading it would train on executed movement
 # labelled as imagery. We load runs 1-4 only.
 #
-# The recording software (OpenViBE) wrote its own cue codes: ``OVTK_GDF_Right``
-# is the imagery cue and ``OVTK_GDF_Tongue`` the rest cue (the dataset's
-# ``events.json`` documents this). Each cue is an instantaneous marker and the
+# The BIDS ``events.tsv`` codes each trial by ``value``: ``7`` is motor imagery
+# and ``9`` is rest (the dataset's ``events.json`` documents this; in the raw
+# EDF they are OpenViBE's ``OVTK_GDF_Right`` and ``OVTK_GDF_Tongue`` cues). The
 # trial runs 4 s from cue to feedback, so one 4 s window per cue fits exactly.
 #
 # REVE's input contract -- none of it enforced at runtime: 200 Hz, EEG channels
@@ -122,11 +117,14 @@ preprocess(
 chs_info = ds.datasets[0].raw.info["chs"]
 print(len(chs_info), "EEG channels:", [c["ch_name"] for c in chs_info])
 
-# The cue markers have zero duration, so the trial would be empty with the
-# default stop offset; extend each trial to exactly one window from the cue.
+# Event durations are about 4 s but some fall a sample short of a full window,
+# which would drop those trials. Make every cue instantaneous, then take exactly
+# one window from each cue.
+for recording in ds.datasets:
+    recording.raw.annotations.set_durations(0.0)
 windows = create_windows_from_events(
     ds,
-    mapping={"OVTK_GDF_Right": 0, "OVTK_GDF_Tongue": 1},  # 0 = motor imagery, 1 = rest
+    mapping={"7": 0, "9": 1},  # 0 = motor imagery, 1 = rest
     trial_start_offset_samples=0,
     trial_stop_offset_samples=WINDOW_S * SFREQ,
     window_size_samples=WINDOW_S * SFREQ,

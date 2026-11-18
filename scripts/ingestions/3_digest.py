@@ -6,9 +6,12 @@ See ``python 3_digest.py --help``.
 """
 
 import functools
+import hashlib
 import json
 import logging
 import os
+import shutil
+import subprocess
 import sys
 from datetime import datetime, timezone
 from pathlib import Path
@@ -291,13 +294,53 @@ def _summarise_empty_or_error(
     return empty_summary
 
 
+def _source_commit(dataset_dir: Path) -> str | None:
+    """Return the HEAD commit of a cloned dataset, or None when it is not a git clone."""
+    if not (dataset_dir / ".git").exists():
+        return None
+    try:
+        out = subprocess.run(
+            ["git", "-C", str(dataset_dir), "rev-parse", "HEAD"],
+            capture_output=True,
+            text=True,
+            timeout=30,
+            check=True,
+        )
+    except (OSError, subprocess.SubprocessError):
+        return None
+    return out.stdout.strip() or None
+
+
+def _digested_commit(dataset_output_dir: Path, dataset_id: str) -> str | None:
+    """Return the source commit recorded in an existing digest summary, if any."""
+    try:
+        summary = json.loads(
+            (dataset_output_dir / f"{dataset_id}_summary.json").read_text()
+        )
+    except (OSError, ValueError):
+        return None
+    return summary.get("source_commit") if isinstance(summary, dict) else None
+
+
 def _check_dataset_skip_conditions(
     dataset_id: str,
     dataset_dir: Path,
     dataset_output_dir: Path,
 ) -> dict[str, Any] | None:
-    """Return a skip summary if output exists or input dir is missing, else None."""
+    """Return a skip summary if output exists or input dir is missing, else None.
+
+    An existing digest is redone when the clone's HEAD differs from the commit
+    recorded at digest time: the deposit changed (files renamed, subjects
+    added or removed) and the old records point at paths that may be gone.
+    Digests without a recorded commit are kept as they are.
+    """
     if dataset_output_dir.exists():
+        old = _digested_commit(dataset_output_dir, dataset_id)
+        new = _source_commit(dataset_dir) if old else None
+        if old and new and old != new:
+            logger.info("%s: source moved %s -> %s, re-digesting", dataset_id, old, new)
+            shutil.rmtree(dataset_output_dir)
+            return None
         return {
             "status": "skipped",
             "dataset_id": dataset_id,
@@ -372,6 +415,15 @@ def digest_dataset(
             summary = _summarise_empty_or_error(dataset_id, result)
             return summary
 
+        commit = _source_commit(dataset_dir)
+        fp = result.dataset_meta.get("ingestion_fingerprint")
+        if commit and fp:
+            # The fingerprint hashes recording paths and sizes only, so a release
+            # that changes sidecars alone (nm000238 v1.1.1) looked unchanged and
+            # inject skipped it. The commit covers every file.
+            result.dataset_meta["ingestion_fingerprint"] = hashlib.sha256(
+                f"{fp}|{commit}".encode()
+            ).hexdigest()
         summary = write_dataset_outputs(
             dataset_output_dir,
             result,
@@ -380,6 +432,10 @@ def digest_dataset(
             digested_at=digested_at,
             total_files=result.total_files,
         )
+        if commit:
+            summary["source_commit"] = commit
+            summary_path = dataset_output_dir / f"{dataset_id}_summary.json"
+            summary_path.write_text(json.dumps(summary, indent=2))
         return summary
     finally:
         if summary is None:

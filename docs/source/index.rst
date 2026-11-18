@@ -327,4 +327,5 @@
    Examples <generated/auto_examples/index>
    Concepts <concepts/index>
    Docs <api/api>
+   Corpus <corpus/index>
    References <references>

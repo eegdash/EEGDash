@@ -40,6 +40,7 @@ Usage:
     python 5_inject.py --input digestion_output --database eegdash_dev --skip-validation
 """
 
+import json
 import math
 import os
 import sys
@@ -56,6 +57,7 @@ from _http import (
     request_json,
 )
 from _inject_config import load_inject_config_from_argv
+from _inject_pin_guard import PinConflictError, guard_live_pins
 from _inject_plan import (
     EXCLUDED_DATASETS,
     _ensure_fingerprint,
@@ -69,6 +71,7 @@ from _inject_plan import (
     load_montages,
     load_records,
     load_validator_status,
+    prune_cutoffs,
 )
 from _validate import validate_digestion_output
 
@@ -93,6 +96,31 @@ __all__ = [
 # CI workers run on 2-16+ vCPUs; cap at 8 matches the prior magic
 # constant for >= 4 vCPU hosts and gives smaller hosts a sensible pool.
 DEFAULT_WORKERS = min(8, max(2, (os.cpu_count() or 2) * 2))
+# A record batch that fails in the parallel pass is re-sent one chunk at a time,
+# each chunk at most this many records and (roughly) this many JSON bytes.
+_RETRY_CHUNK = 100
+_RETRY_CHUNK_BYTES = 4_000_000
+
+
+def _retry_chunks(batch: list) -> list[list]:
+    """Split a failed batch into chunks small enough for the gateway.
+
+    on006545's records are ~250 KB each (24 MB per 100), so a count cap alone
+    still sends bodies the gateway drops.
+    """
+    chunks: list[list] = []
+    current: list = []
+    size = 0
+    for record in batch:
+        n = len(json.dumps(_sanitize_for_json(record), default=str))
+        if current and (len(current) >= _RETRY_CHUNK or size + n > _RETRY_CHUNK_BYTES):
+            chunks.append(current)
+            current, size = [], 0
+        current.append(record)
+        size += n
+    if current:
+        chunks.append(current)
+    return chunks
 
 
 def _sanitize_for_json(obj):
@@ -227,12 +255,27 @@ def inject_records(
             ): idx
             for idx, batch in batches
         }
+        failed = []
         for future in tqdm(
             as_completed(futures, timeout=wall_clock_budget_s),
             total=len(batches),
             desc="Injecting batches",
         ):
             res = future.result(timeout=per_batch_timeout_s)
+            if res["error"]:
+                failed.append(futures[future])
+            else:
+                inserted_count += res["inserted"]
+                updated_count += res["updated"]
+
+    # Under load the gateway drops whole 1000-record batches (2026-10-17: 5,000
+    # of 41,626 records lost in one run). Re-send each failed batch sequentially
+    # in small chunks; only chunks that still fail are reported.
+    for idx in sorted(failed):
+        for chunk in _retry_chunks(batches[idx][1]):
+            res = _bulk_upsert_batch(
+                idx, chunk, url, session, timeout=per_batch_timeout_s
+            )
             if res["error"]:
                 errors.append(res["error"])
             else:
@@ -244,6 +287,48 @@ def inject_records(
         "updated_count": updated_count,
         "errors": errors,
     }
+
+
+def prune_stale_records(
+    records: list[dict],
+    api_url: str,
+    database: str,
+    admin_token: str,
+    client=None,
+) -> dict:
+    """Delete each injected dataset's records that its current digest no longer holds.
+
+    The upsert never removes a record, so a file renamed, moved or deleted on
+    the source stayed in the catalogue and its download returned 404
+    (nm000172, nm000189: renamed runs; nm000250: 520 records of an earlier
+    deposit). Every record of one digest carries that digest's
+    ``digested_at``; once all of it is upserted, a record of the same dataset
+    with an older ``digested_at`` is not in the source any more.
+    """
+    oldest = prune_cutoffs(records)
+
+    session = client or make_authed_client(admin_token)
+    deleted: dict[str, int] = {}
+    errors = []
+    for ds, ts in sorted(oldest.items()):
+        flt = {"dataset": ds, "digested_at": {"$lt": ts}}
+        try:
+            result, _resp = request_json(
+                "delete",
+                f"{api_url}/admin/{database}/records",
+                params={"filter": json.dumps(flt)},
+                timeout=120,
+                raise_for_status=True,
+                raise_for_request=True,
+                client=session,
+            )
+        except (httpx.RequestError, httpx.HTTPStatusError) as e:
+            errors.append(f"{ds}: {e}")
+            continue
+        n = int((result or {}).get("deleted_count") or 0)
+        if n:
+            deleted[ds] = n
+    return {"deleted": deleted, "errors": errors}
 
 
 def inject_montages(
@@ -443,6 +528,15 @@ def main():
             print("No updated datasets detected. Skipping injection.")
             return 0
 
+    # Preflight the exact target before dataset, record, or montage writes.
+    # --force and --skip-validation cannot discard explicit historical pins.
+    if want_records and not args.dry_run:
+        try:
+            guard_live_pins(all_records, plan.changed_ids, args.api_url, args.database)
+        except PinConflictError as exc:
+            print(f"Live pin safety check FAILED: {exc}", file=sys.stderr)
+            return 1
+
     # Stats tracking
     stats = {
         "datasets_injected": 0,
@@ -487,6 +581,9 @@ def main():
                             client=client,
                         )
                         stats["datasets_injected"] += result.get("inserted_count", 0)
+                        for err in result.get("errors", []):
+                            stats["errors"] += 1
+                            errors.append({"dataset": "datasets_batch", "error": err})
                         print(
                             f"  Batch {i // ds_batch_size + 1}: {result.get('inserted_count', 0)} datasets"
                         )
@@ -520,6 +617,32 @@ def main():
                     )
                     stats["records_injected"] += result.get("inserted_count", 0)
                     stats["records_updated"] += result.get("updated_count", 0)
+                    # A lost batch must fail the run, not pass as a success.
+                    for err in result.get("errors", []):
+                        stats["errors"] += 1
+                        errors.append({"dataset": "records_batch", "error": err})
+
+                    # Prune only after every batch landed: a failed batch
+                    # leaves current records with an older digested_at.
+                    if result.get("errors"):
+                        print(
+                            "  Skipping stale-record prune: some batches failed",
+                            file=sys.stderr,
+                        )
+                    else:
+                        pruned = prune_stale_records(
+                            all_records,
+                            args.api_url,
+                            args.database,
+                            admin_token,
+                            client=client,
+                        )
+                        stats["records_pruned"] = sum(pruned["deleted"].values())
+                        for ds, n in pruned["deleted"].items():
+                            print(f"  Pruned {n} stale records of {ds}")
+                        for err in pruned["errors"]:
+                            errors.append({"dataset": "records_prune", "error": err})
+                            stats["errors"] += 1
 
             except (
                 httpx.RequestError,

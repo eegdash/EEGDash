@@ -104,6 +104,49 @@ def test_get_annex_file_key_from_smudged_pointer(tmp_path: Path):
     assert out == annex_key
 
 
+@pytest.mark.parametrize(
+    "annex_key",
+    [
+        pytest.param(
+            "SHA512E-s36869376--379de497a2848957a0bf30739de85b84e81586bbec466ce1"
+            "0d8a59a113b723fd63b1943fbb51229d6ccf17ddbcb41a30fc1ef8502283c82835d5"
+            "13226edb3d1b.edf",
+            id="sha512e-nm000289-run021",
+        ),
+        pytest.param(
+            "SHA256E-s7879144--2b36d231d0f6c6ee9251d3081a92cd88978b801331fe2e9b6b"
+            "4ea573cee16840",
+            id="no-extension-snirf-on004514",
+        ),
+        pytest.param("MD5E-s0--d41d8cd98f00b204e9800998ecf8427e", id="ctf-badchannels"),
+        pytest.param("SHA256-s10--" + "c" * 64, id="sha256-non-e-backend"),
+        pytest.param("MD5E-s42--" + "d" * 32 + ".nii.gz", id="double-extension"),
+    ],
+)
+def test_get_annex_file_key_any_backend_and_extensionless(tmp_path: Path, annex_key):
+    """Every git-annex key is recorded, not only SHA256E/MD5E keys with an extension.
+
+    nm000289 v1.0.1 re-keyed one EDF as SHA512E; git-annex drops extensions
+    longer than 4 characters (``.snirf``) and files without one (CTF ``BadChannels``).
+    """
+    link = tmp_path / "rec.snirf"
+    link.symlink_to(Path(f".git/annex/objects/Xx/Yy/{annex_key}/{annex_key}"))
+    pointer = tmp_path / "pointer.edf"
+    pointer.write_text(f"/annex/objects/{annex_key}\n")
+    assert get_annex_file_key(link) == annex_key
+    assert get_annex_file_key(pointer) == annex_key
+
+
+@pytest.mark.parametrize(
+    "target",
+    ["/annex/objects/garbage-not-a-key.set", "/annex/objects/SHA256E-s12--nothex.edf"],
+)
+def test_get_annex_file_key_rejects_non_keys(tmp_path: Path, target: str):
+    pointer = tmp_path / "x.edf"
+    pointer.write_text(target + "\n")
+    assert get_annex_file_key(pointer) is None
+
+
 def test_get_annex_file_key_returns_none_for_oversized_file(tmp_path: Path):
     big = tmp_path / "big.bin"
     big.write_bytes(b"x" * 1000)  # > 256

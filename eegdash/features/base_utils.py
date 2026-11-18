@@ -6,6 +6,7 @@ This module defines basic utilities for feature extraction.
 
 from __future__ import annotations
 
+import difflib
 from collections.abc import Callable
 from functools import partial
 from typing import Iterable, List, Tuple
@@ -121,7 +122,13 @@ def channel_names_to_indices(channels: List[str], ch_names: List[str]) -> List[i
         if channel in ch_names:
             channel_idx.append(ch_names.index(channel))
         else:
+            idx = channels.index(channel)
+            close = difflib.get_close_matches(channel, ch_names, n=3)
+            hint = f" Did you mean: {close}?" if close else ""
             raise ValueError(
-                f"Channel {channel} not found in metadata channels: {ch_names}."
+                f"Channel {channel!r} (index {idx} in the supplied list) not found "
+                f"in the recording's channel list.{hint}\n"
+                f"Note: to inspect all available channels use "
+                f"`raw.info['ch_names']` or `metadata['info']['ch_names']`."
             )
     return channel_idx

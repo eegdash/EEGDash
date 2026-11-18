@@ -80,5 +80,6 @@ class TrainableFeature(ABC):
         """
         if not self._is_trained:
             raise RuntimeError(
-                f"{self.__class__} cannot be called, it has to be trained first."
+                f"'{type(self).__name__}' must be fitted before use. "
+                f"Call fit_feature_extractors(dataset, features) first."
             )

@@ -110,12 +110,21 @@ class StorageModel(BaseModel):
     )
     base: str = Field(min_length=1, description="Base URI of the storage location")
     raw_key: str = Field(min_length=1, description="Relative path key to the raw file")
+    version_id: str | None = Field(
+        default=None,
+        min_length=1,
+        description="S3 version ID of raw_key only; dependencies remain unpinned.",
+    )
     dep_keys: list[str] = Field(
         default_factory=list, description="List of dependency file keys"
     )
+    version_ids: dict[str, str] | None = Field(
+        default=None,
+        description="S3 version IDs by dependency key; keys must appear in dep_keys.",
+    )
     annex_keys: dict[str, str] | None = Field(
         default=None,
-        description="Sparse map relpath -> SHA-key (NEMAR digest fast path).",
+        description="Sparse map relpath -> git-annex key (NEMAR and OpenNeuro clones).",
     )
     sidecar_inline: dict[str, str] | None = Field(
         default=None,
@@ -790,6 +799,10 @@ class Storage(TypedDict):
         Base URI (e.g., "s3://openneuro.org/ds000001").
     raw_key : str
         Path relative to `base` to reach the file.
+    version_id : str, optional
+        S3 version ID for ``raw_key`` only, not its dependencies.
+    version_ids : dict[str, str], optional
+        S3 version IDs for dependencies, keyed by entries in ``dep_keys``.
     dep_keys : list[str]
         Paths relative to `base` for sidecar files (e.g., .json, .vhdr).
     annex_keys : dict[str, str], optional
@@ -809,6 +822,8 @@ class Storage(TypedDict):
     base: str
     raw_key: str
     dep_keys: list[str]
+    version_id: NotRequired[str]
+    version_ids: NotRequired[dict[str, str]]
     annex_keys: NotRequired[dict[str, str]]
     sidecar_inline: NotRequired[dict[str, str]]
 
@@ -912,6 +927,14 @@ class MontageChannel(TypedDict, total=False):
     BIDS ``electrodes.tsv`` requires ``name, x, y, z`` (in the coordinate
     system declared by the sibling ``coordsystem.json``). The optional
     columns are preserved as-is when present.
+
+    A row of electrodes.tsv is measured and has no ``position_source``. An
+    iEEG channel that names contacts without being a row (``POL A3``,
+    ``A1-Ref``, bipolar ``A1-A2``) is derived from them by
+    :mod:`eegdash.dataset.channel_positions`: ``position_source`` is
+    ``"electrode_alias"`` or ``"bipolar_midpoint"``, ``contacts`` lists the
+    contact names and ``contact_distance`` (a pair only) is their distance,
+    in the coordinate units of the layout.
     """
 
     name: str
@@ -921,6 +944,9 @@ class MontageChannel(TypedDict, total=False):
     type: str
     material: str
     impedance: str
+    position_source: str
+    contacts: list[str]
+    contact_distance: float
 
 
 class Montage(TypedDict, total=False):

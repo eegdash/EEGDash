@@ -390,7 +390,9 @@ def test_downloader_download_s3_file_incomplete(tmp_path):
     with pytest.raises(OSError, match="Incomplete download"):
         downloader.download_s3_file("s3://b/f", f, filesystem=mock_fs)
 
-    assert not f.exists()  # Should remain unlinked
+    # A custom client wrote an invalid file, but deleting this shared path
+    # could remove a concurrent caller's completed replacement.
+    assert f.read_text() == "b" * 50
 
 
 def test_downloader_batch_skip_existing(tmp_path):
@@ -569,7 +571,7 @@ def test_remote_size_returns_size_from_Size_key():
 
 
 def test_download_s3_file_replaces_mismatched_local(tmp_path):
-    """Test download_s3_file deletes and re-downloads when size mismatches."""
+    """Test download_s3_file replaces a cache whose size mismatches."""
     from unittest.mock import MagicMock, patch
 
     from eegdash.downloader import download_s3_file
@@ -670,3 +672,139 @@ def test_remote_size_zero_byte_object_is_zero_not_none():
     mock_fs = MagicMock()
     mock_fs.info.return_value = {"size": 0}
     assert _remote_size(mock_fs, "s3://bucket/empty") == 0
+
+
+class _PrefixFS:
+    """Minimal S3Client double: a listable prefix of nested objects (MEF3 layout)."""
+
+    def __init__(self, objects):
+        self.objects = objects  # key -> bytes
+
+    def _iter_objects(self, path, delimiter=None):
+        _, prefix = downloader._split_s3_uri(path)
+        for k, v in self.objects.items():
+            if k.startswith(prefix):
+                yield {"Key": k, "Size": len(v)}
+
+    def info(self, path):
+        return {"size": len(self.objects[downloader._split_s3_uri(path)[1]])}
+
+    def get_file(self, rpath, lpath, **kwargs):
+        Path(lpath).write_bytes(self.objects[downloader._split_s3_uri(rpath)[1]])
+
+
+def test_download_s3_directory_keeps_nested_layout(tmp_path):
+    fs = _PrefixFS(
+        {
+            "ds1/sub-01/ieeg/r_ieeg.mefd/C1.timd/C1-000000.segd/C1-000000.tdat": b"abc",
+            "ds1/sub-01/ieeg/r_ieeg.mefd/C1.timd/C1-000000.segd/C1-000000.tmet": b"m",
+            "ds1/sub-01/ieeg/r_ieeg.mefd2/other": b"not mine",
+        }
+    )
+    dest = tmp_path / "r_ieeg.mefd"
+    downloader.download_s3_directory(
+        "s3://openneuro.org/ds1/sub-01/ieeg/r_ieeg.mefd", dest, filesystem=fs
+    )
+    seg = dest / "C1.timd" / "C1-000000.segd"
+    assert (seg / "C1-000000.tdat").read_bytes() == b"abc"
+    assert (seg / "C1-000000.tmet").read_bytes() == b"m"
+    assert sorted(p.name for p in dest.iterdir()) == ["C1.timd"]
+
+
+def test_download_s3_directory_empty_prefix_is_not_found(tmp_path):
+    with pytest.raises(FileNotFoundError):
+        downloader.download_s3_directory(
+            "s3://openneuro.org/ds1/missing.mefd",
+            tmp_path / "x",
+            filesystem=_PrefixFS({}),
+        )
+
+
+class _SlowBody:
+    def __init__(self, data, gate):
+        self.data, self.gate = data, gate
+
+    def iter_chunks(self, chunk_size):
+        half = len(self.data) // 2
+        yield self.data[:half]
+        self.gate.wait(5)  # both GETs are mid-stream at the same time
+        yield self.data[half:]
+
+
+class _SharedSidecarS3:
+    """Two records of a dataset fetch the same sidecar at once (download_all threads)."""
+
+    def __init__(self, data):
+        import threading as _t  # noqa: PLC0415
+
+        self.data, self.gate = data, _t.Barrier(2)
+
+    def get_object(self, Bucket, Key):
+        return {
+            "Body": _SlowBody(self.data, self.gate),
+            "ContentLength": len(self.data),
+        }
+
+
+def _fetch_shared(client, dest, errors):
+    try:
+        downloader.S3Client.get_file(
+            client, "s3://openneuro.org/ds1/sub-01/events.tsv", str(dest)
+        )
+    except BaseException as e:  # noqa: BLE001
+        errors.append(e)
+
+
+def test_get_file_concurrent_same_destination(tmp_path):
+    import threading  # noqa: PLC0415
+
+    data = b"onset\tduration\n" * 4096
+    client = downloader.S3Client.__new__(downloader.S3Client)
+    client._client = _SharedSidecarS3(data)
+    dest, errors = tmp_path / "sub-01_events.tsv", []
+    threads = [
+        threading.Thread(target=_fetch_shared, args=(client, dest, errors))
+        for _ in range(2)
+    ]
+    for t in threads:
+        t.start()
+    for t in threads:
+        t.join(10)
+    assert errors == []
+    assert dest.read_bytes() == data
+    assert not list(tmp_path.glob("*.part"))
+
+
+class _DropOnceS3:
+    """The first stream breaks mid-body (BrokenPipe on a busy node); the retry succeeds."""
+
+    def __init__(self, data):
+        self.data, self.calls = data, 0
+
+    def get_object(self, Bucket, Key):
+        from botocore.exceptions import ResponseStreamingError  # noqa: PLC0415
+
+        self.calls += 1
+        data, broken = self.data, self.calls == 1
+
+        class _Body:
+            def iter_chunks(self, chunk_size):
+                yield data[:10]
+                if broken:
+                    raise ResponseStreamingError(
+                        error="Connection broken: BrokenPipeError(32)"
+                    )
+                yield data[10:]
+
+        return {"Body": _Body(), "ContentLength": len(data)}
+
+
+def test_get_file_retries_dropped_stream(tmp_path):
+    data = b"0123456789abcdefghij"
+    client = downloader.S3Client.__new__(downloader.S3Client)
+    client._client = _DropOnceS3(data)
+    dest = tmp_path / "sub-01_eeg.bdf"
+    client.get_file("s3://openneuro.org/ds1/sub-01_eeg.bdf", str(dest))
+    assert dest.read_bytes() == data
+    assert client._client.calls == 2
+    assert not list(tmp_path.glob("*.part"))

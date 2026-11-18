@@ -31,7 +31,7 @@ _project_root = Path(__file__).parent.parent.parent
 if str(_project_root) not in sys.path:
     sys.path.insert(0, str(_project_root))
 
-from eegdash.dataset.io import _find_best_matching_file
+from eegdash.io.brainvision import _find_best_matching_file
 
 logger = logging.getLogger(__name__)
 
@@ -71,6 +71,10 @@ def _vhdr_n_times(content: str, vhdr_path: Path, nchans: int | None) -> int | No
     refs = extract_vhdr_references(vhdr_path)
     datafile = refs.get("datafile") or vhdr_path.with_suffix(".eeg").name
     size = data_file_size(vhdr_path.parent / datafile)
+    if not size:
+        # DataFile= still names the pre-BIDS file (on007471: IBS_0001.eeg): size
+        # the BIDS sibling, the file eegdash.io.brainvision makes MNE read.
+        size = data_file_size(vhdr_path.with_suffix(".eeg"))
     if not size or size % dtype_bytes != 0:
         return None
     total_samples = size // dtype_bytes
@@ -140,7 +144,7 @@ def parse_vhdr_metadata(vhdr_path: Path | str) -> dict[str, Any] | None:
     # Extract SamplingInterval from [Common Infos] section
     # SamplingInterval is in microseconds
     sampling_interval_match = re.search(
-        r"^\s*SamplingInterval\s*=\s*([\d.]+)",
+        r"^\s*SamplingInterval\s*=\s*([\d.]+(?:[eE][+-]?\d+)?)",
         content,
         re.MULTILINE | re.IGNORECASE,
     )

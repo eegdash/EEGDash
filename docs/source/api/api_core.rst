@@ -172,6 +172,7 @@ The API is organized into focused modules that handle specific aspects of EEG da
 * :mod:`~eegdash.schemas` - Schema definitions (``Dataset``, ``Record`` TypedDicts)
 * :mod:`~eegdash.http_api_client` - HTTP REST API client for database operations
 * :mod:`~eegdash.downloader` - S3 and HTTPS download utilities
+* :mod:`~eegdash.corpus` - ``EEGDashCorpus``: plan, download, verify and report a list of datasets
 * :mod:`~eegdash.bids_metadata` - BIDS-compliant metadata handling
 * :mod:`~eegdash.const` - Constants and configuration defaults
 * :mod:`~eegdash.paths` - File system and storage path management
@@ -203,6 +204,7 @@ API Reference
    schemas
    http_api_client
    downloader
+   corpus
    bids_metadata
    const
    logging

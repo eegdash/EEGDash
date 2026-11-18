@@ -90,6 +90,7 @@ class ValidationResult:
             "zip_placeholders": 0,
             "missing_nchans": 0,
             "missing_sampling_frequency": 0,
+            "header_scale_issues": 0,
         }
         self.source_distribution = {}
         self.modality_distribution = {}
@@ -186,6 +187,26 @@ class ValidationResult:
         return "\n".join(lines)
 
 
+def _is_approved_openneuro_pin(dataset_id: str, source: str, storage: dict) -> bool:
+    """A NEMAR ``onNNNNNN`` record pinned to its own OpenNeuro object version.
+
+    Historical source pins (listings a242cf7: on003574, on003768, on004346,
+    on005815) keep a record on the exact OpenNeuro object the catalogue was
+    checked against: ``backend`` s3, ``base`` ``s3://openneuro.org/dsNNNNNN``
+    with the same number as the ``on`` id, and a ``version_id`` (or per-file
+    ``version_ids``, as on003768 and on005815 store it). Anything else
+    under an OpenNeuro base stays invalid for NEMAR.
+    """
+    m = re.fullmatch(r"on(\d+)", str(dataset_id))
+    return bool(
+        source == "nemar"
+        and m
+        and storage.get("backend") == "s3"
+        and (storage.get("version_id") or storage.get("version_ids"))
+        and storage.get("base") == f"s3://openneuro.org/ds{m.group(1)}"
+    )
+
+
 def validate_storage_url(source: str, storage_base: str) -> tuple[bool, str]:
     """Validate that storage URL matches the source."""
     if source not in VALID_STORAGE_PATTERNS:
@@ -235,6 +256,8 @@ def validate_record(
     if storage:
         storage_base = storage.get("base", "")
         is_valid, error_msg = validate_storage_url(source, storage_base)
+        if not is_valid and _is_approved_openneuro_pin(dataset_id, source, storage):
+            is_valid = True
         if not is_valid:
             result.add_error(dataset_id, error_msg, field="storage.base")
             result.stats["storage_errors"] += 1
@@ -248,6 +271,18 @@ def validate_record(
                     field=field,
                 )
                 result.stats["missing_recommended"] += 1
+
+    # The digest flags EDF/BDF channels MNE reads at an implausible scale
+    # (nm000281: joint angles up to 2e6 rad).
+    if issues := record.get("_header_issues"):
+        result.add_warning(
+            dataset_id,
+            f"{record.get('bids_relpath')}: implausible channel scale: "
+            + "; ".join(issues[:3])
+            + (f" (+{len(issues) - 3} more)" if len(issues) > 3 else ""),
+            field="_header_issues",
+        )
+        result.stats["header_scale_issues"] += 1
 
     nchans = record.get("nchans")
     sampling_frequency = record.get("sampling_frequency")

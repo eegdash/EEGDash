@@ -324,6 +324,9 @@ def test_filter_skips_unchanged_by_fingerprint():
         }
     }
     records_by_id = {"ds-001": []}
+    respx.get("https://api.example.com/api/eegdash_dev/count").mock(
+        return_value=httpx.Response(200, json={"count": 0})
+    )
 
     changed, skipped = inject.filter_changed_datasets(
         ["ds-001"],
@@ -334,6 +337,33 @@ def test_filter_skips_unchanged_by_fingerprint():
     )
     assert skipped == ["ds-001"]
     assert changed == []
+
+
+@respx.mock
+@pytest.mark.parametrize(("live_count", "expect_changed"), [(0, True), (2, False)])
+def test_filter_reinjects_matching_fingerprint_with_missing_records(
+    live_count, expect_changed
+):
+    """A matching fingerprint over 0 live records must not skip (on004148: 0 vs 900)."""
+    inject = load_inject()
+    fp = "abc123def456"
+    respx.get("https://api.example.com/api/eegdash_dev/datasets/ds-001").mock(
+        return_value=httpx.Response(200, json={"data": {"ingestion_fingerprint": fp}})
+    )
+    respx.get("https://api.example.com/api/eegdash_dev/count").mock(
+        return_value=httpx.Response(200, json={"count": live_count})
+    )
+    records = [{"dataset": "ds-001", "bids_relpath": f"f{i}.edf"} for i in range(2)]
+
+    changed, skipped = inject.filter_changed_datasets(
+        ["ds-001"],
+        {"ds-001": {"dataset_id": "ds-001", "ingestion_fingerprint": fp}},
+        {"ds-001": records},
+        "https://api.example.com",
+        "eegdash_dev",
+    )
+    assert changed == (["ds-001"] if expect_changed else [])
+    assert skipped == ([] if expect_changed else ["ds-001"])
 
 
 @respx.mock

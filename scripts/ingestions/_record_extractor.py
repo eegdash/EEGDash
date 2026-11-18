@@ -21,7 +21,8 @@ from _constants import NEURO_MODALITIES
 from _metadata_cascade import CascadeContext, MetadataCascade
 from _montage import _walk_up_find as _walk
 from eegdash.dataset._source_inference import DEFAULT_STORAGE_CONFIG, STORAGE_CONFIGS
-from eegdash.dataset.bids_dataset import _COMPANION_FILES
+from eegdash.dataset.bids_dataset import _COMPANION_FILES, position_sidecars
+from eegdash.io.brainvision import companion_names
 from eegdash.schemas import create_record
 from source_adapter import SourceAdapter, get_source_adapter
 
@@ -227,6 +228,23 @@ def _extract_channel_status_counts(bids_dataset: Any, bids_file: str) -> dict[st
     return {"bad_channels": bad_channels, "bad_channels_count": len(bad_channels)}
 
 
+def _bad_channels_in_data(
+    status: dict[str, Any], ch_names: list[str] | None
+) -> dict[str, Any]:
+    """Keep only the bad channels that are channels of the data file.
+
+    on006910 channels.tsv marks 20 of its 128 contact names bad; the EDF holds
+    49 bipolar channels and none of those 20 names, so none of them is a bad
+    channel of the recording. Without ``ch_names`` nothing is dropped.
+    """
+    bads = status.get("bad_channels")
+    if not bads or not ch_names:
+        return status
+    present = set(ch_names)
+    kept = [name for name in bads if name in present]
+    return {**status, "bad_channels": kept, "bad_channels_count": len(kept)}
+
+
 def _extract_technical_metadata(
     bids_dataset: Any, bids_file: str
 ) -> tuple[
@@ -238,8 +256,9 @@ def _extract_technical_metadata(
     bool,
     dict[str, str | None],
     float | None,
+    list[str],
 ]:
-    """Delegate to MetadataCascade; returns (sfreq, nchans, ntimes, ch_names, fif_is_split, fif_continuations_ok, provenance, duration_seconds)."""
+    """Delegate to MetadataCascade; returns (sfreq, nchans, ntimes, ch_names, fif_is_split, fif_continuations_ok, provenance, duration_seconds, header_issues)."""
     ctx = CascadeContext(bids_dataset=bids_dataset, bids_file=bids_file)
     result = MetadataCascade().run(ctx)
     return (
@@ -251,6 +270,7 @@ def _extract_technical_metadata(
         result.fif_continuations_ok,
         result.provenance,
         result.duration_seconds,
+        result.header_issues,
     )
 
 
@@ -258,8 +278,6 @@ _DEP_SUFFIXES: tuple[str, ...] = (
     "_channels.tsv",
     "_events.tsv",
     "_events.json",
-    "_electrodes.tsv",
-    "_coordsystem.json",
     # NIRS-specific sidecars
     "_optodes.tsv",
     "_optodes.json",
@@ -270,6 +288,8 @@ _DEP_SUFFIXES: tuple[str, ...] = (
 # the list cannot drift as datatypes are added, and -- because a record only
 # ever probes its own suffix -- an EEG record in a session that also holds
 # ``sub-01_ses-01_meg.json`` no longer picks the MEG sidecar up as a dependency.
+# electrodes.tsv / coordsystem.json are not listed either: ``position_sidecars``
+# finds the ones BIDS inheritance applies (``space-``, ``acq-``, subject level).
 
 
 def _build_dep_keys(
@@ -317,9 +337,29 @@ def _build_dep_keys(
                     except ValueError:
                         pass
 
+    try:
+        relpath = bids_file_path.relative_to(bids_root)
+        subject_dir = bids_root / relpath.parts[0]
+        dep_keys += position_sidecars(
+            relpath.as_posix(),
+            (
+                p.relative_to(bids_root).as_posix()
+                for pattern in ("*_electrodes.tsv", "*_coordsystem.json")
+                for p in subject_dir.rglob(pattern)
+            ),
+        )
+    except ValueError:
+        pass
+
     ext = bids_file_path.suffix.lower()
-    for comp_ext in _COMPANION_FILES.get(ext, []):
-        comp_file = bids_file_path.with_suffix(comp_ext)
+    comp_files = [bids_file_path.with_suffix(e) for e in _COMPANION_FILES.get(ext, [])]
+    if ext == ".vhdr":  # the files the header names, if the deposit holds them
+        found = (
+            [p for n in names if (p := parent_dir / n).exists() or p.is_symlink()]
+            for names in companion_names(bids_file_path)
+        )
+        comp_files = [paths[0] for paths in found if paths]
+    for comp_file in comp_files:
         try:
             dep_keys.append(str(comp_file.relative_to(bids_root)))
         except ValueError:
@@ -430,6 +470,7 @@ def extract_record(
         fif_continuations_ok,
         metadata_provenance,
         duration_seconds,
+        header_issues,
     ) = _extract_technical_metadata(bids_dataset, bids_file)
     bids_file_path = Path(bids_file)
 
@@ -527,11 +568,13 @@ def extract_record(
 
     if any(v is not None for v in metadata_provenance.values()):
         record["_metadata_provenance"] = metadata_provenance
+    if header_issues:
+        record["_header_issues"] = header_issues
 
     sidecar_extras = _extract_bids_sidecar_fields(bids_dataset, bids_file)
     record.update(sidecar_extras)
 
     channel_status = _extract_channel_status_counts(bids_dataset, bids_file)
-    record.update(channel_status)
+    record.update(_bad_channels_in_data(channel_status, ch_names))
 
     return dict(record)

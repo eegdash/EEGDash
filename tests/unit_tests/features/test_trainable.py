@@ -26,7 +26,7 @@ def test_extractors_gaps():
             pass
 
     mt = MyTrainable()
-    with pytest.raises(RuntimeError, match="trained first"):
+    with pytest.raises(RuntimeError, match="must be fitted before use"):
         mt()
     mt.fit()
     # Now it shouldn't raise RuntimeError, but maybe it fails because it's an ABC without __call__ implementation in parent?
@@ -46,7 +46,7 @@ def test_extractors_gaps():
     # mock parent_extractor_type
     feat.parent_extractor_type = [pre1]
 
-    with pytest.raises(TypeError, match="cannot be a child of"):
+    with pytest.raises(TypeError, match="expects one of"):
         FeatureExtractor({"f": feat}, preprocessor=pre2)
 
 

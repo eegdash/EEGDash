@@ -1,0 +1,86 @@
+BrainVision Data Exchange Header File Version 1.0
+; Data created by EEMAGINE EEG Data Exporter
+
+[Common Infos]
+DataFile=Sam_P117_2020-01-27_12-02-34.eeg
+MarkerFile=Sam_P117_2020-01-27_12-02-34.vmrk
+DataFormat=BINARY
+; Data orientation: MULTIPLEXED=ch1,pt1, ch2,pt1 ...
+DataOrientation=MULTIPLEXED
+NumberOfChannels=64
+; Sampling interval in microseconds
+SamplingInterval=2000
+
+
+[Binary Infos]
+BinaryFormat=IEEE_FLOAT_32
+
+[Channel Infos]
+; Each entry: Ch<Channel number>=<Name>,<Reference channel name>,
+; <Resolution in microvolts>,<Future extensions..
+; Fields are delimited by commas, some fields might be omitted (empty).
+; Commas in channel names are coded as "\1".
+Ch1=Fp1,,1
+Ch2=Fpz,,1
+Ch3=Fp2,,1
+Ch4=F7,,1
+Ch5=F3,,1
+Ch6=Fz,,1
+Ch7=F4,,1
+Ch8=F8,,1
+Ch9=FC5,,1
+Ch10=FC1,,1
+Ch11=FC2,,1
+Ch12=FC6,,1
+Ch13=M1,,1
+Ch14=T7,,1
+Ch15=C3,,1
+Ch16=Cz,,1
+Ch17=C4,,1
+Ch18=T8,,1
+Ch19=M2,,1
+Ch20=CP5,,1
+Ch21=CP1,,1
+Ch22=CP2,,1
+Ch23=CP6,,1
+Ch24=P7,,1
+Ch25=P3,,1
+Ch26=Pz,,1
+Ch27=P4,,1
+Ch28=P8,,1
+Ch29=POz,,1
+Ch30=O1,,1
+Ch31=O2,,1
+Ch32=EOG,,1
+Ch33=AF7,,1
+Ch34=AF3,,1
+Ch35=AF4,,1
+Ch36=AF8,,1
+Ch37=F5,,1
+Ch38=F1,,1
+Ch39=F2,,1
+Ch40=F6,,1
+Ch41=FC3,,1
+Ch42=FCz,,1
+Ch43=FC4,,1
+Ch44=C5,,1
+Ch45=C1,,1
+Ch46=C2,,1
+Ch47=C6,,1
+Ch48=CP3,,1
+Ch49=CP4,,1
+Ch50=P5,,1
+Ch51=P1,,1
+Ch52=P2,,1
+Ch53=P6,,1
+Ch54=PO5,,1
+Ch55=PO3,,1
+Ch56=PO4,,1
+Ch57=PO6,,1
+Ch58=FT7,,1
+Ch59=FT8,,1
+Ch60=TP7,,1
+Ch61=TP8,,1
+Ch62=PO7,,1
+Ch63=PO8,,1
+Ch64=Oz,,1

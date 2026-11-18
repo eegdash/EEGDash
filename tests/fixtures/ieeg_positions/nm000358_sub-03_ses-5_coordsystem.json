@@ -1,0 +1,7 @@
+{
+  "iEEGCoordinateSystem": "Other",
+  "iEEGCoordinateUnits": "mm",
+  "iEEGCoordinateSystemDescription": "MNI space as provided by the data authors: electrodes were localised with FieldTrip by co-registering pre-operative MRI and post-operative CT, manually selected, and warped into MNI space (Peterson et al. 2022; Stolk et al. 2018). The exact MNI template is not stated, so no template label is asserted. Values copied from the NWB electrodes table x/y/z.",
+  "iEEGCoordinateProcessingDescription": "FieldTrip co-registration of pre-op MRI and post-op CT, warped to MNI (source: Peterson et al. 2022)",
+  "iEEGCoordinateProcessingReference": "https://doi.org/10.1038/s41597-022-01280-y"
+}

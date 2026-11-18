@@ -66,4 +66,42 @@ EXCLUDED_DATASETS: set[str] = {
     "ds004929",
     "ds005407",
     "ds005930",
+    # Superseded NEMAR deposit: nm000203 is an early MOABB export of
+    # Sosulski et al. 2019; all its 800 recordings are in nm000266, and its
+    # recording-soaNNN filenames fail BIDS validation.
+    "nm000203",
+    # Derivative-only NEMAR deposit (Siebenhuehner et al. 2020 SEEG/MEG
+    # connectomes): no raw recordings, only connectome zips and contact
+    # tables. The manifest digest invents 84 placeholder sub-NN_ieeg.set
+    # records x 425 (35,700, all without nchans/sfreq), which alone pushes
+    # the inject nchans gate from 4.9% to 16.4% and blocks every injection.
+    "nm000389",
+    # No signal files (checked 2026-10-17): ds002799 (es-fMRI; its ieeg/
+    # folders hold only channels/electrodes .tsv and .json), ds005083 (SEEG
+    # trajectories, .json/.tsv only), ds006253 (behavioural .csv/.pickle) and
+    # nm000150 (nothing outside derivatives/ and sourcedata/).
+    "ds002799",
+    "ds005083",
+    "ds006253",
+    "nm000150",
+    # Deleted on OpenNeuro ("duplicate dataset" / "subject privacy"); the
+    # GitHub mirror is gone and S3 serves nothing.
+    "ds006940",
+    "ds007630",
+    # Derivative-only NEMAR deposit (Fusca, Siebenhuehner, Wang et al. 2023
+    # SEEG/MEG synchronization and DFA): 70 .mat analysis results and no
+    # recordings (README: processed-data release). The manifest digest
+    # invents 68 placeholder sub-NN_ieeg.set records without nchans/sfreq.
+    "nm000390",
+    # OpenNeuro access denied since 2026-10-23 (GraphQL "You do not have
+    # access to read this dataset", S3 403); re-add when public.
+    "ds008108",
+    # Every recording is a placeholder: all 36 .snirf files are the same
+    # 26-byte "dummy_hdf5_header_bypass" stub. Both the NEMAR mirror and
+    # its OpenNeuro original are excluded so neither is re-added.
+    "on007477",
+    "ds007477",
+    # Deleted on OpenNeuro as duplicate of ds005811; on005811 holds the
+    # recordings.
+    "ds005787",
 }

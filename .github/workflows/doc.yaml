@@ -113,6 +113,9 @@ jobs:
       - name: Check real-data gallery contracts
         run: python -m pytest -q tests/unit_tests/test_eeg2026_gallery.py
 
+      - name: Check the Corpus pages' renderer and data copy
+        run: python -m pytest -q tests/test_plot_corpus
+
       - name: Create Docs
         # Full gallery (~1.5 GB of recordings, cached above). A narrower
         # EEGDASH_GALLERY_FILENAME_PATTERN silently renders the excluded

@@ -111,6 +111,20 @@ DATASET_FIGURES: Final[dict[str, FigureSpec]] = {
             "datasets and cumulative subjects."
         ),
     },
+    "isohour": {
+        "title": "Sampling depth: subjects × hours per subject",
+        "title_style": "header",
+        "chart_filename": "dataset_isohour.html",
+        "caption": (
+            "Figure: Each point is a dataset: the x-axis shows the recorded "
+            "hours per subject, the y-axis the number of subjects, both on log "
+            "scales. Grey diagonals are iso-hour lines: every dataset on a line "
+            "holds the same total hours. Duplicate releases, animal and phantom "
+            "recordings, and datasets without a reliable duration are left out. "
+            "Hover for details, click to open a dataset page, and use the "
+            "legend to filter by modality."
+        ),
+    },
     "kde": {
         "title": "Distribution of Sample Sizes Varies by Experimental Modality",
         "title_style": "rubric",

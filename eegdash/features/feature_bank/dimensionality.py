@@ -35,8 +35,8 @@ def dimensionality_higuchi_fractal_dim(x, /, k_max=10, eps=1e-7):
     r"""Calculate Higuchi's Fractal Dimension (HFD).
 
     Higuchi's Fractal Dimension [1]_ [2]_ estimates the complexity of a time series
-    by measuring the mean length of the curve at different time scales $k$. It is
-    highly robust for non-stationary signals.
+    by measuring the mean length of the curve at different time scales :math:`k`.
+    It is highly robust for non-stationary signals.
 
     Parameters
     ----------

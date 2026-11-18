@@ -120,8 +120,13 @@ def _parse_edf_with_mne(path: Path) -> FormatParserResult | None:
     except (OSError, RuntimeError):
         return None
 
+    # MNE >= 1.2 refuses a .bdf in read_raw_edf (NotImplementedError, a
+    # RuntimeError), which silently left every BDF without a header ntimes.
+    reader = (
+        mne.io.read_raw_bdf if path.suffix.lower() == ".bdf" else mne.io.read_raw_edf
+    )
     try:
-        raw = mne.io.read_raw_edf(str(path), preload=False, verbose=False)
+        raw = reader(str(path), preload=False, verbose=False)
     except (OSError, ValueError, RuntimeError, KeyError, TypeError):
         return None
 

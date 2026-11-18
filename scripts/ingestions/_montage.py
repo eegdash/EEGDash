@@ -76,6 +76,9 @@ from typing import Any
 import numpy as np
 import pandas as pd
 
+from eegdash.dataset.bids_dataset import glob_dir
+from eegdash.dataset.channel_positions import derived_positions, read_electrode_table
+
 try:
     import mne
 except ImportError:  # pragma: no cover - optional dependency
@@ -161,7 +164,7 @@ def _walk_up_find(
     if not str(current).startswith(str(root)):
         return None
     while True:
-        matches = sorted(current.glob(pattern))
+        matches = glob_dir(current, pattern)
         if matches:
             return matches[0]
         if current == root:
@@ -244,12 +247,15 @@ def _extract_tsv_layout(
     extras: tuple[str, ...] = ("type", "material", "impedance"),
     min_sensors: int = 4,
     coord_suffix: str = "_electrodes.tsv",
+    ch_names: list[str] | None = None,
 ) -> tuple[str, dict[str, Any]] | None:
     """Shared pipeline for BIDS TSV-based sensor layouts.
 
     Returns ``(hash, layout_doc)`` or ``None`` if the TSV is missing,
     unparsable, or under ``min_sensors``. The returned doc has the
     canonical shape documented in this module's top-level docstring.
+    For iEEG, ``ch_names`` (the record's channels) adds the derived
+    sensors of :func:`_derived_sensors`.
     """
     tsv = _walk_up_find(data_file, bids_root, tsv_pattern)
     if tsv is None:
@@ -270,6 +276,8 @@ def _extract_tsv_layout(
             len(sensors),
         )
         return None
+    if modality == "ieeg" and ch_names:
+        sensors = sensors + _derived_sensors(tsv, ch_names)
     space, units = _parse_coordsystem_json(
         _companion_coords_for(tsv, bids_suffix=coord_suffix)
     )
@@ -282,6 +290,29 @@ def _extract_tsv_layout(
         "units_declared": units,
         "sensors": sensors,
     }
+
+
+def _derived_sensors(tsv: Path, ch_names: list[str]) -> list[dict[str, Any]]:
+    """Sensors of the record's channels that name contacts without being a row.
+
+    ``POL A3``, ``EEG A1-Ref`` (one contact) and bipolar ``RAFA1-RAFA2``
+    channels get the position :mod:`eegdash.dataset.channel_positions` derives,
+    the rule the runtime applies too, in the electrodes.tsv's own coordinates
+    and units. Each carries ``position_source`` (``electrode_alias`` or
+    ``bipolar_midpoint``) and ``contacts``, plus ``contact_distance`` for a
+    pair; measured sensors carry none of these keys, so a layout whose channels
+    are all named like its rows keeps its hash.
+    """
+    try:
+        electrodes = read_electrode_table(tsv)
+    except (OSError, ValueError, UnicodeDecodeError) as exc:
+        LOGGER.warning("[layout.ieeg] derived positions skipped on %s: %s", tsv, exc)
+        return []
+    sensors = []
+    for name, pos in derived_positions(ch_names, electrodes).items():
+        x, y, z = pos.xyz
+        sensors.append({"name": name, "x": x, "y": y, "z": z, **pos.provenance()})
+    return sensors
 
 
 # ---------------------------------------------------------------------------
@@ -345,7 +376,10 @@ _TSV_MODALITY_CONFIGS: dict[str, _ModalityConfig] = {
 
 
 def _extract_layout_for_config(
-    data_file: Path, bids_root: Path, config: _ModalityConfig
+    data_file: Path,
+    bids_root: Path,
+    config: _ModalityConfig,
+    ch_names: list[str] | None = None,
 ) -> tuple[str, dict[str, Any]] | None:
     """Run the TSV-based pipeline for one ``_ModalityConfig``.
 
@@ -366,6 +400,7 @@ def _extract_layout_for_config(
         extras=config.extras,
         min_sensors=config.min_sensors,
         coord_suffix=config.coord_suffix,
+        ch_names=ch_names,
     )
     if direct is not None:
         return direct
@@ -1025,10 +1060,12 @@ def extract_meg_layout(
             RuntimeError,
             KeyError,
             AttributeError,
+            IndexError,
         ) as direct_exc:
             # MNE raises RuntimeError on unsupported format variant,
             # ValueError on truncated/malformed header, OSError on file
-            # not found / permission, KeyError on missing required field.
+            # not found / permission, KeyError on missing required field,
+            # IndexError on a truncated KIT header (annex pointer, nm000229).
             LOGGER.debug(
                 "[layout.meg] direct read %s failed: %s", data_file, direct_exc
             )
@@ -1180,6 +1217,7 @@ def extract_layout(
     data_file: Path,
     bids_root: Path,
     datatype: str,
+    ch_names: list[str] | None = None,
 ) -> tuple[str, dict[str, Any]] | None:
     """Dispatch to the right per-modality extractor.
 
@@ -1203,4 +1241,4 @@ def extract_layout(
     config = _TSV_MODALITY_CONFIGS.get(dt)
     if config is None:
         return None
-    return _extract_layout_for_config(data_file, bids_root, config)
+    return _extract_layout_for_config(data_file, bids_root, config, ch_names)

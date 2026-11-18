@@ -6,15 +6,12 @@ file system operations.
 """
 
 import configparser
-import inspect
 import json
 import os
 import re
-import textwrap
 from collections import Counter
 from contextlib import contextmanager
-from difflib import SequenceMatcher
-from functools import partial
+from functools import partial, partialmethod
 from pathlib import Path
 from time import strptime
 from typing import Any
@@ -25,8 +22,12 @@ import pandas as pd
 from dateutil.parser import parse as _dateutil_parse
 from dateutil.parser import parserinfo
 from mne.io.eeglab import _eeglab as mne_eeglab
-from scipy.io import loadmat, savemat
+from mne_bids.tsv_handler import _from_tsv
+from scipy.io import loadmat
 
+from ..io import READERS, get_reader, tolerant
+from ..io import eeglab as eeglab_io
+from ..io.bids import tsv_encoding
 from ..logging import logger
 
 
@@ -73,51 +74,6 @@ def _convert_time_with_numeric_dash(date_str: str, time_str: str, *, orig):
         pass
 
     return orig(date_str, time_str)
-
-
-def _find_best_matching_file(
-    directory: Path, target_name: str, extension: str, threshold: float = 0.5
-) -> str | None:
-    """Find the best matching file in a directory using fuzzy string matching.
-
-    Parameters
-    ----------
-    directory : Path
-        Directory to search in.
-    target_name : str
-        The filename we're looking for (may have typos or different naming).
-    extension : str
-        File extension to filter by (e.g., ".eeg", ".vmrk").
-    threshold : float
-        Minimum similarity ratio (0-1) to consider a match.
-
-    Returns
-    -------
-    str | None
-        The best matching filename, or None if no good match found.
-
-    """
-    candidates = list(directory.glob(f"*{extension}"))
-    if not candidates:
-        return None
-
-    # If only one file with this extension, use it
-    if len(candidates) == 1:
-        return candidates[0].name
-
-    # Find best match using similarity ratio
-    target_stem = Path(target_name).stem.lower()
-    best_match = None
-    best_ratio = threshold
-
-    for candidate in candidates:
-        candidate_stem = candidate.stem.lower()
-        ratio = SequenceMatcher(None, target_stem, candidate_stem).ratio()
-        if ratio > best_ratio:
-            best_ratio = ratio
-            best_match = candidate.name
-
-    return best_match
 
 
 _ANNEX_KEY_RE = re.compile(r"^(SHA256E|MD5E)-s\d+--[0-9a-f]+\.", flags=re.IGNORECASE)
@@ -183,265 +139,52 @@ def _prepare_writable_path(path: Path) -> bool:
         return False
 
 
-class _VHDRPointerFixer:
-    """Helper class to fix VHDR pointers with state tracking."""
+def _warn_no_coordsystem(bids_path, dataset) -> None:
+    """Warn when a recording's electrodes.tsv has positions but no coordsystem.json applies.
 
-    def __init__(self, vhdr_path: Path):
-        self.vhdr_path = vhdr_path
-        self.data_dir = vhdr_path.parent
-        self.changes = False
-
-    def replace(self, match) -> str:
-        """Regex replacement callback."""
-        key = match.group(1)  # DataFile or MarkerFile
-        old_val = match.group(2).strip()
-
-        is_annex_key = bool(_ANNEX_KEY_RE.match(old_val))
-
-        # If the pointed file exists AND it's not an annex key, keep it.
-        # Annex keys are always rewritten: the key-based filename only
-        # resolves inside a git-annex repo, so outside that context
-        # (e.g. S3 download cache) it will always fail.
-        if not is_annex_key and (self.data_dir / old_val).exists():
-            return match.group(0)
-
-        # Determine expected extension
-        ext = ".vmrk" if key == "MarkerFile" else ".eeg"
-
-        # Strategy 1: Use BIDS filename (same stem as .vhdr).
-        # For annex keys we always rewrite — the target file need not
-        # exist yet (a VMRK stub may be generated right after repair).
-        bids_name = self.vhdr_path.with_suffix(ext).name
-        if not _ANNEX_KEY_RE.match(bids_name) and (
-            is_annex_key or (self.data_dir / bids_name).exists()
-        ):
-            self.changes = True
-            logger.info(
-                f"Auto-repairing {self.vhdr_path.name}: {key}={old_val} -> {bids_name}"
-            )
-            return f"{key}={bids_name}"
-
-        # Strategy 2: Fuzzy match - find best matching file with same extension
-        # This handles typos (rsub- vs sub-, sternbeg vs sternberg) and
-        # BIDS renames where original filename was completely different
-        fuzzy_match = _find_best_matching_file(self.data_dir, old_val, ext)
-        if (
-            fuzzy_match
-            and (self.data_dir / fuzzy_match).exists()
-            and not _ANNEX_KEY_RE.match(fuzzy_match)
-        ):
-            self.changes = True
-            logger.info(
-                f"Auto-repairing {self.vhdr_path.name}: {key}={old_val} -> {fuzzy_match} (fuzzy match)"
-            )
-            return f"{key}={fuzzy_match}"
-
-        return match.group(0)
-
-
-def _repair_vhdr_pointers(vhdr_path: Path) -> bool:
-    """Fix VHDR file pointing to internal filenames instead of BIDS filenames.
-
-    Checks if the DataFile and MarkerFile pointers in a .vhdr file refer
-    to files that exist. If not, checks if files matching the BIDS naming
-    convention exist in the same directory and updates the pointers accordingly.
-
-    Parameters
-    ----------
-    vhdr_path : Path
-        Path to the .vhdr file to check and repair.
-
-    Returns
-    -------
-    bool
-        True if changes were made, False otherwise.
-
+    MNE-BIDS then skips the positions (its own warning is silenced by
+    ``verbose="ERROR"``). Nothing is generated: a written file would guess the
+    coordinate system and the units (ds004770, on005007, on006107). All-n/a
+    electrodes (ds004944, on004819) have nothing to skip, so no warning.
     """
-    if not vhdr_path.exists() or vhdr_path.suffix != ".vhdr":
-        return False
+    from ..io.bids import _find_matching_sidecar  # the space-aware lookup
 
     try:
-        content = vhdr_path.read_text(encoding="utf-8", errors="ignore")
-    except Exception as e:
-        logger.warning("Failed to read VHDR %s: %s", vhdr_path, e)
-        return False
-
-    fixer = _VHDRPointerFixer(vhdr_path)
-
-    # Common section for VHDR
-    # Case insensitive keys, value until end of line
-    new_content = re.sub(
-        r"(DataFile|MarkerFile)\s*=\s*(.*)",
-        fixer.replace,
-        content,
-        flags=re.IGNORECASE,
-    )
-
-    if fixer.changes:
-        try:
-            # Handle symlinks (e.g. git-annex) before writing
-            if not _prepare_writable_path(vhdr_path):
-                logger.warning(
-                    "Cannot write repaired VHDR %s: parent directory not writable",
-                    vhdr_path,
-                )
-                return False
-            vhdr_path.write_text(new_content, encoding="utf-8")
-            return True
-        except Exception as e:
-            logger.error("Failed to write repaired VHDR %s: %s", vhdr_path, e)
-            return False
-
-    return False
-
-
-def _repair_vhdr_missing_markerfile(vhdr_path: Path) -> bool:
-    """Add a missing MarkerFile entry to a VHDR ``[Common Infos]`` section.
-
-    Some BrainVision files omit ``MarkerFile`` entirely, which causes
-    ``configparser.NoOptionError`` in MNE's reader.  This inserts the
-    entry and generates a VMRK stub if the marker file does not exist.
-
-    Parameters
-    ----------
-    vhdr_path : Path
-        Path to the VHDR file.
-
-    Returns
-    -------
-    bool
-        True if the VHDR was modified, False otherwise.
-
-    """
-    if not vhdr_path.exists() or vhdr_path.suffix != ".vhdr":
-        return False
-
-    try:
-        content = vhdr_path.read_text(encoding="utf-8", errors="ignore")
-    except Exception:
-        return False
-
-    # Check if MarkerFile is already present (case-insensitive)
-    if re.search(r"(?i)^\s*MarkerFile\s*=", content, re.MULTILINE):
-        return False
-
-    # Find [Common Infos] section and insert MarkerFile after it
-    match = re.search(r"(?i)(\[Common Infos\][^\[]*)", content)
-    if not match:
-        return False
-
-    vmrk_name = vhdr_path.with_suffix(".vmrk").name
-    section = match.group(1)
-    # Insert MarkerFile at end of section (before next section or EOF)
-    new_section = section.rstrip("\n") + f"\nMarkerFile={vmrk_name}\n"
-    new_content = content[: match.start()] + new_section + content[match.end() :]
-
-    try:
-        # Handle symlinks (e.g. git-annex) before writing
-        if not _prepare_writable_path(vhdr_path):
+        find = partial(_find_matching_sidecar, bids_path, on_error="ignore")
+        if find("coordsystem", ".json") is not None:
+            return
+        electrodes = find("electrodes", ".tsv")
+        if electrodes is not None and _has_positions(electrodes):
             logger.warning(
-                "Cannot write MarkerFile to VHDR %s: parent directory not writable",
-                vhdr_path,
+                "%s %s: no coordsystem.json: positions not applied.",
+                dataset,
+                bids_path.basename,
             )
-            return False
-        vhdr_path.write_text(new_content, encoding="utf-8")
-        logger.info("Added missing MarkerFile=%s to %s", vmrk_name, vhdr_path.name)
     except Exception as e:
-        logger.warning("Failed to write MarkerFile to VHDR: %s", e)
-        return False
-
-    # Ensure the VMRK file exists
-    vmrk_path = vhdr_path.with_suffix(".vmrk")
-    if not vmrk_path.exists():
-        _generate_vmrk_stub(vmrk_path, vhdr_path.name)
-
-    return True
+        logger.warning("Error checking coordsystem.json: %s", e)
 
 
-def _ensure_coordsystem_symlink(data_dir: Path) -> None:
-    """Ensure coordsystem.json exists in the data directory using symlinks if needed.
-
-    MNE-BIDS can be strict about coordsystem.json location. If it's missing
-    in the data directory but present in the subject root, this function
-    creates a symlink. Otherwise it generates a minimal one with the correct
-    datatype-specific keys (EEG vs iEEG vs MEG).
-
-    Parameters
-    ----------
-    data_dir : Path
-        The directory containing the data files (e.g. sub-01/eeg/, sub-01/ieeg/).
-
-    """
-    if not data_dir.exists():
-        return
-
-    # Infer BIDS datatype from directory name (eeg, ieeg, meg, …)
-    datatype = data_dir.name
-
-    try:
-        # Check if we have electrodes.tsv here (implies need for coordsystem)
-        electrodes_files = list(data_dir.glob("*_electrodes.tsv"))
-        if not electrodes_files:
-            return
-
-        # Check if coordsystem.json exists and has correct keys for the datatype
-        coordsystem_files = list(data_dir.glob("*_coordsystem.json"))
-        if coordsystem_files:
-            prefix = _COORD_PREFIX.get(datatype, "EEG")
-            expected_key = f"{prefix}CoordinateSystem"
-            try:
-                content = json.loads(coordsystem_files[0].read_text(encoding="utf-8"))
-                if expected_key in content:
-                    return  # Valid — nothing to do
-            except Exception:
-                pass
-            # Keys missing/wrong or file unreadable — overwrite with correct keys
-            logger.info(
-                "coordsystem.json has wrong keys for %s datatype, regenerating...",
-                datatype,
-            )
-            _generate_coordsystem_json(electrodes_files[0], datatype=datatype)
-            return
-
-        # Look for coordsystem in parent (subject root)
-        # We assume the data_dir is sub-XX/eeg etc, so parent is sub-XX
-        subject_root = data_dir.parent
-        root_coordsystems = list(subject_root.glob("*_coordsystem.json"))
-
-        if root_coordsystems:
-            src = root_coordsystems[0]
-            # match naming convention if possible, or just use src name
-            dst = data_dir / src.name
-
-            if not dst.exists():
-                # Use relative path for portability
-                rel_target = os.path.relpath(src, dst.parent)
-                try:
-                    # Clean up potential broken symlink (FileExistsError otherwise)
-                    dst.unlink(missing_ok=True)
-                    dst.symlink_to(rel_target)
-                    logger.debug(
-                        "Created coordsystem symlink: %s -> %s", dst, rel_target
-                    )
-                except Exception as e:
-                    logger.warning("Failed to link coordsystem: %s", e)
-        else:
-            # No coordsystem.json found anywhere — generate a minimal one
-            # Infer the coordinate system from the electrodes filename
-            # (e.g. "sub-01_ses-01_space-CapTrak_electrodes.tsv")
-            _generate_coordsystem_json(electrodes_files[0], datatype=datatype)
-
-    except Exception as e:
-        logger.warning("Error checking coordsystem symlinks: %s", e)
+def _has_positions(electrodes_tsv: Path) -> bool:
+    """Whether a row of electrodes.tsv has numeric x, y, z, not all 0."""
+    columns = _from_tsv(electrodes_tsv)
+    for xyz in zip(*(columns.get(axis, ()) for axis in "xyz")):
+        try:
+            if any(float(v) != 0 for v in xyz):
+                return True
+        except ValueError:  # n/a
+            continue
+    return False
 
 
 def _generate_coordsystem_json(electrodes_tsv: Path, datatype: str = "eeg") -> bool:
     """Generate a minimal coordsystem.json from the electrodes.tsv filename.
 
     BIDS requires coordsystem.json whenever electrodes.tsv exists. Some
-    OpenNeuro datasets omit it. This generates a minimal valid one by
-    extracting the coordinate system from the ``space-<label>`` entity
-    in the electrodes filename.
+    OpenNeuro datasets omit it. This generates a minimal one: the coordinate
+    system is the ``space-<label>`` of the electrodes filename, or ``Other``
+    when the deposit gives none; the units are ``n/a``, for which MNE-BIDS
+    infers the unit from the coordinate magnitudes (< 1 m, < 100 cm, else mm).
+    Nothing is guessed here, and a warning says the file is not the deposit's.
 
     The JSON keys are datatype-specific per BIDS:
 
@@ -482,221 +225,26 @@ def _generate_coordsystem_json(electrodes_tsv: Path, datatype: str = "eeg") -> b
             )
             prefix = "EEG"
 
+        # ponytail: MNE-BIDS reads |coord| < 100 as cm, so a millimetre deposit
+        # with a small extent reads 10x too large; only the deposit can fix it.
         coordsystem_data = {
             f"{prefix}CoordinateSystem": coord_system,
-            f"{prefix}CoordinateUnits": "m",
+            f"{prefix}CoordinateUnits": "n/a",
         }
 
         coordsystem_path.write_text(json.dumps(coordsystem_data, indent=2))
-        logger.info(
-            f"Generated minimal coordsystem.json: {coordsystem_path.name} "
-            f"(datatype={datatype}, system={coord_system})"
+        logger.warning(
+            "%s has no coordsystem.json in the deposit; wrote %s with system %s "
+            "(%s) and units n/a (MNE-BIDS infers them from the magnitudes).",
+            electrodes_tsv.name,
+            coordsystem_path.name,
+            coord_system,
+            "its space- label" if match else "the deposit gives none",
         )
         return True
     except Exception as e:
         logger.warning("Failed to generate coordsystem.json: %s", e)
         return False
-
-
-def _generate_vmrk_stub(vmrk_path: Path, vhdr_name: str) -> bool:
-    """Generate a minimal VMRK marker file stub.
-
-    BrainVision requires a .vmrk file to exist. This creates a minimal
-    valid stub with just the DataFile reference.
-
-    Parameters
-    ----------
-    vmrk_path : Path
-        Path where the VMRK file should be created.
-    vhdr_name : str
-        Name of the corresponding VHDR file.
-
-    Returns
-    -------
-    bool
-        True if file was generated, False on failure.
-
-    """
-    content = f"""Brain Vision Data Exchange Marker File Version 1.0
-; Generated by EEGDash - minimal stub
-
-[Common Infos]
-Codepage=UTF-8
-DataFile={vhdr_name.replace(".vhdr", ".eeg")}
-
-[Marker Infos]
-; No markers defined
-"""
-    try:
-        # Handle symlinks (e.g. git-annex) before writing
-        if not _prepare_writable_path(vmrk_path):
-            logger.warning(
-                "Cannot write VMRK stub %s: parent directory not writable",
-                vmrk_path,
-            )
-            return False
-        vmrk_path.write_text(content, encoding="utf-8")
-        logger.info("Generated VMRK stub: %s", vmrk_path.name)
-        return True
-    except Exception as e:
-        logger.error("Failed to write VMRK stub %s: %s", vmrk_path, e)
-        return False
-
-
-# Match a TSV cell whose entire content is a European-decimal numeric scalar,
-# e.g. "4,988" → "4.988" (or "-0,5" → "-0.5").  Anchored to cell boundaries
-# (start-of-line or tab on the left; tab, newline, or end-of-string on the
-# right) so interior commas of free-form text cells are never touched —
-# notably EEGLAB stim codes like "B2,4,8,16(240)" in BIDS event ``value``
-# columns, which are categorical labels per the BIDS-EEG spec.  Thousands
-# separators like "10,000" would still be rewritten, but in practice
-# European-locale datasets that use comma-as-decimal use dot or space for
-# thousands grouping, so the ambiguity does not arise in real BIDS TSV files.
-_DECIMAL_COMMA_RE = re.compile(
-    r"(?:^|(?<=\t))(-?\d+),(\d+)(?=\t|\r?\n|$)",
-    re.MULTILINE,
-)
-
-
-def _repair_tsv_decimal_separators(data_dir: Path) -> bool:
-    """Fix TSV files using comma as decimal separator instead of dot.
-
-    Some European datasets use comma as decimal separator (e.g., ``5,004``
-    instead of ``5.004``).  This converts commas to dots in numeric columns
-    of TSV files that are likely to contain floating-point values.
-
-    Parameters
-    ----------
-    data_dir : Path
-        Directory containing TSV files to check.
-
-    Returns
-    -------
-    bool
-        True if any files were repaired, False otherwise.
-
-    """
-    if not data_dir.exists():
-        return False
-
-    # Only target TSV files that typically contain numeric columns
-    target_patterns = ("*_events.tsv", "*_electrodes.tsv", "*_channels.tsv")
-    tsv_paths = []
-    for pat in target_patterns:
-        tsv_paths.extend(data_dir.glob(pat))
-
-    if not tsv_paths:
-        return False
-
-    repaired_any = False
-    for tsv_path in tsv_paths:
-        try:
-            content = tsv_path.read_text(encoding="utf-8")
-        except Exception:
-            continue
-
-        new_content = _DECIMAL_COMMA_RE.sub(r"\1.\2", content)
-        if new_content != content:
-            try:
-                tsv_path.write_text(new_content, encoding="utf-8")
-                logger.info(
-                    f"Repaired decimal separators (comma -> dot): {tsv_path.name}"
-                )
-                repaired_any = True
-            except Exception as e:
-                logger.warning("Failed to write repaired TSV %s: %s", tsv_path.name, e)
-
-    return repaired_any
-
-
-_TRAILING_FIELD_WS_RE = re.compile(r" +(?=[\t\r\n]|\Z)")
-
-
-def _repair_tsv_na_whitespace(data_dir: Path) -> bool:
-    """Strip trailing spaces from fields in TSV files.
-
-    Some datasets have ``n/a`` values padded with spaces (e.g.,
-    ``'n/a      '``).  MNE-BIDS only recognizes exact ``n/a`` as the BIDS
-    missing-value marker, so padded variants cause ``float()`` conversion
-    errors.  This strips trailing spaces before every tab delimiter,
-    carriage-return, or line-feed in all TSV files under *data_dir*,
-    preserving original line endings.
-
-    Parameters
-    ----------
-    data_dir : Path
-        Directory containing TSV files to check.
-
-    Returns
-    -------
-    bool
-        True if any files were repaired, False otherwise.
-
-    """
-    if not data_dir.exists():
-        return False
-
-    repaired_any = False
-    for tsv_path in data_dir.glob("*.tsv"):
-        try:
-            content = tsv_path.read_text(encoding="utf-8")
-        except Exception:
-            continue
-
-        new_content = _TRAILING_FIELD_WS_RE.sub("", content)
-        if new_content != content:
-            try:
-                tsv_path.write_text(new_content, encoding="utf-8")
-                logger.info(
-                    "Stripped trailing whitespace from TSV fields: %s",
-                    tsv_path.name,
-                )
-                repaired_any = True
-            except Exception as e:
-                logger.warning("Failed to write repaired TSV %s: %s", tsv_path.name, e)
-
-    return repaired_any
-
-
-def _repair_tsv_encoding(data_dir: Path) -> bool:
-    """Fix TSV files with non-UTF-8 encoding (e.g., Latin-1).
-
-    Some datasets have channels.tsv files saved with Latin-1 encoding
-    (common when using µ for microvolts). This converts them to UTF-8.
-
-    Parameters
-    ----------
-    data_dir : Path
-        Directory containing TSV files to check.
-
-    Returns
-    -------
-    bool
-        True if any files were repaired, False otherwise.
-
-    """
-    if not data_dir.exists():
-        return False
-
-    repaired_any = False
-    for tsv_path in data_dir.glob("*.tsv"):
-        try:
-            tsv_path.read_text(encoding="utf-8")
-        except UnicodeDecodeError:
-            for encoding in ("cp1252", "latin-1"):
-                try:
-                    content = tsv_path.read_text(encoding=encoding)
-                    tsv_path.write_text(content, encoding="utf-8")
-                    logger.info(
-                        f"Repaired TSV encoding: {tsv_path.name} ({encoding} -> UTF-8)"
-                    )
-                    repaired_any = True
-                    break
-                except Exception:
-                    continue
-        except Exception:
-            pass
-    return repaired_any
 
 
 def _generate_vhdr_from_metadata(
@@ -786,12 +334,6 @@ def _generate_vhdr_from_metadata(
             return False
         vhdr_path.write_text("\n".join(lines), encoding="utf-8")
         logger.info("Generated VHDR from metadata: %s", vhdr_path.name)
-
-        # Also generate VMRK stub if missing
-        vmrk_path = vhdr_path.with_suffix(".vmrk")
-        if not vmrk_path.exists():
-            _generate_vmrk_stub(vmrk_path, vhdr_path.name)
-
         return True
     except Exception as e:
         logger.error("Failed to write generated VHDR %s: %s", vhdr_path, e)
@@ -890,12 +432,6 @@ def _generate_vhdr_from_sibling(vhdr_path: Path) -> bool:
                 vhdr_path.name,
                 sibling.name,
             )
-
-            # Also generate VMRK stub if missing
-            vmrk_path = vhdr_path.with_suffix(".vmrk")
-            if not vmrk_path.exists():
-                _generate_vmrk_stub(vmrk_path, vhdr_path.name)
-
             return True
         except Exception:
             continue
@@ -907,9 +443,9 @@ def _generate_vhdr_from_sibling(vhdr_path: Path) -> bool:
 def _repair_snirf_bids_metadata(snirf_path: Path, record: dict[str, Any]) -> bool:
     """Fix BIDS metadata files for SNIRF (fNIRS) datasets.
 
-    This function attempts to fix common BIDS compliance issues in fNIRS datasets:
-    1. Regenerates channels.tsv from the SNIRF file's actual channel names
-    2. Fixes malformed entries in scans.tsv (NaN timestamps, short strings)
+    Regenerates channels.tsv from the SNIRF file's actual channel names.
+    (Malformed scans.tsv ``acq_time`` values need no repair: MNE-BIDS 0.20
+    warns and keeps the file's meas_date.)
 
     Parameters
     ----------
@@ -954,7 +490,9 @@ def _repair_snirf_bids_metadata(snirf_path: Path, record: dict[str, Any]) -> boo
             if snirf_base.startswith(tsv_base) or tsv_base in snirf_base:
                 # Read existing channels.tsv to preserve structure
                 try:
-                    existing_df = pd.read_csv(channels_tsv, sep="\t")
+                    existing_df = pd.read_csv(
+                        channels_tsv, sep="\t", encoding=tsv_encoding(channels_tsv)
+                    )
 
                     # Check if channel names match
                     if list(existing_df["name"]) != ch_names:
@@ -982,184 +520,15 @@ def _repair_snirf_bids_metadata(snirf_path: Path, record: dict[str, Any]) -> boo
     except Exception as e:
         logger.warning("Error reading SNIRF for channel repair: %s", e)
 
-    # ==== Fix 2: Remove malformed scans.tsv entries ====
-    if _repair_scans_tsv_timestamps(data_dir):
-        repairs_made = True
-
     return repairs_made
 
 
-def _repair_scans_tsv_timestamps(data_dir: Path) -> bool:
-    """Fix invalid timestamps in ``*_scans.tsv`` files.
-
-    ``mne_bids.read_raw_bids()`` parses ``acq_time`` values via
-    ``datetime.fromisoformat()``.  Some datasets contain malformed
-    timestamps (seconds >= 60, NaN values, truncated strings) that crash
-    the parser.  This function replaces any unparsable ``acq_time``
-    entries with ``"n/a"`` so that loading can proceed.
-
-    Parameters
-    ----------
-    data_dir : Path
-        The directory containing the data file (e.g. ``sub-01/eeg/``).
-        Scans files are searched in both ``data_dir`` *and* its parent
-        (session-level ``scans.tsv``).
-
-    Returns
-    -------
-    bool
-        True if any timestamps were repaired, False otherwise.
-
-    """
-    from datetime import datetime
-
-    search_dirs = [data_dir]
-    if data_dir.parent.exists():
-        search_dirs.append(data_dir.parent)
-
-    repaired_any = False
-    seen: set[Path] = set()
-
-    for d in search_dirs:
-        for scans_tsv in list(d.glob("*_scans.tsv")) + list(d.glob("scans.tsv")):
-            if scans_tsv in seen:
-                continue
-            seen.add(scans_tsv)
-
-            try:
-                lines = scans_tsv.read_text(encoding="utf-8").splitlines()
-            except Exception:
-                continue
-
-            if not lines:
-                continue
-
-            header = lines[0].split("\t")
-            try:
-                acq_idx = header.index("acq_time")
-            except ValueError:
-                continue
-
-            new_lines = [lines[0]]
-            changed = False
-            for line in lines[1:]:
-                cols = line.split("\t")
-                if acq_idx < len(cols):
-                    ts = cols[acq_idx].strip()
-                    if ts and ts.lower() != "n/a":
-                        try:
-                            dt = datetime.fromisoformat(ts)
-                            # Normalize to ISO 8601 with 'T' separator
-                            # and 6-digit microseconds — mne-bids uses
-                            # strptime('%Y-%m-%dT%H:%M:%S.%f') which
-                            # requires 'T' and fractional seconds.
-                            # For tz-aware inputs, preserve the tz: a
-                            # plain "%Y-%m-%dT%H:%M:%S.%f" silently
-                            # strips trailing 'Z' / '+HH:MM' offsets.
-                            if dt.tzinfo is not None:
-                                normalized = dt.strftime("%Y-%m-%dT%H:%M:%S.%f%z")
-                                # %z emits +HHMM; restore RFC 3339 'Z'
-                                # for UTC, otherwise insert the ISO
-                                # 8601 extended-form colon.
-                                if normalized.endswith("+0000"):
-                                    normalized = normalized[:-5] + "Z"
-                                else:
-                                    normalized = normalized[:-2] + ":" + normalized[-2:]
-                            else:
-                                normalized = dt.strftime("%Y-%m-%dT%H:%M:%S.%f")
-                            if normalized != ts:
-                                cols[acq_idx] = normalized
-                                changed = True
-                        except (ValueError, TypeError):
-                            cols[acq_idx] = "n/a"
-                            changed = True
-                new_lines.append("\t".join(cols))
-
-            if changed:
-                try:
-                    scans_tsv.write_text("\n".join(new_lines) + "\n", encoding="utf-8")
-                    logger.info("Repaired invalid timestamps in %s", scans_tsv.name)
-                    repaired_any = True
-                except Exception as e:
-                    logger.warning(
-                        f"Failed to write repaired scans.tsv {scans_tsv.name}: {e}"
-                    )
-
-    return repaired_any
-
-
-def _repair_events_tsv_nan_samples(data_dir: Path) -> bool:
-    """Drop rows with NaN onset/sample from ``*_events.tsv`` files.
-
-    Some EEGLAB datasets export events with NaN onset and sample values.
-    ``mne_bids.read_raw_bids()`` tries to convert the ``sample`` column
-    to ``int`` and crashes on NaN.  This removes those rows so loading
-    can proceed — the underlying data is fine, only the event markers
-    are incomplete.
-
-    Parameters
-    ----------
-    data_dir : Path
-        Directory containing the events TSV files.
-
-    Returns
-    -------
-    bool
-        True if any files were repaired, False otherwise.
-
-    """
-    if not data_dir.exists():
-        return False
-
-    repaired_any = False
-    for events_tsv in data_dir.glob("*_events.tsv"):
-        try:
-            lines = events_tsv.read_text(encoding="utf-8").splitlines()
-        except Exception:
-            continue
-
-        if len(lines) < 2:
-            continue
-
-        header = lines[0]
-        cols = header.split("\t")
-
-        # Find onset or sample column
-        onset_idx = None
-        for col_name in ("onset", "sample"):
-            if col_name in cols:
-                onset_idx = cols.index(col_name)
-                break
-        if onset_idx is None:
-            continue
-
-        new_lines = [header]
-        dropped = 0
-        for line in lines[1:]:
-            fields = line.split("\t")
-            if onset_idx < len(fields):
-                val = fields[onset_idx].strip().lower()
-                if val in ("nan", "n/a", ""):
-                    dropped += 1
-                    continue
-            new_lines.append(line)
-
-        if dropped > 0:
-            try:
-                events_tsv.write_text("\n".join(new_lines) + "\n", encoding="utf-8")
-                logger.info(
-                    "Repaired %s: dropped %d rows with NaN onset/sample",
-                    events_tsv.name,
-                    dropped,
-                )
-                repaired_any = True
-            except Exception as e:
-                logger.warning("Failed to write repaired %s: %s", events_tsv.name, e)
-
-    return repaired_any
-
-
-def _repair_channels_tsv(data_dir: Path) -> bool:
+def _repair_channels_tsv(
+    data_dir: Path,
+    *,
+    protected: set[Path] | None = None,
+    eligible: set[Path] | None = None,
+) -> bool:
     r"""Repair empty or malformed ``*_channels.tsv`` files in *data_dir*.
 
     MNE-BIDS skips channel metadata when ``channels.tsv`` is absent but
@@ -1171,6 +540,8 @@ def _repair_channels_tsv(data_dir: Path) -> bool:
     * **Has content but no ``name`` column** → the first column header is
       renamed to ``name`` (per BIDS spec the first column must be ``name``).
 
+    With ``eligible``, inspect only explicitly owned current-record paths;
+    sparse key maps cannot certify that sibling files are safe to rewrite.
     Returns ``True`` if any file was repaired.
     """
     if not data_dir.is_dir():
@@ -1184,8 +555,12 @@ def _repair_channels_tsv(data_dir: Path) -> bool:
         return False
 
     for tsv_path in tsv_files:
+        if eligible is not None and tsv_path not in eligible:
+            continue
+        if tsv_path in (protected or set()):
+            continue
         try:
-            content = tsv_path.read_text(encoding="utf-8-sig")
+            content = tsv_path.read_text(encoding=tsv_encoding(tsv_path))
             stripped = content.strip()
 
             if not stripped:
@@ -1253,86 +628,9 @@ def _deduplicate_channel_names(ch_names: list[str]) -> list[str]:
     return result
 
 
-def _repair_channels_tsv_duplicates(data_dir: Path) -> bool:
-    r"""Deduplicate channel names in ``*_channels.tsv`` files.
-
-    MNE-BIDS calls ``raw.rename_channels`` using channel names from
-    ``channels.tsv``.  When the TSV contains duplicate names, MNE raises
-    ``ValueError: New channel names are not unique, renaming failed``.
-
-    This function appends ``-0``, ``-1``, … suffixes to duplicate names
-    so that all channel names in the TSV are unique.
-
-    Returns ``True`` if any file was repaired.
-    """
-    if not data_dir.is_dir():
-        return False
-
-    repaired_any = False
-
-    try:
-        tsv_files = list(data_dir.glob("*_channels.tsv"))
-    except Exception:
-        return False
-
-    for tsv_path in tsv_files:
-        try:
-            content = tsv_path.read_text(encoding="utf-8-sig")
-            stripped = content.strip()
-            if not stripped:
-                continue
-
-            lines = stripped.split("\n")
-            if len(lines) < 2:
-                continue
-
-            header = lines[0]
-            columns = header.split("\t")
-
-            # Find the 'name' column index
-            col_names_lower = [c.strip().lower() for c in columns]
-            if "name" not in col_names_lower:
-                continue
-            name_idx = col_names_lower.index("name")
-
-            # Extract all channel names
-            ch_names = []
-            for line in lines[1:]:
-                fields = line.split("\t")
-                if len(fields) > name_idx:
-                    ch_names.append(fields[name_idx].strip())
-                else:
-                    ch_names.append("")
-
-            # Check for duplicates
-            if len(ch_names) == len(set(ch_names)):
-                continue
-
-            # Deduplicate
-            new_names = _deduplicate_channel_names(ch_names)
-
-            # Rewrite the file
-            new_lines = [header]
-            for i, line in enumerate(lines[1:]):
-                fields = line.split("\t")
-                if len(fields) > name_idx:
-                    fields[name_idx] = new_names[i]
-                new_lines.append("\t".join(fields))
-
-            tsv_path.write_text("\n".join(new_lines) + "\n", encoding="utf-8")
-            logger.info(
-                "Deduplicated channel names in %s (%d duplicates resolved).",
-                tsv_path.name,
-                len(ch_names) - len(set(ch_names)),
-            )
-            repaired_any = True
-        except Exception as exc:
-            logger.warning("Failed to deduplicate %s: %s", tsv_path.name, exc)
-
-    return repaired_any
-
-
-def _repair_participants_tsv_ids(bids_root: Path) -> bool:
+def _repair_participants_tsv_ids(
+    bids_root: Path, *, protected: set[Path] | None = None
+) -> bool:
     """Align ``participant_id`` values in ``participants.tsv`` with ``sub-*`` folders.
 
     Some BIDS datasets have mismatches between folder names and
@@ -1359,7 +657,7 @@ def _repair_participants_tsv_ids(bids_root: Path) -> bool:
     from .bids_dataset import _match_subject_fallback
 
     participants_tsv = bids_root / "participants.tsv"
-    if not participants_tsv.exists():
+    if participants_tsv in (protected or set()) or not participants_tsv.exists():
         return False
 
     # Collect actual sub-* folder names
@@ -1480,7 +778,7 @@ def _repair_participants_tsv_ids(bids_root: Path) -> bool:
         return False
 
 
-def _clamping_crop(orig_crop, self, *args, **kwargs):
+def _clamping_crop(self, *args, orig_crop, **kwargs):
     """Patched ``Annotations.crop`` that clamps negative durations first."""
     if hasattr(self, "duration") and self.duration is not None:
         mask = self.duration < 0
@@ -1512,99 +810,13 @@ def _fix_negative_annotation_durations():
        interpreters) but must never be used from concurrent threads.
     """
     _orig_crop = mne.Annotations.crop
-    mne.Annotations.crop = partial(_clamping_crop, _orig_crop)
+    # partialmethod, not partial: a partial is no descriptor, so
+    # ``annot.crop(0, t)`` got ``self=0`` ("'int' has no len()", on006923).
+    mne.Annotations.crop = partialmethod(_clamping_crop, orig_crop=_orig_crop)
     try:
         yield
     finally:
         mne.Annotations.crop = _orig_crop
-
-
-# Cached state for _get_optional_task_fn().  Computed once on first use;
-# the result cannot change within a process lifetime.
-_OPTIONAL_TASK_PATCHED_FN = None  # compiled patched function, or None
-_OPTIONAL_TASK_DETECTION_DONE = False
-
-
-def _build_optional_task_patch():
-    """Build a patched ``read_raw_bids`` that allows ``task=None``.
-
-    Returns the patched function, or ``None`` if the installed mne-bids
-    already supports ``task=None`` natively.
-    """
-    import mne_bids.read as _read_mod
-
-    try:
-        src = inspect.getsource(_read_mod.read_raw_bids)
-    except (OSError, TypeError):
-        return None
-
-    if '"root", "subject", "task"' not in src:
-        return None  # Already supports task=None
-
-    # Apply the three patches from PR #1527 via source replacement:
-    # 1. Remove "task" from the required attributes list
-    # 2. Update the error message template to match
-    # 3. Guard bids_path.task.startswith("rest") against None
-    patched_src = (
-        src.replace(
-            'for required in ["root", "subject", "task"]:',
-            'for required in ["root", "subject"]:',
-        )
-        .replace(
-            '"bids_path" must contain `root`, `subject`, and `task` ',
-            '"bids_path" must contain `root` and `subject` ',
-        )
-        .replace(
-            'bids_path.task.startswith("rest")',
-            '(bids_path.task is not None and bids_path.task.startswith("rest"))',
-        )
-    )
-
-    if patched_src == src:
-        logger.warning(
-            "mne-bids task=None backport: source replacement had no effect. "
-            "The upstream source may have changed format. Skipping patch."
-        )
-        return None
-
-    # Strip decorators (e.g. @verbose) — they are already applied to
-    # the original and we must not double-apply them.
-    lines = patched_src.splitlines()
-    for i, line in enumerate(lines):
-        if line.lstrip().startswith("def read_raw_bids"):
-            patched_src = textwrap.dedent("\n".join(lines[i:]))
-            break
-
-    # Compile in the module's namespace so all references resolve
-    local_ns = {}
-    exec(  # noqa: S102
-        compile(patched_src, _read_mod.__file__, "exec"),
-        _read_mod.__dict__,
-        local_ns,
-    )
-    return local_ns.get("read_raw_bids")
-
-
-def _get_optional_task_fn():
-    """Return a patched ``read_raw_bids`` that accepts ``task=None``.
-
-    Returns ``None`` if the installed mne-bids already supports
-    ``task=None`` natively (mne-bids >= 0.19 / PR #1527).
-
-    The detection and compilation are cached at module level so that only
-    the first call pays the ``inspect.getsource`` + ``compile`` cost.
-    """
-    global _OPTIONAL_TASK_PATCHED_FN, _OPTIONAL_TASK_DETECTION_DONE  # noqa: PLW0603
-
-    if not _OPTIONAL_TASK_DETECTION_DONE:
-        _OPTIONAL_TASK_PATCHED_FN = _build_optional_task_patch()
-        _OPTIONAL_TASK_DETECTION_DONE = True
-        if _OPTIONAL_TASK_PATCHED_FN is not None:
-            logger.info(
-                "mne-bids does not support task=None natively; "
-                "backport of PR #1527 available."
-            )
-    return _OPTIONAL_TASK_PATCHED_FN
 
 
 def _load_raw_direct(filepath: Path):  # -> mne.io.BaseRaw
@@ -1630,24 +842,12 @@ def _load_raw_direct(filepath: Path):  # -> mne.io.BaseRaw
         If the file extension is not supported.
 
     """
-    _EXT_TO_READER = {
-        ".vhdr": mne.io.read_raw_brainvision,
-        ".edf": mne.io.read_raw_edf,
-        ".bdf": mne.io.read_raw_bdf,
-        ".set": mne.io.read_raw_eeglab,
-        ".fif": mne.io.read_raw_fif,
-        ".cnt": mne.io.read_raw_cnt,
-        ".ds": mne.io.read_raw_ctf,
-        ".snirf": mne.io.read_raw_snirf,
-    }
-
     ext = filepath.suffix.lower()
-    reader = _EXT_TO_READER.get(ext)
-    if reader is None:
+    if ext not in READERS:
         raise ValueError(
-            f"No direct reader for extension {ext!r}. "
-            f"Supported: {sorted(_EXT_TO_READER)}"
+            f"No direct reader for extension {ext!r}. Supported: {sorted(READERS)}"
         )
+    reader = get_reader(ext)
 
     logger.warning(
         "Falling back to direct %s reader for %s (bypassing MNE-BIDS).",
@@ -1683,66 +883,6 @@ def _load_raw_direct(filepath: Path):  # -> mne.io.BaseRaw
             with _fix_negative_annotation_durations():
                 return reader(str(filepath), preload=False, verbose="ERROR")
         raise
-
-
-def _load_raw_snirf_fallback(snirf_path: Path):
-    """Load SNIRF data via h5py when MNE's reader rejects the data type.
-
-    MNE only supports CW amplitude (dataType=1) and processed haemoglobin
-    (dataType=99999).  Time-domain NIRS (dataType=301) and other types are
-    rejected.  This fallback reads the raw time-series directly from the
-    HDF5 file and wraps it in a ``RawArray``.
-    """
-    import h5py
-
-    snirf_path = Path(snirf_path)
-    logger.info("Loading SNIRF via h5py fallback: %s", snirf_path.name)
-
-    with h5py.File(str(snirf_path), "r") as f:
-        nirs = f["/nirs"]
-
-        # Read time-series from data1
-        ts = nirs["data1/dataTimeSeries"][()]  # (n_times, n_channels)
-        time = nirs["data1/time"][:]
-        if len(time) < 2:
-            raise ValueError(f"SNIRF time array has {len(time)} element(s), need >= 2")
-        dt = float(np.diff(time[:2])[0])
-        if dt <= 0:
-            raise ValueError(
-                f"SNIRF time step is non-positive ({dt}), cannot compute srate"
-            )
-        srate = 1.0 / dt
-
-        n_times, n_channels = ts.shape
-
-        # Try to get channel names from BIDS channels.tsv
-        ch_names = None
-        bids_info = _read_bids_channels_tsv(snirf_path.parent)
-        if bids_info and len(bids_info[0]) == n_channels:
-            ch_names = bids_info[0]
-
-        if ch_names is None:
-            ch_names = [f"S{i + 1}" for i in range(n_channels)]
-
-        ch_names = _deduplicate_channel_names(ch_names)
-
-    info = mne.create_info(
-        ch_names=ch_names, sfreq=srate, ch_types="fnirs_cw_amplitude"
-    )
-    raw = mne.io.RawArray(ts.T, info, verbose="ERROR")
-
-    raw.info["description"] = (
-        f"Loaded via h5py fallback ({n_channels} ch, {srate:.1f} Hz)"
-    )
-
-    logger.warning(
-        "Loaded SNIRF via h5py fallback: %s (%d ch, %d samples, %.1f Hz).",
-        snirf_path.name,
-        n_channels,
-        n_times,
-        srate,
-    )
-    return raw
 
 
 def _parse_set_metadata(set_path: Path) -> dict:
@@ -1859,7 +999,7 @@ def _read_bids_channels_tsv(
 
     ch_names = []
     ch_types = []
-    with open(tsv_path, newline="") as f:
+    with open(tsv_path, newline="", encoding=tsv_encoding(tsv_path)) as f:
         reader = csv.DictReader(f, delimiter="\t")
         for row in reader:
             name = row.get("name", "").strip()
@@ -1993,7 +1133,9 @@ def _load_raw_from_eeglab_epochs(set_path: Path):
     # ---- Try MNE's read_epochs_eeglab first ----
     used_mne = False
     try:
-        epochs = mne.io.read_epochs_eeglab(str(set_path), verbose="ERROR")
+        # tolerant(): the own .fdt, as for Raw (eegdash.io.eeglab)
+        with tolerant():
+            epochs = mne.io.read_epochs_eeglab(str(set_path), verbose="ERROR")
         used_mne = True
     except (AttributeError, IndexError, KeyError) as epoch_error:
         # Common failures:
@@ -2073,10 +1215,8 @@ def _load_raw_from_eeglab_epochs(set_path: Path):
         data_ref = _get("data")
 
         if isinstance(data_ref, str):
-            # External .fdt file
-            fdt_path = set_path.parent / data_ref
-            if not fdt_path.exists():
-                fdt_path = set_path.with_suffix(".fdt")
+            # External .fdt file: the own one first (on004348)
+            fdt_path = eeglab_io.own_data_file(set_path, data_ref)
             if not fdt_path.exists():
                 raise ValueError(
                     f"No .fdt file found for '{set_path.name}' "
@@ -2262,10 +1402,7 @@ def _eeglab_fdt_path(set_path: Path, eeg: dict) -> Path | None:
     data_ref = eeg.get("data")
     if not isinstance(data_ref, str):
         return None
-    p = set_path.parent / data_ref
-    if not p.exists():
-        p = set_path.with_suffix(".fdt")
-    return p
+    return eeglab_io.own_data_file(set_path, data_ref)
 
 
 def _eeglab_ch_names_from_eeg(eeg: dict, nbchan: int) -> list[str]:
@@ -2294,168 +1431,6 @@ def _eeglab_ch_names_from_eeg(eeg: dict, nbchan: int) -> list[str]:
                 pass
         ch_names.append(f"CH{i + 1}")
     return ch_names
-
-
-def _repair_eeglab_fdt(set_path: Path) -> bool:
-    """Repair .set header: fix .fdt filename mismatches and truncated data.
-
-    Handles two independent problems that prevent MNE from loading:
-
-    1. **Filename mismatch** -- The header's ``datfile``/``data`` field
-       references a non-BIDS filename (e.g. ``sub10_sess1.fdt``) that does
-       not exist on disk, while a BIDS-named ``.fdt`` with the same stem as
-       the ``.set`` file *does* exist.  The header is rewritten to point at
-       the BIDS-named file.
-    2. **Truncated data** -- The companion ``.fdt`` has fewer samples than
-       the header declares.  ``pnts``, ``xmax``, and ``times`` are patched
-       to match the actual byte count.
-
-    Tries ``_eeglab_load_first_eeg`` (scipy / MNE ``_readmat``) first;
-    falls back to ``pymatreader`` with ``uint16_codec='latin-1'`` for
-    .set files whose char arrays trip the "buffer too small" error in scipy.
-
-    Parameters
-    ----------
-    set_path : Path
-        Path to the .set file.
-
-    Returns
-    -------
-    bool
-        True if the .set was modified, False otherwise.
-
-    """
-    if not set_path.exists() or set_path.suffix.lower() != ".set":
-        return False
-
-    # --- load header ---
-    eeg = _eeglab_load_first_eeg(set_path)
-    used_pymatreader = False
-
-    if eeg is None:
-        # scipy/MNE _readmat failed (e.g. "buffer too small" for non-ASCII
-        # char arrays).  Try pymatreader which handles uint16 codec.
-        try:
-            import pymatreader
-
-            mat = pymatreader.read_mat(str(set_path), uint16_codec="latin-1")
-            eeg = mat.get("EEG", mat)
-            if not isinstance(eeg, dict) or "pnts" not in eeg:
-                return False
-            used_pymatreader = True
-        except Exception:
-            return False
-
-    nbchan = int(eeg.get("nbchan", 1))
-    pnts = int(eeg.get("pnts", 1))
-
-    # --- locate companion .fdt ---
-    # Determine what the header currently references
-    if used_pymatreader:
-        data_ref = eeg.get("datfile") or eeg.get("data")
-    else:
-        data_ref = eeg.get("data")
-
-    # Track whether the original reference is a string pointing to a file
-    has_external_fdt = isinstance(data_ref, str) and bool(data_ref)
-
-    if has_external_fdt:
-        fdt_path = set_path.parent / data_ref
-        if not fdt_path.exists():
-            # Referenced .fdt missing -- try the BIDS-named companion
-            fdt_path = set_path.with_suffix(".fdt")
-    else:
-        fdt_path = set_path.with_suffix(".fdt")
-
-    if fdt_path is None or not fdt_path.exists():
-        return False
-
-    # --- determine what needs fixing ---
-    bids_fdt_name = set_path.stem + ".fdt"
-
-    # Filename mismatch: header references a non-BIDS .fdt name that
-    # doesn't exist on disk (e.g. "sub10_sess1.fdt") while the BIDS-named
-    # .fdt (e.g. "sub-10_ses-01_task-xxx_eeg.fdt") does exist.
-    needs_rename = has_external_fdt and str(data_ref) != bids_fdt_name
-
-    expected_bytes = nbchan * pnts * _EEGLAB_BYTES_PER_SAMPLE
-    fdt_size = fdt_path.stat().st_size
-    needs_pnts_fix = fdt_size < expected_bytes
-
-    if not needs_rename and not needs_pnts_fix:
-        return False
-
-    # --- compute actual sample count when data is truncated ---
-    actual_pnts = pnts
-    if needs_pnts_fix:
-        actual_pnts = fdt_size // _EEGLAB_BYTES_PER_SAMPLE // nbchan
-        if actual_pnts <= 0:
-            logger.warning(
-                "EEGLAB .fdt file %s has 0 readable samples "
-                "(expected %d). Data file is empty/corrupt.",
-                fdt_path.name,
-                pnts,
-            )
-            return False
-
-    # --- patch header fields ---
-    srate = float(eeg.get("srate", 1.0)) or 1.0
-    repaired = {
-        key: value for key, value in dict(eeg).items() if not str(key).startswith("__")
-    }
-
-    # Always fix the datfile/data reference to point at the BIDS-named .fdt
-    repaired["datfile"] = bids_fdt_name
-    repaired["data"] = bids_fdt_name
-
-    if needs_pnts_fix:
-        repaired["pnts"] = actual_pnts
-        repaired["xmax"] = (actual_pnts - 1) / srate
-        # Rebuild times array to match actual sample count
-        if "times" in repaired:
-            repaired["times"] = np.arange(actual_pnts, dtype=np.float64) / srate
-
-    # When loaded via pymatreader, list fields must be converted to arrays
-    # for scipy.savemat to serialize them correctly.
-    if used_pymatreader:
-        for k in list(repaired.keys()):
-            v = repaired[k]
-            if isinstance(v, list):
-                try:
-                    repaired[k] = np.array(v)
-                except ValueError:
-                    repaired[k] = np.array(v, dtype="O")
-
-    # --- write repaired .set ---
-    try:
-        savemat(str(set_path), {"EEG": repaired}, do_compression=False)
-        if needs_rename and needs_pnts_fix:
-            logger.info(
-                "Repaired EEGLAB .set header: %s (datfile %r -> %r, pnts %s -> %s).",
-                set_path.name,
-                data_ref,
-                bids_fdt_name,
-                pnts,
-                actual_pnts,
-            )
-        elif needs_rename:
-            logger.info(
-                "Repaired EEGLAB .set header: %s (datfile %r -> %r).",
-                set_path.name,
-                data_ref,
-                bids_fdt_name,
-            )
-        else:
-            logger.info(
-                "Repaired EEGLAB .set header: %s (pnts %s -> %s).",
-                set_path.name,
-                pnts,
-                actual_pnts,
-            )
-        return True
-    except Exception as e:
-        logger.warning("Failed to rewrite .set %s: %s", set_path.name, e)
-        return False
 
 
 def _load_raw_eeglab_alleeg(filepath: Path):
@@ -2489,15 +1464,19 @@ def _load_raw_eeglab_alleeg(filepath: Path):
     if isinstance(data_ref, str):
         data_fname = _eeglab_fdt_path(filepath, eeg)
         data = np.fromfile(data_fname, dtype="<f4", count=nbchan * pnts)
-        if data.size != nbchan * pnts:
-            data = np.pad(
-                data.astype(np.float64),
-                (0, nbchan * pnts - data.size),
-                mode="constant",
-                constant_values=0,
+        present = data.size // nbchan  # complete samples; never pad with zeros
+        if present < pnts:
+            if present == 0:
+                raise ValueError(f"{Path(data_fname).name} holds no complete sample")
+            logger.warning(
+                "Truncated EEGLAB data file %s: %d of %d samples present; "
+                "reading those only.",
+                Path(data_fname).name,
+                present,
+                pnts,
             )
-        else:
-            data = data.astype(np.float64)
+            pnts = present
+        data = data[: nbchan * pnts].astype(np.float64)
         data = data.reshape(nbchan, pnts, order="F")
     else:
         data = np.asarray(data_ref, dtype=np.float64)

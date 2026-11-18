@@ -44,7 +44,7 @@ def _get_record_metadata(win_ds: EEGWindowsDataset) -> dict:
     Parameters
     ----------
     win_ds : EEGWindowsDataset
-        A braindecode wimdowed EEG dataset.
+        A braindecode windowed EEG dataset.
 
     Returns
     -------
@@ -52,7 +52,7 @@ def _get_record_metadata(win_ds: EEGWindowsDataset) -> dict:
         Record metadata, including:
 
         - info : MNE's record info.
-        - description : braindesode's dataset description.
+        - description : braindecode's dataset description.
 
     """
     return {
@@ -69,7 +69,7 @@ def _get_batch_metadata(
     Parameters
     ----------
     win_ds : EEGWindowsDataset
-        A braindecode wimdowed EEG dataset.
+        A braindecode windowed EEG dataset.
     X : ndarray
         A batch of EEG windows.
     crop_inds : list of tuples
@@ -126,10 +126,10 @@ def _get_feature_extractor_from_parameter(
         features._validate_execution_tree(parent_type=SignalOutputType)
     except TypeError as e:
         raise TypeError(
-            "The given FeatureExtractor cannot process raw signals.\n"
-            + "Please make sure the possible parent types of its "
-            + "preprocessor/features include SignalOutputType or a "
-            + "subclass of it."
+            f"extract_features requires a FeatureExtractor whose top-level input is "
+            f"raw EEG (SignalOutputType). The validation failed because: {e}. "
+            f"Wrap your extractor in another FeatureExtractor without a preprocessor, "
+            f"or verify @feature_predecessor annotations."
         ) from e
 
 

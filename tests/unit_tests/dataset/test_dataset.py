@@ -880,6 +880,11 @@ def test_dataset_download_all_coverage(tmp_path):
         # 397: no targets
         ds.datasets = []
         EEGDashDataset.download_all(ds)
+        ds._download_dataset_files.assert_called_once()
+        ds._download_dataset_files.side_effect = OSError("global metadata unavailable")
+        with pytest.raises(OSError, match="global metadata unavailable"):
+            EEGDashDataset.download_all(ds)
+        ds._download_dataset_files.side_effect = None
 
         # 385: default n_jobs (implicitly handled if targets present)
         mock_raw = MagicMock()
@@ -1299,9 +1304,15 @@ def test_download_all_parallel_execution(tmp_path):
         ds._download_dataset_files = MagicMock()
 
         with patch("eegdash.dataset.dataset.Parallel") as mock_parallel:
-            mock_parallel.return_value = MagicMock(return_value=None)
+            mock_parallel.return_value = MagicMock(
+                side_effect=lambda tasks: [
+                    func(*args, **kwargs) for func, args, kwargs in tasks
+                ]
+            )
             ds.download_all(n_jobs=2)
             mock_parallel.assert_called_once()
+            mock_raw1._download_required_files.assert_called_once()
+            mock_raw2._download_required_files.assert_called_once()
 
 
 def test_challenge_dataset_subjects_tuple_in_query(tmp_path):

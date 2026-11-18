@@ -434,8 +434,12 @@ class FeatureExtractor(TrainableFeature):
             if not is_valid_by_output_type:
                 parent = _get_func_name(parent_type)
                 child = _get_func_name(f)
+                expected = [_get_func_name(p) for p in pe_type]
                 raise TypeError(
-                    f"Feature '{fname}: {child}' cannot be a child of {parent}"
+                    f"Feature '{fname}' (function: '{child}') expects one of "
+                    f"{expected} as its preprocessor, but got '{parent}'. "
+                    f"Check that the 'preprocessor' argument of the FeatureExtractor "
+                    f"matches the @feature_predecessor declaration of '{child}'."
                 )
 
     def _check_is_trainable(self) -> bool:
@@ -659,10 +663,9 @@ class FeatureExtractor(TrainableFeature):
             )
         if not isinstance(key, str):
             raise ValueError(
-                "Non-string keys are supported only for direct keys.\n"
-                + f"Key {key} is not a direct key of the FeatureExtractor.\n"
-                + "Possible direct keys are: "
-                + f"{self.feature_extractors_dict.keys()}"
+                f"Key {key!r} (type: {type(key).__name__}) was not found as a direct key. "
+                f"Only string keys support recursive lookup through nested extractors. "
+                f"Direct keys: {list(self.feature_extractors_dict.keys())}."
             )
         for k, f in self.feature_extractors_dict.items():
             if not isinstance(f, FeatureExtractor):
@@ -681,9 +684,9 @@ class FeatureExtractor(TrainableFeature):
                 return self._concat_preprocessor_to_child_func(func)
 
         raise ValueError(
-            f"Key {key} not found in FeatureExtractor.\n"
-            + "Possible direct keys are: "
-            + f"{self.feature_extractors_dict.keys()}"
+            f"Key '{key}' was not found in this FeatureExtractor or any nested extractor. "
+            f"Direct keys: {list(self.feature_extractors_dict.keys())}. "
+            f"All available feature names (including nested): {self.feature_names}."
         )
 
     @property

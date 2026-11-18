@@ -1409,3 +1409,29 @@ class TestReadParticipantsTsv:
         tsv = tmp_path / "participants.tsv"
         tsv.write_bytes(b"\x00\x01\x02\x03")
         assert _read_participants_tsv(tsv) is None
+
+
+def test_glob_dir_lists_a_directory_once_until_it_changes(tmp_path, monkeypatch):
+    """nm000359 keeps 22,507 files in one folder; per-record globs made the digest quadratic."""
+    from eegdash.dataset import bids_dataset as bd  # noqa: PLC0415
+
+    for i in range(5):
+        (tmp_path / f"sub-{i}_eeg.json").write_text("{}")
+    (tmp_path / "sub-0_eeg.set").write_text("")
+    old_ns = bd.os.stat(tmp_path).st_mtime_ns - 10 * 10**9  # a settled directory
+    bd.os.utime(tmp_path, ns=(old_ns, old_ns))
+    calls = []
+    real = bd.os.listdir
+    monkeypatch.setattr(bd.os, "listdir", lambda p: calls.append(p) or real(p))
+    bd._dir_names.cache_clear()
+
+    for _ in range(50):
+        found = bd.glob_dir(tmp_path, "*_eeg.json")
+    assert [p.name for p in found] == [f"sub-{i}_eeg.json" for i in range(5)]
+    assert len(calls) == 1
+
+    # a file added within the mtime granularity (mtime unchanged) is still seen
+    # while the directory is fresh
+    (tmp_path / "sub-9_eeg.json").write_text("{}")
+    assert bd.glob_dir(tmp_path, "*_eeg.json")[-1].name == "sub-9_eeg.json"
+    assert bd.glob_dir(tmp_path / "missing", "*") == []

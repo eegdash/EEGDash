@@ -289,6 +289,7 @@ def test_validate_digestion_output_full_report_golden():
             "zip_placeholders": 0,
             "missing_nchans": 3,
             "missing_sampling_frequency": 3,
+            "header_scale_issues": 0,
         },
         "source_distribution": {"unknown": 2, "zenodo": 1},
         "modality_distribution": {"eeg": 5},
@@ -463,5 +464,6 @@ def test_validation_result_stats_keys_are_stable():
         "zip_placeholders",
         "missing_nchans",
         "missing_sampling_frequency",
+        "header_scale_issues",
     }
     assert set(r.stats.keys()) == expected_keys

@@ -17,6 +17,7 @@ __version__ = "0.9.1"
 
 __all__ = [
     "EEGDash",
+    "EEGDashCorpus",
     "EEGDashDataset",
     "EEGChallengeDataset",
     "DataIntegrityError",
@@ -30,6 +31,10 @@ def __getattr__(name: str):
         from .api import EEGDash
 
         return EEGDash
+    if name == "EEGDashCorpus":
+        from .corpus import EEGDashCorpus
+
+        return EEGDashCorpus
     if name == "DataIntegrityError":
         from .dataset.exceptions import DataIntegrityError
 

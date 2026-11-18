@@ -457,9 +457,14 @@ class FeaturesConcatDataset(BaseConcatDataset):
 
         """
         if not all([isinstance(ds, FeaturesDataset) for ds in self.datasets]):
+            non_conforming = [
+                (i, type(ds).__name__)
+                for i, ds in enumerate(self.datasets)
+                if not isinstance(ds, FeaturesDataset)
+            ]
             raise TypeError(
-                "Metadata dataframe can only be computed when all "
-                "datasets are FeaturesDataset."
+                f"All datasets must be FeaturesDataset to access .metadata. "
+                f"Non-conforming datasets: {non_conforming}."
             )
 
         all_dfs = list()
@@ -528,7 +533,11 @@ class FeaturesConcatDataset(BaseConcatDataset):
 
         """
         if len(self.datasets) == 0:
-            raise ValueError("Expect at least one dataset")
+            raise ValueError(
+                "FeaturesConcatDataset.save: cannot save an empty dataset "
+                "(self.datasets is empty). Make sure feature extraction was "
+                "produced for at least one recording."
+            )
         path_contents = os.listdir(path)
         n_sub_dirs = len([os.path.isdir(os.path.join(path, e)) for e in path_contents])
         for i_ds, ds in enumerate(self.datasets):
@@ -541,9 +550,10 @@ class FeaturesConcatDataset(BaseConcatDataset):
                     shutil.rmtree(sub_dir)
                 else:
                     raise FileExistsError(
-                        f"Subdirectory {sub_dir} already exists. Please select"
-                        f" a different directory, set overwrite=True, or "
-                        f"resolve manually."
+                        f"Subdirectory '{sub_dir}' (dataset index {i_ds + offset}) "
+                        f"already exists. To overwrite, pass overwrite=True. To save "
+                        f"elsewhere, change the path argument. To resume a partial "
+                        f"save, use the offset parameter."
                     )
             os.makedirs(sub_dir)
             self._save_features(sub_dir, ds, i_ds, offset)
@@ -552,17 +562,19 @@ class FeaturesConcatDataset(BaseConcatDataset):
             self._save_raw_info(sub_dir, ds)
             self._save_kwargs(sub_dir, ds)
         if overwrite and i_ds + 1 + offset < n_sub_dirs:
+            leftover = list(range(i_ds + 1 + offset, n_sub_dirs))
             logger.warning(
-                f"The number of saved datasets ({i_ds + 1 + offset}) "
-                f"does not match the number of existing "
-                f"subdirectories ({n_sub_dirs}). You may now "
-                f"encounter a mix of differently preprocessed "
-                f"datasets!"
+                f"overwrite=True saved {i_ds + 1 + offset} dataset(s), but "
+                f"{n_sub_dirs} subdirectories existed before. Subdirectories "
+                f"{leftover} were not overwritten and may contain stale data. "
+                f"Delete them manually or re-save to a fresh directory."
             )
         if path_contents:
             logger.warning(
-                f"Chosen directory {path} contains other "
-                f"subdirectories or files {path_contents}."
+                f"Directory '{path}' contains {len(path_contents)} unrelated "
+                f"file(s)/subdirectorie(s) not written by this save: {path_contents}. "
+                f"These will be ignored by load_features_concat_dataset() but may "
+                f"indicate a wrong target directory — move or delete them if unintended."
             )
 
     @staticmethod
@@ -981,8 +993,8 @@ class FeaturesConcatDataset(BaseConcatDataset):
         """
         if "inplace" in kwargs and kwargs["inplace"] is False:
             raise ValueError(
-                f"{func_name} only works inplace, please change "
-                + "to inplace=True (default)."
+                f"{func_name}() operates in-place and does not support inplace=False. "
+                f"Remove the inplace argument or set it to True."
             )
         kwargs["inplace"] = True
 

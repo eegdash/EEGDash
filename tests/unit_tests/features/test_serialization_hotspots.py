@@ -21,7 +21,7 @@ def test_adjust_dict_types_converts_numeric_and_underscore_keys(raw, expected):
 
 
 def test_func_from_dict_errors_for_unknown_name():
-    with pytest.raises(ValueError, match="not found in feature bank"):
+    with pytest.raises(ValueError, match="not found in feature_bank"):
         ser._func_from_dict({"name": "not_a_real_feature"})
 
 
@@ -34,7 +34,7 @@ def test_func_from_dict_builds_partial_for_args_and_kwargs():
 
 def test_feature_extractor_from_dict_raises_on_malformed_feature_dict():
     bad = {"feature_extractors": {"f": {"unexpected": 1}}}
-    with pytest.raises(ValueError, match="must contain either a 'feature_extractors'"):
+    with pytest.raises(ValueError, match="Malformed entry for feature key 'f'"):
         ser.feature_extractor_from_dict(bad)
 
 

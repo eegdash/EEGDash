@@ -9,6 +9,8 @@ stubbed (no network), so any drift fails here before it can ship.
 
 from __future__ import annotations
 
+from collections import Counter
+
 import _inject_plan
 from _inject_plan import build_injection_plan, find_digested_datasets
 from eegdash.testing import data_file
@@ -81,11 +83,21 @@ def test_injection_plan_skips_when_fingerprints_match(monkeypatch):
         "fetch_existing_dataset",
         lambda api, db, did: {"ingestion_fingerprint": fp_table.get(did)},
     )
+    counts = Counter(r["dataset"] for r in _build(force=True).records)
+    monkeypatch.setattr(
+        _inject_plan, "fetch_record_count", lambda api, db, did: counts[did]
+    )
     plan = _build()
     assert sorted(plan.skipped_ids) == ALL_IDS
     assert plan.changed_ids == []
     assert plan.datasets == []
     assert plan.records == []
+
+    # Same fingerprints, but the DB lost the records: re-inject them.
+    monkeypatch.setattr(_inject_plan, "fetch_record_count", lambda api, db, did: 0)
+    plan = _build()
+    assert sorted(plan.changed_ids) == sorted(counts)
+    assert len(plan.records) == 5
 
 
 def test_injection_plan_changes_when_fingerprint_differs(monkeypatch):

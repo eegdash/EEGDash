@@ -195,6 +195,35 @@ def snirf_n_times_from_fileobj(fileobj: Any) -> int | None:
                 pass
 
 
+def snirf_rate_and_n_times_from_fileobj(
+    fileobj: Any,
+) -> tuple[float | None, int | None]:
+    """``(sfreq, n_times)`` as MNE reads them, from a seekable file-like.
+
+    MNE's rate is ``1 / mean(diff(time))`` = ``(n - 1) / (time[-1] - time[0])``, or
+    ``1 / time[1]`` for the two-value ``[start, step]`` form. Only ``time[0]``,
+    ``time[-1]`` and HDF5 metadata are read. ``(None, n_times)`` when the time
+    vector is unusable; never raises.
+    """
+    n_times = snirf_n_times_from_fileobj(fileobj)
+    if h5py is None or not n_times:
+        return None, n_times
+    try:
+        with h5py.File(fileobj, "r") as h5:
+            nirs = next(h5[k] for k in h5 if k.startswith("nirs"))
+            data = next(nirs[k] for k in nirs if k.startswith("data"))
+            time = data["time"]
+            n = int(time.shape[0])
+            if n == 2 and n_times != 2:
+                step = float(time[1])
+                return (1.0 / step if step > 0 else None), n_times
+            span = float(time[n - 1]) - float(time[0])
+            return ((n - 1) / span if n > 1 and span > 0 else None), n_times
+    except (OSError, ValueError, KeyError, StopIteration, TypeError) as e:
+        logger.debug("SNIRF time vector unreadable: %s", e)
+        return None, n_times
+
+
 def _parse_snirf_with_h5py(snirf_path: Path) -> dict[str, Any] | None:
     """Fallback SNIRF parser using h5py directly.
 

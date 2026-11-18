@@ -18,16 +18,17 @@ from mne_bids import BIDSPath, write_raw_bids
 
 import eegdash.api
 import eegdash.corpus as corpus_mod
+import eegdash.corpus_recipes as recipes_mod
 from eegdash.corpus import EEGDashCorpus
 from eegdash.corpus_convert import (
     Bank,
-    Recipe,
     Shard,
     convert_shard,
     is_local_id,
     plan_shards,
     sample_offsets,
 )
+from eegdash.corpus_recipes import RECIPES, Recipe
 
 NAMES = ["Fp1", "Fp2", "Cz", "Pz", "O1", "O2"]
 SORTED = sorted(NAMES)
@@ -111,8 +112,30 @@ def test_bank_names(bank):
     assert cap.resolve(["A1", "A2"])[1] == ["A1"]  # two: the earlobes
 
 
+def test_recipes_are_written_out_in_one_place(capsys):
+    with pytest.raises(TypeError):
+        Recipe()  # no default values: a recipe states every number
+    assert all(name == r.name for name, r in RECIPES.items())
+    reve = RECIPES["reve"].to_dict()
+    assert reve == {
+        "name": "reve",
+        "version": 1,
+        "sfreq": 200,
+        "l_freq": 0.5,
+        "h_freq": 99.5,
+        "h_freq_max_ratio": 0.45,
+        "resample_method": "polyphase",
+        "window": 2000,
+        "min_channels": 3,
+        "units": "uV",
+        "refused": sorted(recipes_mod.HELD_OUT),
+    }
+    assert recipes_mod.main() == 0
+    assert json.loads(capsys.readouterr().out) == {"reve": reve}
+
+
 def test_benchmark_sources_are_refused(tmp_path, bank):
-    recipe = Recipe()
+    recipe = RECIPES["reve"]
     assert recipe.refuses("ds004362") and recipe.refuses("on004362")
     assert recipe.refuses("nm000110") and not recipe.refuses("ds004840")
     with pytest.raises(ValueError, match="benchmark source"):

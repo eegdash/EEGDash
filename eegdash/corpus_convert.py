@@ -26,8 +26,8 @@ A group ``<g>`` is one channel set: every session of the shard whose resolved
 channels are the same, names sorted. Signals are microvolts and are not
 normalised; the per-session statistics are for the loader.
 
-The :class:`Recipe` named ``reve`` is the one of the REVE paper (section
-3.1.1): EEG channels with a known 3-D position, band-pass 0.5-99.5 Hz,
+The recipes are defined in :mod:`eegdash.corpus_recipes`, and nowhere else. The
+one named ``reve`` is that of the REVE paper (section 3.1.1): EEG channels with a known 3-D position, band-pass 0.5-99.5 Hz,
 resampled to 200 Hz, cut into samples of 2000 timesteps, recordings of 10 s or
 less dropped. ``zarr`` is needed to write a part and is imported only then.
 """
@@ -40,28 +40,16 @@ import re
 import shutil
 import time
 from collections import Counter
-from dataclasses import asdict, dataclass, field
+from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any, Sequence
 
 import numpy as np
 import pandas as pd
 
+from .corpus_recipes import HELD_OUT, RECIPES, Recipe, get_recipe
 from .logging import logger
 
-# OpenEEGBench sources in the catalogue: BCIC-IV-2a, PhysioNet-MI, FACED, Mumtaz,
-# Zyma, CHB-MIT, BCIC-2020-3. A model scored on them must not be pretrained on them.
-HELD_OUT = frozenset(
-    {
-        "nm000139",
-        "ds004362",
-        "nm000112",
-        "nm000114",
-        "nm000109",
-        "nm000110",
-        "nm000113",
-    }
-)
 PART_STORE = "samples.zarr"
 SHARD_SAMPLES = 128  # samples per Zarr shard file: about 130 MB at 129 channels
 DEFAULT_SHARD_BYTES = 20 * 1024**3  # raw bytes of one shard
@@ -99,68 +87,6 @@ NON_EEG_RE = re.compile(
 # A modality prefix some EDF writers put on every label: "EEG Fp1", "EEG-Cz".
 EEG_PREFIX_RE = re.compile(r"^EEG[\s_-]+", re.IGNORECASE)
 ENTITY_RE = re.compile(r"(?:^|_)(sub|ses)-([^_]+)")
-
-
-# ---------------------------------------------------------------------- recipe
-
-
-@dataclass(frozen=True)
-class Recipe:
-    """The preprocessing a part was converted with; written into every part.
-
-    Parameters
-    ----------
-    name, version : str, int
-        What a store is checked against before parts are merged into it.
-    sfreq : int
-        Sampling rate of the samples, Hz. A slower recording is skipped.
-    l_freq, h_freq : float
-        Band-pass edges, Hz; the upper one is lowered to 0.45 of a recording's
-        own rate when that is below it.
-    window : int
-        Timesteps per sample. A recording of *window* timesteps or fewer after
-        resampling is skipped.
-    min_channels : int
-        A recording with fewer channels of known position is skipped.
-    units : str
-        Unit of the stored signal.
-    refused : frozenset of str
-        Dataset ids never converted: the benchmark's own sources.
-
-    """
-
-    name: str = "reve"
-    version: int = 1
-    sfreq: int = 200
-    l_freq: float = 0.5
-    h_freq: float = 99.5
-    window: int = 2000
-    min_channels: int = 3
-    units: str = "uV"
-    refused: frozenset[str] = HELD_OUT
-
-    def refuses(self, dataset_id: str) -> bool:
-        """Whether *dataset_id*, or the same dataset under its other archive id, is refused."""
-        ids = {dataset_id}
-        if re.fullmatch(r"(ds|on)\d+", dataset_id):
-            ids |= {"ds" + dataset_id[2:], "on" + dataset_id[2:]}
-        return bool(ids & self.refused)
-
-    def to_dict(self) -> dict[str, Any]:
-        """The recipe as JSON-ready values."""
-        return {**asdict(self), "refused": sorted(self.refused)}
-
-
-RECIPES: dict[str, Recipe] = {"reve": Recipe()}
-
-
-def get_recipe(recipe: str | Recipe) -> Recipe:
-    """A :class:`Recipe`, by name or as given."""
-    if isinstance(recipe, Recipe):
-        return recipe
-    if recipe not in RECIPES:
-        raise ValueError(f"unknown recipe {recipe!r}: {sorted(RECIPES)}")
-    return RECIPES[recipe]
 
 
 def is_local_id(dataset_id: str) -> bool:
@@ -544,10 +470,15 @@ def preprocess_recording(
         raw.set_channel_types({n: "eeg" for n in raw.ch_names}, verbose="ERROR")
     jobs = filter_jobs(len(raw.ch_names) * raw.n_times * 8, n_jobs)  # float64
     raw.filter(
-        recipe.l_freq, min(recipe.h_freq, 0.45 * sfreq), n_jobs=jobs, verbose="ERROR"
+        recipe.l_freq,
+        min(recipe.h_freq, recipe.h_freq_max_ratio * sfreq),
+        n_jobs=jobs,
+        verbose="ERROR",
     )
     if abs(sfreq - recipe.sfreq) > 1e-6:
-        raw.resample(recipe.sfreq, method="polyphase", n_jobs=jobs, verbose="ERROR")
+        raw.resample(
+            recipe.sfreq, method=recipe.resample_method, n_jobs=jobs, verbose="ERROR"
+        )
     order = np.argsort(canonical)
     data = raw.get_data(units=recipe.units)[order].T  # (T, C)
     return Prepared(

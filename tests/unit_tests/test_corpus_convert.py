@@ -18,12 +18,16 @@ from mne_bids import BIDSPath, write_raw_bids
 
 import eegdash.api
 import eegdash.corpus as corpus_mod
+import eegdash.corpus_convert as convert_mod
 import eegdash.corpus_recipes as recipes_mod
+import eegdash.local_bids
+from eegdash import EEGDashDataset
 from eegdash.corpus import EEGDashCorpus
 from eegdash.corpus_convert import (
     Bank,
     Shard,
     convert_shard,
+    discover_records,
     is_local_id,
     keep_listed,
     plan_shards,
@@ -249,6 +253,70 @@ def test_a_file_the_list_does_not_name_is_not_converted(tmp_path, bank):
     assert summary["n_records_seen"] == 2 and summary["n_sessions"] == 1
     sessions = _open(tmp_path / "part")["0"].attrs["sessions"]
     assert [s["file"] for s in sessions] == [one]
+
+
+def test_a_shard_lists_its_own_subjects_and_reads_them_as_the_offline_mode_does(
+    tmp_path, monkeypatch
+):
+    root = _tree(tmp_path / "cache" / "ds000003")
+    (root / "sourcedata" / "sub-01" / "eeg").mkdir(parents=True)
+    (root / "sourcedata" / "sub-01" / "eeg" / "sub-01_task-rest_eeg.set").write_text("")
+    offline = EEGDashDataset(
+        cache_dir=str(root.parent), dataset="ds000003", download=False, subject=["01"]
+    ).datasets
+    offline = sorted(
+        (r for r in offline if r.record["bids_relpath"].startswith("sub-")),
+        key=lambda r: r.record["bids_relpath"],
+    )
+    # the whole-dataset walk is not used: a shard lists its subject folders only
+    monkeypatch.setattr(eegdash.local_bids, "find_matching_paths", _refuse)
+    recs = discover_records(root.parent, "ds000003", ["01"])
+    assert [r.record["bids_relpath"] for r in recs] == [
+        "sub-01/eeg/sub-01_task-rest_run-1_eeg.set",
+        "sub-01/eeg/sub-01_task-rest_run-2_eeg.set",
+    ]
+    filled = {"digested_at", "sampling_frequency", "nchans", "ntimes", "ch_names"}
+    for mine, theirs in zip(recs, offline, strict=True):
+        assert {k: v for k, v in mine.record.items() if k not in filled} == {
+            k: v for k, v in theirs.record.items() if k not in filled
+        }
+        keys = ("subject", "session", "run", "task")
+        assert [mine.description.get(k) for k in keys] == [
+            theirs.description.get(k) for k in keys
+        ]
+        assert mine.raw.ch_names == theirs.raw.ch_names
+        np.testing.assert_array_equal(mine.raw.get_data(), theirs.raw.get_data())
+    assert discover_records(root.parent, "ds000003", ["09"]) == []
+    assert len(discover_records(root.parent, "ds000003", None)) == 4
+
+
+def test_a_loaded_recording_is_released_and_a_listed_one_not_on_disk_is_reported(
+    tmp_path, bank, monkeypatch
+):
+    pytest.importorskip("zarr")
+    root = tmp_path / "cache" / "ds000004"
+    _recording(root, "01")
+    _recording(root, "01", run=2)
+    _recording(root, "02")
+    held = []
+
+    def keeping(*args):
+        held.extend(discover_records(*args))
+        return list(held)
+
+    monkeypatch.setattr(convert_mod, "discover_records", keeping)
+    listed = {
+        "sub-01/eeg/sub-01_task-rest_run-1_eeg.set",
+        "sub-01/eeg/sub-01_task-rest_run-2_eeg.set",
+        "sub-01/eeg/sub-01_task-rest_run-3_eeg.set",  # never fetched
+        "sub-02/eeg/sub-02_task-rest_run-1_eeg.set",  # another shard's
+    }
+    summary = convert_shard(
+        "ds000004", ["01"], root, tmp_path / "part", bank=bank, files=listed
+    )
+    assert summary["n_sessions"] == 2 and summary["n_records_seen"] == 2
+    assert summary["skipped_by_reason"] == {"not_on_disk": 1}
+    assert len(held) == 2 and all(rec._raw is None for rec in held)
 
 
 def test_convert_passes_the_manifests_recordings(cache, tmp_path, monkeypatch):

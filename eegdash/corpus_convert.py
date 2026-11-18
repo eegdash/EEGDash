@@ -57,6 +57,8 @@ DEFAULT_SHARD_BYTES = 20 * 1024**3  # raw bytes of one shard
 LOCAL_ID_RE = re.compile(r"[a-z][a-z0-9]*(-[a-z][a-z0-9]*)*-\d[a-z0-9.]*")
 # Data files; .eeg, .fdt and .vmrk are companions.
 PRIMARY_EXT = (".set", ".vhdr", ".edf", ".bdf", ".fif", ".gdf", ".cnt")
+# the datatype folders and suffixes EEGDash's offline discovery reads by default
+DATATYPES = ("eeg", "meg", "ieeg", "nirs", "emg")
 
 BIOSEMI_RE = re.compile(r"[A-D]([1-9]|[12]\d|3[0-2])")  # A1..D32
 # E1..E32: the fifth ring of a BioSemi-160 or -256 cap (and GSN's first 32 names)
@@ -762,27 +764,92 @@ def _record_order(rec: Any) -> tuple[str, ...]:
     return (*keys, record_file(rec))
 
 
+def subject_recordings(root: Path, subjects: Sequence[str] | None) -> list[str]:
+    """The recordings on disk under the subject folders of *root*, as paths inside it.
+
+    One listing per subject folder of the shard. EEGDash's offline discovery
+    lists the whole dataset whichever subjects are asked for, three times over:
+    on a parallel file system that is about 17 files a second, half an hour for
+    a dataset of 32,000 files, for every shard, before a recording is read.
+    """
+    from mne_bids.config import ALLOWED_DATATYPE_EXTENSIONS  # noqa: PLC0415
+
+    exts = {e for d in DATATYPES for e in ALLOWED_DATATYPE_EXTENSIONS.get(d, [])}
+    root = Path(root)
+    if subjects:
+        folders = [root / f"sub-{s}" for s in subjects]
+    else:
+        folders = sorted(d for d in root.glob("sub-*") if d.is_dir())
+    found = set()
+    for folder in folders:
+        for datatype in DATATYPES:
+            for path in folder.glob(f"**/{datatype}/*"):
+                suffix = path.name.split(".")[0].rsplit("_", 1)[-1]
+                if suffix in DATATYPES and path.suffix.lower() in exts:
+                    found.add(path.relative_to(root).as_posix())
+    return sorted(found)
+
+
+def _entities(name: str) -> dict[str, str]:
+    """The ``key-value`` entities of a BIDS file name."""
+    pairs = (piece.partition("-") for piece in name.split(".")[0].split("_")[:-1])
+    return {key: value for key, sep, value in pairs if sep}
+
+
 def discover_records(
     cache_dir: Path, folder: str, subjects: Sequence[str] | None
 ) -> list[Any]:
-    """The recordings of a dataset in the cache, offline, in a fixed order."""
-    from .dataset import EEGDashDataset  # noqa: PLC0415 (heavy import)
+    """The recordings of a dataset in the cache, offline, in a fixed order.
 
-    # The offline discovery records paths against the resolved folder: behind a
-    # symbolic link or a relative cache_dir they came out as bare file names.
+    The files are listed per subject (:func:`subject_recordings`) and handed to
+    :class:`~eegdash.EEGDashDataset` as records, the same record its offline
+    discovery builds, so each is read by the same loader.
+    """
+    from .dataset import EEGDashDataset  # noqa: PLC0415 (heavy import)
+    from .schemas import create_record  # noqa: PLC0415
+
+    # resolved: the loader reads sidecars against the real folder
     root = (Path(cache_dir) / folder).resolve()
-    kwargs: dict[str, Any] = dict(
-        cache_dir=str(root.parent), dataset=root.name, download=False, n_jobs=1
+    records = []
+    for rel in subject_recordings(root, subjects):
+        e = _entities(Path(rel).name)
+        records.append(
+            create_record(
+                dataset=root.name,
+                storage_base=str(root),
+                bids_relpath=rel,
+                subject=e.get("sub"),
+                session=e.get("ses"),
+                task=e.get("task"),
+                run=e.get("run"),
+                acquisition=e.get("acq"),
+                dep_keys=[],
+                datatype=Path(rel).parent.name,
+                suffix=Path(rel).name.split(".")[0].rsplit("_", 1)[-1],
+                storage_backend="local",
+            )
+        )
+    if not records:
+        return []
+    dataset = EEGDashDataset(
+        cache_dir=str(root.parent),
+        dataset=root.name,
+        records=records,
+        download=False,
+        n_jobs=1,
     )
-    if subjects:
-        kwargs["subject"] = list(subjects)
-    try:
-        recs = list(EEGDashDataset(**kwargs).datasets)
-    except ValueError as err:  # braindecode: "datasets should not be an empty iterable"
-        if "empty" not in str(err):
-            raise
-        recs = []
-    return sorted(recs, key=_record_order)
+    return sorted(dataset.datasets, key=_record_order)
+
+
+def release(rec: Any) -> None:
+    """Forget the recording a record has loaded.
+
+    An EEGDash record keeps its ``Raw``, and an EEGLAB file that holds its own
+    data is in memory once opened: a shard of 270 such recordings grew by a
+    recording per recording until the job was killed.
+    """
+    if getattr(rec, "_raw", None) is not None:
+        rec._raw = None
 
 
 def keep_listed(
@@ -945,12 +1012,20 @@ def convert_shard(
             f"no recordings found for {dataset} subjects={subjects or 'all'} under {root}"
         )
     recs, skipped = keep_listed(recs, files)
+    n_left_out = len(skipped)
+    if files is not None and subjects:  # a listed recording the disk does not hold
+        on_disk = {record_file(r) for r in recs}
+        mine = tuple(f"sub-{s}/" for s in subjects)
+        skipped += [
+            dict(file=f, reason="not_on_disk", detail="")
+            for f in sorted(files)
+            if f.startswith(mine) and f not in on_disk
+        ]
     if skipped:
         reasons = dict(Counter(s["reason"] for s in skipped))
         logger.warning(
             "%s: %d recording(s) left out: %s", dataset, len(skipped), reasons
         )
-    n_left_out = len(skipped)
     if max_records:
         recs = recs[:max_records]
     logger.info("%s subjects=%s: %d recordings", dataset, subjects or "all", len(recs))
@@ -969,6 +1044,8 @@ def convert_shard(
             )
         except Exception as err:  # keep the shard going; the summary lists it
             res = Skipped("load_error", f"{err.__class__.__name__}: {err}"[:300])
+        finally:
+            release(rec)
         if isinstance(res, Skipped):
             skipped.append(dict(file=file, reason=res.reason, detail=res.detail))
             logger.info(

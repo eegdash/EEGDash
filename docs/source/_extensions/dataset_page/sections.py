@@ -24,6 +24,7 @@ from __future__ import annotations
 import ast
 import html
 import json
+import math
 import re
 import urllib.request  # noqa: F401 -- used by _get_first_eeg_record (urllib.request.Request/urlopen); ruff misses it because the function also does a local `import urllib.parse`
 from collections import Counter
@@ -33,6 +34,7 @@ from typing import Mapping, Sequence
 from sphinx.util import logging
 
 from eegdash.dataset.snapshot import DatasetSnapshot
+from eegdash.schemas import AGE_UNITS_PER_YEAR
 
 from ._constants import (
     _BIDS_FEMALE_KEYS,
@@ -928,6 +930,32 @@ def _is_positive_float(value: object) -> bool:
     return f > 0
 
 
+def _age_axis(ages_years: Sequence[float]) -> tuple[float, int, str]:
+    """Return ``(scale, bucket width, unit)`` for an age histogram.
+
+    Ages arrive in years. Cohorts entirely under two years (infant fNIRS
+    datasets) are drawn in months, one bar per month, instead of a single
+    "0" bar; every other cohort keeps the 5-year bars.
+    """
+    if ages_years and max(ages_years) < 2:
+        return 12.0, 1, "mo"
+    return 1.0, 5, "yr"
+
+
+def _age_bucket_label(start: int, width: int, unit: str) -> str:
+    """Tooltip label of one age bar: ``20-24`` for years, ``3 mo`` for months."""
+    if unit == "yr":
+        return f"{start}-{start + width - 1}"
+    return f"{start} {unit}"
+
+
+def _format_age_range(low: float, high: float, unit: str) -> str:
+    """Age range for a chart caption: whole years, or months to one decimal."""
+    if unit == "yr":
+        return f"{low:.0f}–{high:.0f} yr"
+    return f"{low:.1f}–{high:.1f} {unit}"
+
+
 def _donut_arc(
     pct: float, color: str, offset: float, circumference: float
 ) -> tuple[str, float]:
@@ -1140,21 +1168,28 @@ def _format_recording_stats_section(context: Mapping[str, object]) -> str:
     # A. Age distribution — vertical bars stacked by gender
     # ------------------------------------------------------------------
     participants_rows = context.get("participants_rows") or []
+    # ``participant_tsv`` ages keep the unit of the participants.tsv column;
+    # the dataset document names that unit when it is not years.
+    per_year = AGE_UNITS_PER_YEAR.get(
+        str(demographics.get("participants_age_units") or ""), 1.0
+    )
+    paired_ages: list[tuple[float, str]] = []
+    for p in participants_rows:
+        try:
+            a = float(p.get("age")) / per_year
+        except (TypeError, ValueError):
+            continue
+        if not math.isfinite(a) or a <= 0:
+            continue
+        paired_ages.append((a, str(p.get("sex") or "").strip().lower()))
+    age_scale, bucket_size, age_unit = _age_axis([a for a, _ in paired_ages])
 
     pair_buckets_f: Counter[int] = Counter()
     pair_buckets_m: Counter[int] = Counter()
     pair_buckets_o: Counter[int] = Counter()
-    bucket_size = 5
     paired_age_count = 0
-    for p in participants_rows:
-        try:
-            a = float(p.get("age"))
-        except (TypeError, ValueError):
-            continue
-        if a <= 0:
-            continue
-        sex = str(p.get("sex") or "").strip().lower()
-        bucket_start = int(a // bucket_size) * bucket_size
+    for a, sex in paired_ages:
+        bucket_start = int(a * age_scale // bucket_size) * bucket_size
         if sex in _BIDS_FEMALE_KEYS:
             pair_buckets_f[bucket_start] += 1
         elif sex in _BIDS_MALE_KEYS:
@@ -1176,12 +1211,7 @@ def _format_recording_stats_section(context: Mapping[str, object]) -> str:
         )
         chart_height = 180
 
-        ages_used = [
-            float(p.get("age"))
-            for p in participants_rows
-            if str(p.get("age")) not in ("", "None", "n/a")
-            and _is_positive_float(p.get("age"))
-        ]
+        ages_used = [a for a, _ in paired_ages]
         age_min_v = min(ages_used) if ages_used else 0
         age_max_v = max(ages_used) if ages_used else 0
 
@@ -1192,6 +1222,7 @@ def _format_recording_stats_section(context: Mapping[str, object]) -> str:
             m = pair_buckets_m.get(start, 0)
             o = pair_buckets_o.get(start, 0)
             tot = f + m + o
+            bucket_label = _age_bucket_label(start, bucket_size, age_unit)
             col_pieces = ""
             # Stack bottom→top: Male orange, Female blue, Other grey
             if o:
@@ -1199,7 +1230,7 @@ def _format_recording_stats_section(context: Mapping[str, object]) -> str:
                 col_pieces += (
                     f'<div style="width:100%; height:{h}px; '
                     f'background:#6b7785; flex-shrink:0;" '
-                    f'title="{start}-{start + bucket_size - 1}: other n={o}">'
+                    f'title="{bucket_label}: other n={o}">'
                     "</div>"
                 )
             if f:
@@ -1207,7 +1238,7 @@ def _format_recording_stats_section(context: Mapping[str, object]) -> str:
                 col_pieces += (
                     f'<div style="width:100%; height:{h}px; '
                     f'background:#006ca3; flex-shrink:0;" '
-                    f'title="{start}-{start + bucket_size - 1}: female n={f}">'
+                    f'title="{bucket_label}: female n={f}">'
                     "</div>"
                 )
             if m:
@@ -1215,14 +1246,14 @@ def _format_recording_stats_section(context: Mapping[str, object]) -> str:
                 col_pieces += (
                     f'<div style="width:100%; height:{h}px; '
                     f'background:#f7941d; flex-shrink:0;" '
-                    f'title="{start}-{start + bucket_size - 1}: male n={m}">'
+                    f'title="{bucket_label}: male n={m}">'
                     "</div>"
                 )
             bars_html += (
                 f'<div style="display:flex; flex-direction:column-reverse; '
                 f"justify-content:flex-start; gap:1px; flex:1 1 0; "
                 f'min-width:0;" '
-                f'title="{start}-{start + bucket_size - 1}: n={tot}">'
+                f'title="{bucket_label}: n={tot}">'
                 f"{col_pieces}"
                 "</div>"
             )
@@ -1266,16 +1297,21 @@ def _format_recording_stats_section(context: Mapping[str, object]) -> str:
         age_mean_v = demographics.get("age_mean")
         try:
             mean_str = (
-                f", mean {float(age_mean_v):.1f} yr" if age_mean_v is not None else ""
+                f", mean {float(age_mean_v) * age_scale:.1f} {age_unit}"
+                if age_mean_v is not None
+                else ""
             )
         except (TypeError, ValueError):
             mean_str = ""
+        range_str = _format_age_range(
+            age_min_v * age_scale, age_max_v * age_scale, age_unit
+        )
 
         age_html = (
             ".. raw:: html\n\n"
             '   <div class="eegdash-stats-section" style="margin-bottom:1rem;">\n'
             "     <p><strong>Age distribution by gender</strong> "
-            f"(n={paired_age_count}, range {age_min_v:.0f}–{age_max_v:.0f} yr"
+            f"(n={paired_age_count}, range {range_str}"
             f"{mean_str})</p>\n"
             f'     <div class="eeg-chart-row" style="display:flex; align-items:flex-end; '
             f'gap:2px; height:{chart_height}px; border-bottom:1px solid #34404e;">\n'
@@ -1294,10 +1330,12 @@ def _format_recording_stats_section(context: Mapping[str, object]) -> str:
         # demographics aren't available.
         valid_ages = [float(a) for a in ages if a is not None]
         if valid_ages:
+            age_scale, bucket_size, age_unit = _age_axis(valid_ages)
             age_min = min(valid_ages)
             age_max = max(valid_ages)
             buckets: Counter[int] = Counter(
-                int(float(a) // bucket_size) * bucket_size for a in valid_ages
+                int(float(a) * age_scale // bucket_size) * bucket_size
+                for a in valid_ages
             )
             max_count = max(buckets.values())
             chart_height = 180
@@ -1306,10 +1344,11 @@ def _format_recording_stats_section(context: Mapping[str, object]) -> str:
             for start in sorted(buckets):
                 count = buckets[start]
                 h = int(count / max_count * chart_height)
+                bucket_label = _age_bucket_label(start, bucket_size, age_unit)
                 bars_html += (
                     f'<div style="flex:1 1 0; min-width:0; '
                     f'height:{h}px; background:#006ca3;" '
-                    f'title="{start}-{start + bucket_size - 1}: {count}"></div>'
+                    f'title="{bucket_label}: {count}"></div>'
                 )
                 labels_html += (
                     f'<span style="flex:1 1 0; min-width:0; '
@@ -1319,15 +1358,20 @@ def _format_recording_stats_section(context: Mapping[str, object]) -> str:
             mean_v = demographics.get("age_mean")
             try:
                 mean_str = (
-                    f", mean {float(mean_v):.1f} yr" if mean_v is not None else ""
+                    f", mean {float(mean_v) * age_scale:.1f} {age_unit}"
+                    if mean_v is not None
+                    else ""
                 )
             except (TypeError, ValueError):
                 mean_str = ""
+            range_str = _format_age_range(
+                age_min * age_scale, age_max * age_scale, age_unit
+            )
             age_html = (
                 ".. raw:: html\n\n"
                 '   <div class="eegdash-stats-section" style="margin-bottom:1rem;">\n'
                 "     <p><strong>Age distribution</strong> "
-                f"(n={len(valid_ages)}, range {age_min:.0f}–{age_max:.0f} yr"
+                f"(n={len(valid_ages)}, range {range_str}"
                 f"{mean_str} · sex per subject not reported)</p>\n"
                 f'     <div class="eeg-chart-row" style="display:flex; align-items:flex-end; '
                 f'gap:2px; height:{chart_height}px; border-bottom:1px solid #34404e;">\n'

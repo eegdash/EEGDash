@@ -119,21 +119,31 @@ def _funding_lines(funding) -> list[str]:
     return out
 
 
-_PAPER_RELATIONS = {"IsSupplementTo", "IsDescribedBy", "References"}
+# DataCite relations that name the paper describing the dataset, in order of
+# preference. "References" is not one: a dataset references methods, toolbox
+# or preprint papers too, and a page should show no paper rather than those.
+_PAPER_RELATIONS = ("IsDescribedBy", "IsSupplementTo")
 
 
 def _paper_doi(related) -> str | None:
-    """Return the first paper DOI; skips entries without an explicit relation_type to avoid conflating dataset and paper DOIs."""
+    """Return the DOI of the paper that describes the dataset, or None.
+
+    Takes the first DOI related as ``IsDescribedBy``, else the first as
+    ``IsSupplementTo``, whatever their order in the list. Entries without an
+    explicit relation_type are skipped, so dataset and paper DOIs are not
+    conflated.
+    """
+    dois: dict[str, list[str]] = {rel: [] for rel in _PAPER_RELATIONS}
     for r in related or []:
         if not isinstance(r, dict) or (r.get("identifier_type") or "").upper() != "DOI":
             continue
         rel = (r.get("relation_type") or "").strip()
-        if rel not in _PAPER_RELATIONS:
-            continue
         doi = (r.get("identifier") or "").strip()
-        if doi:
-            return doi.replace("https://doi.org/", "").replace("http://doi.org/", "")
-    return None
+        if rel in dois and doi:
+            dois[rel].append(
+                doi.replace("https://doi.org/", "").replace("http://doi.org/", "")
+            )
+    return next((found[0] for found in dois.values() if found), None)
 
 
 def _ages(demographics) -> list[int]:

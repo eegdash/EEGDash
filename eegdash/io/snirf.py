@@ -56,7 +56,9 @@ def _validate_nirs_info(info, *args, **kwargs):
         kinds = {types[p] for p in picks}
         names = [info["ch_names"][p] for p in picks]
         if len(picks) and kinds in ({"hbo"}, {"hbr"}) and len(set(names)) == len(names):
-            warn(f"fNIRS data holds a single chromophore ({kinds.pop()}); read without HbO/HbR pairs.")
+            warn(
+                f"fNIRS data holds a single chromophore ({kinds.pop()}); read without HbO/HbR pairs."
+            )
             return picks
         raise
 
@@ -76,7 +78,10 @@ def _processed_hb_only(f):
             ml = group[k]
             if int(np.asarray(ml["dataType"][()]).reshape(-1)[0]) != 99999:
                 return False
-            if "dataTypeLabel" not in ml or _label(ml["dataTypeLabel"]) not in _HB_LABELS:
+            if (
+                "dataTypeLabel" not in ml
+                or _label(ml["dataTypeLabel"]) not in _HB_LABELS
+            ):
                 return False
         return True
     except Exception:
@@ -89,7 +94,9 @@ class _File(h5py.File):
         if str(name).strip("/") == "nirs/probe/wavelengths":
             empty = out is None or (isinstance(out, h5py.Dataset) and out.size == 0)
             if empty and _processed_hb_only(self):
-                warn("SNIRF file has no probe wavelengths (a required field); its HbO/HbR data does not use them.")
+                warn(
+                    "SNIRF file has no probe wavelengths (a required field); its HbO/HbR data does not use them."
+                )
                 return np.array([0, 0])
         return out
 
@@ -121,7 +128,9 @@ def fixes():
     with ExitStack() as stack:
         for name in _orig:
             stack.enter_context(mock.patch.object(_snirf, name, globals()[name]))
-        stack.enter_context(mock.patch.object(_nirs, "_validate_nirs_info", _validate_nirs_info))
+        stack.enter_context(
+            mock.patch.object(_nirs, "_validate_nirs_info", _validate_nirs_info)
+        )
         stack.enter_context(mock.patch.object(h5py, "File", _File))
         stack.enter_context(
             mock.patch.dict(

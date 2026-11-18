@@ -88,3 +88,7 @@ def test_prefix_only_mismatch_is_minor():
     channels = [Channel("emg0", "uV", -5000, 5000)]
     findings = check({"a": (channels, {"emg0": "V"})})
     assert [f.check for f in findings] == ["prefix"]
+
+
+def test_sidecar_units_ignores_a_bom():
+    assert sidecar_units("\ufeffname\ttype\tunits\nCz\tEEG\tuV\n") == {"Cz": "uV"}

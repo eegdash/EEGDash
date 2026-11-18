@@ -26,6 +26,7 @@ import urllib.request
 from collections import Counter, defaultdict
 from concurrent.futures import ThreadPoolExecutor
 from dataclasses import dataclass
+from functools import partial
 from pathlib import Path
 
 import boto3
@@ -70,21 +71,22 @@ def header_size(main: bytes) -> int:
     return 256 * (int(main[252:256]) + 1)
 
 
+def _field(buf: bytes, n: int, offset: int, width: int) -> list[str]:
+    """One signal-header field for all ``n`` channels."""
+    start = 256 + offset * n
+    return [
+        buf[start + width * i : start + width * (i + 1)].decode("latin-1").strip()
+        for i in range(n)
+    ]
+
+
 def parse_header(buf: bytes) -> list[Channel]:
     """Channels of an EDF/BDF header (main and signal headers)."""
     n = int(buf[252:256])
-
-    def field(offset, width):
-        start = 256 + offset * n
-        return [
-            buf[start + width * i : start + width * (i + 1)].decode("latin-1").strip()
-            for i in range(n)
-        ]
-
     # Signal header fields: label 16, transducer 80, dimension 8, then
     # physical min 8 and max 8.
-    names, units = field(0, 16), field(96, 8)
-    pmin, pmax = field(104, 8), field(112, 8)
+    names, units = _field(buf, n, 0, 16), _field(buf, n, 96, 8)
+    pmin, pmax = _field(buf, n, 104, 8), _field(buf, n, 112, 8)
     return [
         Channel(names[i], units[i], float(pmin[i]), float(pmax[i])) for i in range(n)
     ]
@@ -92,7 +94,8 @@ def parse_header(buf: bytes) -> list[Channel]:
 
 def sidecar_units(tsv: str) -> dict[str, str]:
     """``name -> units`` from a ``channels.tsv``."""
-    rows = csv.DictReader(io.StringIO(tsv), delimiter="\t")
+    # MOABB-built deposits write channels.tsv with a UTF-8 BOM.
+    rows = csv.DictReader(io.StringIO(tsv.removeprefix("\ufeff")), delimiter="\t")
     return {row["name"]: row.get("units", "n/a") for row in rows}
 
 
@@ -223,33 +226,36 @@ def nemar_files(dataset_id: str) -> list[str]:
     return paths
 
 
-def read_nemar(dataset_id: str, max_per_subject: int | None = None, workers: int = 32):
-    """Same as :func:`read_local` for a NEMAR dataset, from header byte ranges."""
+def _fetch(s3, dataset_id: str, key: str, start: int, stop: int) -> bytes:
+    rng = f"bytes={start}-{stop - 1}"
+    return s3.get_object(Bucket="nemar", Key=f"{dataset_id}/objects/{key}", Range=rng)[
+        "Body"
+    ].read()
+
+
+def _read_one(s3, dataset_id: str, path: str):
+    """``path -> (header channels, channels.tsv units)`` from header byte ranges."""
     # Lazy: the local check does not need eegdash's reader stack.
     from eegdash.dataset.base import _resolve_nemar_pointer  # noqa: PLC0415
 
+    key, _ = _resolve_nemar_pointer(dataset_id, path)
+    main = _fetch(s3, dataset_id, key, 0, 256)
+    buf = main + _fetch(s3, dataset_id, key, 256, header_size(main))
+    annex, raw = _resolve_nemar_pointer(dataset_id, _sidecar_path(path))
+    sidecar = {} if annex else sidecar_units(raw.decode("utf-8"))
+    return path, (parse_header(buf), sidecar)
+
+
+def read_nemar(dataset_id: str, max_per_subject: int | None = None, workers: int = 32):
+    """Same as :func:`read_local` for a NEMAR dataset, from header byte ranges."""
     s3 = boto3.client(
         "s3", config=Config(signature_version=UNSIGNED, max_pool_connections=workers)
     )
     files = nemar_files(dataset_id)
     paths = _pick([p for p in files if p.endswith(EXTENSIONS)], max_per_subject)
 
-    def fetch(key, start, stop):
-        rng = f"bytes={start}-{stop - 1}"
-        return s3.get_object(
-            Bucket="nemar", Key=f"{dataset_id}/objects/{key}", Range=rng
-        )["Body"].read()
-
-    def one(path):
-        key, _ = _resolve_nemar_pointer(dataset_id, path)
-        main = fetch(key, 0, 256)
-        buf = main + fetch(key, 256, header_size(main))
-        annex, raw = _resolve_nemar_pointer(dataset_id, _sidecar_path(path))
-        sidecar = {} if annex else sidecar_units(raw.decode("utf-8"))
-        return path, (parse_header(buf), sidecar)
-
     with ThreadPoolExecutor(workers) as pool:
-        return dict(pool.map(one, paths))
+        return dict(pool.map(partial(_read_one, s3, dataset_id), paths))
 
 
 def main(argv=None):

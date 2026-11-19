@@ -492,6 +492,19 @@ def test_cli(tmp_path, archive, s3, monkeypatch, capsys):
     assert corpus_mod.main(["status", "ds1", "--cache-dir", cache]) == 0
 
 
+def test_cli_takes_a_list_of_ids_longer_than_a_file_name(tmp_path, capsys):
+    """75 ids on the command line were tested as one file name: ``File name too long``."""
+    ids = [f"ds{k:06d}" for k in range(75)]
+    assert len(",".join(ids)) > 255
+    assert corpus_mod._source(",".join(ids)) == ids
+    assert corpus_mod.main(["status", ",".join(ids), "--cache-dir", str(tmp_path)]) == 1
+    assert "status: 75 datasets" in capsys.readouterr().out
+    assert corpus_mod._source("eegdash-corpus-v0") == "eegdash-corpus-v0"
+    table = tmp_path / "c.csv"
+    table.write_text("dataset_id\nds1\n")
+    assert corpus_mod._source(str(table)) == str(table)
+
+
 def test_relative_cache_dir(tmp_path, archive, s3, monkeypatch):
     """EEGDASH_CACHE_DIR defaults to a relative ./.eegdash_cache."""
     monkeypatch.chdir(tmp_path)

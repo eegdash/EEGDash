@@ -785,6 +785,19 @@ class EEGDashCorpus:
         return ConvertReport(reps, time.monotonic() - t0)
 
 
+def _source(arg: str) -> str | list[str]:
+    """The command line's corpus: a name or a table's path as it is, else the ids of ``a,b,c``.
+
+    A long list of ids is not a file name, and asking the file system about one
+    raises ``ENAMETOOLONG`` above 255 bytes (75 ids, 2026-11-19).
+    """
+    try:
+        known = (_CORPORA / f"{arg}.csv").is_file() or Path(arg).is_file()
+    except OSError:
+        known = False
+    return arg if known else arg.split(",")
+
+
 def main(argv: Sequence[str] | None = None) -> int:
     parser = argparse.ArgumentParser(
         prog="python -m eegdash.corpus",
@@ -827,11 +840,7 @@ def main(argv: Sequence[str] | None = None) -> int:
         help="convert: also a dataset whose files were not all verified (refused by default)",
     )
     args = parser.parse_args(argv)
-    named = (_CORPORA / f"{args.corpus}.csv").is_file()
-    source = (
-        args.corpus if named or Path(args.corpus).is_file() else args.corpus.split(",")
-    )
-    corpus = EEGDashCorpus(source, cache_dir=args.cache_dir)
+    corpus = EEGDashCorpus(_source(args.corpus), cache_dir=args.cache_dir)
     max_bytes = int(args.max_gb * 1024**3) if args.max_gb else DEFAULT_SHARD_BYTES
     if args.command == "shards":
         shards = corpus.shards(max_bytes=max_bytes)

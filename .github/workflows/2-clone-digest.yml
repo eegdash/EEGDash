@@ -147,9 +147,10 @@ jobs:
         if: always() && steps.changed.outputs.changed == 'true'
         run: |
           if [ -d "eegdash-dataset-listings/digested" ] && [ "$(ls -A eegdash-dataset-listings/digested 2>/dev/null)" ]; then
+            # Not --strict: the check reads every digested dataset, so a
+            # data-quality warning on another source's dataset would fail this one.
             python eegdash/scripts/ingestions/4_validate_output.py \
-              --input eegdash-dataset-listings/digested \
-              --strict
+              --input eegdash-dataset-listings/digested
           else
             echo "No digested datasets to validate"
           fi

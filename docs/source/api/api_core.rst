@@ -172,7 +172,10 @@ The API is organized into focused modules that handle specific aspects of EEG da
 * :mod:`~eegdash.schemas` - Schema definitions (``Dataset``, ``Record`` TypedDicts)
 * :mod:`~eegdash.http_api_client` - HTTP REST API client for database operations
 * :mod:`~eegdash.downloader` - S3 and HTTPS download utilities
-* :mod:`~eegdash.corpus` - ``EEGDashCorpus``: plan, download, verify and report a list of datasets
+* :mod:`~eegdash.corpus` - ``EEGDashCorpus``: plan, download, verify, convert and report a list of datasets
+* :mod:`~eegdash.corpus_convert` - The conversion of a corpus into training samples: the position bank, one part per shard
+* :mod:`~eegdash.corpus_recipes` - The recipes a corpus can be converted with, each written out in full: ``Recipe``, ``RECIPES``
+* :mod:`~eegdash.corpus_merge` - Merge converted parts into one store, or extend a finished store with them
 * :mod:`~eegdash.bids_metadata` - BIDS-compliant metadata handling
 * :mod:`~eegdash.const` - Constants and configuration defaults
 * :mod:`~eegdash.paths` - File system and storage path management
@@ -205,6 +208,9 @@ API Reference
    http_api_client
    downloader
    corpus
+   corpus_convert
+   corpus_merge
+   corpus_recipes
    bids_metadata
    const
    logging

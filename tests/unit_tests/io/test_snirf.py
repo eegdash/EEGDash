@@ -142,7 +142,9 @@ def _write_processed_snirf(path, *, labels=("HbO", "HbR"), wavelengths=(760.0, 8
         for key, value in meta.items():
             f.create_dataset(f"nirs/metaDataTags/{key}", data=value)
         if wavelengths is not None:
-            f.create_dataset("nirs/probe/wavelengths", data=np.array(wavelengths, dtype=float))
+            f.create_dataset(
+                "nirs/probe/wavelengths", data=np.array(wavelengths, dtype=float)
+            )
         f.create_dataset("nirs/probe/sourcePos3D", data=[[0.0, 80.0, 0.0]])
         f.create_dataset("nirs/probe/detectorPos3D", data=[[30.0, 80.0, 0.0]])
         data = np.arange(N_TIMES * n_ch, dtype=float).reshape(N_TIMES, n_ch) + 1
@@ -161,7 +163,9 @@ def _write_processed_snirf(path, *, labels=("HbO", "HbR"), wavelengths=(760.0, 8
 
 def test_snirf_single_chromophore(tmp_path):
     """MNE requires HbO/HbR pairs in Raw constructor; single-chromophore files read under tolerant."""
-    fname = _write_processed_snirf(tmp_path / "single_hbo.snirf", labels=("HbO",), wavelengths=(760.0, 850.0))
+    fname = _write_processed_snirf(
+        tmp_path / "single_hbo.snirf", labels=("HbO",), wavelengths=(760.0, 850.0)
+    )
     with pytest.raises(ValueError, match="At least two chromophore"):
         mne.io.read_raw_snirf(fname)
     raw = read_raw_snirf(fname)
@@ -173,7 +177,11 @@ def test_snirf_single_chromophore(tmp_path):
 def test_snirf_processed_missing_wavelengths(tmp_path):
     """Processed HbO/HbR files lacking probe wavelengths read cleanly under tolerant."""
     for case, wl in [("absent", None), ("empty", [])]:
-        fname = _write_processed_snirf(tmp_path / f"no_wavelengths_{case}.snirf", labels=("HbO", "HbR"), wavelengths=wl)
+        fname = _write_processed_snirf(
+            tmp_path / f"no_wavelengths_{case}.snirf",
+            labels=("HbO", "HbR"),
+            wavelengths=wl,
+        )
         with pytest.raises((RuntimeError, TypeError)):
             mne.io.read_raw_snirf(fname)
         raw = read_raw_snirf(fname)

@@ -17,17 +17,22 @@ the cache against it, and a report::
     for raw in corpus.records(): ...     # every recording, offline
     corpus.shards()                      # the parts a conversion writes
     corpus.convert("/data/out", shard=3, n_shards=64)  # this process's parts
+    corpus.merge("/data/out", "my-corpus", base="eegdash-corpus-v0.zarr")
 
 Command line: ``python -m eegdash.corpus plan|download|verify|status|shards|
-convert <name, csv or a,b,c> [--cache-dir ...]``; exit code 1 when anything is
-missing.
+convert|merge <name, csv or a,b,c> [--cache-dir ...]``; exit code 1 when
+anything is missing (``merge --out OUT --name NAME [--base STORE.zarr]``: 1
+when the merge is refused). ``python -m eegdash.corpus files <local-id>
+--out FILE.csv`` writes a local dataset's file list.
 
 A dataset id of the form ``<name>-<version>`` (``tdbrain-3.1``) is a local
 dataset: one the catalogue does not serve, such as a gated one obtained under
 its own terms. Its BIDS tree is read from ``<cache_dir>/<id>/`` (a symbolic
-link will do); it is never queried, downloaded or written to. When
-``corpora/files/<id>.csv`` (``path,size,sha256``) exists, the tree is checked
-against it.
+link will do); it is never queried, downloaded or written to. It is checked
+against a file list (``path,size,sha256``, written by :func:`write_file_list`):
+the packaged ``corpora/files/<id>.csv`` when there is one, else
+``<cache_dir>/<id>.files.csv`` beside the tree; without either, its
+recordings are listed and checked for presence only.
 
 Per dataset the cache holds ``<dataset>/.eegdash/manifest.jsonl`` (a header,
 then one line per expected file: path, kind, size, key, required, state) and
@@ -42,6 +47,7 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
+import os
 import sys
 import time
 import uuid
@@ -69,7 +75,9 @@ from .corpus_convert import (
     local_subjects,
     plan_shards,
     shard_report,
+    write_csv,
 )
+from .corpus_merge import MergeReport, merge_parts
 from .dataset._source_inference import nemar_twin_of
 from .logging import logger
 from .paths import get_default_cache_dir
@@ -178,9 +186,58 @@ def _check(root: Path, entry: dict, level: str) -> None:
     # download_all raises for a missing one (_require_data_file), so download reports it.
 
 
+def _sha256(path: Path) -> str:
+    """The SHA-256 of a file, read in chunks of 1 MiB."""
+    h = hashlib.sha256()
+    with open(path, "rb") as f:
+        while chunk := f.read(1024 * 1024):
+            h.update(chunk)
+    return h.hexdigest()
+
+
+def write_file_list(root: str | Path, out: str | Path, *, n_jobs: int = 8) -> int:
+    """Write the file list of a tree, ``path,size,sha256``, the list a local dataset is checked against.
+
+    Every regular file under *root* (a symbolic link to the tree is followed;
+    a file or folder whose name starts with ``.`` is left out), sorted by
+    path, hashed *n_jobs* at a time. Nothing is written inside *root*.
+
+    Returns
+    -------
+    int
+        The number of files listed.
+
+    """
+    root, out = Path(root).resolve(), Path(out)
+    if not root.is_dir():
+        raise ValueError(f"{root}: not a folder")
+    if out.resolve().is_relative_to(root):
+        raise ValueError(f"{out}: the file list must not be written inside {root}")
+    paths = []
+    for dirpath, dirnames, filenames in os.walk(root):
+        dirnames[:] = [d for d in dirnames if not d.startswith(".")]
+        paths += [
+            Path(dirpath, f)
+            for f in filenames
+            if not f.startswith(".") and Path(dirpath, f).is_file()
+        ]
+    paths.sort(key=lambda p: p.relative_to(root).as_posix())
+    with ThreadPoolExecutor(max_workers=max(1, n_jobs)) as pool:
+        digests = list(pool.map(_sha256, paths))
+    rows = [
+        {"path": p.relative_to(root).as_posix(), "size": p.stat().st_size, "sha256": d}
+        for p, d in zip(paths, digests)
+    ]
+    out.parent.mkdir(parents=True, exist_ok=True)
+    write_csv(out, rows, ["path", "size", "sha256"])
+    return len(rows)
+
+
 def _local_files(dsid: str, root: Path) -> dict[str, dict]:
-    """The expected files of a local dataset: its shipped file list, else its recordings."""
+    """The expected files of a local dataset: its file list, packaged or beside the tree, else its recordings."""
     listing = _CORPORA / "files" / f"{dsid}.csv"
+    if not listing.is_file():
+        listing = root.parent / f"{dsid}.files.csv"
     if listing.is_file():
         rows = pd.read_csv(listing, dtype=str, keep_default_na=False)
         out = {}
@@ -784,6 +841,66 @@ class EEGDashCorpus:
             reps.append(shard_report(part, "converted", summary))
         return ConvertReport(reps, time.monotonic() - t0)
 
+    # -- merge ------------------------------------------------------------
+
+    def merge(
+        self,
+        out: str | Path,
+        name: str,
+        *,
+        base: str | Path | None = None,
+        link: str = "hard",
+        max_bytes: int = DEFAULT_SHARD_BYTES,
+        overwrite: bool = False,
+    ) -> MergeReport:
+        """Merge the parts of :meth:`shards` into the store ``<out>/<name>.zarr``.
+
+        Parameters
+        ----------
+        out : str | Path
+            As for :meth:`convert`: the parts are read from ``<out>/parts/``
+            and the store is written to *out*.
+        name : str
+            The store's name.
+        base : str | Path | None
+            A finished store to extend, never written to (see
+            :func:`~eegdash.corpus_merge.merge_parts`).
+        link : {"hard", "symlink", "copy"}
+            How the chunk files enter the store.
+        max_bytes : int
+            As for :meth:`shards`: the value the parts were converted with.
+        overwrite : bool
+            Replace an existing store of that name.
+
+        Returns
+        -------
+        MergeReport
+
+        """
+        parts = [Path(out) / "parts" / s.name for s in self.shards(max_bytes=max_bytes)]
+        missing = [p.name for p in parts if not (p / "_DONE").exists()]
+        if missing:
+            raise ValueError(
+                f"{len(missing)} part(s) without _DONE, convert them first: "
+                f"{', '.join(missing[:5])}"
+            )
+        licences = {}
+        if "licence" in self.table.columns:
+            licences = {
+                d: str(v).strip()
+                for d, v in self.table["licence"].items()
+                if str(v).strip()
+            }
+        return merge_parts(
+            parts,
+            out,
+            name,
+            base=base,
+            link=link,
+            licences=licences,
+            overwrite=overwrite,
+        )
+
 
 def _source(arg: str) -> str | list[str]:
     """The command line's corpus: a name or a table's path as it is, else the ids of ``a,b,c``.
@@ -805,7 +922,16 @@ def main(argv: Sequence[str] | None = None) -> int:
     )
     parser.add_argument(
         "command",
-        choices=("plan", "download", "verify", "status", "shards", "convert"),
+        choices=(
+            "plan",
+            "download",
+            "verify",
+            "status",
+            "shards",
+            "convert",
+            "merge",
+            "files",
+        ),
     )
     parser.add_argument(
         "corpus", help="a corpus name, a CSV with a dataset_id column, or ids a,b,c"
@@ -822,7 +948,11 @@ def main(argv: Sequence[str] | None = None) -> int:
         "--level", choices=("size", "hash"), default="size", help="verify"
     )
     parser.add_argument("--json", help="write the report here as JSON")
-    parser.add_argument("--out", help="convert: the parts go to <out>/parts/")
+    parser.add_argument(
+        "--out",
+        help="convert: the parts go to <out>/parts/; merge: the store goes to "
+        "<out>/<name>.zarr; files: the CSV to write",
+    )
     parser.add_argument("--shard", type=int, help="convert: this process's number")
     parser.add_argument(
         "--n-shards", type=int, help="convert: how many processes share the shards"
@@ -834,12 +964,34 @@ def main(argv: Sequence[str] | None = None) -> int:
     parser.add_argument(
         "--positions", help="convert: a {name: [x, y, z]} JSON position bank, metres"
     )
+    parser.add_argument("--name", help="merge: the store's name")
+    parser.add_argument("--base", help="merge: a finished store to extend")
+    parser.add_argument(
+        "--link", choices=("hard", "symlink", "copy"), default="hard", help="merge"
+    )
+    parser.add_argument(
+        "--overwrite", action="store_true", help="merge: replace a store of that name"
+    )
     parser.add_argument(
         "--unverified",
         action="store_true",
         help="convert: also a dataset whose files were not all verified (refused by default)",
     )
     args = parser.parse_args(argv)
+    if args.command == "files":
+        ids = _source(args.corpus)
+        if not (isinstance(ids, list) and len(ids) == 1 and is_local_id(ids[0])):
+            parser.error("files takes exactly one local dataset id (tdbrain-3.1)")
+        if not args.out:
+            parser.error("files needs --out")
+        root = Path(args.cache_dir or get_default_cache_dir()) / ids[0]
+        try:
+            n = write_file_list(root, args.out, n_jobs=args.n_jobs)
+        except ValueError as exc:
+            parser.error(str(exc))
+        size = pd.read_csv(args.out)["size"].sum() if n else 0
+        print(f"files: {n} files, {size / 1e9:.2f} GB -> {args.out}")
+        return 0
     corpus = EEGDashCorpus(_source(args.corpus), cache_dir=args.cache_dir)
     max_bytes = int(args.max_gb * 1024**3) if args.max_gb else DEFAULT_SHARD_BYTES
     if args.command == "shards":
@@ -848,6 +1000,25 @@ def main(argv: Sequence[str] | None = None) -> int:
             print(f"{k}\t{s.name}\t{len(s.subjects)}\t{s.n_bytes / 1e9:.2f} GB")
         print(f"shards: {len(shards)}")
         return 0 if shards else 1
+    if args.command == "merge":
+        if not args.out or not args.name:
+            parser.error("merge needs --out and --name")
+        try:
+            merged = corpus.merge(
+                args.out,
+                args.name,
+                base=args.base,
+                link=args.link,
+                max_bytes=max_bytes,
+                overwrite=args.overwrite,
+            )
+        except ValueError as exc:
+            print(f"MERGE REFUSED: {exc}")
+            return 1
+        print(merged)
+        if args.json:
+            Path(args.json).write_text(json.dumps(merged.to_dict(), indent=1) + "\n")
+        return 0
     if args.command == "convert":
         if not args.out:
             parser.error("convert needs --out")
@@ -882,9 +1053,11 @@ __all__ = [
     "CorpusReport",
     "ConvertReport",
     "DatasetReport",
+    "MergeReport",
     "Recipe",
     "Shard",
     "main",
+    "write_file_list",
 ]
 
 if __name__ == "__main__":

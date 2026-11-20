@@ -400,6 +400,68 @@ def test_a_local_copy_is_checked_against_its_file_list(cache, tmp_path, monkeypa
     assert "outside the dataset folder" in corpus.status().problems[0]
 
 
+def test_a_file_list_is_written_from_a_tree_behind_a_link(tmp_path):
+    held = tmp_path / "held" / "v1"
+    (held / "sub-01" / "eeg").mkdir(parents=True)
+    (held / "sub-01" / "eeg" / "b.txt").write_bytes(b"bb")
+    (held / "a.txt").write_bytes(b"a")
+    (held / "sub-01" / "z.txt").write_bytes(b"zzz")
+    (held / ".git").mkdir()
+    (held / ".git" / "HEAD").write_bytes(b"hidden folder")
+    (held / "sub-01" / ".DS_Store").write_bytes(b"hidden file")
+    (tmp_path / "cache").mkdir()
+    root = tmp_path / "cache" / "demo-1.0"
+    root.symlink_to(held, target_is_directory=True)
+    out = tmp_path / "lists" / "demo-1.0.csv"
+    assert corpus_mod.write_file_list(root, out, n_jobs=2) == 3
+    lines = out.read_text().splitlines()
+    assert lines[0] == "path,size,sha256"
+    rows = [line.split(",") for line in lines[1:]]
+    assert [r[0] for r in rows] == ["a.txt", "sub-01/eeg/b.txt", "sub-01/z.txt"]
+    assert [int(r[1]) for r in rows] == [1, 2, 3]
+    assert [r[2] for r in rows] == [
+        hashlib.sha256(b).hexdigest() for b in (b"a", b"bb", b"zzz")
+    ]
+    with pytest.raises(ValueError, match="inside"):
+        corpus_mod.write_file_list(root, root / "list.csv")
+    assert not (held / "list.csv").exists()
+
+
+def test_a_local_copy_is_checked_against_the_file_list_beside_it(
+    cache, tmp_path, monkeypatch
+):
+    monkeypatch.setattr(corpus_mod, "_CORPORA", tmp_path / "corpora")  # none packaged
+    root = cache / "demo-1.0"
+    n = corpus_mod.write_file_list(root, cache / "demo-1.0.files.csv")
+    corpus = EEGDashCorpus(["demo-1.0"], cache_dir=cache)
+    report = corpus.verify(level="hash")
+    assert report.ok and report.datasets[0].row()["present"] == n
+    assert n > 4  # every file of the tree, not the four recordings alone
+    victim = root / "sub-01" / "eeg" / "sub-01_task-rest_run-1_channels.tsv"
+    victim.write_bytes(victim.read_bytes()[::-1])  # the same size, other bytes
+    assert corpus.verify(level="size").ok
+    report = corpus.verify(level="hash")
+    assert not report.ok and report.datasets[0].row()["corrupt"] == 1
+    (cache / "demo-1.0.files.csv").unlink()  # no list: the recordings, present
+    assert corpus.verify(level="hash").datasets[0].row()["present"] == 4
+
+
+def test_cli_writes_the_file_list_of_one_local_dataset(cache, tmp_path, capsys):
+    out = tmp_path / "demo.csv"
+    args = ["--cache-dir", str(cache), "--out", str(out), "--n-jobs", "2"]
+    assert corpus_mod.main(["files", "demo-1.0", *args]) == 0
+    printed = capsys.readouterr().out
+    assert printed.startswith("files: ") and f"-> {out}" in printed
+    n = len(out.read_text().splitlines()) - 1
+    assert f"files: {n} files, " in printed
+    for wrong in ("ds000001", "demo-1.0,other-2.0", "eegdash-corpus-v0"):
+        with pytest.raises(SystemExit) as exc:
+            corpus_mod.main(["files", wrong, *args])
+        assert exc.value.code == 2
+    with pytest.raises(SystemExit):
+        corpus_mod.main(["files", "demo-1.0", "--cache-dir", str(cache)])  # no --out
+
+
 # ------------------------------------------------------------------ one part
 
 

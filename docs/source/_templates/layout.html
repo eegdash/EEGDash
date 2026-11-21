@@ -45,6 +45,12 @@
    duplicate `<meta name="viewport">` — the Sphinx base layout already
    emits one. We keep the docsearch/docbuild tags the theme relies on. #}
 {% block extrahead %}
+  {# GitHub Pages cannot send security headers, so this is the only CSP the
+     site gets. script-src stays open: the theme, gallery, analytics and
+     DataTables rely on inline scripts. The rest blocks <base> hijacking,
+     plugins, off-site form posts and mixed content. #}
+  <meta http-equiv="Content-Security-Policy" content="object-src 'none'; base-uri 'self'; form-action 'self'; upgrade-insecure-requests"/>
+  <meta name="referrer" content="strict-origin-when-cross-origin"/>
   <meta name="docsearch:language" content="{{ language }}"/>
   <meta name="docsearch:version" content="{{ version }}" />
 

@@ -40,6 +40,12 @@ jobs:
     # makes this reusable workflow request more than the caller grants, which GitHub
     # rejects with a startup_failure.
     continue-on-error: ${{ inputs.continue_on_error }}
+    # Inputs reach shell scripts only through env (no ${{ }} in run:).
+    env:
+      SOURCE_NAME: ${{ inputs.source_name }}
+      SCRIPT_PATH: ${{ inputs.script_path }}
+      OUTPUT_FILE: ${{ inputs.output_file }}
+      SCRIPT_ARGS: ${{ inputs.script_args }}
 
     steps:
       - name: Checkout EEGDash
@@ -77,15 +83,16 @@ jobs:
 
       - name: Fetch datasets
         run: |
-          python eegdash/${{ inputs.script_path }} \
-            --output eegdash-dataset-listings/consolidated/${{ inputs.output_file }} \
-            ${{ inputs.script_args }}
+          read -ra EXTRA_ARGS <<< "$SCRIPT_ARGS"
+          python "eegdash/$SCRIPT_PATH" \
+            --output "eegdash-dataset-listings/consolidated/$OUTPUT_FILE" \
+            "${EXTRA_ARGS[@]}"
 
       - name: Verify and report
         run: |
-          echo "### 📊 ${{ inputs.source_name }} Results" >> $GITHUB_STEP_SUMMARY
-          if [ -f eegdash-dataset-listings/consolidated/${{ inputs.output_file }} ]; then
-            TOTAL=$(python -c "import json; print(len(json.load(open('eegdash-dataset-listings/consolidated/${{ inputs.output_file }}'))))")
+          echo "### 📊 $SOURCE_NAME Results" >> $GITHUB_STEP_SUMMARY
+          if [ -f "eegdash-dataset-listings/consolidated/$OUTPUT_FILE" ]; then
+            TOTAL=$(python -c "import json, sys; print(len(json.load(open(sys.argv[1]))))" "eegdash-dataset-listings/consolidated/$OUTPUT_FILE")
             echo "- Total datasets: $TOTAL" >> $GITHUB_STEP_SUMMARY
           fi
 
@@ -94,9 +101,9 @@ jobs:
           cd eegdash-dataset-listings
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add consolidated/${{ inputs.output_file }} || true
+          git add "consolidated/$OUTPUT_FILE" || true
           if ! git diff --cached --quiet; then
-            git commit -m "chore: update ${{ inputs.source_name }} listings [$(date -u +%Y-%m-%d)]"
+            git commit -m "chore: update $SOURCE_NAME listings [$(date -u +%Y-%m-%d)]"
             git pull --rebase origin main
             git push
           fi

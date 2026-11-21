@@ -83,6 +83,10 @@ jobs:
         id: inject
         env:
           EEGDASH_ADMIN_TOKEN: ${{ secrets.EEGDASH_ADMIN_TOKEN }}
+          # Inputs go through env, never ${{ }} inside the script (injection).
+          INPUT_DATABASE: ${{ inputs.database }}
+          INPUT_DRY_RUN: ${{ inputs.dry_run }}
+          INPUT_SOURCES: ${{ inputs.sources }}
         run: |
           if [ ! -d "eegdash-dataset-listings/digested" ] || [ -z "$(ls -A eegdash-dataset-listings/digested 2>/dev/null)" ]; then
             echo "No digested datasets available, skipping injection"
@@ -91,18 +95,18 @@ jobs:
             exit 0
           fi
 
-          ARGS="--input eegdash-dataset-listings/digested"
-          ARGS="$ARGS --database ${{ inputs.database }}"
+          ARGS=(--input eegdash-dataset-listings/digested --database "$INPUT_DATABASE")
           # Recompute per-dataset stats after a real injection. The script only
           # acts on this flag when NOT a dry run, so it is a safe no-op otherwise.
-          ARGS="$ARGS --compute-stats"
+          ARGS+=(--compute-stats)
 
-          if [ "${{ inputs.dry_run }}" == "true" ]; then
-            ARGS="$ARGS --dry-run"
+          if [ "$INPUT_DRY_RUN" == "true" ]; then
+            ARGS+=(--dry-run)
           fi
 
-          if [ "${{ inputs.sources }}" != "" ] && [ "${{ inputs.sources }}" != "all" ]; then
-            ARGS="$ARGS --sources ${{ inputs.sources }}"
+          if [ -n "$INPUT_SOURCES" ] && [ "$INPUT_SOURCES" != "all" ]; then
+            read -ra SOURCES <<< "$INPUT_SOURCES"
+            ARGS+=(--sources "${SOURCES[@]}")
           fi
 
           # Stream the injector's output live AND keep a copy for parsing. The old
@@ -111,7 +115,7 @@ jobs:
           # months. `tee` keeps the log observable while it runs; PIPESTATUS[0]
           # preserves the injector's exit code through the pipe.
           set +e
-          python eegdash/scripts/ingestions/5_inject.py $ARGS 2>&1 | tee /tmp/inject_output.log
+          python eegdash/scripts/ingestions/5_inject.py "${ARGS[@]}" 2>&1 | tee /tmp/inject_output.log
           RC=${PIPESTATUS[0]}
           set -e
           OUTPUT=$(cat /tmp/inject_output.log)
@@ -129,11 +133,15 @@ jobs:
           echo "records=$RECORDS" >> $GITHUB_OUTPUT
 
       - name: Generate summary
+        env:
+          SOURCE_NAME: ${{ inputs.source_name }}
+          INPUT_DATABASE: ${{ inputs.database }}
+          INPUT_DRY_RUN: ${{ inputs.dry_run }}
         run: |
-          echo "### 💉 ${{ inputs.source_name }} Injection Results" >> $GITHUB_STEP_SUMMARY
-          echo "- Database: \`${{ inputs.database }}\`" >> $GITHUB_STEP_SUMMARY
+          echo "### 💉 $SOURCE_NAME Injection Results" >> $GITHUB_STEP_SUMMARY
+          echo "- Database: \`$INPUT_DATABASE\`" >> $GITHUB_STEP_SUMMARY
           echo "- Datasets injected: ${{ steps.inject.outputs.datasets }}" >> $GITHUB_STEP_SUMMARY
           echo "- Records injected: ${{ steps.inject.outputs.records }}" >> $GITHUB_STEP_SUMMARY
-          if [ "${{ inputs.dry_run }}" == "true" ]; then
+          if [ "$INPUT_DRY_RUN" == "true" ]; then
             echo "- ⚠️ **DRY RUN** - no data was uploaded" >> $GITHUB_STEP_SUMMARY
           fi

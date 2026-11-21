@@ -127,13 +127,14 @@ jobs:
       - name: Retire OpenNeuro twins of NEMAR on* datasets
         env:
           EEGDASH_ADMIN_TOKEN: ${{ secrets.EEGDASH_API_TOKEN }}
+          DATABASE: ${{ github.event.inputs.database || 'eegdash' }}
         run: |
           # Stream the output: retirement walks every twin doing network deletes
           # with rate-limit backoff, so capturing into a variable would leave the
           # log empty until it finished -- the same blind spot 3-inject.yml fixes.
           set +e
           python eegdash/scripts/ingestions/prefer_nemar_mirrors.py \
-            --database "${{ github.event.inputs.database || 'eegdash' }}" \
+            --database "$DATABASE" \
             --apply 2>&1 | tee /tmp/retire_output.log
           RC=${PIPESTATUS[0]}
           set -e
@@ -149,13 +150,16 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Generate summary
+        env:
+          DATABASE: ${{ github.event.inputs.database || 'eegdash' }}
+          DRY_RUN: ${{ github.event.inputs.dry_run || 'false' }}
         run: |
           {
             echo "## Daily Ingestion Pipeline Summary (NEMAR-only)"
             echo ""
             echo "- Trigger: \`${{ github.event_name }}\`"
-            echo "- Database: \`${{ github.event.inputs.database || 'eegdash' }}\`"
-            echo "- Dry run: \`${{ github.event.inputs.dry_run || 'false' }}\`"
+            echo "- Database: \`$DATABASE\`"
+            echo "- Dry run: \`$DRY_RUN\`"
             echo ""
             echo "| Step | Status |"
             echo "|------|--------|"

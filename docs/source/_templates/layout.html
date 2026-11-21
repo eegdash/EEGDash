@@ -45,6 +45,10 @@
    duplicate `<meta name="viewport">` — the Sphinx base layout already
    emits one. We keep the docsearch/docbuild tags the theme relies on. #}
 {% block extrahead %}
+  {# No CSP/referrer <meta> here: a meta CSP disables Chromium's preload
+     scanner for the rest of the page and upgrade-insecure-requests breaks
+     HTTP previews. Security headers belong in a Cloudflare Response Header
+     Transform Rule on eegdash.org, not in a meta tag. #}
   <meta name="docsearch:language" content="{{ language }}"/>
   <meta name="docsearch:version" content="{{ version }}" />
 

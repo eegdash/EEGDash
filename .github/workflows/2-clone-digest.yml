@@ -51,6 +51,14 @@ jobs:
   digest:
     name: Clone & Digest ${{ inputs.source_name }}
     runs-on: ubuntu-latest
+    # Inputs reach shell scripts only through env (no ${{ }} in run:).
+    env:
+      SOURCE_NAME: ${{ inputs.source_name }}
+      CONSOLIDATED_FILE: ${{ inputs.consolidated_file }}
+      WORKERS: ${{ inputs.workers }}
+      MAX_DATASETS: ${{ inputs.max_datasets }}
+      DATASET_TIMEOUT: ${{ inputs.dataset_timeout }}
+      N_JOBS: ${{ inputs.n_jobs }}
     outputs:
       datasets_processed: ${{ steps.summary.outputs.datasets }}
       records_created: ${{ steps.summary.outputs.records }}
@@ -101,7 +109,7 @@ jobs:
         run: |
           cd eegdash-dataset-listings
           if git rev-parse --verify HEAD~1 >/dev/null 2>&1; then
-            if git diff --name-only HEAD~1 HEAD -- consolidated/${{ inputs.consolidated_file }} | grep -q .; then
+            if git diff --name-only HEAD~1 HEAD -- "consolidated/$CONSOLIDATED_FILE" | grep -q .; then
               echo "changed=true" >> $GITHUB_OUTPUT
             else
               echo "changed=false" >> $GITHUB_OUTPUT
@@ -113,15 +121,14 @@ jobs:
       - name: Smart Clone datasets
         if: steps.changed.outputs.changed == 'true'
         run: |
-          ARGS="--input eegdash-dataset-listings/consolidated/${{ inputs.consolidated_file }}"
-          ARGS="$ARGS --output eegdash-dataset-listings/cloned"
-          ARGS="$ARGS --workers ${{ inputs.workers }}"
-          
-          if [ "${{ inputs.max_datasets }}" != "0" ]; then
-            ARGS="$ARGS --limit ${{ inputs.max_datasets }}"
+          ARGS=(--input "eegdash-dataset-listings/consolidated/$CONSOLIDATED_FILE")
+          ARGS+=(--output eegdash-dataset-listings/cloned --workers "$WORKERS")
+
+          if [ "$MAX_DATASETS" != "0" ]; then
+            ARGS+=(--limit "$MAX_DATASETS")
           fi
-          
-          python eegdash/scripts/ingestions/2_clone.py $ARGS
+
+          python eegdash/scripts/ingestions/2_clone.py "${ARGS[@]}"
 
       - name: Digest datasets
         if: steps.changed.outputs.changed == 'true'
@@ -132,13 +139,12 @@ jobs:
         run: |
           # Only digest if there are cloned datasets
           if [ -d "eegdash-dataset-listings/cloned" ] && [ "$(ls -A eegdash-dataset-listings/cloned 2>/dev/null)" ]; then
-            ARGS="--input eegdash-dataset-listings/cloned"
-            ARGS="$ARGS --output eegdash-dataset-listings/digested"
-            ARGS="$ARGS --workers ${{ inputs.workers }}"
-            ARGS="$ARGS --dataset-timeout ${{ inputs.dataset_timeout }}"
-            ARGS="$ARGS --n-jobs ${{ inputs.n_jobs }}"
-            
-            python eegdash/scripts/ingestions/3_digest.py $ARGS
+            python eegdash/scripts/ingestions/3_digest.py \
+              --input eegdash-dataset-listings/cloned \
+              --output eegdash-dataset-listings/digested \
+              --workers "$WORKERS" \
+              --dataset-timeout "$DATASET_TIMEOUT" \
+              --n-jobs "$N_JOBS"
           else
             echo "No datasets to digest"
           fi
@@ -159,7 +165,7 @@ jobs:
         id: summary
         run: |
           if [ "${{ steps.changed.outputs.changed }}" != "true" ]; then
-            echo "### 📊 ${{ inputs.source_name }} Digest Results" >> $GITHUB_STEP_SUMMARY
+            echo "### 📊 $SOURCE_NAME Digest Results" >> $GITHUB_STEP_SUMMARY
             echo "- Changed: false" >> $GITHUB_STEP_SUMMARY
             echo "- No digestion run" >> $GITHUB_STEP_SUMMARY
             echo "datasets=0" >> $GITHUB_OUTPUT
@@ -185,7 +191,7 @@ jobs:
           echo "datasets=$DATASETS" >> $GITHUB_OUTPUT
           echo "records=$RECORDS" >> $GITHUB_OUTPUT
           
-          echo "### 📊 ${{ inputs.source_name }} Digest Results" >> $GITHUB_STEP_SUMMARY
+          echo "### 📊 $SOURCE_NAME Digest Results" >> $GITHUB_STEP_SUMMARY
           echo "- Changed: ${{ steps.changed.outputs.changed }}" >> $GITHUB_STEP_SUMMARY
           echo "- Datasets processed: $DATASETS" >> $GITHUB_STEP_SUMMARY
           echo "- Records created: $RECORDS" >> $GITHUB_STEP_SUMMARY
@@ -224,7 +230,7 @@ jobs:
           git add -A digested/ || true
           
           if ! git diff --cached --quiet; then
-            git commit -m "chore: digest ${{ inputs.source_name }} datasets [$(date -u +%Y-%m-%d)]"
+            git commit -m "chore: digest $SOURCE_NAME datasets [$(date -u +%Y-%m-%d)]"
             # Every source writes digested/BATCH_SUMMARY.json, so two source
             # pipelines finishing close together conflict on it (2026-11-02:
             # EEGManyLabs landed 10 min before NEMAR, run 41417085988). Keep

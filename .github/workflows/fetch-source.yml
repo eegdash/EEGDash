@@ -83,7 +83,12 @@ jobs:
 
       - name: Fetch datasets
         run: |
-          read -ra EXTRA_ARGS <<< "$SCRIPT_ARGS"
+          # Split with shell quoting rules (shlex executes nothing), one arg per
+          # line; `read -ra` dropped quotes and stopped at the first newline.
+          EXTRA_ARGS=()
+          if [ -n "$SCRIPT_ARGS" ]; then
+            mapfile -t EXTRA_ARGS < <(python3 -c 'import shlex,sys; print("\n".join(shlex.split(sys.argv[1])))' "$SCRIPT_ARGS")
+          fi
           python "eegdash/$SCRIPT_PATH" \
             --output "eegdash-dataset-listings/consolidated/$OUTPUT_FILE" \
             "${EXTRA_ARGS[@]}"

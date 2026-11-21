@@ -6,7 +6,8 @@ runner the existing ``--n-jobs`` scales linearly (request latency flat at
 ~0.09 s): full read-only digest of nm000281 took 1,220 s at n_jobs 4 and 614 s
 at n_jobs 8, identical records, strict validation clean. The reusable workflow
 never passed ``--n-jobs``; it now takes an ``n_jobs`` input (default 1, so other
-sources are unchanged) and both NEMAR callers set 8.
+sources are unchanged), passed through the job env as ``N_JOBS``, and both
+NEMAR callers set 8.
 """
 
 from __future__ import annotations
@@ -26,9 +27,12 @@ def test_reusable_digest_passes_n_jobs_with_default_one():
     wf = _load("2-clone-digest.yml")
     inputs = wf[True]["workflow_call"]["inputs"]  # PyYAML reads `on:` as True
     assert inputs["n_jobs"]["default"] == 1
-    steps = wf["jobs"]["digest"]["steps"]
-    digest = next(s for s in steps if s.get("name") == "Digest datasets")
-    assert "--n-jobs ${{ inputs.n_jobs }}" in digest["run"]
+    job = wf["jobs"]["digest"]
+    digest = next(s for s in job["steps"] if s.get("name") == "Digest datasets")
+    # The input reaches the script through env, never ${{ }} in run: (F8).
+    env = {**job.get("env", {}), **digest.get("env", {})}
+    assert env["N_JOBS"] == "${{ inputs.n_jobs }}"
+    assert '--n-jobs "$N_JOBS"' in digest["run"]
 
 
 def test_nemar_callers_digest_in_parallel():

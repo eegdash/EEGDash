@@ -39,6 +39,12 @@ jobs:
   inject:
     name: Inject ${{ inputs.source_name }} to ${{ inputs.database }}
     runs-on: ubuntu-latest
+    # Inputs reach shell scripts only through env (no ${{ }} in run:).
+    env:
+      SOURCE_NAME: ${{ inputs.source_name }}
+      DATABASE: ${{ inputs.database }}
+      DRY_RUN: ${{ inputs.dry_run }}
+      SOURCES: ${{ inputs.sources }}
     outputs:
       datasets_injected: ${{ steps.inject.outputs.datasets }}
       records_injected: ${{ steps.inject.outputs.records }}
@@ -83,10 +89,6 @@ jobs:
         id: inject
         env:
           EEGDASH_ADMIN_TOKEN: ${{ secrets.EEGDASH_ADMIN_TOKEN }}
-          # Inputs go through env, never ${{ }} inside the script (injection).
-          INPUT_DATABASE: ${{ inputs.database }}
-          INPUT_DRY_RUN: ${{ inputs.dry_run }}
-          INPUT_SOURCES: ${{ inputs.sources }}
         run: |
           if [ ! -d "eegdash-dataset-listings/digested" ] || [ -z "$(ls -A eegdash-dataset-listings/digested 2>/dev/null)" ]; then
             echo "No digested datasets available, skipping injection"
@@ -95,18 +97,18 @@ jobs:
             exit 0
           fi
 
-          ARGS=(--input eegdash-dataset-listings/digested --database "$INPUT_DATABASE")
+          ARGS=(--input eegdash-dataset-listings/digested --database "$DATABASE")
           # Recompute per-dataset stats after a real injection. The script only
           # acts on this flag when NOT a dry run, so it is a safe no-op otherwise.
           ARGS+=(--compute-stats)
 
-          if [ "$INPUT_DRY_RUN" == "true" ]; then
+          if [ "$DRY_RUN" == "true" ]; then
             ARGS+=(--dry-run)
           fi
 
-          if [ -n "$INPUT_SOURCES" ] && [ "$INPUT_SOURCES" != "all" ]; then
-            read -ra SOURCES <<< "$INPUT_SOURCES"
-            ARGS+=(--sources "${SOURCES[@]}")
+          if [ -n "$SOURCES" ] && [ "$SOURCES" != "all" ]; then
+            read -ra SOURCE_LIST <<< "$SOURCES"
+            ARGS+=(--sources "${SOURCE_LIST[@]}")
           fi
 
           # Stream the injector's output live AND keep a copy for parsing. The old
@@ -127,21 +129,18 @@ jobs:
           
           # Parse results
           DATASETS=$(echo "$OUTPUT" | grep -oP 'Datasets:\s+\K\d+' || echo "0")
-          RECORDS=$(echo "$OUTPUT" | grep -oP 'Records:\s+\K\d+' || echo "0")
+          # 5_inject.py prints "Records Ins:<n>" and "Records Upd:<n>".
+          RECORDS=$(echo "$OUTPUT" | { grep -oP 'Records (Ins|Upd):\s*\K\d+' || true; } | awk '{s+=$1} END {print s+0}')
           
           echo "datasets=$DATASETS" >> $GITHUB_OUTPUT
           echo "records=$RECORDS" >> $GITHUB_OUTPUT
 
       - name: Generate summary
-        env:
-          SOURCE_NAME: ${{ inputs.source_name }}
-          INPUT_DATABASE: ${{ inputs.database }}
-          INPUT_DRY_RUN: ${{ inputs.dry_run }}
         run: |
           echo "### 💉 $SOURCE_NAME Injection Results" >> $GITHUB_STEP_SUMMARY
-          echo "- Database: \`$INPUT_DATABASE\`" >> $GITHUB_STEP_SUMMARY
+          echo "- Database: \`$DATABASE\`" >> $GITHUB_STEP_SUMMARY
           echo "- Datasets injected: ${{ steps.inject.outputs.datasets }}" >> $GITHUB_STEP_SUMMARY
           echo "- Records injected: ${{ steps.inject.outputs.records }}" >> $GITHUB_STEP_SUMMARY
-          if [ "$INPUT_DRY_RUN" == "true" ]; then
+          if [ "$DRY_RUN" == "true" ]; then
             echo "- ⚠️ **DRY RUN** - no data was uploaded" >> $GITHUB_STEP_SUMMARY
           fi

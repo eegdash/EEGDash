@@ -1,14 +1,16 @@
 name: Ingestions — Lint + Test
 
 on:
+  # Workflow edits run too: unit tests here parse .github/workflows/*.
   pull_request:
     paths:
       - 'scripts/ingestions/**'
-      - '.github/workflows/ingestions-lint-and-test.yml'
+      - '.github/workflows/**'
   push:
     branches: [main, master]
     paths:
       - 'scripts/ingestions/**'
+      - '.github/workflows/**'
   workflow_dispatch: {}
 
 concurrency:

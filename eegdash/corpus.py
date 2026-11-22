@@ -23,7 +23,9 @@ Command line: ``python -m eegdash.corpus plan|download|verify|status|shards|
 convert|merge <name, csv or a,b,c> [--cache-dir ...]``; exit code 1 when
 anything is missing (``merge --out OUT --name NAME [--base STORE.zarr]``: 1
 when the merge is refused). ``python -m eegdash.corpus files <local-id>
---out FILE.csv`` writes a local dataset's file list.
+--out FILE.csv`` writes a local dataset's file list; ``python -m
+eegdash.corpus bids <local-id> --src DIR`` writes its BIDS tree from a source
+in another layout (:mod:`eegdash.to_bids`).
 
 A dataset id of the form ``<name>-<version>`` (``tdbrain-3.1``) is a local
 dataset: one the catalogue does not serve, such as a gated one obtained under
@@ -931,6 +933,7 @@ def main(argv: Sequence[str] | None = None) -> int:
             "convert",
             "merge",
             "files",
+            "bids",
         ),
     )
     parser.add_argument(
@@ -953,9 +956,13 @@ def main(argv: Sequence[str] | None = None) -> int:
         help="convert: the parts go to <out>/parts/; merge: the store goes to "
         "<out>/<name>.zarr; files: the CSV to write",
     )
-    parser.add_argument("--shard", type=int, help="convert: this process's number")
     parser.add_argument(
-        "--n-shards", type=int, help="convert: how many processes share the shards"
+        "--shard", type=int, help="convert, bids: this process's number"
+    )
+    parser.add_argument(
+        "--n-shards",
+        type=int,
+        help="convert: how many processes share the shards; bids: the subjects",
     )
     parser.add_argument("--recipe", default="reve", help="convert")
     parser.add_argument(
@@ -967,7 +974,9 @@ def main(argv: Sequence[str] | None = None) -> int:
     parser.add_argument("--name", help="merge: the store's name")
     parser.add_argument("--base", help="merge: a finished store to extend")
     parser.add_argument(
-        "--link", choices=("hard", "symlink", "copy"), default="hard", help="merge"
+        "--link",
+        choices=("hard", "symlink", "copy"),
+        help="merge (default hard), bids (default symlink)",
     )
     parser.add_argument(
         "--overwrite", action="store_true", help="merge: replace a store of that name"
@@ -977,7 +986,51 @@ def main(argv: Sequence[str] | None = None) -> int:
         action="store_true",
         help="convert: also a dataset whose files were not all verified (refused by default)",
     )
+    parser.add_argument("--src", help="bids: the source tree")
+    parser.add_argument(
+        "--exclude", help="bids: a CSV key,match,reason of recordings to leave out"
+    )
+    parser.add_argument(
+        "--keep-held-out",
+        action="store_true",
+        help="bids: do not apply the adapter's held-out table",
+    )
+    parser.add_argument(
+        "--dry-run",
+        action="store_true",
+        help="bids: read every header, write only --json",
+    )
+    parser.add_argument("--adapter", help="bids: another adapter, module:Class")
     args = parser.parse_args(argv)
+    if args.command == "bids":
+        from .to_bids import to_bids  # noqa: PLC0415
+
+        ids = _source(args.corpus)
+        if not (isinstance(ids, list) and len(ids) == 1 and is_local_id(ids[0])):
+            parser.error("bids takes exactly one local dataset id (siena-1.0.0)")
+        if not args.src:
+            parser.error("bids needs --src")
+        try:
+            report = to_bids(
+                ids[0],
+                args.src,
+                cache_dir=args.cache_dir,
+                link=args.link or "symlink",
+                exclude=args.exclude,
+                keep_held_out=args.keep_held_out,
+                dry_run=args.dry_run,
+                n_jobs=args.n_jobs,
+                shard=args.shard,
+                n_shards=args.n_shards,
+                adapter=args.adapter,
+            )
+        except ValueError as exc:
+            print(f"BIDS REFUSED: {exc}")
+            return 1
+        print(report)
+        if args.json:
+            report.write(args.json)
+        return 0 if report.ok else 1
     if args.command == "files":
         ids = _source(args.corpus)
         if not (isinstance(ids, list) and len(ids) == 1 and is_local_id(ids[0])):
@@ -1008,7 +1061,7 @@ def main(argv: Sequence[str] | None = None) -> int:
                 args.out,
                 args.name,
                 base=args.base,
-                link=args.link,
+                link=args.link or "hard",
                 max_bytes=max_bytes,
                 overwrite=args.overwrite,
             )

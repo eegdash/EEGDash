@@ -455,6 +455,29 @@ def test_corpus_merge_takes_its_parts_and_licences(work):
         corpus.merge(work / "out", "again", max_bytes=1)
 
 
+def test_corpus_merge_writes_the_store_to_dest(work):
+    """The store and its two side files go to dest; nothing new lands beside the parts."""
+    corpus = EEGDashCorpus(work / "corpus.csv", cache_dir=work / "cache")
+    before = sorted(p.name for p in (work / "out").iterdir())
+    report = corpus.merge(work / "out", "apart", max_bytes=1, dest=work / "zarr")
+    assert report.store == work / "zarr" / "apart.zarr" and report.n_buckets == 3
+    assert sorted(p.name for p in (work / "zarr").iterdir()) == [
+        "apart-buckets.csv",
+        "apart-manifest.csv",
+        "apart.zarr",
+    ]
+    assert sorted(p.name for p in (work / "out").iterdir()) == before
+
+
+def test_cli_dest_takes_the_store(work, capsys):
+    args = ["merge", str(work / "corpus.csv"), "--cache-dir", str(work / "cache")]
+    args += ["--out", str(work / "out"), "--name", "cli-dest", "--max-gb", "1e-9"]
+    assert corpus_mod.main([*args, "--dest", str(work / "cli-zarr")]) == 0
+    assert "merge: cli-dest: 3 buckets" in capsys.readouterr().out
+    assert (work / "cli-zarr" / "cli-dest.zarr").is_dir()
+    assert not (work / "out" / "cli-dest.zarr").exists()
+
+
 def test_cli_merges_and_reports_a_refusal(work, capsys):
     args = ["merge", str(work / "corpus.csv"), "--cache-dir", str(work / "cache")]
     args += ["--out", str(work / "out"), "--name", "cli", "--max-gb", "1e-9"]

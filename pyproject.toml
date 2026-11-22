@@ -207,6 +207,7 @@ namespaces = false
 [tool.setuptools.package-data]
 "eegdash" = ["dataset_summary.csv", "corpora/*.csv"]
 "eegdash.dataset" = ["dataset_summary.csv"]
+"eegdash.to_bids" = ["tables/*"]
 
 [tool.ruff]
 line-length = 88

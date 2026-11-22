@@ -1,0 +1,4 @@
+pattern,name,type
+(?i).*(?:ekg|ecg).*,\g<0>,ECG
+(?i)eeg\s.*,\g<0>,EEG
+"(?i)(?:fp|af|f|fc|ft|c|cp|t|tp|p|po|o|i|m|a)(?:z|\d{1,2})",\g<0>,EEG

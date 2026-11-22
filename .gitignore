@@ -16,6 +16,7 @@
 !coverage.xml
 !codemeta.json
 !docs/source/_extra/**/*.json
+!eegdash/to_bids/tables/*.json
 eegdash_cache/
 *.npy
 *Hugging*

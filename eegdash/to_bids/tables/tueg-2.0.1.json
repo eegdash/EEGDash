@@ -1,0 +1,33 @@
+{
+  "task": "clinical",
+  "power_line_frequency": 60,
+  "eeg_reference": "n/a",
+  "url": "https://isip.piconepress.com/projects/nedc/html/tuh_eeg/",
+  "paper": "The Temple University Hospital EEG Data Corpus. Frontiers in Neuroscience. 2016;10:196. https://doi.org/10.3389/fnins.2016.00196",
+  "montages": {
+    "01_tcp_ar": "ar",
+    "02_tcp_le": "le",
+    "03_tcp_ar_a": "ara",
+    "04_tcp_le_a": "lea"
+  },
+  "dataset_description": {
+    "Name": "TUH EEG Corpus (TUEG)",
+    "Authors": ["Iyad Obeid", "Joseph Picone"],
+    "License": "Not redistributable. The TUH EEG Corpus is distributed by the Neural Engineering Data Consortium (NEDC) of Temple University under its own data use terms, which forbid redistribution: each user obtains it from NEDC (https://isip.piconepress.com/projects/nedc/html/tuh_eeg/) and makes this tree from their own copy.",
+    "HowToAcknowledge": "Please cite the paper that describes the corpus: Obeid I, Picone J. The Temple University Hospital EEG Data Corpus. Frontiers in Neuroscience. 2016;10:196. https://doi.org/10.3389/fnins.2016.00196",
+    "ReferencesAndLinks": [
+      "https://isip.piconepress.com/projects/nedc/html/tuh_eeg/",
+      "https://doi.org/10.3389/fnins.2016.00196"
+    ],
+    "SourceDatasets": [
+      {
+        "URL": "https://isip.piconepress.com/projects/nedc/html/tuh_eeg/",
+        "Version": "2.0.1"
+      }
+    ]
+  },
+  "sidecar": {
+    "TaskDescription": "Clinical EEG recorded at Temple University Hospital, from the hospital's archive.",
+    "InstitutionName": "Temple University Hospital"
+  }
+}

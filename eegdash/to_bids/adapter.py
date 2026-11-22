@@ -207,8 +207,8 @@ class Adapter:
 
     """
 
-    name: ClassVar[str]  # "siena"
-    versions: ClassVar[tuple[str, ...]]  # ("1.0.0",)
+    name: ClassVar[str]  # "tueg"
+    versions: ClassVar[tuple[str, ...]]  # ("2.0.1",)
     revision: ClassVar[int] = 1  # bumped when the output changes
     extension: ClassVar[str] = ".edf"  # of the BIDS data file
     linkable: ClassVar[bool] = True  # the source file is a valid BIDS data file

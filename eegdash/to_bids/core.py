@@ -122,12 +122,12 @@ CSV_FIELDS = [
 
 
 def split_id(dataset_id: str) -> tuple[str, str]:
-    """``siena-1.0.0`` -> ``("siena", "1.0.0")``; a ValueError for an id that is not local."""
+    """``tueg-2.0.1`` -> ``("tueg", "2.0.1")``; a ValueError for an id that is not local."""
     m = VERSION_RE.fullmatch(dataset_id)
     if not is_local_id(dataset_id) or not m:
         raise ValueError(
             f"{dataset_id!r}: a converted dataset is named <name>-<version> "
-            "(siena-1.0.0)"
+            "(tueg-2.0.1)"
         )
     return m[1], m[2]
 

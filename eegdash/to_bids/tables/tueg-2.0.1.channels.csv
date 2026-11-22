@@ -1,0 +1,8 @@
+pattern,name,type
+(?i)(?:EEG\s+)?(EKG.*?)(?:-REF|-LE)?,\1,ECG
+(?i)(?:EEG\s+)?([LR]OC)(?:-REF|-LE)?,\1,EOG
+(?i)(?:EEG\s+)?(EMG.*?)(?:-REF|-LE)?,\1,EMG
+(?i)(?:EEG\s+)?(PHOTIC.*?)(?:-REF|-LE)?,\1,TRIG
+(?i)(?:EEG\s+)?(IBI|BURSTS|SUPPR)(?:-REF|-LE)?,\1,MISC
+(?i)(?:EEG\s+)?(\d+)(?:-REF|-LE)?,\1,MISC
+"(?i)(?:EEG\s+)?((?:FP|AF|FT|FC|CP|TP|PO|F|C|T|P|O|A|I|M)(?:Z|\d{1,2})|NZ|SP\d)(?:-REF|-LE)?",\1,EEG

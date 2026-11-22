@@ -4,18 +4,19 @@
 
 """Bring a dataset that is not in BIDS to a BIDS tree, one adapter per dataset.
 
-A gated archive a user holds, or a public deposit in another layout, becomes a
-BIDS tree at ``<cache_dir>/<name>-<version>/``: the folder a local dataset is
+A dataset each user obtains from its data holder under the holder's terms (a
+gated archive that may not be redistributed, so not on NEMAR) becomes a BIDS
+tree at ``<cache_dir>/<name>-<version>/``: the folder a local dataset is
 read from (see :mod:`eegdash.corpus`), so ``files``, ``verify``, ``shards``,
 ``convert`` and ``merge`` take it over unchanged::
 
     from eegdash.to_bids import to_bids
-    report = to_bids("siena-1.0.0", "/data/siena-scalp-eeg/1.0.0", dry_run=True)
-    report = to_bids("siena-1.0.0", "/data/siena-scalp-eeg/1.0.0")
+    report = to_bids("tueg-2.0.1", "/data/tuh_eeg/v2.0.1", dry_run=True)
+    report = to_bids("tueg-2.0.1", "/data/tuh_eeg/v2.0.1")
 
 Command line::
 
-    python -m eegdash.corpus bids siena-1.0.0 --src DIR [--cache-dir C]
+    python -m eegdash.corpus bids tueg-2.0.1 --src DIR [--cache-dir C]
         [--link symlink|hard|copy] [--exclude CSV] [--keep-held-out] [--dry-run]
         [--n-jobs N] [--shard K --n-shards N] [--adapter module:Class]
         [--json REPORT.json]
@@ -23,8 +24,9 @@ Command line::
 Headers are read, never the signal; data files are linked (symbolic links by
 default), never rewritten when the source format is a BIDS data file; nothing
 is written under the source. Held-out recordings are left out and reported.
-The adapters are in :data:`ADAPTERS`; one outside the package is named
-``module:Class`` (a subclass of :class:`Adapter`).
+The adapters are in :data:`ADAPTERS`: the TUH EEG Corpus (``tueg``, from
+NEDC). One outside the package is named ``module:Class`` (a subclass of
+:class:`Adapter`).
 """
 
 from __future__ import annotations
@@ -46,11 +48,11 @@ from .adapter import (
 from .core import LINK_MODES, BidsReport, run, split_id
 
 # <name>: "module:Class", imported when used
-ADAPTERS = {"siena": "eegdash.to_bids.siena:Siena"}
+ADAPTERS = {"tueg": "eegdash.to_bids.tueg:TUEG"}
 
 
 def get_adapter(spec: str | type[Adapter]) -> type[Adapter]:
-    """The adapter class of a dataset name (``siena``), a ``module:Class`` path, or a class."""
+    """The adapter class of a dataset name (``tueg``), a ``module:Class`` path, or a class."""
     if isinstance(spec, type):
         cls = spec
     else:
@@ -83,7 +85,7 @@ def to_bids(
     Parameters
     ----------
     dataset_id : str
-        ``<name>-<version>`` (``siena-1.0.0``); the adapter is the one
+        ``<name>-<version>`` (``tueg-2.0.1``); the adapter is the one
         registered for the name, and must know the version.
     src : str | Path
         The source tree; never written to, and the output may not be in it.

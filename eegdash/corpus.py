@@ -1016,7 +1016,7 @@ def main(argv: Sequence[str] | None = None) -> int:
 
         ids = _source(args.corpus)
         if not (isinstance(ids, list) and len(ids) == 1 and is_local_id(ids[0])):
-            parser.error("bids takes exactly one local dataset id (siena-1.0.0)")
+            parser.error("bids takes exactly one local dataset id (tueg-2.0.1)")
         if not args.src:
             parser.error("bids needs --src")
         try:

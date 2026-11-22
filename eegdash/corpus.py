@@ -21,9 +21,9 @@ the cache against it, and a report::
 
 Command line: ``python -m eegdash.corpus plan|download|verify|status|shards|
 convert|merge <name, csv or a,b,c> [--cache-dir ...]``; exit code 1 when
-anything is missing (``merge --out OUT --name NAME [--base STORE.zarr]``: 1
-when the merge is refused). ``python -m eegdash.corpus files <local-id>
---out FILE.csv`` writes a local dataset's file list; ``python -m
+anything is missing (``merge --out OUT --name NAME [--base STORE.zarr]
+[--dest DIR]``: 1 when the merge is refused). ``python -m eegdash.corpus files
+<local-id> --out FILE.csv`` writes a local dataset's file list; ``python -m
 eegdash.corpus bids <local-id> --src DIR`` writes its BIDS tree from a source
 in another layout (:mod:`eegdash.to_bids`).
 
@@ -854,14 +854,14 @@ class EEGDashCorpus:
         link: str = "hard",
         max_bytes: int = DEFAULT_SHARD_BYTES,
         overwrite: bool = False,
+        dest: str | Path | None = None,
     ) -> MergeReport:
-        """Merge the parts of :meth:`shards` into the store ``<out>/<name>.zarr``.
+        """Merge the parts of :meth:`shards` into the store ``<dest>/<name>.zarr``.
 
         Parameters
         ----------
         out : str | Path
-            As for :meth:`convert`: the parts are read from ``<out>/parts/``
-            and the store is written to *out*.
+            As for :meth:`convert`: the parts are read from ``<out>/parts/``.
         name : str
             The store's name.
         base : str | Path | None
@@ -873,6 +873,11 @@ class EEGDashCorpus:
             As for :meth:`shards`: the value the parts were converted with.
         overwrite : bool
             Replace an existing store of that name.
+        dest : str | Path | None
+            The folder the store and its side files ``<name>-buckets.csv``
+            and ``<name>-manifest.csv`` go to; *out* when not given. A
+            separate folder keeps the stores apart from the parts (a
+            ``zarr/`` beside ``parts/``).
 
         Returns
         -------
@@ -895,7 +900,7 @@ class EEGDashCorpus:
             }
         return merge_parts(
             parts,
-            out,
+            out if dest is None else dest,
             name,
             base=base,
             link=link,
@@ -953,8 +958,12 @@ def main(argv: Sequence[str] | None = None) -> int:
     parser.add_argument("--json", help="write the report here as JSON")
     parser.add_argument(
         "--out",
-        help="convert: the parts go to <out>/parts/; merge: the store goes to "
-        "<out>/<name>.zarr; files: the CSV to write",
+        help="convert: the parts go to <out>/parts/; merge: the parts are read "
+        "from there and the store goes to <out>/<name>.zarr unless --dest; "
+        "files: the CSV to write",
+    )
+    parser.add_argument(
+        "--dest", help="merge: the folder the store goes to (default --out)"
     )
     parser.add_argument(
         "--shard", type=int, help="convert, bids: this process's number"
@@ -1064,6 +1073,7 @@ def main(argv: Sequence[str] | None = None) -> int:
                 link=args.link or "hard",
                 max_bytes=max_bytes,
                 overwrite=args.overwrite,
+                dest=args.dest,
             )
         except ValueError as exc:
             print(f"MERGE REFUSED: {exc}")

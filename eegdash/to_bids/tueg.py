@@ -222,8 +222,9 @@ class TUEG(Adapter):
             "out every TUAB recording, matched by file name, and every recording of a "
             "subject of TUEV's training set. TUEV's evaluation files carry no subject "
             "code and cannot be matched to this corpus, so they are not left out: a "
-            "model pretrained on this tree may have seen them, and no TUEV score "
-            "should be reported from it.",
+            "model pretrained on this tree may have seen them. A score on TUEV's "
+            "training subjects (cross-validation within the training set) is clean; "
+            "a score on TUEV's evaluation set should not be reported from it.",
             "",
         ]
         if reasons:

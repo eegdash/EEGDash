@@ -244,7 +244,13 @@ def test_the_sidecar_and_the_dataset_files(src, held, tmp_path):
     assert "`acq-ar` 2, `acq-ara` 1, `acq-le` 1, `acq-lea` 1" in readme
     assert "`EEG XYZ-REF` (3 recordings)" in readme
     assert "does not define them" in readme  # why EEGReference is n/a
-    assert "TUAB" in readme and "no TUEV score" in readme.replace("\n", " ")
+    flat = readme.replace("\n", " ")
+    assert (
+        "TUAB" in flat
+        and "training subjects (cross-validation within the training set) is clean"
+        in flat
+    )
+    assert "a score on TUEV's evaluation set should not be reported" in flat
     assert "cannot be matched" in readme
     assert f"| {HELD_RECORDING} | 1 |" in readme
     assert f"| {HELD_SUBJECT} | 1 |" in readme

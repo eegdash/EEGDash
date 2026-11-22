@@ -446,6 +446,82 @@ def test_a_local_copy_is_checked_against_the_file_list_beside_it(
     assert corpus.verify(level="hash").datasets[0].row()["present"] == 4
 
 
+def _field(value, width):
+    return str(value).ljust(width).encode("latin-1")[:width]
+
+
+def _write_edf(path, labels, *, sfreq=256, seconds=12):
+    """An EDF written byte by byte: *labels*, 1-s records of int16 samples in uV."""
+    ns = len(labels)
+    header = b"".join(
+        [
+            _field("0", 8),
+            _field("X X X X", 80),
+            _field("X", 80),
+            _field("01.01.20", 8),
+            _field("10.00.00", 8),
+            _field(256 * (ns + 1), 8),
+            _field("", 44),
+            _field(seconds, 8),
+            _field(1, 8),
+            _field(ns, 4),
+        ]
+    )
+    header += b"".join(_field(label, 16) for label in labels)
+    for width, value in [
+        (80, ""),  # transducer
+        (8, "uV"),
+        (8, -3200),
+        (8, 3200),
+        (8, -32768),
+        (8, 32767),
+        (80, ""),  # prefiltering
+        (8, sfreq),
+        (32, ""),
+    ]:
+        header += _field(value, width) * ns
+    rng = np.random.default_rng(0)
+    data = rng.integers(-1000, 1000, (seconds, ns, sfreq)).astype("<i2").tobytes()
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_bytes(header + data)
+    return path
+
+
+def _clean_names_tree(root, names):
+    """One EDF labelled ``EEG FP1-REF``-style, its channels.tsv listing *names*."""
+    eeg = root / "sub-01" / "eeg"
+    stem = "sub-01_task-rest"
+    labels = ["EEG FP1-REF", "EEG FP2-REF", "EEG C3-REF", "EEG C4-REF", "EEG CZ-REF"]
+    _write_edf(eeg / f"{stem}_eeg.edf", [*labels, "EKG1"])
+    (root / "dataset_description.json").write_text(
+        json.dumps({"Name": "x", "BIDSVersion": "1.9.0"})
+    )
+    (eeg / f"{stem}_eeg.json").write_text(
+        json.dumps(
+            {"TaskName": "rest", "SamplingFrequency": 256, "PowerLineFrequency": 60}
+        )
+    )
+    rows = [f"{n}\t{'ECG' if n == 'ECG' else 'EEG'}\tuV" for n in names]
+    (eeg / f"{stem}_channels.tsv").write_text(
+        "name\ttype\tunits\n" + "\n".join(rows) + "\n"
+    )
+    return root
+
+
+def test_a_local_tree_whose_channels_tsv_cleans_the_labels_is_read(tmp_path, bank):
+    pytest.importorskip("zarr")
+    names = ["Fp1", "Fp2", "C3", "C4", "Cz", "ECG"]
+    root = _clean_names_tree(tmp_path / "cache" / "demo-2.0", names)
+    summary = convert_shard("demo-2.0", None, root, tmp_path / "part", bank=bank)
+    assert summary["skipped_by_reason"] == {} and summary["n_sessions"] == 1
+    assert _open(tmp_path / "part")["0"].attrs["channels"] == sorted(names[:5])
+    # one row short: no name is set, the raw labels resolve to nothing, a skip
+    root = _clean_names_tree(tmp_path / "cache" / "demo-3.0", names[:5])
+    summary = convert_shard("demo-3.0", None, root, tmp_path / "short", bank=bank)
+    assert summary["n_sessions"] == 0
+    assert summary["skipped_by_reason"] == {"lt3_resolvable": 1}
+
+
 def test_cli_writes_the_file_list_of_one_local_dataset(cache, tmp_path, capsys):
     out = tmp_path / "demo.csv"
     args = ["--cache-dir", str(cache), "--out", str(out), "--n-jobs", "2"]

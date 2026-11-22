@@ -704,11 +704,20 @@ class LocalRecord:
 
     @property
     def raw(self) -> Any:
+        """The recording, read as a catalogue record is read.
+
+        Under :func:`eegdash.io.tolerant` and with ``on_ch_mismatch="rename"``:
+        a channels.tsv whose names clean the file's labels (``Fp1`` for
+        ``EEG FP1-REF``) renames them, where a strict read refused the
+        recording. A channels.tsv with another number of rows sets no name.
+        """
         from mne_bids import (  # noqa: PLC0415
             BIDSPath,
             get_entities_from_fname,
             read_raw_bids,
         )
+
+        from .io import tolerant  # noqa: PLC0415 (imports mne)
 
         e = get_entities_from_fname(self.path.name)
         bp = BIDSPath(
@@ -719,7 +728,8 @@ class LocalRecord:
             check=False,
             **{k: v for k, v in e.items() if v is not None},
         )
-        return read_raw_bids(bp, verbose="ERROR")
+        with tolerant():
+            return read_raw_bids(bp, verbose="ERROR", on_ch_mismatch="rename")
 
 
 def local_subjects(root: Path) -> dict[str, int]:

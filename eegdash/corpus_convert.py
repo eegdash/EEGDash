@@ -40,6 +40,7 @@ import re
 import shutil
 import time
 from collections import Counter
+from concurrent.futures import ThreadPoolExecutor
 from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any, Collection, Sequence
@@ -732,14 +733,29 @@ class LocalRecord:
             return read_raw_bids(bp, verbose="ERROR", on_ch_mismatch="rename")
 
 
-def local_subjects(root: Path) -> dict[str, int]:
-    """Subject label -> bytes of its EEG folders, for the subjects of a BIDS tree with a recording."""
-    out: dict[str, int] = {}
-    for d in sorted(Path(root).glob("sub-*")):
-        files = [p for p in d.glob("**/eeg/*") if p.is_file()]
-        if any(p.name.endswith(tuple(f"_eeg{e}" for e in PRIMARY_EXT)) for p in files):
-            out[d.name[4:]] = sum(p.stat().st_size for p in files)
-    return out
+LOCAL_SCAN_THREADS = 16  # file lookups at a time when a local tree is scanned
+_PRIMARY_SUFFIXES = tuple(f"_eeg{e}" for e in PRIMARY_EXT)
+
+
+def _subject_bytes_of(d: Path) -> tuple[str, int] | None:
+    """One subject folder: its label and the bytes of its EEG folders, when it holds a recording."""
+    files = [p for p in d.glob("**/eeg/*") if p.is_file()]
+    if any(p.name.endswith(_PRIMARY_SUFFIXES) for p in files):
+        return d.name[4:], sum(p.stat().st_size for p in files)
+    return None
+
+
+def local_subjects(root: Path, n_jobs: int = LOCAL_SCAN_THREADS) -> dict[str, int]:
+    """Subject label -> bytes of its EEG folders, for the subjects of a BIDS tree with a recording.
+
+    Subjects are sized *n_jobs* at a time: the size of a linked recording is a
+    lookup of the source file, slow one by one on a loaded parallel file
+    system (0.1 s each for TUEG on one night, 4 times faster 32 at a time).
+    The result does not depend on *n_jobs*.
+    """
+    dirs = sorted(Path(root).glob("sub-*"))
+    with ThreadPoolExecutor(max_workers=max(1, n_jobs)) as pool:
+        return dict(found for found in pool.map(_subject_bytes_of, dirs) if found)
 
 
 def discover_bids(root: Path, subjects: Sequence[str] | None) -> list[LocalRecord]:

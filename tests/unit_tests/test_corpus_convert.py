@@ -220,6 +220,19 @@ def test_a_to_bids_tree_is_scanned_once_and_the_converting_processes_read_the_sc
         EEGDashCorpus(["demo-1.0"], cache_dir=cache).shards()
 
 
+def test_a_local_tree_scanned_in_parallel_gives_what_one_lookup_at_a_time_gives(cache):
+    root = cache / "demo-1.0"
+    sizes = convert_mod.local_subjects(root, n_jobs=1)
+    assert list(sizes) == ["01", "02", "03"]  # in order: the shard plan reads it so
+    assert convert_mod.local_subjects(root, n_jobs=8) == sizes
+    assert list(convert_mod.local_subjects(root, n_jobs=8)) == list(sizes)
+    one, many = (
+        EEGDashCorpus(["demo-1.0"], cache_dir=cache).verify(n_jobs=n).datasets[0]
+        for n in (1, 8)
+    )
+    assert one.ok and one.entries == many.entries
+
+
 def test_shard_and_n_shards_select_the_parts(cache, tmp_path, monkeypatch):
     calls = []
 

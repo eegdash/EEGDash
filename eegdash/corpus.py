@@ -65,6 +65,7 @@ import pandas as pd
 from . import downloader
 from .corpus_convert import (
     DEFAULT_SHARD_BYTES,
+    LOCAL_SCAN_THREADS,
     PRIMARY_EXT,
     Bank,
     ConvertReport,
@@ -508,13 +509,19 @@ class EEGDashCorpus:
         return self.cache_dir / dsid
 
     def _local(
-        self, dsid: str, level: str = "size", *, fresh: bool = False
+        self,
+        dsid: str,
+        level: str = "size",
+        *,
+        fresh: bool = False,
+        n_jobs: int = LOCAL_SCAN_THREADS,
     ) -> DatasetReport:
         """A local dataset, from its tree: nothing is queried, nothing written into the tree.
 
         A finished ``to_bids`` tree is checked once and the result saved beside
         it (``<dsid>.local.json``); later calls at ``size`` level read it, unless
-        *fresh* (``verify``) asks for the check again.
+        *fresh* (``verify``) asks for the check again. Files are checked *n_jobs*
+        at a time.
         """
         root = self.cache_dir / dsid
         rep = DatasetReport(dsid, state="local")
@@ -534,8 +541,8 @@ class EEGDashCorpus:
             rep.problems.append(f"path outside the dataset folder: {escaped[0]}")
             return rep
         if not saved.get("entries"):
-            for entry in rep.entries.values():
-                _check(root, entry, level)
+            with ThreadPoolExecutor(max_workers=max(1, n_jobs)) as pool:
+                list(pool.map(lambda e: _check(root, e, level), rep.entries.values()))
             if rep.entries:
                 _save_scan(dsid, root, entries=rep.entries)
         rep.subjects = len({p.split("/")[0] for p in rep.entries if p[:4] == "sub-"})
@@ -732,7 +739,7 @@ class EEGDashCorpus:
         reps = []
         for dsid in self.ids:
             if is_local_id(dsid):  # checked in place: no manifest, no COMPLETE
-                reps.append(self._local(dsid, level, fresh=True))
+                reps.append(self._local(dsid, level, fresh=True, n_jobs=n_jobs))
                 continue
             rep = self._from_disk(dsid)
             if rep.entries:

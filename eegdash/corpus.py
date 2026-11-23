@@ -90,6 +90,7 @@ _COMPLETE = Path(".eegdash", "COMPLETE")
 _OK = ("present", "absent")
 _COUNTED = ("files", "present", "absent", "missing", "corrupt", "incomplete")
 _CORPORA = Path(__file__).parent / "corpora"  # <name>.csv: the named corpora
+_BIDS_DONE = Path(".eegdash", "to_bids", "DONE")  # a finished eegdash.to_bids tree
 
 
 def _read_manifest(root: Path) -> tuple[dict, dict[str, dict]]:
@@ -233,6 +234,70 @@ def write_file_list(root: str | Path, out: str | Path, *, n_jobs: int = 8) -> in
     out.parent.mkdir(parents=True, exist_ok=True)
     write_csv(out, rows, ["path", "size", "sha256"])
     return len(rows)
+
+
+def _scan_path(root: Path) -> Path:
+    """Beside a local tree: ``<dsid>.local.json``, what one scan of the tree found."""
+    return root.parent / f"{root.name}.local.json"
+
+
+def _tree_key(dsid: str, root: Path) -> str | None:
+    """What identifies a finished :mod:`eegdash.to_bids` tree and its file list; None for any other tree.
+
+    ``to_bids`` removes its ``DONE`` at the start of a run and writes it anew at
+    the end, so a scan saved under one ``DONE`` is not read after the tree is
+    rewritten; a file list written or replaced beside the tree changes it too.
+    """
+    try:
+        done = (root / _BIDS_DONE).stat()
+    except OSError:
+        return None
+    key = [f"{done.st_mtime_ns}:{done.st_size}"]
+    for listing in (
+        _CORPORA / "files" / f"{dsid}.csv",
+        root.parent / f"{dsid}.files.csv",
+    ):
+        try:
+            st = listing.stat()
+        except OSError:
+            continue
+        key.append(f"{listing.name}:{st.st_mtime_ns}:{st.st_size}")
+    return "|".join(key)
+
+
+def _read_scan(dsid: str, root: Path) -> dict:
+    """The saved scan of a local tree when it is the current tree's; else empty."""
+    key = _tree_key(dsid, root)
+    if key is None:
+        return {}
+    try:
+        data = json.loads(_scan_path(root).read_text(encoding="utf-8"))
+    except (OSError, ValueError):
+        return {}
+    return data if isinstance(data, dict) and data.get("key") == key else {}
+
+
+def _save_scan(dsid: str, root: Path, **fields: Any) -> None:
+    """Add *fields* to the saved scan of a finished ``to_bids`` tree (any other tree: nothing).
+
+    Every process that converts a shard checks the dataset and sizes its
+    subjects first; on a parallel file system 32 processes walking a tree of
+    65,816 recordings at once never got past it. One scan, saved, is read by
+    all of them. Written to a temporary file and renamed: a reader sees the
+    old file or the new one.
+    """
+    key = _tree_key(dsid, root)
+    if key is None:
+        return
+    data = {**_read_scan(dsid, root), **fields, "key": key}
+    path = _scan_path(root)
+    tmp = path.with_name(f".{path.name}.{os.getpid()}.tmp")
+    try:
+        tmp.write_text(json.dumps(data, sort_keys=True), encoding="utf-8")
+        os.replace(tmp, path)
+    except OSError as err:  # a read-only cache: every process scans, as before
+        tmp.unlink(missing_ok=True)
+        logger.warning("%s: the scan of the tree is not saved (%s)", dsid, err)
 
 
 def _local_files(dsid: str, root: Path) -> dict[str, dict]:
@@ -442,8 +507,15 @@ class EEGDashCorpus:
             return self.cache_dir / twin
         return self.cache_dir / dsid
 
-    def _local(self, dsid: str, level: str = "size") -> DatasetReport:
-        """A local dataset, from its tree: nothing is queried and nothing written."""
+    def _local(
+        self, dsid: str, level: str = "size", *, fresh: bool = False
+    ) -> DatasetReport:
+        """A local dataset, from its tree: nothing is queried, nothing written into the tree.
+
+        A finished ``to_bids`` tree is checked once and the result saved beside
+        it (``<dsid>.local.json``); later calls at ``size`` level read it, unless
+        *fresh* (``verify``) asks for the check again.
+        """
         root = self.cache_dir / dsid
         rep = DatasetReport(dsid, state="local")
         if not root.is_dir():
@@ -452,7 +524,8 @@ class EEGDashCorpus:
                 f"local: obtain it under its terms and place its BIDS tree at {root}"
             )
             return rep
-        rep.entries = _local_files(dsid, root)
+        saved = {} if fresh or level != "size" else _read_scan(dsid, root)
+        rep.entries = saved.get("entries") or _local_files(dsid, root)
         escaped = [
             p for p in rep.entries if Path(p).is_absolute() or ".." in Path(p).parts
         ]
@@ -460,8 +533,11 @@ class EEGDashCorpus:
             rep.entries = {}
             rep.problems.append(f"path outside the dataset folder: {escaped[0]}")
             return rep
-        for entry in rep.entries.values():
-            _check(root, entry, level)
+        if not saved.get("entries"):
+            for entry in rep.entries.values():
+                _check(root, entry, level)
+            if rep.entries:
+                _save_scan(dsid, root, entries=rep.entries)
         rep.subjects = len({p.split("/")[0] for p in rep.entries if p[:4] == "sub-"})
         if not rep.entries:
             rep.problems.append(f"no recording under {root}")
@@ -656,7 +732,7 @@ class EEGDashCorpus:
         reps = []
         for dsid in self.ids:
             if is_local_id(dsid):  # checked in place: no manifest, no COMPLETE
-                reps.append(self._local(dsid, level))
+                reps.append(self._local(dsid, level, fresh=True))
                 continue
             rep = self._from_disk(dsid)
             if rep.entries:
@@ -705,7 +781,15 @@ class EEGDashCorpus:
         root = self._root(dsid)
         _, entries = ({}, {}) if is_local_id(dsid) else _read_manifest(root)
         if not entries:
-            return local_subjects(root) if root.is_dir() else {}
+            if not root.is_dir():
+                return {}
+            saved = _read_scan(dsid, root) if is_local_id(dsid) else {}
+            if "subject_bytes" in saved:
+                return saved["subject_bytes"]
+            sizes = local_subjects(root)
+            if is_local_id(dsid):
+                _save_scan(dsid, root, subject_bytes=sizes)
+            return sizes
         sizes: Counter = Counter()
         subjects = set()
         for path, entry in entries.items():

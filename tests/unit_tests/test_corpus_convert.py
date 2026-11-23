@@ -192,6 +192,34 @@ def test_shards_from_a_local_tree_and_from_a_manifest(cache):
     assert [(s.subjects, s.n_bytes) for s in planned] == [(("a",), 50), (("b",), 75)]
 
 
+def _no_walk(*args, **kwargs):
+    raise AssertionError("the tree was walked again")
+
+
+def test_a_to_bids_tree_is_scanned_once_and_the_converting_processes_read_the_scan(
+    cache, tmp_path, monkeypatch
+):
+    pytest.importorskip("zarr")
+    root, scan = cache / "demo-1.0", cache / "demo-1.0.local.json"
+    corpus = EEGDashCorpus(["demo-1.0"], cache_dir=cache)
+    walked = corpus.shards(max_bytes=1)
+    assert not scan.exists()  # not a to_bids tree: nothing saved, as before
+    done = root / ".eegdash" / "to_bids" / "DONE"
+    done.parent.mkdir(parents=True)
+    done.write_text("{}\n")
+    assert corpus.verify().ok and corpus.shards(max_bytes=1) == walked
+    assert set(json.loads(scan.read_text())) == {"entries", "key", "subject_bytes"}
+    for name in ("local_subjects", "_local_files", "_check"):
+        monkeypatch.setattr(corpus_mod, name, _no_walk)
+    again = EEGDashCorpus(["demo-1.0"], cache_dir=cache)  # another process
+    assert again.shards(max_bytes=1) == walked  # the same plan: part 000 still holds
+    assert again.status().ok
+    assert again.convert(tmp_path / "out", shard=1, n_shards=3).ok
+    done.write_text('{"run": 2}\n')  # the tree written again: the scan is stale
+    with pytest.raises(AssertionError, match="walked again"):
+        EEGDashCorpus(["demo-1.0"], cache_dir=cache).shards()
+
+
 def test_shard_and_n_shards_select_the_parts(cache, tmp_path, monkeypatch):
     calls = []
 

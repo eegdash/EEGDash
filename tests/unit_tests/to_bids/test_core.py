@@ -719,6 +719,26 @@ def test_a_cut_run_resumes_without_reading_the_finished_subjects_again(
     assert [p.name for p in read] == ["s2_1.edf"]
 
 
+@pytest.mark.parametrize(("seconds", "appends"), [(3600.0, 1), (0.0, 3)])
+def test_the_scan_file_is_appended_to_in_batches_not_once_per_subject(
+    src, tmp_path, monkeypatch, seconds, appends
+):
+    import eegdash.to_bids.core as core  # noqa: PLC0415
+
+    write_edf(src / "s3" / "s3_1.edf", LABELS, seed=9)
+    real_append, calls = core._append_rows, []
+    monkeypatch.setattr(core, "FLUSH_SECONDS", seconds)
+    monkeypatch.setattr(
+        core,
+        "_append_rows",
+        lambda p, rows: calls.append(len(rows)) or real_append(p, rows),
+    )
+    report = _run(src, tmp_path / "cache")
+    assert report.ok and len(calls) == appends and sum(calls) == 3
+    scan = tmp_path / "cache" / DSID / ".eegdash" / "to_bids" / "scan-all.jsonl"
+    assert len(scan.read_text().splitlines()) == 3
+
+
 def test_shard_reports_add_up_to_the_full_run(src, tmp_path):
     write_edf(src / "s3" / "s3_1.edf", LABELS, seed=9)
     full = _run(src, tmp_path / "full")

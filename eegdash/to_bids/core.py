@@ -26,9 +26,11 @@
   one that holds another source is refused. Subjects are spread over
   processes (``n_jobs``) and over job-array tasks (``shard``, ``n_shards``:
   subjects sorted, every n-th): a subject belongs to one worker, so no two
-  processes write one folder. Each subject's rows are appended to
-  ``.eegdash/to_bids/scan-<k>.jsonl`` (``scan-all.jsonl`` without a shard) as
-  it finishes, so a cut job resumes without reading those headers again.
+  processes write one folder. The finished subjects' rows are appended to
+  ``.eegdash/to_bids/scan-<k>.jsonl`` (``scan-all.jsonl`` without a shard)
+  every ``FLUSH_SECONDS``, so a cut job resumes without reading those headers
+  again (one append per subject, each flushed to disk, took 0.17 s on a
+  parallel file system: longer than writing the subject).
 - **finish**, by the call without a shard: the root files (participants,
   dataset_description, README.md, CHANGES, LICENSE, ``sourcedata/``,
   ``task-<t>_events.json``, ``.bidsignore``) and ``.eegdash/to_bids/``
@@ -78,6 +80,7 @@ STATE = Path(".eegdash", "to_bids")  # the converter's own files, beside the tre
 LABEL_RE = re.compile(r"[A-Za-z0-9]+")  # a BIDS entity label
 VERSION_RE = re.compile(r"(.+)-(\d[a-z0-9.]*)")  # <name>-<version>
 TMP_RE = re.compile(r"\..+\.\d+\.tmp(\.[A-Za-z0-9]+)?")  # the names of _tmp()
+FLUSH_SECONDS = 30.0  # how often the scan file is appended to, at most
 COMPARE_BYTES = 1 << 20  # a copy is the source's when its first and last MiB are
 COUNT_KEYS = {
     "EEG": "EEGChannelCount",
@@ -658,7 +661,7 @@ def prior_rows(out: Path) -> dict[str, dict]:
 
 
 def _append_rows(path: Path, rows: list[dict]) -> None:
-    """One subject's rows at the end of the scan file, flushed: what a cut job resumes from."""
+    """Finished subjects' rows at the end of the scan file, flushed: what a cut job resumes from."""
     with open(path, "a", encoding="utf-8") as f:
         f.write("".join(json.dumps(r, sort_keys=True) + "\n" for r in rows))
         f.flush()
@@ -1029,6 +1032,8 @@ def run(
         len(excluded),
     )
     rows: list[dict] = []
+    pending: list[dict] = []  # rows not yet in the scan file
+    flushed = time.monotonic()
     pool = None
     if n_jobs > 1 and len(jobs) > 1:
         workers = min(n_jobs, len(jobs))
@@ -1046,9 +1051,13 @@ def run(
     try:
         for subject_rows in results:  # in subject order, as each finishes
             rows += subject_rows
-            if not dry_run:
-                _append_rows(scan, subject_rows)
+            pending += subject_rows
+            if not dry_run and time.monotonic() - flushed >= FLUSH_SECONDS:
+                _append_rows(scan, pending)
+                pending, flushed = [], time.monotonic()
     finally:
+        if not dry_run and pending:  # what finished before a failure is kept
+            _append_rows(scan, pending)
         if pool is not None:
             pool.shutdown(cancel_futures=True)
     report.rows = sorted(report.rows + rows, key=lambda r: r["bids_path"])

@@ -237,7 +237,7 @@ def test_the_sidecar_and_the_dataset_files(src, held, tmp_path):
     ]
     assert "forbid redistribution" in desc["License"]
     assert "isip.piconepress.com/projects/nedc/html/tuh_eeg/" in desc["License"]
-    assert desc["GeneratedBy"] == [{"Name": "eegdash.to_bids", "Version": "tueg/1"}]
+    assert desc["GeneratedBy"] == [{"Name": "eegdash.to_bids", "Version": "tueg/2"}]
     readme = (root / "README.md").read_text()
     assert readme.startswith("# TUH EEG Corpus (TUEG) 2.0.1")
     assert "5 recordings of 2 subjects" in readme
@@ -269,8 +269,34 @@ def test_the_channel_table():
     assert table.lookup("EEG SP1-REF") == ("SP1", "EEG", True)
     assert table.lookup("EEG T10-REF") == ("T10", "EEG", True)
     assert table.lookup("EEG 30-LE") == ("30", "MISC", True)
-    assert table.lookup("EEG C3P-REF") == ("EEG C3P-REF", "MISC", False)
-    assert table.lookup("DC1-DC") == ("DC1-DC", "MISC", False)
+    assert table.lookup("EEG C3P-REF") == ("C3P", "EEG", True)
+    # the labels EXP 37b found unmapped over the whole archive (2026-11-22)
+    seen = {
+        "ECG EKG-REF": ("EKG", "ECG"),
+        "EEG LUC-LE": ("LUC", "EOG"),
+        "EEG RLC-REF": ("RLC", "EOG"),
+        "RESP ABDOMEN-REF": ("RESP ABDOMEN", "RESP"),
+        "EEG RESP1-REF": ("RESP1", "RESP"),
+        "DC3-DC": ("DC3", "MISC"),
+        "PULSE RATE": ("PULSE RATE", "MISC"),
+        "EEG PG1-LE": ("PG1", "EEG"),
+        "EEG X1-REF": ("X1", "MISC"),
+        "EEG 1X10_LAT_01-": ("1X10_LAT_01", "MISC"),
+        "EEG C3-P3": ("C3-P3", "MISC"),
+        "EEG FP1-F7": ("FP1-F7", "MISC"),
+    }
+    for label, (name, kind) in seen.items():
+        assert table.lookup(label) == (name, kind, True), label
+    assert table.lookup("EEG C3-REF") == (
+        "C3",
+        "EEG",
+        True,
+    )  # a referential label is not a bipolar pair
+    assert table.lookup("EEG FOO-REF") == (
+        "EEG FOO-REF",
+        "MISC",
+        False,
+    )  # still no rule: unmapped, counted
 
 
 def test_channels_tsv_rows(src, held, tmp_path):

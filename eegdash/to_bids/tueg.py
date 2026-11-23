@@ -105,7 +105,7 @@ class TUEG(Adapter):
 
     name = "tueg"
     versions = ("2.0.1",)
-    revision = 1
+    revision = 2
     extension = ".edf"
     linkable = True
 

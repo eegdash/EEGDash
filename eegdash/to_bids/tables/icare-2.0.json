@@ -1,0 +1,113 @@
+{
+  "task": "icu",
+  "url": "https://bdsp.io/content/bdsp-icare/2.0/",
+  "doi": "https://doi.org/10.60508/2xr5-3368",
+  "paper": "Amorim E, Zheng WL, Ghassemi MM, et al. The International Cardiac Arrest Research (I-CARE) Consortium Electroencephalography Database. Critical Care Medicine. https://doi.org/10.1097/CCM.0000000000006074",
+  "splits": ["training", "validation", "test"],
+  "groups": ["EEG", "ECG", "REF", "OTHER"],
+  "dataset_description": {
+    "Name": "I-CARE: International Cardiac Arrest REsearch consortium Electroencephalography Database",
+    "Authors": [
+      "Edilberto Amorim",
+      "Wei-Long Zheng",
+      "Mohammad Ghassemi",
+      "Mahsa Aghaeeaval",
+      "Pravinkumar Kandhare",
+      "Vishnu Karukonda",
+      "Jong Woo Lee",
+      "Susan Herman",
+      "Adithya Sivaraju",
+      "Nicolas Gaspard",
+      "Jeannette Hofmeijer",
+      "Michel JAM van Putten",
+      "Reza Sameni",
+      "Matthew Reyna",
+      "Gari Clifford",
+      "M. Brandon Westover"
+    ],
+    "License": "Not redistributable. I-CARE 2.0 is distributed by the Brain Data Science Platform (BDSP) under the BDSP Restricted Health Data License and the BDSP Restricted Health Data Use Agreement, signed by each user, which forbid sharing the data or record-level derivatives: each user obtains it from BDSP (https://bdsp.io/content/bdsp-icare/2.0/) and makes this tree from their own copy.",
+    "HowToAcknowledge": "Please cite the database, Amorim E, et al. I-CARE: International Cardiac Arrest REsearch consortium Electroencephalography Database (version 2.0). Brain Data Science Platform, 2026. https://doi.org/10.60508/2xr5-3368, and the paper that describes it: Amorim E, et al. The International Cardiac Arrest Research (I-CARE) Consortium Electroencephalography Database. Critical Care Medicine. https://doi.org/10.1097/CCM.0000000000006074",
+    "ReferencesAndLinks": [
+      "https://bdsp.io/content/bdsp-icare/2.0/",
+      "https://doi.org/10.60508/2xr5-3368",
+      "https://doi.org/10.1097/CCM.0000000000006074"
+    ],
+    "SourceDatasets": [
+      {
+        "URL": "https://bdsp.io/content/bdsp-icare/2.0/",
+        "DOI": "doi:10.60508/2xr5-3368",
+        "Version": "2.0"
+      }
+    ]
+  },
+  "sidecar": {
+    "TaskDescription": "Continuous intensive-care EEG monitoring of a comatose patient after cardiac arrest; no task was performed.",
+    "InstitutionName": "I-CARE consortium (seven hospitals in the United States and Europe)"
+  },
+  "participants": {
+    "columns": {
+      "Hospital": "hospital",
+      "Age": "age",
+      "Sex": "sex",
+      "ROSC": "rosc",
+      "OHCA": "ohca",
+      "Shockable Rhythm": "shockable_rhythm",
+      "VFib": "shockable_rhythm",
+      "TTM": "ttm",
+      "Outcome": "outcome",
+      "CPC": "cpc"
+    },
+    "sex": {"Male": "M", "Female": "F"},
+    "json": {
+      "split": {
+        "Description": "The release's folder: the 2023 PhysioNet Challenge partition.",
+        "Levels": {
+          "training": "training set (607 patients)",
+          "validation": "validation set (107 patients)",
+          "test": "test set (306 patients)"
+        }
+      },
+      "hospital": {
+        "Description": "De-identified source hospital, as the release's patient file gives it."
+      },
+      "age": {
+        "Description": "Age at the cardiac arrest; ages above 89 are given as 90.",
+        "Units": "year"
+      },
+      "sex": {
+        "Description": "Sex, as the release's patient file gives it.",
+        "Levels": {"M": "male", "F": "female"}
+      },
+      "rosc": {
+        "Description": "Time from the cardiac arrest to the return of spontaneous circulation (ROSC).",
+        "Units": "minute"
+      },
+      "ohca": {
+        "Description": "Out-of-hospital cardiac arrest.",
+        "Levels": {"True": "out of hospital", "False": "in hospital"}
+      },
+      "shockable_rhythm": {
+        "Description": "Initial rhythm shockable (ventricular fibrillation); the release's field `Shockable Rhythm` or `VFib`.",
+        "Levels": {"True": "shockable", "False": "not shockable"}
+      },
+      "ttm": {
+        "Description": "Targeted temperature management setpoint; n/a when none was applied.",
+        "Units": "degree Celsius"
+      },
+      "outcome": {
+        "Description": "Neurological outcome, from the Cerebral Performance Category (CPC).",
+        "Levels": {"Good": "CPC 1-2", "Poor": "CPC 3-5"}
+      },
+      "cpc": {
+        "Description": "Cerebral Performance Category.",
+        "Levels": {
+          "1": "good cerebral performance",
+          "2": "moderate disability",
+          "3": "severe disability",
+          "4": "coma or vegetative state",
+          "5": "death"
+        }
+      }
+    }
+  }
+}

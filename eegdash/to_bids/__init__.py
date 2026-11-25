@@ -25,7 +25,8 @@ Headers are read, never the signal; data files are linked (symbolic links by
 default), never rewritten when the source format is a BIDS data file; nothing
 is written under the source. Held-out recordings are left out and reported.
 The adapters are in :data:`ADAPTERS`: the TUH EEG Corpus (``tueg``, from
-NEDC). One outside the package is named ``module:Class`` (a subclass of
+NEDC) and I-CARE (``icare``, from BDSP, WFDB records written as EDF; needs
+``wfdb``). One outside the package is named ``module:Class`` (a subclass of
 :class:`Adapter`).
 """
 
@@ -48,7 +49,10 @@ from .adapter import (
 from .core import LINK_MODES, BidsReport, run, split_id
 
 # <name>: "module:Class", imported when used
-ADAPTERS = {"tueg": "eegdash.to_bids.tueg:TUEG"}
+ADAPTERS = {
+    "tueg": "eegdash.to_bids.tueg:TUEG",
+    "icare": "eegdash.to_bids.icare:ICARE",
+}
 
 
 def get_adapter(spec: str | type[Adapter]) -> type[Adapter]:

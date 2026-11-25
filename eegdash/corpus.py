@@ -210,12 +210,36 @@ def _listed(path: Path) -> tuple[int, str] | None:
     return path.stat().st_size, _sha256(path)
 
 
+def _names_under(top: Path) -> list[Path]:
+    """Every entry under *top* that is not a folder, names starting with ``.`` left out, no link followed.
+
+    Folders are told apart by the type the directory listing gives
+    (``follow_symlinks=False``). ``os.walk`` looked up the target of every link
+    to decide, one Lustre lookup per recording: TUEG's list (65,816 links) spent
+    50 minutes on it without hashing a file. A linked folder comes back as an
+    entry and is dropped by :func:`_listed`, as ``os.walk`` never entered it.
+    """
+    found, stack = [], [top]
+    while stack:
+        with os.scandir(stack.pop()) as it:
+            for e in it:
+                if e.name.startswith("."):
+                    continue
+                if e.is_dir(follow_symlinks=False):
+                    stack.append(Path(e.path))
+                else:
+                    found.append(Path(e.path))
+    return found
+
+
 def write_file_list(root: str | Path, out: str | Path, *, n_jobs: int = 8) -> int:
     """Write the file list of a tree, ``path,size,sha256``, the list a local dataset is checked against.
 
     Every regular file under *root* (a symbolic link to the tree is followed;
     a file or folder whose name starts with ``.`` is left out), sorted by
-    path, hashed *n_jobs* at a time. Nothing is written inside *root*.
+    path. The top-level folders are walked and the files hashed *n_jobs* at a
+    time; a linked folder inside the tree is not entered. Nothing is written
+    inside *root*.
 
     Returns
     -------
@@ -228,12 +252,14 @@ def write_file_list(root: str | Path, out: str | Path, *, n_jobs: int = 8) -> in
         raise ValueError(f"{root}: not a folder")
     if out.resolve().is_relative_to(root):
         raise ValueError(f"{out}: the file list must not be written inside {root}")
-    paths = []
-    for dirpath, dirnames, filenames in os.walk(root):
-        dirnames[:] = [d for d in dirnames if not d.startswith(".")]
-        paths += [Path(dirpath, f) for f in filenames if not f.startswith(".")]
-    paths.sort(key=lambda p: p.relative_to(root).as_posix())
+    with os.scandir(root) as it:
+        entries = [e for e in it if not e.name.startswith(".")]
+    dirs = [Path(e.path) for e in entries if e.is_dir(follow_symlinks=False)]
+    paths = [Path(e.path) for e in entries if not e.is_dir(follow_symlinks=False)]
     with ThreadPoolExecutor(max_workers=max(1, n_jobs)) as pool:
+        for names in pool.map(_names_under, dirs):
+            paths += names
+        paths.sort(key=lambda p: p.relative_to(root).as_posix())
         found = list(pool.map(_listed, paths))
     rows = [
         {"path": p.relative_to(root).as_posix(), "size": f[0], "sha256": f[1]}

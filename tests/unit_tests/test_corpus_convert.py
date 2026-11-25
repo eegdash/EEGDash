@@ -486,6 +486,23 @@ def test_a_file_list_follows_linked_files_and_leaves_out_broken_links(tmp_path):
     ]
 
 
+def test_a_file_list_walks_nested_folders_and_does_not_enter_a_linked_folder(tmp_path):
+    outside = tmp_path / "outside"
+    outside.mkdir()
+    (outside / "x.edf").write_bytes(b"x")
+    root = tmp_path / "cache" / "demo-1.0"
+    (root / "sub-01" / "ses-01" / "eeg").mkdir(parents=True)
+    (root / "sub-01" / "ses-01" / "eeg" / "a.edf").write_bytes(b"aa")
+    (root / "sub-02").mkdir()
+    (root / "sub-02" / "b.edf").write_bytes(b"b")
+    (root / "sub-02" / "linked").symlink_to(outside, target_is_directory=True)
+    (root / "top.json").write_bytes(b"{}")
+    out = tmp_path / "demo-1.0.csv"
+    assert corpus_mod.write_file_list(root, out, n_jobs=3) == 3
+    paths = [line.split(",")[0] for line in out.read_text().splitlines()[1:]]
+    assert paths == ["sub-01/ses-01/eeg/a.edf", "sub-02/b.edf", "top.json"]
+
+
 def test_a_local_copy_is_checked_against_the_file_list_beside_it(
     cache, tmp_path, monkeypatch
 ):

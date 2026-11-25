@@ -199,6 +199,17 @@ def _sha256(path: Path) -> str:
     return h.hexdigest()
 
 
+def _listed(path: Path) -> tuple[int, str] | None:
+    """The size and SHA-256 of a regular file (a link followed), or None for anything else.
+
+    Run in the pool with the hash: on Lustre the first look at a linked file
+    took up to 0.1 s on a slow night, an hour for TUEG's 65,816 files one at a time.
+    """
+    if not path.is_file():
+        return None
+    return path.stat().st_size, _sha256(path)
+
+
 def write_file_list(root: str | Path, out: str | Path, *, n_jobs: int = 8) -> int:
     """Write the file list of a tree, ``path,size,sha256``, the list a local dataset is checked against.
 
@@ -220,17 +231,14 @@ def write_file_list(root: str | Path, out: str | Path, *, n_jobs: int = 8) -> in
     paths = []
     for dirpath, dirnames, filenames in os.walk(root):
         dirnames[:] = [d for d in dirnames if not d.startswith(".")]
-        paths += [
-            Path(dirpath, f)
-            for f in filenames
-            if not f.startswith(".") and Path(dirpath, f).is_file()
-        ]
+        paths += [Path(dirpath, f) for f in filenames if not f.startswith(".")]
     paths.sort(key=lambda p: p.relative_to(root).as_posix())
     with ThreadPoolExecutor(max_workers=max(1, n_jobs)) as pool:
-        digests = list(pool.map(_sha256, paths))
+        found = list(pool.map(_listed, paths))
     rows = [
-        {"path": p.relative_to(root).as_posix(), "size": p.stat().st_size, "sha256": d}
-        for p, d in zip(paths, digests)
+        {"path": p.relative_to(root).as_posix(), "size": f[0], "sha256": f[1]}
+        for p, f in zip(paths, found)
+        if f is not None
     ]
     out.parent.mkdir(parents=True, exist_ok=True)
     write_csv(out, rows, ["path", "size", "sha256"])

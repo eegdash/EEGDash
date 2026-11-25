@@ -468,6 +468,24 @@ def test_a_file_list_is_written_from_a_tree_behind_a_link(tmp_path):
     assert not (held / "list.csv").exists()
 
 
+def test_a_file_list_follows_linked_files_and_leaves_out_broken_links(tmp_path):
+    raw = tmp_path / "raw"
+    raw.mkdir()
+    (raw / "rec.edf").write_bytes(b"edf data")
+    root = tmp_path / "cache" / "demo-1.0"
+    (root / "sub-01" / "eeg").mkdir(parents=True)
+    (root / "sub-01" / "eeg" / "sub-01_eeg.edf").symlink_to(raw / "rec.edf")
+    (root / "sub-01" / "eeg" / "sub-01_channels.tsv").write_bytes(b"name")
+    (root / "sub-01" / "eeg" / "gone.edf").symlink_to(raw / "missing.edf")
+    out = tmp_path / "demo-1.0.csv"
+    assert corpus_mod.write_file_list(root, out, n_jobs=4) == 2
+    rows = [line.split(",") for line in out.read_text().splitlines()[1:]]
+    assert rows == [
+        ["sub-01/eeg/sub-01_channels.tsv", "4", hashlib.sha256(b"name").hexdigest()],
+        ["sub-01/eeg/sub-01_eeg.edf", "8", hashlib.sha256(b"edf data").hexdigest()],
+    ]
+
+
 def test_a_local_copy_is_checked_against_the_file_list_beside_it(
     cache, tmp_path, monkeypatch
 ):

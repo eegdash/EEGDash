@@ -163,7 +163,7 @@ def _snapshot(root):
 
 
 def test_the_adapter_is_registered():
-    assert ADAPTERS["tueg"] == "eegdash.to_bids.tueg:TUEG"
+    assert ADAPTERS == {"tueg": "eegdash.to_bids.tueg:TUEG"}
     assert get_adapter("tueg") is TUEG
     assert TUEG.versions == ("2.0.1",) and TUEG.linkable and TUEG.extension == ".edf"
 

@@ -1,8 +1,0 @@
-pattern,name,type
-EEG ([A-Za-z]+\d*-[A-Za-z]+\d*),\1,MISC
-"EEG ((?i:FP|AF|FT|FC|CP|TP|PO|F|C|T|P|O|A|I|M)(?i:Z|\d{1,2})|(?i:NZ))",\1,EEG
-ECG (ECG(?:\d+|L|R)?),\1,ECG
-REF (RAT\d|REF|C2|A[12]|BIP\d|Cb2|M[12]|In1-Ref\d),\1,MISC
-OTHER ((?:EMG|LEG|LAT)\d*),\1,EMG
-OTHER ([LR]OC),\1,EOG
-OTHER (SpO2),\1,MISC

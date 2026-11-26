@@ -130,15 +130,9 @@ tests = [
     # (tests/unit_tests/test_croissant_export.py). Optional: the gate skips
     # when absent, runs the MLCommons validator when present.
     'mlcroissant',
-    # tests/unit_tests/to_bids/test_icare.py: the I-CARE adapter reads WFDB records
-    'wfdb>=4',
 ]
 dev = [
   "pre-commit",
-]
-# eegdash.to_bids's I-CARE adapter reads WFDB records
-icare = [
-  "wfdb>=4",
 ]
 
 docs = [

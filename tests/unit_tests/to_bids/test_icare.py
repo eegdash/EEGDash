@@ -496,6 +496,52 @@ def test_the_edf_holds_wfdbs_codes_and_physical_values(src, tmp_path):
     assert got.shape == (3125, 6) and np.array_equal(got, phys * 1e-6)
 
 
+def test_a_flat_channel_without_a_positive_gain_is_written_flat(src, tmp_path):
+    """BDSP's 2.0 headers give a constant channel a negative gain (-0.0763 for code 1)."""
+    pytest.importorskip("wfdb")
+    p, eeg, n = src / "training" / "0284", list(EEG_0284), 12 * 256
+    gains, base = [2.0] * len(eeg), [0] * len(eeg)
+    gains[1] = -0.07629510760307312
+    codes = _codes(n, len(eeg), 11)
+    codes[:, 1] = 1  # flat: written, read as 0
+    write_record(p, "0284_006_008_EEG", eeg, codes, gains=gains, baselines=base, sfreq=256)  # fmt: skip
+    varying = _codes(n, len(eeg), 12)  # not flat: no gain to read it with
+    write_record(p, "0284_007_009_EEG", eeg, varying, gains=gains, baselines=base, sfreq=256)  # fmt: skip
+    report = _run(src, tmp_path / "cache")
+    eeg_dir = tmp_path / "cache" / DSID / "sub-0284" / "eeg"
+    edf = eeg_dir / "sub-0284_task-icu_acq-h008_run-006_eeg.edf"
+    assert np.array_equal(_edf_codes(edf), codes)  # the codes kept
+    got = mne.io.read_raw_edf(edf, preload=True, verbose="ERROR").get_data()
+    assert (got[1] == 0).all() and got[0].std() > 0
+    side = json.loads(edf.with_suffix(".json").read_text())
+    assert side["FlatChannels"] == [eeg[1]] and "FlatChannelsNote" in side
+    assert not (eeg_dir / "sub-0284_task-icu_acq-h009_run-007_eeg.edf").exists()
+    assert any(
+        "acq-h009_run-007" in t and "not a calibrated channel" in t
+        for t in report.problems
+    )
+
+
+def test_an_extra_record_without_its_sample_file_is_left_out(src, tmp_path):
+    """BDSP's 2.0 serves 0647_114_105's ECG header without its .mat: the EEG is kept."""
+    pytest.importorskip("wfdb")
+    p, eeg, n = src / "training" / "0284", list(EEG_0284), 12 * 256
+    two = dict(gains=[2.0] * len(eeg), baselines=[0] * len(eeg), sfreq=256)
+    codes = _codes(n, len(eeg), 13)
+    write_record(p, "0284_008_010_EEG", eeg, codes, **two)
+    write_record(p, "0284_008_010_ECG", ["ECG"], _codes(n, 1, 14), gains=[2.0], baselines=[0], sfreq=256)  # fmt: skip
+    (p / "0284_008_010_ECG.mat").unlink()
+    report = _run(src, tmp_path / "cache")
+    edf = tmp_path / "cache" / DSID / "sub-0284" / "eeg"
+    edf = edf / "sub-0284_task-icu_acq-h010_run-008_eeg.edf"
+    assert np.array_equal(_edf_codes(edf), codes)  # the EEG record alone
+    assert any(
+        "0284_008_010_ECG: a header without its sample file" in w
+        for w in report.warnings
+    )
+    assert not any("run-008" in t for t in report.problems)
+
+
 # ------------------------------------------------- resume, dry run, wfdb
 
 

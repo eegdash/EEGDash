@@ -448,9 +448,13 @@ class ICARE(Adapter):
         folder = self.src / rec.source.parent
         signals, labels, ranges = [], [], []
         missing, rounded, assumed, left_out, records = {}, [], [], [], []
+        flat: list[str] = []
         eeg = None
         for group in rec.extra["groups"].split(","):
             base = folder / f"{rec.key}_{group}"
+            if eeg is not None and not base.with_name(f"{base.name}.mat").is_file():
+                left_out.append(f"{base.name}: a header without its sample file")
+                continue
             record = wfdb.rdrecord(str(base), physical=False, return_res=16)
             if eeg is None:
                 eeg = record
@@ -475,12 +479,14 @@ class ICARE(Adapter):
                     col[gap] = np.clip(round(record.baseline[k]), *INT16)
                     missing[label] = int(gap.sum())
                 unit = units[k] if k < len(units) else None
+                gain, baseline = record.adc_gain[k], record.baseline[k]
+                if not gain > 0 and col.min() == col.max():
+                    # one code throughout with no usable gain (BDSP's 2.0 writes
+                    # a negative one): a flat channel, its code read as physical 0
+                    gain, baseline = 1.0, int(col[0])
+                    flat.append(label)
                 fields = physical_range(
-                    record.adc_gain[k],
-                    record.baseline[k],
-                    int(col.min()),
-                    int(col.max()),
-                    unit,
+                    gain, baseline, int(col.min()), int(col.max()), unit
                 )
                 if not fields["exact"]:
                     rounded.append(label)
@@ -495,6 +501,7 @@ class ICARE(Adapter):
             records=records,
             missing=missing,
             rounded=rounded,
+            flat=flat,
             assumed=assumed,
             left_out=left_out,
             dropped=dropped,
@@ -535,6 +542,12 @@ class ICARE(Adapter):
                 "exact 8-character EDF value: the ends of the EDF range are rounded to "
                 "their last decimal place, so a physical value differs from WFDB's by "
                 "at most half a unit of that place; the 16-bit codes are WFDB's."
+            )
+        if found.get("flat"):
+            side["FlatChannels"] = found["flat"]
+            side["FlatChannelsNote"] = (
+                "Channels that hold one sample value throughout and whose WFDB header "
+                "gives no positive gain: written flat, the value as physical 0."
             )
         if found.get("assumed"):
             side["UnitsNote"] = (
@@ -634,7 +647,7 @@ class ICARE(Adapter):
             "per segment |",
             "| `EEG`, `ECG`, `REF`, `OTHER` records of a segment | merged into its EDF "
             "file, in that order; a record of another rate or length than the EEG "
-            "record is left out (warnings) |",
+            "record, or without its sample file, is left out (warnings) |",
             "| `<patient>.txt` | participants.tsv |",
             "",
             "The EDF files hold the release's 16-bit samples unchanged. Each channel's "
@@ -643,7 +656,9 @@ class ICARE(Adapter):
             "fields cannot hold that range exactly, it is rounded and the channel listed "
             "under `PhysicalRangeRounded` in the recording's sidecar. Samples with WFDB's "
             "missing-sample code are written as the channel's baseline and counted "
-            "under `MissingSamples`. A channel whose record declares no unit (`nu` or "
+            "under `MissingSamples`. A channel that holds one value throughout and whose "
+            "header gives no positive gain is written flat at physical 0 "
+            "(`FlatChannels`). A channel whose record declares no unit (`nu` or "
             "none) is written in uV, as its values have microvolt amplitude; the "
             "release does not state the unit (`UnitsNote`).",
             "",

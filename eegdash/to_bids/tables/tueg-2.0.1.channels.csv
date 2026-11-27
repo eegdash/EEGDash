@@ -1,0 +1,14 @@
+pattern,name,type
+(?i)(?:EEG\s+|ECG\s+)?(EKG.*?)(?:-REF|-LE)?,\1,ECG
+(?i)(?:EEG\s+)?([LR]OC|LUC|RLC)(?:-REF|-LE)?,\1,EOG
+(?i)(?:EEG\s+)?(EMG.*?)(?:-REF|-LE)?,\1,EMG
+(?i)(?:EEG\s+)?(PHOTIC.*?)(?:-REF|-LE)?,\1,TRIG
+(?i)(?:EEG\s+)?(RESP.*?)(?:-REF|-LE)?,\1,RESP
+(?i)(?:EEG\s+)?(IBI|BURSTS|SUPPR)(?:-REF|-LE)?,\1,MISC
+(?i)(DC\d+)-DC,\1,MISC
+(?i)(PULSE RATE),\1,MISC
+(?i)(?:EEG\s+)?(\d+)(?:-REF|-LE)?,\1,MISC
+(?i)(?:EEG\s+)?(X\d+|1X10_LAT_\d+)(?:-REF|-LE|-)?,\1,MISC
+"(?i)(?:EEG\s+)?((?:FP|AF|FT|FC|CP|TP|PO|F|C|T|P|O|A|I|M)(?:Z|\d{1,2})|NZ|SP\d)(?:-REF|-LE)?",\1,EEG
+(?i)(?:EEG\s+)?(C[34]P|PG\d)(?:-REF|-LE)?,\1,EEG
+"(?i)(?:EEG\s+)?((?:FP|F|C|T|P|O)(?:Z|\d{1,2})-(?:FP|F|C|T|P|O)(?:Z|\d{1,2}))",\1,MISC

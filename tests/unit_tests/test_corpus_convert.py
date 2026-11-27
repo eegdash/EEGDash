@@ -192,6 +192,47 @@ def test_shards_from_a_local_tree_and_from_a_manifest(cache):
     assert [(s.subjects, s.n_bytes) for s in planned] == [(("a",), 50), (("b",), 75)]
 
 
+def _no_walk(*args, **kwargs):
+    raise AssertionError("the tree was walked again")
+
+
+def test_a_to_bids_tree_is_scanned_once_and_the_converting_processes_read_the_scan(
+    cache, tmp_path, monkeypatch
+):
+    pytest.importorskip("zarr")
+    root, scan = cache / "demo-1.0", cache / "demo-1.0.local.json"
+    corpus = EEGDashCorpus(["demo-1.0"], cache_dir=cache)
+    walked = corpus.shards(max_bytes=1)
+    assert not scan.exists()  # not a to_bids tree: nothing saved, as before
+    done = root / ".eegdash" / "to_bids" / "DONE"
+    done.parent.mkdir(parents=True)
+    done.write_text("{}\n")
+    assert corpus.verify().ok and corpus.shards(max_bytes=1) == walked
+    assert set(json.loads(scan.read_text())) == {"entries", "key", "subject_bytes"}
+    for name in ("local_subjects", "_local_files", "_check"):
+        monkeypatch.setattr(corpus_mod, name, _no_walk)
+    again = EEGDashCorpus(["demo-1.0"], cache_dir=cache)  # another process
+    assert again.shards(max_bytes=1) == walked  # the same plan: part 000 still holds
+    assert again.status().ok
+    assert again.convert(tmp_path / "out", shard=1, n_shards=3).ok
+    done.write_text('{"run": 2}\n')  # the tree written again: the scan is stale
+    with pytest.raises(AssertionError, match="walked again"):
+        EEGDashCorpus(["demo-1.0"], cache_dir=cache).shards()
+
+
+def test_a_local_tree_scanned_in_parallel_gives_what_one_lookup_at_a_time_gives(cache):
+    root = cache / "demo-1.0"
+    sizes = convert_mod.local_subjects(root, n_jobs=1)
+    assert list(sizes) == ["01", "02", "03"]  # in order: the shard plan reads it so
+    assert convert_mod.local_subjects(root, n_jobs=8) == sizes
+    assert list(convert_mod.local_subjects(root, n_jobs=8)) == list(sizes)
+    one, many = (
+        EEGDashCorpus(["demo-1.0"], cache_dir=cache).verify(n_jobs=n).datasets[0]
+        for n in (1, 8)
+    )
+    assert one.ok and one.entries == many.entries
+
+
 def test_shard_and_n_shards_select_the_parts(cache, tmp_path, monkeypatch):
     calls = []
 
@@ -427,6 +468,41 @@ def test_a_file_list_is_written_from_a_tree_behind_a_link(tmp_path):
     assert not (held / "list.csv").exists()
 
 
+def test_a_file_list_follows_linked_files_and_leaves_out_broken_links(tmp_path):
+    raw = tmp_path / "raw"
+    raw.mkdir()
+    (raw / "rec.edf").write_bytes(b"edf data")
+    root = tmp_path / "cache" / "demo-1.0"
+    (root / "sub-01" / "eeg").mkdir(parents=True)
+    (root / "sub-01" / "eeg" / "sub-01_eeg.edf").symlink_to(raw / "rec.edf")
+    (root / "sub-01" / "eeg" / "sub-01_channels.tsv").write_bytes(b"name")
+    (root / "sub-01" / "eeg" / "gone.edf").symlink_to(raw / "missing.edf")
+    out = tmp_path / "demo-1.0.csv"
+    assert corpus_mod.write_file_list(root, out, n_jobs=4) == 2
+    rows = [line.split(",") for line in out.read_text().splitlines()[1:]]
+    assert rows == [
+        ["sub-01/eeg/sub-01_channels.tsv", "4", hashlib.sha256(b"name").hexdigest()],
+        ["sub-01/eeg/sub-01_eeg.edf", "8", hashlib.sha256(b"edf data").hexdigest()],
+    ]
+
+
+def test_a_file_list_walks_nested_folders_and_does_not_enter_a_linked_folder(tmp_path):
+    outside = tmp_path / "outside"
+    outside.mkdir()
+    (outside / "x.edf").write_bytes(b"x")
+    root = tmp_path / "cache" / "demo-1.0"
+    (root / "sub-01" / "ses-01" / "eeg").mkdir(parents=True)
+    (root / "sub-01" / "ses-01" / "eeg" / "a.edf").write_bytes(b"aa")
+    (root / "sub-02").mkdir()
+    (root / "sub-02" / "b.edf").write_bytes(b"b")
+    (root / "sub-02" / "linked").symlink_to(outside, target_is_directory=True)
+    (root / "top.json").write_bytes(b"{}")
+    out = tmp_path / "demo-1.0.csv"
+    assert corpus_mod.write_file_list(root, out, n_jobs=3) == 3
+    paths = [line.split(",")[0] for line in out.read_text().splitlines()[1:]]
+    assert paths == ["sub-01/ses-01/eeg/a.edf", "sub-02/b.edf", "top.json"]
+
+
 def test_a_local_copy_is_checked_against_the_file_list_beside_it(
     cache, tmp_path, monkeypatch
 ):
@@ -444,6 +520,82 @@ def test_a_local_copy_is_checked_against_the_file_list_beside_it(
     assert not report.ok and report.datasets[0].row()["corrupt"] == 1
     (cache / "demo-1.0.files.csv").unlink()  # no list: the recordings, present
     assert corpus.verify(level="hash").datasets[0].row()["present"] == 4
+
+
+def _field(value, width):
+    return str(value).ljust(width).encode("latin-1")[:width]
+
+
+def _write_edf(path, labels, *, sfreq=256, seconds=12):
+    """An EDF written byte by byte: *labels*, 1-s records of int16 samples in uV."""
+    ns = len(labels)
+    header = b"".join(
+        [
+            _field("0", 8),
+            _field("X X X X", 80),
+            _field("X", 80),
+            _field("01.01.20", 8),
+            _field("10.00.00", 8),
+            _field(256 * (ns + 1), 8),
+            _field("", 44),
+            _field(seconds, 8),
+            _field(1, 8),
+            _field(ns, 4),
+        ]
+    )
+    header += b"".join(_field(label, 16) for label in labels)
+    for width, value in [
+        (80, ""),  # transducer
+        (8, "uV"),
+        (8, -3200),
+        (8, 3200),
+        (8, -32768),
+        (8, 32767),
+        (80, ""),  # prefiltering
+        (8, sfreq),
+        (32, ""),
+    ]:
+        header += _field(value, width) * ns
+    rng = np.random.default_rng(0)
+    data = rng.integers(-1000, 1000, (seconds, ns, sfreq)).astype("<i2").tobytes()
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_bytes(header + data)
+    return path
+
+
+def _clean_names_tree(root, names):
+    """One EDF labelled ``EEG FP1-REF``-style, its channels.tsv listing *names*."""
+    eeg = root / "sub-01" / "eeg"
+    stem = "sub-01_task-rest"
+    labels = ["EEG FP1-REF", "EEG FP2-REF", "EEG C3-REF", "EEG C4-REF", "EEG CZ-REF"]
+    _write_edf(eeg / f"{stem}_eeg.edf", [*labels, "EKG1"])
+    (root / "dataset_description.json").write_text(
+        json.dumps({"Name": "x", "BIDSVersion": "1.9.0"})
+    )
+    (eeg / f"{stem}_eeg.json").write_text(
+        json.dumps(
+            {"TaskName": "rest", "SamplingFrequency": 256, "PowerLineFrequency": 60}
+        )
+    )
+    rows = [f"{n}\t{'ECG' if n == 'ECG' else 'EEG'}\tuV" for n in names]
+    (eeg / f"{stem}_channels.tsv").write_text(
+        "name\ttype\tunits\n" + "\n".join(rows) + "\n"
+    )
+    return root
+
+
+def test_a_local_tree_whose_channels_tsv_cleans_the_labels_is_read(tmp_path, bank):
+    pytest.importorskip("zarr")
+    names = ["Fp1", "Fp2", "C3", "C4", "Cz", "ECG"]
+    root = _clean_names_tree(tmp_path / "cache" / "demo-2.0", names)
+    summary = convert_shard("demo-2.0", None, root, tmp_path / "part", bank=bank)
+    assert summary["skipped_by_reason"] == {} and summary["n_sessions"] == 1
+    assert _open(tmp_path / "part")["0"].attrs["channels"] == sorted(names[:5])
+    # one row short: no name is set, the raw labels resolve to nothing, a skip
+    root = _clean_names_tree(tmp_path / "cache" / "demo-3.0", names[:5])
+    summary = convert_shard("demo-3.0", None, root, tmp_path / "short", bank=bank)
+    assert summary["n_sessions"] == 0
+    assert summary["skipped_by_reason"] == {"lt3_resolvable": 1}
 
 
 def test_cli_writes_the_file_list_of_one_local_dataset(cache, tmp_path, capsys):

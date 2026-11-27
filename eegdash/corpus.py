@@ -22,8 +22,10 @@ the cache against it, and a report::
 Command line: ``python -m eegdash.corpus plan|download|verify|status|shards|
 convert|merge <name, csv or a,b,c> [--cache-dir ...]``; exit code 1 when
 anything is missing (``merge --out OUT --name NAME [--base STORE.zarr]
-[--dest DIR]``: 1 when the merge is refused). ``python -m eegdash.corpus files <local-id>
---out FILE.csv`` writes a local dataset's file list.
+[--dest DIR]``: 1 when the merge is refused). ``python -m eegdash.corpus files
+<local-id> --out FILE.csv`` writes a local dataset's file list; ``python -m
+eegdash.corpus bids <local-id> --src DIR`` writes its BIDS tree from a source
+in another layout (:mod:`eegdash.to_bids`).
 
 A dataset id of the form ``<name>-<version>`` (``tdbrain-3.1``) is a local
 dataset: one the catalogue does not serve, such as a gated one obtained under
@@ -63,6 +65,7 @@ import pandas as pd
 from . import downloader
 from .corpus_convert import (
     DEFAULT_SHARD_BYTES,
+    LOCAL_SCAN_THREADS,
     PRIMARY_EXT,
     Bank,
     ConvertReport,
@@ -88,6 +91,7 @@ _COMPLETE = Path(".eegdash", "COMPLETE")
 _OK = ("present", "absent")
 _COUNTED = ("files", "present", "absent", "missing", "corrupt", "incomplete")
 _CORPORA = Path(__file__).parent / "corpora"  # <name>.csv: the named corpora
+_BIDS_DONE = Path(".eegdash", "to_bids", "DONE")  # a finished eegdash.to_bids tree
 
 
 def _read_manifest(root: Path) -> tuple[dict, dict[str, dict]]:
@@ -195,12 +199,47 @@ def _sha256(path: Path) -> str:
     return h.hexdigest()
 
 
+def _listed(path: Path) -> tuple[int, str] | None:
+    """The size and SHA-256 of a regular file (a link followed), or None for anything else.
+
+    Run in the pool with the hash: on Lustre the first look at a linked file
+    took up to 0.1 s on a slow night, an hour for TUEG's 65,816 files one at a time.
+    """
+    if not path.is_file():
+        return None
+    return path.stat().st_size, _sha256(path)
+
+
+def _names_under(top: Path) -> list[Path]:
+    """Every entry under *top* that is not a folder, names starting with ``.`` left out, no link followed.
+
+    Folders are told apart by the type the directory listing gives
+    (``follow_symlinks=False``). ``os.walk`` looked up the target of every link
+    to decide, one Lustre lookup per recording: TUEG's list (65,816 links) spent
+    50 minutes on it without hashing a file. A linked folder comes back as an
+    entry and is dropped by :func:`_listed`, as ``os.walk`` never entered it.
+    """
+    found, stack = [], [top]
+    while stack:
+        with os.scandir(stack.pop()) as it:
+            for e in it:
+                if e.name.startswith("."):
+                    continue
+                if e.is_dir(follow_symlinks=False):
+                    stack.append(Path(e.path))
+                else:
+                    found.append(Path(e.path))
+    return found
+
+
 def write_file_list(root: str | Path, out: str | Path, *, n_jobs: int = 8) -> int:
     """Write the file list of a tree, ``path,size,sha256``, the list a local dataset is checked against.
 
     Every regular file under *root* (a symbolic link to the tree is followed;
     a file or folder whose name starts with ``.`` is left out), sorted by
-    path, hashed *n_jobs* at a time. Nothing is written inside *root*.
+    path. The top-level folders are walked and the files hashed *n_jobs* at a
+    time; a linked folder inside the tree is not entered. Nothing is written
+    inside *root*.
 
     Returns
     -------
@@ -213,24 +252,87 @@ def write_file_list(root: str | Path, out: str | Path, *, n_jobs: int = 8) -> in
         raise ValueError(f"{root}: not a folder")
     if out.resolve().is_relative_to(root):
         raise ValueError(f"{out}: the file list must not be written inside {root}")
-    paths = []
-    for dirpath, dirnames, filenames in os.walk(root):
-        dirnames[:] = [d for d in dirnames if not d.startswith(".")]
-        paths += [
-            Path(dirpath, f)
-            for f in filenames
-            if not f.startswith(".") and Path(dirpath, f).is_file()
-        ]
-    paths.sort(key=lambda p: p.relative_to(root).as_posix())
+    with os.scandir(root) as it:
+        entries = [e for e in it if not e.name.startswith(".")]
+    dirs = [Path(e.path) for e in entries if e.is_dir(follow_symlinks=False)]
+    paths = [Path(e.path) for e in entries if not e.is_dir(follow_symlinks=False)]
     with ThreadPoolExecutor(max_workers=max(1, n_jobs)) as pool:
-        digests = list(pool.map(_sha256, paths))
+        for names in pool.map(_names_under, dirs):
+            paths += names
+        paths.sort(key=lambda p: p.relative_to(root).as_posix())
+        found = list(pool.map(_listed, paths))
     rows = [
-        {"path": p.relative_to(root).as_posix(), "size": p.stat().st_size, "sha256": d}
-        for p, d in zip(paths, digests)
+        {"path": p.relative_to(root).as_posix(), "size": f[0], "sha256": f[1]}
+        for p, f in zip(paths, found)
+        if f is not None
     ]
     out.parent.mkdir(parents=True, exist_ok=True)
     write_csv(out, rows, ["path", "size", "sha256"])
     return len(rows)
+
+
+def _scan_path(root: Path) -> Path:
+    """Beside a local tree: ``<dsid>.local.json``, what one scan of the tree found."""
+    return root.parent / f"{root.name}.local.json"
+
+
+def _tree_key(dsid: str, root: Path) -> str | None:
+    """What identifies a finished :mod:`eegdash.to_bids` tree and its file list; None for any other tree.
+
+    ``to_bids`` removes its ``DONE`` at the start of a run and writes it anew at
+    the end, so a scan saved under one ``DONE`` is not read after the tree is
+    rewritten; a file list written or replaced beside the tree changes it too.
+    """
+    try:
+        done = (root / _BIDS_DONE).stat()
+    except OSError:
+        return None
+    key = [f"{done.st_mtime_ns}:{done.st_size}"]
+    for listing in (
+        _CORPORA / "files" / f"{dsid}.csv",
+        root.parent / f"{dsid}.files.csv",
+    ):
+        try:
+            st = listing.stat()
+        except OSError:
+            continue
+        key.append(f"{listing.name}:{st.st_mtime_ns}:{st.st_size}")
+    return "|".join(key)
+
+
+def _read_scan(dsid: str, root: Path) -> dict:
+    """The saved scan of a local tree when it is the current tree's; else empty."""
+    key = _tree_key(dsid, root)
+    if key is None:
+        return {}
+    try:
+        data = json.loads(_scan_path(root).read_text(encoding="utf-8"))
+    except (OSError, ValueError):
+        return {}
+    return data if isinstance(data, dict) and data.get("key") == key else {}
+
+
+def _save_scan(dsid: str, root: Path, **fields: Any) -> None:
+    """Add *fields* to the saved scan of a finished ``to_bids`` tree (any other tree: nothing).
+
+    Every process that converts a shard checks the dataset and sizes its
+    subjects first; on a parallel file system 32 processes walking a tree of
+    65,816 recordings at once never got past it. One scan, saved, is read by
+    all of them. Written to a temporary file and renamed: a reader sees the
+    old file or the new one.
+    """
+    key = _tree_key(dsid, root)
+    if key is None:
+        return
+    data = {**_read_scan(dsid, root), **fields, "key": key}
+    path = _scan_path(root)
+    tmp = path.with_name(f".{path.name}.{os.getpid()}.tmp")
+    try:
+        tmp.write_text(json.dumps(data, sort_keys=True), encoding="utf-8")
+        os.replace(tmp, path)
+    except OSError as err:  # a read-only cache: every process scans, as before
+        tmp.unlink(missing_ok=True)
+        logger.warning("%s: the scan of the tree is not saved (%s)", dsid, err)
 
 
 def _local_files(dsid: str, root: Path) -> dict[str, dict]:
@@ -440,8 +542,21 @@ class EEGDashCorpus:
             return self.cache_dir / twin
         return self.cache_dir / dsid
 
-    def _local(self, dsid: str, level: str = "size") -> DatasetReport:
-        """A local dataset, from its tree: nothing is queried and nothing written."""
+    def _local(
+        self,
+        dsid: str,
+        level: str = "size",
+        *,
+        fresh: bool = False,
+        n_jobs: int = LOCAL_SCAN_THREADS,
+    ) -> DatasetReport:
+        """A local dataset, from its tree: nothing is queried, nothing written into the tree.
+
+        A finished ``to_bids`` tree is checked once and the result saved beside
+        it (``<dsid>.local.json``); later calls at ``size`` level read it, unless
+        *fresh* (``verify``) asks for the check again. Files are checked *n_jobs*
+        at a time.
+        """
         root = self.cache_dir / dsid
         rep = DatasetReport(dsid, state="local")
         if not root.is_dir():
@@ -450,7 +565,8 @@ class EEGDashCorpus:
                 f"local: obtain it under its terms and place its BIDS tree at {root}"
             )
             return rep
-        rep.entries = _local_files(dsid, root)
+        saved = {} if fresh or level != "size" else _read_scan(dsid, root)
+        rep.entries = saved.get("entries") or _local_files(dsid, root)
         escaped = [
             p for p in rep.entries if Path(p).is_absolute() or ".." in Path(p).parts
         ]
@@ -458,8 +574,11 @@ class EEGDashCorpus:
             rep.entries = {}
             rep.problems.append(f"path outside the dataset folder: {escaped[0]}")
             return rep
-        for entry in rep.entries.values():
-            _check(root, entry, level)
+        if not saved.get("entries"):
+            with ThreadPoolExecutor(max_workers=max(1, n_jobs)) as pool:
+                list(pool.map(lambda e: _check(root, e, level), rep.entries.values()))
+            if rep.entries:
+                _save_scan(dsid, root, entries=rep.entries)
         rep.subjects = len({p.split("/")[0] for p in rep.entries if p[:4] == "sub-"})
         if not rep.entries:
             rep.problems.append(f"no recording under {root}")
@@ -654,7 +773,7 @@ class EEGDashCorpus:
         reps = []
         for dsid in self.ids:
             if is_local_id(dsid):  # checked in place: no manifest, no COMPLETE
-                reps.append(self._local(dsid, level))
+                reps.append(self._local(dsid, level, fresh=True, n_jobs=n_jobs))
                 continue
             rep = self._from_disk(dsid)
             if rep.entries:
@@ -703,7 +822,15 @@ class EEGDashCorpus:
         root = self._root(dsid)
         _, entries = ({}, {}) if is_local_id(dsid) else _read_manifest(root)
         if not entries:
-            return local_subjects(root) if root.is_dir() else {}
+            if not root.is_dir():
+                return {}
+            saved = _read_scan(dsid, root) if is_local_id(dsid) else {}
+            if "subject_bytes" in saved:
+                return saved["subject_bytes"]
+            sizes = local_subjects(root)
+            if is_local_id(dsid):
+                _save_scan(dsid, root, subject_bytes=sizes)
+            return sizes
         sizes: Counter = Counter()
         subjects = set()
         for path, entry in entries.items():
@@ -936,6 +1063,7 @@ def main(argv: Sequence[str] | None = None) -> int:
             "convert",
             "merge",
             "files",
+            "bids",
         ),
     )
     parser.add_argument(
@@ -962,9 +1090,13 @@ def main(argv: Sequence[str] | None = None) -> int:
     parser.add_argument(
         "--dest", help="merge: the folder the store goes to (default --out)"
     )
-    parser.add_argument("--shard", type=int, help="convert: this process's number")
     parser.add_argument(
-        "--n-shards", type=int, help="convert: how many processes share the shards"
+        "--shard", type=int, help="convert, bids: this process's number"
+    )
+    parser.add_argument(
+        "--n-shards",
+        type=int,
+        help="convert: how many processes share the shards; bids: the subjects",
     )
     parser.add_argument("--recipe", default="reve", help="convert")
     parser.add_argument(
@@ -976,7 +1108,9 @@ def main(argv: Sequence[str] | None = None) -> int:
     parser.add_argument("--name", help="merge: the store's name")
     parser.add_argument("--base", help="merge: a finished store to extend")
     parser.add_argument(
-        "--link", choices=("hard", "symlink", "copy"), default="hard", help="merge"
+        "--link",
+        choices=("hard", "symlink", "copy"),
+        help="merge (default hard), bids (default symlink)",
     )
     parser.add_argument(
         "--overwrite", action="store_true", help="merge: replace a store of that name"
@@ -986,7 +1120,51 @@ def main(argv: Sequence[str] | None = None) -> int:
         action="store_true",
         help="convert: also a dataset whose files were not all verified (refused by default)",
     )
+    parser.add_argument("--src", help="bids: the source tree")
+    parser.add_argument(
+        "--exclude", help="bids: a CSV key,match,reason of recordings to leave out"
+    )
+    parser.add_argument(
+        "--keep-held-out",
+        action="store_true",
+        help="bids: do not apply the adapter's held-out table",
+    )
+    parser.add_argument(
+        "--dry-run",
+        action="store_true",
+        help="bids: read every header, write only --json",
+    )
+    parser.add_argument("--adapter", help="bids: another adapter, module:Class")
     args = parser.parse_args(argv)
+    if args.command == "bids":
+        from .to_bids import to_bids  # noqa: PLC0415
+
+        ids = _source(args.corpus)
+        if not (isinstance(ids, list) and len(ids) == 1 and is_local_id(ids[0])):
+            parser.error("bids takes exactly one local dataset id (tueg-2.0.1)")
+        if not args.src:
+            parser.error("bids needs --src")
+        try:
+            report = to_bids(
+                ids[0],
+                args.src,
+                cache_dir=args.cache_dir,
+                link=args.link or "symlink",
+                exclude=args.exclude,
+                keep_held_out=args.keep_held_out,
+                dry_run=args.dry_run,
+                n_jobs=args.n_jobs,
+                shard=args.shard,
+                n_shards=args.n_shards,
+                adapter=args.adapter,
+            )
+        except ValueError as exc:
+            print(f"BIDS REFUSED: {exc}")
+            return 1
+        print(report)
+        if args.json:
+            report.write(args.json)
+        return 0 if report.ok else 1
     if args.command == "files":
         ids = _source(args.corpus)
         if not (isinstance(ids, list) and len(ids) == 1 and is_local_id(ids[0])):
@@ -1017,7 +1195,7 @@ def main(argv: Sequence[str] | None = None) -> int:
                 args.out,
                 args.name,
                 base=args.base,
-                link=args.link,
+                link=args.link or "hard",
                 max_bytes=max_bytes,
                 overwrite=args.overwrite,
                 dest=args.dest,

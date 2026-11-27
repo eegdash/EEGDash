@@ -40,6 +40,7 @@ import re
 import shutil
 import time
 from collections import Counter
+from concurrent.futures import ThreadPoolExecutor
 from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any, Collection, Sequence
@@ -704,11 +705,20 @@ class LocalRecord:
 
     @property
     def raw(self) -> Any:
+        """The recording, read as a catalogue record is read.
+
+        Under :func:`eegdash.io.tolerant` and with ``on_ch_mismatch="rename"``:
+        a channels.tsv whose names clean the file's labels (``Fp1`` for
+        ``EEG FP1-REF``) renames them, where a strict read refused the
+        recording. A channels.tsv with another number of rows sets no name.
+        """
         from mne_bids import (  # noqa: PLC0415
             BIDSPath,
             get_entities_from_fname,
             read_raw_bids,
         )
+
+        from .io import tolerant  # noqa: PLC0415 (imports mne)
 
         e = get_entities_from_fname(self.path.name)
         bp = BIDSPath(
@@ -719,17 +729,33 @@ class LocalRecord:
             check=False,
             **{k: v for k, v in e.items() if v is not None},
         )
-        return read_raw_bids(bp, verbose="ERROR")
+        with tolerant():
+            return read_raw_bids(bp, verbose="ERROR", on_ch_mismatch="rename")
 
 
-def local_subjects(root: Path) -> dict[str, int]:
-    """Subject label -> bytes of its EEG folders, for the subjects of a BIDS tree with a recording."""
-    out: dict[str, int] = {}
-    for d in sorted(Path(root).glob("sub-*")):
-        files = [p for p in d.glob("**/eeg/*") if p.is_file()]
-        if any(p.name.endswith(tuple(f"_eeg{e}" for e in PRIMARY_EXT)) for p in files):
-            out[d.name[4:]] = sum(p.stat().st_size for p in files)
-    return out
+LOCAL_SCAN_THREADS = 16  # file lookups at a time when a local tree is scanned
+_PRIMARY_SUFFIXES = tuple(f"_eeg{e}" for e in PRIMARY_EXT)
+
+
+def _subject_bytes_of(d: Path) -> tuple[str, int] | None:
+    """One subject folder: its label and the bytes of its EEG folders, when it holds a recording."""
+    files = [p for p in d.glob("**/eeg/*") if p.is_file()]
+    if any(p.name.endswith(_PRIMARY_SUFFIXES) for p in files):
+        return d.name[4:], sum(p.stat().st_size for p in files)
+    return None
+
+
+def local_subjects(root: Path, n_jobs: int = LOCAL_SCAN_THREADS) -> dict[str, int]:
+    """Subject label -> bytes of its EEG folders, for the subjects of a BIDS tree with a recording.
+
+    Subjects are sized *n_jobs* at a time: the size of a linked recording is a
+    lookup of the source file, slow one by one on a loaded parallel file
+    system (0.1 s each for TUEG on one night, 4 times faster 32 at a time).
+    The result does not depend on *n_jobs*.
+    """
+    dirs = sorted(Path(root).glob("sub-*"))
+    with ThreadPoolExecutor(max_workers=max(1, n_jobs)) as pool:
+        return dict(found for found in pool.map(_subject_bytes_of, dirs) if found)
 
 
 def discover_bids(root: Path, subjects: Sequence[str] | None) -> list[LocalRecord]:

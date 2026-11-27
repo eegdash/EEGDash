@@ -6,6 +6,7 @@ from eegdash.features.feature_bank.dimensionality import (
     dimensionality_katz_fractal_dim,
     dimensionality_petrosian_fractal_dim,
 )
+from eegdash.features.feature_bank.signal import signal_zero_crossings
 
 
 @pytest.fixture
@@ -119,3 +120,19 @@ def test_dimensionality_gaps():
     )
 
     dimensionality_katz_fractal_dim(x)
+
+
+def test_petrosian_fractal_dim_formula(signals):
+    for name in ("sine", "white"):
+        sig = signals[name]
+        n = sig.shape[-1]
+        nd = signal_zero_crossings(np.diff(sig, axis=-1))
+        expected = np.log10(n) / (np.log10(n) + np.log10(n / (n + 0.4 * nd)))
+        pfd = dimensionality_petrosian_fractal_dim(sig)
+        np.testing.assert_allclose(pfd, expected)
+        assert 1.0 <= pfd[0] <= 2.0
+
+    # Monotonic signal has no derivative sign changes (nd == 0) -> PFD == 1.0
+    ramp = np.linspace(0.0, 1.0, 200)[None, :]
+    pfd_ramp = dimensionality_petrosian_fractal_dim(ramp)
+    np.testing.assert_allclose(pfd_ramp, [1.0])

@@ -130,9 +130,10 @@ def dimensionality_petrosian_fractal_dim(x, /):
            on Circuits and Systems I: Fundamental Theory and Applications, 48(2), pp.177-183.
 
     """
+    n = x.shape[-1]
     nd = signal_zero_crossings(np.diff(x, axis=-1))
-    log_n = np.log(x.shape[-1])
-    return log_n / (2 * log_n - np.log(nd))
+    log_n = np.log(n)
+    return log_n / (2 * log_n - np.log(n + 0.4 * nd))
 
 
 @feature_predecessor()

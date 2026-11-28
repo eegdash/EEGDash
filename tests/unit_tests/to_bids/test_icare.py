@@ -27,6 +27,7 @@ from eegdash.to_bids.adapter import Header
 from eegdash.to_bids.icare import ICARE
 
 DSID = "icare-2.0"
+MISS = -32768  # WFDB format 16: a missing sample
 COMMENTS = ["Utility frequency: 60", "Start time: 4:07:23", "End time: 4:59:59"]
 # 0284, hour 4, segment 1: EEG channels and their (gain, baseline)
 EEG_0284 = {
@@ -180,15 +181,18 @@ def _edf_codes(path):
 
 
 def _wfdb_segment(folder, key, groups):
-    """WFDB's codes (missing ones as the baseline), physical values and gains of a segment."""
+    """WFDB's codes (missing ones interpolated), physical values and gains of a segment."""
     wfdb = pytest.importorskip("wfdb")
     codes, phys, gains = [], [], []
     for group in groups:
         d = wfdb.rdrecord(str(folder / f"{key}_{group}"), physical=False)
         p = wfdb.rdrecord(str(folder / f"{key}_{group}"))
         c = d.d_signal.astype(np.int64)
-        for k, b in enumerate(d.baseline):
-            c[c[:, k] == icare.MISSING, k] = b
+        for k in range(c.shape[1]):
+            gap = c[:, k] == icare.MISSING
+            if gap.any():  # linear between the nearest valid codes, rounded
+                ok = np.flatnonzero(~gap)
+                c[gap, k] = np.rint(np.interp(np.flatnonzero(gap), ok, c[ok, k]))
         codes.append(c)
         phys.append(p.p_signal)
         gains += d.adc_gain
@@ -456,7 +460,7 @@ def test_the_dataset_files(src, tmp_path):
     assert desc["Name"].startswith("I-CARE: International Cardiac Arrest")
     assert desc["SourceDatasets"][0]["URL"] == "https://bdsp.io/content/bdsp-icare/2.0/"
     assert "Not redistributable" in desc["License"]
-    assert desc["GeneratedBy"] == [{"Name": "eegdash.to_bids", "Version": "icare/1"}]
+    assert desc["GeneratedBy"] == [{"Name": "eegdash.to_bids", "Version": "icare/2"}]
     readme = (root / "README.md").read_text()
     assert readme.startswith("# I-CARE 2.0 (BDSP)")
     assert "5 recordings of 2 patients (test 1, training 1)" in readme
@@ -478,7 +482,11 @@ def test_the_edf_holds_wfdbs_codes_and_physical_values(src, tmp_path):
     got = raw.get_data().T  # volts
     names = [n for n, _ in CHANNELS_0284_H004]
     missing = np.isnan(phys)
-    assert missing.sum() == 3 and (got[missing] == 0).all()  # as the baseline
+    pz = names.index("Pz")  # gain 2, baseline 0: rows 5 and 6 between 4 and 7, 100
+    assert missing.sum() == 3 and missing[[5, 6, 100], pz].all()
+    assert np.allclose(
+        got[missing] * 1e6, codes[missing] / gains[pz], rtol=1e-12, atol=0
+    )
     exact = [k for k, n in enumerate(names) if n != "Fp2"]
     # Fp1 (gain 2): MNE's arithmetic gives WFDB's values to the last bit
     assert np.array_equal(got[:, 0], phys[:, 0] * 1e-6)
@@ -494,6 +502,47 @@ def test_the_edf_holds_wfdbs_codes_and_physical_values(src, tmp_path):
     assert np.array_equal(_edf_codes(edf), codes)
     got = mne.io.read_raw_edf(edf, preload=True, verbose="ERROR").get_data().T
     assert got.shape == (3125, 6) and np.array_equal(got, phys * 1e-6)
+
+
+@pytest.mark.parametrize(
+    ("codes", "baseline", "want"),
+    [
+        # between neighbours
+        ([10, MISS, MISS, 40, MISS, 0], 0, [10, 20, 30, 40, 20, 0]),
+        ([MISS, MISS, 5, 7, MISS], 0, [5, 5, 5, 7, 7]),  # an end: the nearest code
+        ([100, MISS, 104], -91280, [100, 102, 104]),  # baseline below int16: not used
+        ([MISS, MISS], -91280, [-32767, -32767]),  # none valid: the baseline, clipped
+        ([MISS], 3, [3]),
+        ([1, 2, 3], 0, [1, 2, 3]),  # nothing missing: unchanged
+    ],
+)
+def test_missing_samples_are_interpolated(codes, baseline, want):
+    col = np.array(codes, dtype=np.int16)
+    n = icare.fill_missing(col, baseline)
+    assert n == codes.count(MISS) and col.tolist() == want
+    assert col.dtype == np.int16 and not (col == icare.MISSING).any()
+
+
+def test_a_missing_sample_with_a_baseline_below_int16_is_no_spike(src, tmp_path):
+    """BDSP's 0833_009_029 F4: baseline -91280, gain 468.1; revision 1 wrote code -32768 (125 uV)."""
+    pytest.importorskip("wfdb")
+    p, eeg, n = src / "training" / "0284", list(EEG_0284), 12 * 256
+    gains, base = [468.1] * len(eeg), [-91280] * len(eeg)
+    codes = _codes(n, len(eeg), 15) - 30000  # about -32000 to -28000, as in the record
+    codes[1000, 3] = icare.MISSING
+    write_record(p, "0284_009_011_EEG", eeg, codes, gains=gains, baselines=base, sfreq=256)  # fmt: skip
+    _run(src, tmp_path / "cache")
+    edf = tmp_path / "cache" / DSID / "sub-0284" / "eeg"
+    edf = edf / "sub-0284_task-icu_acq-h011_run-009_eeg.edf"
+    got = _edf_codes(edf)
+    want = codes.copy()
+    want[1000, 3] = round((codes[999, 3] + codes[1001, 3]) / 2)
+    assert np.abs(got[1000, 3] - want[1000, 3]) <= 1 and got.min() > icare.MISSING
+    got[1000, 3] = want[1000, 3]
+    assert np.array_equal(got, want)  # every other code kept
+    side = json.loads(edf.with_suffix(".json").read_text())
+    assert side["MissingSamples"] == {eeg[3]: 1}
+    assert "interpolation" in side["MissingSamplesNote"]
 
 
 def test_a_flat_channel_without_a_positive_gain_is_written_flat(src, tmp_path):

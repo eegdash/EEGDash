@@ -37,7 +37,11 @@ adapter's revision does, not when only another group's record changes.
 
 **Samples.** The EDF file holds WFDB's 16-bit digital values unchanged, but
 for the format's missing-sample code (-32768), which is replaced by the
-channel's baseline (physical 0) and counted per channel in the sidecar. A
+linear interpolation of the channel's nearest valid codes on either side (the
+nearest one at either end of the recording; :func:`fill_missing`) and counted
+per channel in the sidecar. (Revision 1 wrote the channel's baseline, clipped
+to int16: for a baseline below -32768 that is the missing code itself, read as
+a spike of the range's end.) A
 channel's EDF physical range is derived from its gain and baseline
 (:func:`physical_range`), so the EDF physical value of a code is WFDB's
 ``(code - baseline) / gain``: exactly, as a decimal, when EDF's 8-character
@@ -270,6 +274,29 @@ def physical_range(
     )
 
 
+def fill_missing(col: np.ndarray, baseline: float) -> int:
+    """Replace WFDB's missing-sample code in the int16 column *col*, in place; returns how many.
+
+    A missing code takes the linear interpolation, rounded, of the nearest
+    valid codes before and after it; one before the first valid code or after
+    the last takes that code. A column with no valid code is written as the
+    baseline, clipped to int16 without the missing code itself. No missing
+    code is left, and no value outside the valid codes' range is made.
+    """
+    gap = col == MISSING
+    n = int(gap.sum())
+    if n == 0:
+        return 0
+    good = np.flatnonzero(~gap)
+    if good.size == 0:
+        col[:] = np.clip(round(baseline), INT16[0] + 1, INT16[1])
+        return n
+    holes = np.flatnonzero(gap)
+    values = np.interp(holes, good, col[good].astype(np.float64))
+    col[holes] = np.rint(values).astype(col.dtype)
+    return n
+
+
 def record_layout(n_times: int, sfreq: float) -> tuple[int, int, str, int]:
     """``(samples per EDF data record, records, the duration field, samples dropped)``.
 
@@ -365,7 +392,7 @@ class ICARE(Adapter):
 
     name = "icare"
     versions = ("2.0",)
-    revision = 1
+    revision = 2  # 2: missing samples interpolated, no longer the clipped baseline
     extension = ".edf"
     linkable = False
 
@@ -474,10 +501,9 @@ class ICARE(Adapter):
                 if len(name) > EDF_LABEL or not name.isascii():
                     raise ValueError(f"{base.name}: label {label!r} too long for EDF")
                 col = data[:, k].copy()
-                gap = col == MISSING
-                if gap.any():
-                    col[gap] = np.clip(round(record.baseline[k]), *INT16)
-                    missing[label] = int(gap.sum())
+                n_missing = fill_missing(col, record.baseline[k])
+                if n_missing:
+                    missing[label] = n_missing
                 unit = units[k] if k < len(units) else None
                 gain, baseline = record.adc_gain[k], record.baseline[k]
                 if not gain > 0 and col.min() == col.max():
@@ -533,7 +559,8 @@ class ICARE(Adapter):
             side["MissingSamples"] = found["missing"]
             side["MissingSamplesNote"] = (
                 "Samples with WFDB's missing-sample code (-32768) per channel, "
-                "written as the channel's baseline (physical 0)."
+                "written as the linear interpolation of the channel's nearest valid "
+                "samples on either side (the nearest one at an end of the recording)."
             )
         if found.get("rounded"):
             side["PhysicalRangeRounded"] = found["rounded"]
@@ -655,8 +682,9 @@ class ICARE(Adapter):
             "physical value is WFDB's (sample - baseline) / gain; where EDF's 8-character "
             "fields cannot hold that range exactly, it is rounded and the channel listed "
             "under `PhysicalRangeRounded` in the recording's sidecar. Samples with WFDB's "
-            "missing-sample code are written as the channel's baseline and counted "
-            "under `MissingSamples`. A channel that holds one value throughout and whose "
+            "missing-sample code are written as the linear interpolation of the "
+            "channel's nearest valid samples on either side and counted under "
+            "`MissingSamples`. A channel that holds one value throughout and whose "
             "header gives no positive gain is written flat at physical 0 "
             "(`FlatChannels`). A channel whose record declares no unit (`nu` or "
             "none) is written in uV, as its values have microvolt amplitude; the "
